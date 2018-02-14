@@ -1,0 +1,50 @@
+meshpath = models/;
+meshnames = 
+player_ship.obj |
+laser.obj |
+missile.obj |
+pulse.obj |
+swarm_droid.obj |
+shock_droid.obj |
+enforcer.obj | 
+swarm_droid_2.obj |
+test2.obj |
+test1.obj;
+
+collpath = models/;
+collnames = 
+player_ship_coll.obj |
+laser_coll.obj |
+NULL |
+pulse_coll.obj |
+swarm_droid_coll.obj |
+NULL |
+enforcer_coll.obj |
+swarm_droid_2_coll.obj |
+NULL |
+test1_coll.obj;
+
+fontpath = fonts/;
+fontnames = 
+consola.ttf |
+lucon.ttf;
+
+texturepath = img/;
+texturenames =
+explosion.tga |
+glow.tga |
+rock.tga |
+dust.tga |
+laser_icon.tga |
+missile_icon.tga |
+propulsion_icon.tga |
+reactor_icon.tga |
+repair_icon.tga |
+shield_icon.tga |
+stabilizers_icon.tga |
+spark.tga |
+sparkglow.tga |
+sparkparticle.tga |
+lightning.tga |
+reticule.tga |
+cursor.tga;

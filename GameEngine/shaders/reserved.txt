@@ -1,0 +1,10 @@
+0	pos
+1	nor
+2	col
+3	txc
+
+0	modmatrix
+1	viematrix
+2	promatrix
+3	colortex
+4 	colortexbnd

@@ -1,0 +1,359 @@
+﻿#include "ai.h"
+#include "framework.h"
+
+
+
+double When_Closest(Vector3d loc1, Vector3d vel1, Vector3d loc2, Vector3d vel2) {
+	Vector3d locdif = loc1 - loc2;
+	Vector3d veldif = vel1 - vel2;
+	double dot1 = locdif.Dot(veldif);
+	double dot2 = veldif.Dot(veldif);
+	if (dot2 == 0.0)
+		return 0.0;
+	return dot1 / dot2 * -1;
+}
+
+Vector3d How_Close(Vector3d loc1, Vector3d vel1, Vector3d loc2, Vector3d vel2, double t) {
+	Vector3d p1 = loc1 + vel1 * t;
+	Vector3d p2 = loc2 + vel2 * t;
+	return (p1 - p2);
+}
+
+double When_Close(Vector3d loc1, Vector3d vel1, Vector3d loc2, Vector3d vel2, double d) {
+	Vector3d dloc = loc1 - loc2;
+	Vector3d dvel = vel1 - vel2;
+
+	double a = dvel.Dot(dvel);
+	double b = dvel.Dot(dloc) * 2;
+	double c = dloc.Dot(dloc) - d * d;
+
+	double disc = b * b - 4 * a * c;
+
+	if (disc < 0 || (b > 0 && disc < b * b))
+		return -1.0;
+
+	double sqrtdisc = sqrt(disc);
+
+	double result = (-b - sqrtdisc) / (a + a);
+
+	if (result > 0.0)
+		return result;
+	else
+		return (-b + sqrtdisc) / (a + a);
+}
+
+AIManager* AIManager::active = NULL;
+
+AIManager::AIManager()
+	: components(NULL),
+	ncomponents(0) {
+	components = new AIComponent*[maxcomponents];
+	active = this;
+}
+
+AIManager::~AIManager() {
+	while (ncomponents)
+		delete components[0];
+	delete[] components;
+}
+
+void AIManager::Calculate(double t) {
+	for (int i = 0; i < ncomponents; i++)
+		components[i]->Calculate(t);
+}
+
+void AIManager::Add_Component(AIComponent* component) {
+	if (ncomponents == maxcomponents)
+		GEngine::Die("AIManager.Add_Component: member <components> overflow");
+
+	components[ncomponents] = component;
+	component->index = ncomponents;
+	ncomponents++;
+}
+
+void AIManager::Remove_Component(AIComponent* component) {
+	if (component->index >= ncomponents)
+		GEngine::Die("AIManager.Remove_Component: invalid index");
+
+	components[component->index] = components[ncomponents - 1];
+	components[component->index]->index = component->index;
+	ncomponents--;
+}
+
+EntityManager* EntityManager::active = NULL;
+
+EntityManager::EntityManager()
+	: entities(NULL),
+	nentities(0) {
+	entities = new Entity*[maxentities];
+	active = this;
+}
+
+EntityManager::~EntityManager() {
+	while (nentities)
+		delete entities[0];
+	delete[] entities;
+}
+
+void EntityManager::Add_Entity(Entity* e) {
+	if (nentities == maxentities)
+		GEngine::Die("EntityManager.Add_Entity: member <entities> overflow");
+
+	entities[nentities] = e;
+	e->index = nentities;
+	nentities++;
+}
+
+void EntityManager::Remove_Entity(Entity* e) {
+	if (e->index >= nentities)
+		GEngine::Die("EntityManager.Remove_entity: invalid index");
+
+	entities[e->index] = entities[nentities - 1];
+	entities[e->index]->index = e->index;
+	nentities--;
+}
+
+AITR::AITR(AIComponent* component, double t) :
+	TimeRequest(t),
+	component(component)
+{}
+
+void AITR::Activate() {
+	static int c = 1;
+	static double s = 0;
+	static double metas = 0;
+	static double a = 0;
+	if (GEngine::active->clock.Time() - metas > 1) {
+		double per = a * 100;
+		OutputDebugStringA((string("\nai:\t") + to_string((int)(per + 0.5)) + "%").c_str());
+		metas = GEngine::active->clock.Time();
+		a = 0;
+		c = 0;
+	}
+	c++;
+	s = GEngine::active->clock.Time();
+
+	double t = ot - this->t;
+	TimeRequestQueue::active->Remove_Request(this);
+	this->t = ot;
+	TimeRequestQueue::active->Add_Request(this);
+	component->Calculate(t);
+
+	a += GEngine::active->clock.Time() - s;
+}
+
+SwarmDroidAI::SwarmDroidAI(SwarmDroid* parent) :
+parent		(parent),
+aggressor	(NULL),
+target		(NULL),
+tgtdir		(Vector3d(0, 0, -1)),
+tgtspeed	(30.0f),
+frozen		(false) {
+	Choose_Target();
+}
+
+void SwarmDroidAI::Calculate() {
+	if (!Confirm_Target())
+		Choose_Target();
+
+	Vector3d avoid = Avoid_Entities(parent, NULL, 0);
+
+	if (frozen && (int)(GEngine::active->clock.Time()) % 10 == 0)
+		frozen = false;
+
+	/*if (rand() % (int)(30 / parent->AIComponent::stepper.step) == 0)
+		frozen = true;*/
+
+	if ((target->transform.loc - parent->transform.loc).Magnitude() <
+		target->mask->tree->trunk->radius + parent->mask->tree->trunk->radius + 3.0) {
+		frozen = true;
+		tgtdir = Vector3d::Random_Normalized();
+	}
+
+	if (target == NULL) {
+		if ((int)(GEngine::active->clock.Time()) % 5 == 0) {
+			parent->transform.orient.Calculate_Right();
+			tgtdir = parent->transform.orient.right * -1;
+			tgtspeed = 10.0f;
+		}
+	}
+	else {
+		if (!frozen) {
+			tgtdir = target->transform.loc - parent->transform.loc;
+			tgtdir += target->linvel * tgtdir.Magnitude() * 0.01;
+			tgtspeed = tgtdir.Magnitude() * 2.0f;
+		}
+	}
+
+	if (!avoid.Is_Zero()) {
+		tgtdir = avoid;
+		tgtspeed = 40.0f;
+	}
+
+	tgtdir.Normalize();
+}
+
+void SwarmDroidAI::Choose_Target() {
+	Entity* beste = NULL;
+	float bestn = 1000.0;
+	Entity* thise;
+	float thisn;
+	for (int i = 0; i < EntityManager::active->nentities; i++) {
+		thise = EntityManager::active->entities[i];
+		if (thise->info.alleg != ALLEG_HUMAN)
+			continue;
+		thisn = (thise->transform.loc - parent->transform.loc).Magnitude();
+		if (thise == aggressor) {
+			aggressor = NULL;
+			thisn *= 0.5;
+		}
+		if ((thise->transform.loc - parent->transform.loc).Dot(parent->transform.orient.dir) < 0) {
+			thisn *= 1.2;
+		}
+		if (thisn < bestn) {
+			beste = thise;
+			bestn = thisn;
+		}
+	}
+	target = beste;
+}
+
+bool SwarmDroidAI::Confirm_Target() {
+	if (target == NULL)
+		return false;
+	if (aggressor != NULL)
+		return false;
+	if ((target->transform.loc - parent->transform.loc).Dot(target->transform.loc - parent->transform.loc) > 1000000.0f)
+		return false;
+	for (int i = 0; i < EntityManager::active->nentities; i++) {
+		if (EntityManager::active->entities[i] == target)
+			return true;
+	}
+	return false;
+}
+
+ShockDroidAI::ShockDroidAI(ShockDroid* parent) :
+	parent(parent),
+	aggressor(NULL),
+	target(NULL),
+	tgtdir(Vector3d(0, 0, -1)),
+	tgtspeed(0.0f),
+	tgtloc(parent->transform.loc),
+	prevmove(Rand_Float(0, 10)) {
+	Choose_Target();
+	if(target != NULL)
+		tgtloc = target->transform.loc + Vector3d::Random_Normalized() * 50.0;
+}
+
+void ShockDroidAI::Calculate() {
+	if (!Confirm_Target())
+		Choose_Target();
+
+	if (target == NULL) {
+		tgtdir = Vector3d(0, 0, -1);
+		tgtspeed = 0.0;
+		return;
+	}
+
+	if (GEngine::active->clock.Time() - prevmove > 10) {
+		tgtloc = target->transform.loc + Vector3d::Random_Normalized() * 50.0;
+		prevmove += 10.0;
+	}
+
+	tgtdir = tgtloc - parent->transform.loc;
+	tgtspeed = 30.0;
+
+	if (tgtdir.Magnitude() < 10.0)
+		tgtspeed = 0.0;
+
+	Vector3d avoid = Avoid_Entities(parent, NULL, 0);
+
+	if (!avoid.Is_Zero() && !parent->linvel.Is_Zero()) {
+		tgtdir = avoid;
+		tgtspeed = 20.0f;
+	}
+
+	tgtdir.Normalize();
+}
+
+void ShockDroidAI::Choose_Target() {
+	Entity* beste = NULL;
+	float bestn = 1000.0;
+	Entity* thise;
+	float thisn;
+	for (int i = 0; i < EntityManager::active->nentities; i++) {
+		thise = EntityManager::active->entities[i];
+		if (thise->info.alleg != ALLEG_HUMAN)
+			continue;
+		thisn = (thise->transform.loc - parent->transform.loc).Magnitude();
+		if (thise == aggressor) {
+			aggressor = NULL;
+			thisn *= 0.5;
+		}
+
+		if (thisn < bestn) {
+			beste = thise;
+			bestn = thisn;
+		}
+	}
+	target = beste;
+}
+
+bool ShockDroidAI::Confirm_Target() {
+	if (target == NULL)
+		return false;
+	if (aggressor != NULL)
+		return false;
+	if ((target->transform.loc - parent->transform.loc).Dot(target->transform.loc - parent->transform.loc) > 1000000.0f)
+		return false;
+	for (int i = 0; i < EntityManager::active->nentities; i++) {
+		if (EntityManager::active->entities[i] == target)
+			return true;
+	}
+	return false;
+}
+
+Vector3d Avoid_Entities(NPC* npc, Entity** ignore, int nignore) {
+	Vector3d avoid;
+	for (int i = 0; i < EntityManager::active->nentities; i++) {
+		Entity* e = EntityManager::active->entities[i];
+		
+		if (e == npc || e->MechComponent::type == TYPE_PULSE || e->MechComponent::type == TYPE_LASER)
+			continue;
+
+		bool cont = false;
+		for (int j = 0; j < nignore; j++) {
+			if (e == ignore[j]) {
+				cont = true;
+				break;
+			}
+		}
+		if (cont)
+			continue;
+
+		Vector3d dloc = npc->transform.loc - e->transform.loc;
+		Vector3d dvel = npc->linvel - e->linvel;
+
+		/*if (dloc.Dot(dloc) > dvel.Dot(dvel) * step * step)
+			continue;*/
+
+		double closet = When_Close(npc->transform.loc, npc->linvel,
+			e->transform.loc, e->linvel, npc->mask->tree->trunk->radius + 
+			e->mask->tree->trunk->radius + 2.0);
+
+		float maxtime = 2.0;
+
+		if (closet > 0.0 && closet < maxtime) {
+
+			Vector3d closev = How_Close(npc->transform.loc, npc->linvel,
+				e->transform.loc, e->linvel, closet);
+
+			avoid += (npc->transform.loc - e->transform.loc).Normalized() * 
+				(maxtime - closet);
+		}
+	}
+
+	avoid.Normalize();
+
+	return avoid;
+}
