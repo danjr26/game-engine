@@ -21,7 +21,6 @@ struct MMLElement {
 };
 
 void Parse_MML_String(MMLElement& inout_element, string in_string);
-CustomArray<Mesh*> Load_Mesh_File(string in_filePath, string in_fileName);
 
 struct Material {
 public:
@@ -40,13 +39,14 @@ public:
 };
 
 template<class T>
-struct Plane {
-private:
+class Plane {
+public:
 	enum Side {
 		front,
 		on,
 		back
 	};
+private:
 	T pointDot;
 	Vector3<T> axis;
 
@@ -137,39 +137,36 @@ public:
 	static Spheref Welzl(CustomArray<Vector3f>& in_points, CustomArray<Vector3f>& in_borderPoints);
 };
 
-class SubMesh {
-public:
-	unsigned int	vertexArrayID;
-	unsigned int 	vertbuffer;
-	unsigned int 	normbuffer;
-	unsigned int	texcbuffer;
-	unsigned int	indxbuffer;
-	Material 		material;
-	int				nVertices;
-	
-	SubMesh(Vector3f* vertices, Vector3f* norms, Vector2f* texcs, int nVertices, Material material);
-	~SubMesh();
-	void Render(Flags callflags);
-};
-
 class Mesh : public Resource {
 public:
-	SubMesh**		submeshes;
-	int				nsubmeshes;
-
-	Vector3f*		rawvertices;
-	Vector3f*		rawnormals;
-	Vector2f*		rawtexcoords;
-	int				ntriangles;
-
-	SphereTree*		tree;
+	enum Buffers {
+		vertex,
+		normal,
+		uv,
+		materialIndex,
+		vertexIndex,
+		count
+	};
+private:
+	GLuint vertexArrayID;
+	GLuint vertexBufferID;
+	GLuint normalBufferID;
+	GLuint uvBufferID;
+	GLuint materialIndexBufferID;
+	GLuint indexBufferID;
+	CustomArray
+		<Material> materials;
+	uint nVertices;
+	Flags renderFlags;
 	
-			Mesh			(string path, string name);
-			~Mesh			();
-	//void	Load_OBJ		();
-	void	Load_Raw		(Vector3f* vertices, Vector3f* norms, Vector2f* texcs, int ntris, Material matl);
-	void	Render			(Flags callflags);
-	
+public:			
+	Mesh(CustomArray<Vector3f>& in_vertices, CustomArray<Vector3f>& in_normals, CustomArray<Vector3f>& in_uvs, CustomArray<uchar>& in_materialIndices, 
+		CustomArray<Triple<ushort>>& in_indices, CustomArray<Material>& in_materials, Flags in_renderFlags, string in_name);
+	~Mesh();
+
+	void Render (Flags callflags);
+
+	static CustomArray<Mesh*> Load_Mesh_File(string in_filePath, string in_fileName);
 };
 
 struct RawMesh {

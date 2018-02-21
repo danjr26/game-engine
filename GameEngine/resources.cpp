@@ -14,7 +14,7 @@ Resource::~Resource() {
 }
 
 ResourceManager::ResourceManager() :
-resources(256, offsetof(Resource, rmindex)) {
+resources(256, offsetof(Resource, resourceManagerArrayIndex)) {
 	active = this;
 }
 
@@ -29,7 +29,7 @@ void ResourceManager::Remove(Resource* resource) {
 	resources.Remove(resource);
 }
 
-Resource* ResourceManager::Get_Resource(string name) {
+Resource* ResourceManager::Get(string name) {
 	for (int i = 0; i < resources.Size(); i++) {
 		if (resources[i]->name == name)
 			return resources[i];

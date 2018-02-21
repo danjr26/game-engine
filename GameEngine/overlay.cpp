@@ -326,7 +326,7 @@ MechanicalComponent(step),
 parent(parent),
 text(nullptr) {
 	TextFormat format = {
-		(Font*)GEngine::Get().Resource().Get_Resource("consola.ttf"),
+		(Font*)GEngine::Get().Resource().Get("consola.ttf"),
 		TJ_LEFT,
 		Color4f(1, 1, 1, 1),
 		12,
@@ -371,7 +371,7 @@ parent(parent) {
 	for (int i = 0; i < 6; i++) {
 		*icons[i] = new Rect2D(
 				Transform2d(Vector2d(0, ystart + size * i), Orientation2d(), Vector2d(size, size)), 0.0, 
-				(Texture2D*)GEngine::Get().Resource().Get_Resource(iconnames[i]), 
+				(Texture2D*)GEngine::Get().Resource().Get(iconnames[i]), 
 				Color4f(1.0, 1.0, 1.0, 1.0), 0
 				);
 	}
@@ -419,7 +419,7 @@ void PlayerShipSystemsStatus::Update(double t) {
 Reticule::Reticule(PlayerShip* parent) :
 MechanicalComponent(0.01),
 Rect2D(Transform2d(Vector2d(0, 0), Orientation2d(), Vector2d(32, 32)), 0.5, 
-(Texture2D*)GEngine::Get().Resource().Get_Resource("reticule.tga"), 
+(Texture2D*)GEngine::Get().Resource().Get("reticule.tga"), 
 Color4f(1.0, 1.0, 1.0, 1.0), 0),
 parent(parent) 
 {}
@@ -448,7 +448,7 @@ void Reticule::Update(double t) {
 Cursor::Cursor() :
 MechanicalComponent(0.01),
 Rect2D(Transform2d(Vector2d(0, 0), Orientation2d(), Vector2d(10, 10)), 0.5, 
-(Texture2D*)GEngine::Get().Resource().Get_Resource("cursor.tga"), 
+(Texture2D*)GEngine::Get().Resource().Get("cursor.tga"), 
 Color4f(1.0, 1.0, 1.0, 1.0), 0) {
 	ShowCursor(false);
 }

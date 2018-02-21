@@ -8,6 +8,8 @@
 #include <string>
 #include "resources.h"
 
+
+
 namespace TextureFlags {
 	enum {
 		readable =	0x01,

@@ -62,7 +62,7 @@ lasttime			(GEngine::Get().Clock().Now()),
 maxtime				(0.0),
 refreshstepper		(step) {
 	TextFormat format = {
-		(Font*)GEngine::Get().Resource().Get_Resource("consola.ttf"),
+		(Font*)GEngine::Get().Resource().Get("consola.ttf"),
 		TJ_LEFT,
 		Color4f(1.0, 1.0, 1.0, 1.0),
 		12,

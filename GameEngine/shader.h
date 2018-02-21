@@ -29,6 +29,13 @@ struct BlendSettings {
 
 class Shader : public Resource {
 public:
+	enum AttributeIndex {
+		vertex,
+		normal,
+		color,
+		uv,
+		materialIndex
+	};
 	GLuint shadertype;
 	GLuint vertexArrayID;
 

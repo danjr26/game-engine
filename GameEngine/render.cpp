@@ -126,7 +126,7 @@ HWND Window::Get_Handle() {
 
 RenderManager::RenderManager(Vector2i resolution, double step) :
 components		(1024, offsetof(class RenderComponent, renderManagerArrayIndex)),
-timeRequest				(step),
+timeRequest		(step),
 camera			(Transform3d(), Projection(0.1, 1000.0, 45.0)),
 context			(),
 lightmanager	(),

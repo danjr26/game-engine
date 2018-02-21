@@ -453,7 +453,7 @@ void ParticleSystem::Update(double t)
 SpaceDust::SpaceDust() :
 ParticleSystem(
 	Transform3d(), 
-	(Texture2D*)GEngine::Get().Resource().Get_Resource("glow.tga"), 
+	(Texture2D*)GEngine::Get().Resource().Get("glow.tga"), 
 	{true, GL_ONE, GL_SRC_ALPHA, GL_ADD}, 
 	250, PS__END, 1.0 / 30.0, FACE_CAM) {
 	for (int i = 0; i < PS__END; i++)

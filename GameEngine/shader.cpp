@@ -79,7 +79,7 @@ void ShaderProgram::Deactivate() {
 void ShaderProgram::Activate(string name) {
 	if (active != nullptr && name == active->name)
 		return;
-	ShaderProgram* shader = (ShaderProgram*)GEngine::Get().Resource().Get_Resource(name);
+	ShaderProgram* shader = (ShaderProgram*)GEngine::Get().Resource().Get(name);
 	if (shader == nullptr)
 		Die("ShaderProgram.Activate: could not find shader '" + name + "'");
 	else

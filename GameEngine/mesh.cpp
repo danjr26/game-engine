@@ -1123,7 +1123,7 @@ void Parse_MML_String(MMLElement & inout_element, string in_string) {
 			MMLElement subElement;
 			Parse_MML_String(subElement, subElementString);
 
-			inout_element.children.insert(std::map<uint, MMLElement>::value_type(inout_element.children.size(), subElement))
+			inout_element.children.insert(std::map<uint, MMLElement>::value_type(inout_element.children.size(), subElement));
 		}
 		else {
 			string body;
@@ -1135,3 +1135,54 @@ void Parse_MML_String(MMLElement & inout_element, string in_string) {
 		}
 	}
 }
+
+Mesh::Mesh(CustomArray<Vector3f>& in_vertices, CustomArray<Vector3f>& in_normals, CustomArray<Vector3f>& in_uvs, CustomArray<uchar>& in_materialIndices, 
+	CustomArray<Triple<ushort>>& in_indices, CustomArray<Material>& in_materials, Flags in_renderFlags, string in_name) :
+Resource(in_name),
+materials(in_materials) {
+	if (in_vertices.Size() != in_normals.Size() || !(in_vertices.Size() == in_uvs.Size() || in_uvs.Is_Null()) ||
+		in_vertices.Size() % 3 != 0 || in_vertices.Size() / 3 != in_materialIndices.Size() || in_materialIndices.Size() != in_indices.Size()) {
+		throw InvalidParameterException("Mesh:Mesh:parameter lengths invalid");
+	}
+
+	glGenVertexArrays(1, &vertexArrayID);
+	glBindVertexArray(vertexArrayID);
+
+	glGenBuffers(Buffers::count, &vertexBufferID);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * in_vertices.Size(), in_vertices.Pointer(), GL_STATIC_DRAW);
+	glEnableVertexAttribArray(Shader::AttributeIndex::vertex);
+	glVertexAttribPointer(Shader::AttributeIndex::vertex, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, normalBufferID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * in_normals.Size(), in_normals.Pointer(), GL_STATIC_DRAW);
+	glEnableVertexAttribArray(Shader::AttributeIndex::normal);
+	glVertexAttribPointer(Shader::AttributeIndex::normal, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, uvBufferID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * in_uvs.Size(), in_uvs.Pointer(), GL_STATIC_DRAW);
+	glEnableVertexAttribArray(Shader::AttributeIndex::uv);
+	glVertexAttribPointer(Shader::AttributeIndex::uv, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, materialIndexBufferID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(uchar) * in_materialIndices.Size(), in_materialIndices.Pointer(), GL_STATIC_DRAW);
+	glEnableVertexAttribArray(Shader::AttributeIndex::materialIndex);
+	glVertexAttribPointer(Shader::AttributeIndex::materialIndex, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ushort) * in_indices.Size(), in_indices.Pointer(), GL_STATIC_DRAW);
+
+	glBindVertexArray(0);
+}
+
+Mesh::~Mesh() {
+	glDeleteBuffers(Buffers::count, &vertexBufferID);
+	glDeleteVertexArrays(1, &vertexArrayID);
+}
+
+CustomArray<Mesh*> Mesh::Load_Mesh_File(string in_filePath, string in_fileName) {
+	
+}
+
+

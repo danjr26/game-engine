@@ -291,7 +291,7 @@ void Text2D::Render(bool trans) {
 
 	Matrix4f modelmat = modelStack.Top();
 
-	((ShaderProgram*)GEngine::Get().Resource().Get_Resource("text_shader"))->Activate();
+	((ShaderProgram*)GEngine::Get().Resource().Get("text_shader"))->Activate();
 
 	glBindVertexArray(vertexArrayID);
 	glActiveTexture(GL_TEXTURE0);
@@ -319,7 +319,7 @@ void Text2D::Render(bool trans) {
 
 	glBindVertexArray(0);
 
-	((ShaderProgram*)GEngine::Get().Resource().Get_Resource("default_shader"))->Activate();
+	((ShaderProgram*)GEngine::Get().Resource().Get("default_shader"))->Activate();
 
 	transform.Unapply_Object();
 

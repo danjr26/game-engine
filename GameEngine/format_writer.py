@@ -169,12 +169,26 @@ end_open_element("Materials")
 
 start_open_element("Meshes", {})
 for mesh in mesh_objects:
+    bpy.ops.object.mode_set(mode="OBJECT")
     new_mesh = copy_object(mesh)
     
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.object.modifier_add(type="TRIANGULATE")
     bpy.ops.object.mode_set(mode="OBJECT")
     apply_all_modifiers(new_mesh)
+    
+    bpy.context.tool_settings.mesh_select_mode = (False, True, False);
+    
+    for edge in mesh.data.edges:
+        material_index = -1;
+        for face in mesh.data.polygons:
+            if edge.key in face.edge_keys:
+                if material_index == -1:
+                    material_index = face.material_index
+                elif material_index != face.material_index:
+                    edge.select = True
+                    bpy.ops.mesh.edge_split()
+                    break
     
     normals = []
     for vertex in new_mesh.data.vertices:
@@ -241,7 +255,7 @@ for mesh in mesh_objects:
     start_open_element("VertexNormals", {})
     pad_tabs()
     for vertex in new_mesh.data.vertices:
-        for coordinate in vertex.normal:
+        for coordinate in vertex.co:
             file.write("{:.9}".format(str(coordinate)) + " ")
     file.write("\n")
     end_open_element("VertexNormals")

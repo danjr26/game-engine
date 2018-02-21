@@ -89,6 +89,10 @@ public:
 		return true;
 	}
 
+	bool Is_Null() {
+		return data == nullptr;
+	}
+
 	CustomArray<T> operator=(CustomArray<T>& in_source) {
 		in_source.Assert_Validity();
 

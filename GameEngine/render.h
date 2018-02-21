@@ -40,33 +40,6 @@ public:
 };
 
 
-class RenderContext {
-public:
-	enum : Flags {
-		enable_blending =		0x00000001,
-		enable_depth_write =	0x00000002
-	};
-
-private:
-	Material material;
-
-	GLenum blendSourceFactor;
-	GLenum blendDestinationFactor;
-	GLenum blendOperation;
-
-	Flags flags;
-
-public:
-	RenderContext();
-
-	BlendSettings Get_Blend_Settings();
-	void Set_Blend_Settings(BlendSettings& in_source);
-	bool Get_Depth_Write();
-	void Set_Depth_Write(bool in_value);
-	Material& Get_Material();
-	void Set_Material(Material& in_source);
-};
-
 namespace RenderType {
 	enum : Flags {
 		beforecam =		0x01,
@@ -105,7 +78,6 @@ public:
 	void	Add				(RenderComponent* component);
 	void	Remove			(RenderComponent* component);
 
-	RenderContext&			Context	();
 	Camera&					Camera	();
 	LightManager&			Light	();
 	OverlayManager&			Overlay	();

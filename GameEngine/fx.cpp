@@ -76,7 +76,7 @@ void LightningBolt::Render(Flags in_renderFlags) {
 	glDepthMask(0);
 	glDisable(GL_LIGHTING);
 
-	Texture2D* tex = (Texture2D*)GEngine::Get().Resource().Get_Resource("lightning.tga");
+	Texture2D* tex = (Texture2D*)GEngine::Get().Resource().Get("lightning.tga");
 	tex->Activate();
 	glColor4f(0.0, 0.5, 0.0, 1.0);
 	glBegin(GL_QUAD_STRIP);
@@ -249,7 +249,7 @@ void LaserManager::Render(Flags in_callFlags) {
 		glDisable(GL_CULL_FACE);
 
 		glActiveTexture(GL_TEXTURE0);
-		Texture2D* texture = (Texture2D*)GEngine::Get().Resource().Get_Resource("sparkglow.tga");
+		Texture2D* texture = (Texture2D*)GEngine::Get().Resource().Get("sparkglow.tga");
 		texture->Activate();
 
 		ShaderProgram::Activate("beam_shader");
@@ -287,7 +287,7 @@ void LaserManager::Render(Flags in_callFlags) {
 		
 		glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Color4f) * components.Size() * 2, colors2);
-		texture = (Texture2D*)GEngine::Get().Resource().Get_Resource("sparkparticle.tga");
+		texture = (Texture2D*)GEngine::Get().Resource().Get("sparkparticle.tga");
 		texture->Activate();
 		glDrawArrays(GL_LINES, 0, components.Size() * 2);
 

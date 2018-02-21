@@ -66,7 +66,7 @@ void ShockDroidReactor::Update(double t)
 {}
 
 ShockDroid::ShockDroid(Transform3d transform, ShockDroidSettings& settings) :
-	NPC(transform, Identity::shockdroid, Allegiance::alien, ((Mesh*)GEngine::Get().Resource().Get_Resource("shock_droid.obj"))->tree,
+	NPC(transform, Identity::shockdroid, Allegiance::alien, ((Mesh*)GEngine::Get().Resource().Get("shock_droid.obj"))->tree,
 		0.01f, 0.1),
 	settings(settings),
 	reactor(this, settings.reactor),
@@ -76,7 +76,7 @@ ShockDroid::ShockDroid(Transform3d transform, ShockDroidSettings& settings) :
 	spawn(1.0),
 	spawned(false) {
 
-	mesh = new MeshInstance((Mesh*)GEngine::Get().Resource().Get_Resource("shock_droid.obj"));
+	mesh = new MeshInstance((Mesh*)GEngine::Get().Resource().Get("shock_droid.obj"));
 
 	GEngine::Get().Collision().Remove(this);
 	GEngine::Get().AI().Remove(this);

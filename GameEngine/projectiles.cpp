@@ -3,7 +3,7 @@
 
 Laser::Laser(Entity* parent, LaserSettings& settings, Transform3d& transform) :
 Entity(transform, Identity::laser, Allegiance::human,
-	((Mesh*)GEngine::Get().Resource().Get_Resource("laser.obj"))->tree, 
+	((Mesh*)GEngine::Get().Resource().Get("laser.obj"))->tree, 
 	0.005),
 parent			(parent),
 settings		(settings),
@@ -42,12 +42,12 @@ bool Laser::Should_Check_Collision(CollidableComponent* that) {
 
 Missile::Missile(Entity* parent, Entity* target, MissileSettings& settings, Transform3d& transform) :
 NPC(transform, Identity::missile, Allegiance::human,
-	((Mesh*)GEngine::Get().Resource().Get_Resource("missile.obj"))->tree, 
+	((Mesh*)GEngine::Get().Resource().Get("missile.obj"))->tree, 
 	0.01f, 0.5f),
 parent		(parent),
 settings	(settings),
 timeout		(settings.timeout) {
-	mesh = new MeshInstance((Mesh*)GEngine::Get().Resource().Get_Resource("missile.obj"));
+	mesh = new MeshInstance((Mesh*)GEngine::Get().Resource().Get("missile.obj"));
 	mesh->transform = transform;
 }
 
@@ -111,7 +111,7 @@ void Missile::(double t) {/*
 
 Pulse::Pulse(Entity* parent, PulseSettings& settings, Transform3d& transform) :
 Entity(transform, Identity::pulse, Allegiance::alien,
-	((Mesh*)GEngine::Get().Resource().Get_Resource("pulse.obj"))->tree, 
+	((Mesh*)GEngine::Get().Resource().Get("pulse.obj"))->tree, 
 	0.01f),
 parent	(parent),
 settings(settings),
@@ -244,7 +244,7 @@ void LaserRecoil(Vector3d position, Vector3d forward) {
 		new LaserRecoilGen(),
 		nullptr,
 		Transform3d(position),
-		(Texture2D*)GEngine::Get().Resource().Get_Resource("glow.tga"),
+		(Texture2D*)GEngine::Get().Resource().Get("glow.tga"),
 		BlendSettings{
 		true,
 		GL_ONE,
@@ -266,7 +266,7 @@ void PulseRecoil(Vector3d position, Vector3d forward) {
 		new PulseRecoilGen(),
 		nullptr,
 		Transform3d(position),
-		(Texture2D*)GEngine::Get().Resource().Get_Resource("explosion.tga"),
+		(Texture2D*)GEngine::Get().Resource().Get("explosion.tga"),
 		BlendSettings{
 		true,
 		GL_ONE,

@@ -277,7 +277,7 @@ trans					(settings.startup, settings.cooldown) {
 	MeshBlanketSettings mbsettings = {
 		new PlayerShipShieldMesBlaGen(),
 		parent->mesh,
-		(Texture2D*)GEngine::Get().Resource().Get_Resource("glow.tga"),
+		(Texture2D*)GEngine::Get().Resource().Get("glow.tga"),
 		BlendSettings {
 			true,
 			GL_ONE_MINUS_SRC_ALPHA,
@@ -332,9 +332,9 @@ float PlayerShipShield::Mod_Damage(float damage) {
 PlayerShip::PlayerShip(Transform3d& transform, PlayerShipSettings& settings) :
 Entity(transform,
 Identity::playership, Allegiance::human,
-((Mesh*)GEngine::Get().Resource().Get_Resource("test1.obj"))->tree, 
+((Mesh*)GEngine::Get().Resource().Get("test1.obj"))->tree, 
  0.01),
-mesh			(new MeshInstance((Mesh*)GEngine::Get().Resource().Get_Resource("test1.obj"))),
+mesh			(new MeshInstance((Mesh*)GEngine::Get().Resource().Get("test1.obj"))),
 settings		(settings),
 reactor			(this, settings.reactor),
 shield			(this, settings.shield),
@@ -353,7 +353,7 @@ firstperson		(false) {
 		new PlayerShipTrailGen(this),
 		new PlayerShipTrailPop(),
 		Transform3d(Vector3d()),
-		(Texture2D*)GEngine::Get().Resource().Get_Resource("explosion.tga"),
+		(Texture2D*)GEngine::Get().Resource().Get("explosion.tga"),
 		BlendSettings{
 		true,
 		GL_ONE,

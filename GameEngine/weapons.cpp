@@ -91,7 +91,7 @@ void LaserFireFlash(Vector3d position) {
 		new LaserFlashGen(),
 		nullptr,
 		Transform3d(position),
-		(Texture2D*)GEngine::Get().Resource().Get_Resource("spark.tga"),
+		(Texture2D*)GEngine::Get().Resource().Get("spark.tga"),
 		BlendSettings{
 		true,
 		GL_ONE,
@@ -113,7 +113,7 @@ void PulseFireFlash(Vector3d position) {
 		new PulseFlashGen(),
 		nullptr,
 		Transform3d(position),
-		(Texture2D*)GEngine::Get().Resource().Get_Resource("explosion.tga"),
+		(Texture2D*)GEngine::Get().Resource().Get("explosion.tga"),
 		BlendSettings{
 		true,
 		GL_ONE,
