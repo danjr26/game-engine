@@ -1,15 +1,12 @@
 #version 400
 
-uniform sampler2DArray texes;
+uniform sampler2DArray colorTextures;
 
-in vec3 pass_txc;
-in vec4 pass_col;
+in vec3 uv_f;
 
-out vec4 out_col;
+out vec4 color_o;
 
 void main() {
-	if(pass_txc.x < 0.0 || pass_txc.y < 0.0 || pass_txc.x > 1.0 || pass_txc.y > 1.0)
-		out_col = vec4(0.5);
-	else
-		out_col = texture(texes, pass_txc);
+	color_o = texture(colorTextures, uv_f);
+	color_o = vec4(1.0, 1.0, 1.0, pow(color_o.a, 1.0 / 2.2));
 }

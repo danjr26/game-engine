@@ -23,14 +23,14 @@ void Laser::Update(double t) {
 		delete this;
 }
 
-bool Laser::Collide(CollidableComponent* that, Collision* collision) {
+bool Laser::Collide(CollidableComponent3* that, Collision* collision) {
 	if (that->type == Identity::laser || that->type == Identity::pulse || that->type == Identity::explosionblast || that->type == Identity::playership)
 		return false;
 	LaserRecoil(collision->collisionPoint, transform.orientation.forward);
 	return true;
 }
 
-bool Laser::Should_Check_Collision(CollidableComponent* that) {
+bool Laser::Should_Check_Collision(CollidableComponent3* that) {
 	switch (that->type) {
 	case Identity::laser:
 	case Identity::pulse:
@@ -56,7 +56,7 @@ Missile::~Missile() {
 }
 
 void Missile::Update(double t) {
-//	CollidableComponent::stepper.step = 2.0 / velocity.Magnitude();
+//	CollidableComponent3::stepper.step = 2.0 / velocity.Magnitude();
 	/*
 	double selflinmag = selfvel.Magnitude();
 
@@ -96,7 +96,7 @@ void Missile::Update(double t) {
 	}*/
 }
 
-bool Missile::Collide(CollidableComponent* that, Collision* collision) {
+bool Missile::Collide(CollidableComponent3* that, Collision* collision) {
 	MissileExplosion(transform.position);
 	return true;
 }
@@ -124,7 +124,7 @@ Pulse::~Pulse()
 {}
 
 void Pulse::Update(double t) {
-//	CollidableComponent::stepper.step = 0.75 / settings.speed;
+//	CollidableComponent3::stepper.step = 0.75 / settings.speed;
 	transform.orientation.up.Rotate(1000.0f * t, transform.orientation.forward);
 	transform.position += transform.orientation.forward * settings.speed * t;
 	timeout -= t;
@@ -133,14 +133,14 @@ void Pulse::Update(double t) {
 		delete this;
 }
 
-bool Pulse::Collide(CollidableComponent* that, Collision* collision) {
+bool Pulse::Collide(CollidableComponent3* that, Collision* collision) {
 	if (that->type == Identity::playership && ((PlayerShip*)that)->firstperson == true)
 		return true;
 	PulseRecoil(collision->collisionPoint, transform.orientation.forward);
 	return true;
 }
 
-bool Pulse::Should_Check_Collision(CollidableComponent* that) {
+bool Pulse::Should_Check_Collision(CollidableComponent3* that) {
 	switch (that->type) {
 	case Identity::laser:
 	case Identity::pulse:
@@ -153,7 +153,7 @@ bool Pulse::Should_Check_Collision(CollidableComponent* that) {
 ExplosionBlast::ExplosionBlast(Transform3d transform, float expansion, float lifet,
 	float damagek, float forcek) :
 MechanicalComponent(0.01),
-CollidableComponent(Identity::explosionblast, new CollisionMask(&this->transform, &this->vel, nullptr)),
+CollidableComponent3(Identity::explosionblast, new SphereTreeCollisionMask(&this->transform, &this->vel, nullptr)),
 expansion	(expansion),
 damagek		(damagek),
 forcek		(forcek),
@@ -180,7 +180,7 @@ void ExplosionBlast::Update(double t) {
 	mask->tree->trunk->radius += expansion * t;
 }
 
-bool ExplosionBlast::Collide(CollidableComponent* that, Collision* collision) {
+bool ExplosionBlast::Collide(CollidableComponent3* that, Collision* collision) {
 	return false;
 }
 
@@ -205,7 +205,7 @@ void MissileExplosion(Vector3d position) {/*
 		24.0f, 24.0f,
 		0.0f, 0.0f,
 		0.5f, 0.5f,
-		(Texture2D*)GEngine::Get().Resource().Get_Resource("spark.tga"),
+		(Texture2*)GEngine::Get().Resource().Get_Resource("spark.tga"),
 		Vector2f(1.0f, 1.0f), 5.5, 5.8,
 		Color4f(0.5f, 0.75f, 1.0f, 1.0f),
 		Color4f(0.1f, 0.2f, 1.0f, 0.0f)
@@ -216,7 +216,7 @@ void MissileExplosion(Vector3d position) {/*
 		0.0f, 4.0f,
 		0.0f, 90.0f,
 		3.0f, 4.5f,
-		(Texture2D*)GEngine::Get().Resource().Get_Resource("smoke.tga"),
+		(Texture2*)GEngine::Get().Resource().Get_Resource("smoke.tga"),
 		Vector2f(1.0f, 1.0f), 2.0, 4.0,
 		Color4f(0.95f, 0.95f, 1.0f, 0.02f),
 		Color4f(0.0f, 0.0f, 0.0f, 0.0f)
@@ -227,7 +227,7 @@ void MissileExplosion(Vector3d position) {/*
 		0.0f, 2.0f,
 		0.0f, 360.0f,
 		0.1f, 0.25f,
-		(Texture2D*)GEngine::Get().Resource().Get_Resource("flash.tga"),
+		(Texture2*)GEngine::Get().Resource().Get_Resource("flash.tga"),
 		Vector2f(1.0f, 1.0f), 10.0, 20.0,
 		Color4f(1.0f, 1.0f, 1.0f, 0.75f),
 		Color4f(1.0f, 1.0f, 1.0f, 0.0f)
@@ -244,7 +244,7 @@ void LaserRecoil(Vector3d position, Vector3d forward) {
 		new LaserRecoilGen(),
 		nullptr,
 		Transform3d(position),
-		(Texture2D*)GEngine::Get().Resource().Get("glow.tga"),
+		(Texture2*)GEngine::Get().Resource().Get("glow.tga"),
 		BlendSettings{
 		true,
 		GL_ONE,
@@ -266,7 +266,7 @@ void PulseRecoil(Vector3d position, Vector3d forward) {
 		new PulseRecoilGen(),
 		nullptr,
 		Transform3d(position),
-		(Texture2D*)GEngine::Get().Resource().Get("explosion.tga"),
+		(Texture2*)GEngine::Get().Resource().Get("explosion.tga"),
 		BlendSettings{
 		true,
 		GL_ONE,

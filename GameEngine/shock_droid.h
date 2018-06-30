@@ -58,7 +58,7 @@ public:
 	virtual			~ShockDroid		();
 	void			Take_Damage		(float damage);
 	virtual void	Update			(double t);
-	virtual bool	Collide			(CollidableComponent* that, Collision* collision);
+	virtual bool	Collide			(CollidableComponent3* that, Collision* collision);
 	virtual void			(double t);
 };
 

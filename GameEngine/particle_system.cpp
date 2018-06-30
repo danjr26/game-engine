@@ -417,7 +417,7 @@ void ParticleData::Make_Unstatic(int index) {
 	}
 }
 
-ParticleSystem::ParticleSystem(Transform3d transform, Texture2D* texture, BlendSettings blend, int maxpcls, int nelem, double step, int face) :
+ParticleSystem::ParticleSystem(Transform3d transform, Texture2* texture, BlendSettings blend, int maxpcls, int nelem, double step, int face) :
 MechanicalComponent(step),
 data		(this, maxpcls, nelem),
 transform	(transform),
@@ -453,7 +453,7 @@ void ParticleSystem::Update(double t)
 SpaceDust::SpaceDust() :
 ParticleSystem(
 	Transform3d(), 
-	(Texture2D*)GEngine::Get().Resource().Get("glow.tga"), 
+	(Texture2*)GEngine::Get().Resource().Get("glow.tga"), 
 	{true, GL_ONE, GL_SRC_ALPHA, GL_ADD}, 
 	250, PS__END, 1.0 / 30.0, FACE_CAM) {
 	for (int i = 0; i < PS__END; i++)

@@ -1,87 +1,52 @@
 #include "shader.h"
-#include "framework.h"
 
-Shader::Shader(GLuint shadertype, string path, string name) :
-Resource(path, name),
-shadertype(shadertype) {
-	fstream file;
-	file.open(path + name);
-	if (!file.is_open())
-		Die(string("Could not find shader file: ") + path + name);
+Shader::Shader(Shader::Type in_type, std::string in_filename) :
+type(in_type) {
+	std::fstream file;
+	file.open(in_filename);
+
+	if (!file.is_open()) {
+		Log::main(std::string("error: could not open file '") + in_filename + "'");
+		exit(-1);
+	}
+
 	file.seekg(0, std::ios::end);
-	int length = file.tellg();      
-	file.seekg(0, std::ios::beg); 
+	int length = file.tellg();   
 	char* buffer = new char[length]; 
-	for (int i = 0; i < length; i++)
+
+	for (int i = 0; i < length; i++) {
 		buffer[i] = '\0';
+	}
+
+	file.seekg(0, std::ios::beg); 
 	file.read(buffer, length);
+
 	file.close();
 
-	vertexArrayID = glCreateShader(shadertype);
-	glShaderSource(vertexArrayID, 1, &buffer, &length);
-	glCompileShader(vertexArrayID);
+	id = glCreateShader((GLuint)in_type);
+	glShaderSource(id, 1, &buffer, &length);
+	glCompileShader(id);
+
 	GLint success = 0;
-	glGetShaderiv(vertexArrayID, GL_COMPILE_STATUS, &success);
+	glGetShaderiv(id, GL_COMPILE_STATUS, &success);
 	if (success == GL_FALSE) {
-		GLint logsize = 0;
-		glGetShaderiv(vertexArrayID, GL_INFO_LOG_LENGTH, &logsize);
-		char* log = new char[logsize];
-		glGetShaderInfoLog(vertexArrayID, logsize, nullptr, log);
-		Die(name + '\n' + log);
+		GLint logLength = 0;
+		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &logLength);
+		char* log = new char[logLength];
+		glGetShaderInfoLog(id, logLength, nullptr, log);
+		Log::main(std::string("\nerror: shader '") + in_filename + "' compilation failed:\n" + log);
+		delete[] log;
+		exit(-1);
 	}
+
 	delete[] buffer;
 }
 
 Shader::~Shader() {
-	glDeleteShader(vertexArrayID);
+	glDeleteShader(id);
 }
 
-ShaderProgram* ShaderProgram::active = nullptr;
-
-ShaderProgram::ShaderProgram(string name, Shader* vshader, Shader* fshader, Shader* gshader, Shader* tshader) :
-Resource("", name) {
-	if (vshader == nullptr || fshader == nullptr)
-		Die("Need vertex and fragment shaders!");
-	vertexArrayID = glCreateProgram();
-	glAttachShader(vertexArrayID, vshader->vertexArrayID);
-	glAttachShader(vertexArrayID, fshader->vertexArrayID);
-	if(gshader != nullptr)
-		glAttachShader(vertexArrayID, gshader->vertexArrayID);
-	if(tshader != nullptr)
-		glAttachShader(vertexArrayID, tshader->vertexArrayID);
-	glLinkProgram(vertexArrayID);
-
-	GLint success = 0;
-	glGetProgramiv(vertexArrayID, GL_LINK_STATUS, &success);
-	if (success == GL_FALSE) {
-		GLint logsize = 0;
-		glGetProgramiv(vertexArrayID, GL_INFO_LOG_LENGTH, &logsize);
-		char* log = new char[logsize];
-		glGetProgramInfoLog(vertexArrayID, logsize, nullptr, log);
-		Die(log);
-	}
+Shader::Type Shader::Get_Type() {
+	return type;
 }
 
-ShaderProgram::~ShaderProgram() {
-	glDeleteProgram(vertexArrayID);
-}
-
-void ShaderProgram::Activate() {
-	glUseProgram(vertexArrayID);
-	active = this;
-}
-
-void ShaderProgram::Deactivate() {
-	glUseProgram(0);
-	active = nullptr;
-}
-
-void ShaderProgram::Activate(string name) {
-	if (active != nullptr && name == active->name)
-		return;
-	ShaderProgram* shader = (ShaderProgram*)GEngine::Get().Resource().Get(name);
-	if (shader == nullptr)
-		Die("ShaderProgram.Activate: could not find shader '" + name + "'");
-	else
-		shader->Activate();
-}

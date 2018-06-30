@@ -1,25 +1,15 @@
 #ifndef COLLISION_H
 #define COLLISION_H
-#include "clock.h"
-#include "component.h"
-#include "collision_mask.h"
-#include "oct_tree.h"
-#include "trq.h"
 
-template class IndexedArray<CollidableComponent>;
-class CollisionManager {
-public:
-	IndexedArray<CollidableComponent> components;
-	OctTree	octTree;
-	CollisionTR timeRequest;
-
-			CollisionManager	();
-			~CollisionManager	();
-	
-	void	Check_Collisions	();
-	void	Add					(CollidableComponent* in_component);
-	void	Remove				(CollidableComponent* in_component);
+template<class T, uint n>
+struct Collision {
+	bool didCollide;
+	Vector<T, n> collisionPoint;
 };
 
+using Collision2f = Collision<float, 2>;
+using Collision2d = Collision<double, 2>;
+using Collision3f = Collision<float, 3>;
+using Collision3d = Collision<double, 3>;
 
 #endif

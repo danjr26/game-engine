@@ -102,14 +102,14 @@ void ShockDroid::Update(double t) {
 		else
 			return;
 	}
-//	CollidableComponent::stepper.step = 2.5 / velocity.Magnitude();
+//	CollidableComponent3::stepper.step = 2.5 / velocity.Magnitude();
 	reactor.Update(t);
 	propulsion.Update(t);
 	pulsegun.Update(t);
 	mesh->transform = transform;
 }
 
-bool ShockDroid::Collide(CollidableComponent* that, Collision* collision) {
+bool ShockDroid::Collide(CollidableComponent3* that, Collision* collision) {
 	/*switch (that->type) {
 	case TYPE_PULSE:
 		if (((Pulse*)that)->parent == (Entity*)this)

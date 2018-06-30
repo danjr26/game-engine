@@ -75,6 +75,8 @@ def copy_object(object):
     set_active_object(new_object)
     return new_object
     
+start_open_element("MeshFile", {})
+    
 mesh_objects = []
 for object in bpy.data.objects:
     if(object.type == "MESH"):
@@ -167,9 +169,9 @@ for material in bpy.data.materials:
     end_open_element("Material")
 end_open_element("Materials")
 
-start_open_element("Meshes", {})
+start_open_element("Meshes", {"count" : str(len(mesh_objects))})
 for mesh in mesh_objects:
-    bpy.ops.object.mode_set(mode="OBJECT")
+    #bpy.ops.object.mode_set(mode="OBJECT")
     new_mesh = copy_object(mesh)
     
     bpy.ops.object.mode_set(mode="EDIT")
@@ -274,6 +276,8 @@ for mesh in mesh_objects:
     set_active_object(new_mesh)
     bpy.ops.object.delete()
 end_open_element("Meshes")
+
+end_open_element("MeshFile")
 
 
 file.close()

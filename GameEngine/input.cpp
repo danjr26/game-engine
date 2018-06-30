@@ -4,8 +4,7 @@
 LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPARAM in_lParam) {
 	Vector2i position;
 	float wheelDelta = 0.0f;
-	switch (in_message)
-	{
+	switch (in_message) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
@@ -19,6 +18,8 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 	case WM_MBUTTONUP:
 	case WM_RBUTTONDOWN:
 	case WM_RBUTTONUP:
+	case WM_XBUTTONDOWN:
+	case WM_XBUTTONUP:
 	case WM_MOUSEMOVE:	
 		position = Vector2i(GET_X_LPARAM(in_lParam), GET_Y_LPARAM(in_lParam));
 		GEngine::Get().Input().Handle_Mouse_Input(in_message, position, wheelDelta);
@@ -115,7 +116,7 @@ Vector2i Get_Mouse_Coords_Pixel() {
 }
 
 Vector2d Pixel_To_Gradient_Coords(Vector2i in_pixelCoords) {
-	Vector2i windowDimensions = GEngine::Get().Window().Get_Dim();
+	Vector2i windowDimensions = GEngine::Get().Window().Get_Dimensions();
 	return Vector2d(
 		(double)in_pixelCoords.x / windowDimensions.x * 2.0 - 1.0,
 		(windowDimensions.y - in_pixelCoords.y) / windowDimensions.y * 2.0 - 1.0
@@ -127,7 +128,7 @@ Vector2d Get_Mouse_Coords_Gradient() {
 }
 
 Vector2i Gradient_To_Pixel_Coords(Vector2d in_gradientCoords) {
-	Vector2i windowDimensions = GEngine::Get().Window().Get_Dim();
+	Vector2i windowDimensions = GEngine::Get().Window().Get_Dimensions();
 	return Vector2d(
 		(in_gradientCoords.x + 1.0) / 2.0 * windowDimensions.x,
 		windowDimensions.y - ((in_gradientCoords.y + 1.0) / 2.0 * windowDimensions.y)

@@ -2,20 +2,12 @@
 
 uniform mat4 matrix;
 
-layout(location = 0) in vec3 in_pos;
-layout(location = 2) in vec4 in_col;
-layout(location = 3) in vec3 in_txc;
+layout(location = 0) in vec2 position_v;
+layout(location = 3) in vec3 uv_v;
 
-out vec3 pass_txc;
-out vec4 pass_col;
+out vec3 uv_f;
 
 void main() {
-	gl_Position = matrix * vec4(in_pos, 1.0);
-	gl_Position.y = -gl_Position.y;
-	gl_Position.x /= 400.0;
-	gl_Position.y /= 300.0;
-	gl_Position.x -= 1.0;
-	gl_Position.y += 1.0;
-	pass_col = in_col;
-	pass_txc = in_txc;
+	gl_Position = matrix * vec4(position_v, 0.0, 1.0);
+	uv_f = uv_v;
 }

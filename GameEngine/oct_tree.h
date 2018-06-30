@@ -1,7 +1,7 @@
 #ifndef OCT_TREE_H
 #define OCT_TREE_H
 #include "component.h"
-#include "vectors.h"
+#include "vector.h"
 
 union OctInfo {
 	struct {
@@ -9,7 +9,7 @@ union OctInfo {
 		ushort	ncomponents;
 		ushort	nchildren;
 	} node;
-	CollidableComponent* data;
+	CollidableComponent3* data;
 };
 
 class OctTree {
@@ -21,7 +21,7 @@ public:
 			OctTree			(uint depth);
 			~OctTree		();
 	void	Refresh		();
-	uint	Calculate_Level	(CollidableComponent** read1, uint nread1, CollidableComponent** read2, uint nread2, uint writei, uint depthcount);
+	uint	Calculate_Level	(CollidableComponent3** read1, uint nread1, CollidableComponent3** read2, uint nread2, uint writei, uint depthcount);
 };
 /*
 class OctTreeCoords {

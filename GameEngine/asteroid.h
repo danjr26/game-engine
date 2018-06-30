@@ -10,7 +10,7 @@ public:
 	MeshInstance*	mesh;
 
 	Asteroid(Mesh* meshData, Transform3d transform);
-	bool Collide(CollidableComponent* that, Collision* collision) override;
+	bool Collide(CollidableComponent3* that, Collision* collision) override;
 	static Mesh* Random(int detail, float minr, float maxr);
 };
 */

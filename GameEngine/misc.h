@@ -1,4 +1,4 @@
-#ifndef  MISC_H
+#ifndef MISC_H
 #define MISC_H
 
 #include <math.h>
@@ -10,18 +10,6 @@
 #include <gl/wglew.h>
 #include <functional>
 using namespace std;
-
-#define PI			3.141592653589793
-#define E			2.718281828459045
-#define DEG_TO_RAD	0.017453292519943
-#define RAD_TO_DEG	59.29577951308233
-
-typedef unsigned char uchar;
-typedef unsigned short ushort;
-typedef unsigned int uint;
-typedef unsigned long int ulong;
-typedef long double longd;
-typedef ulong Flags;
 
 template<class T>
 T Clamp(T n, T floor, T ceiling) {
@@ -46,9 +34,62 @@ T Clamp_Ceiling(T n, T ceiling) {
 	return n;
 }
 
-string Double_To_String(double d, int precision);
+template<class T>
+T Mean(T a, T b) {
+	return (a + b) * 0.5;
+}
 
-//void Die(std::string error);
+template<class T>
+bool Is_Between_Exc(T a, T b1, T b2) {
+	if (b1 < b2) {
+		return a > b1 && a < b2;
+	}
+	else {
+		return a > b2 && a < b1;
+	}
+}
+
+template<class T>
+bool Is_Between_Inc(T a, T b1, T b2) {
+	if (b1 < b2) {
+		return a >= b1 && a <= b2;
+	}
+	else {
+		return a >= b2 && a <= b1;
+	}
+}
+
+template<class T>
+T Lesser_Of(T a, T b) {
+	if (b < a) {
+		return b;
+	}
+	else {
+		return a;
+	}
+}
+
+template<class T> 
+T Greater_Of(T a, T b) {
+	if (b > a) {
+		return b;
+	}
+	else {
+		return a;
+	}
+}
+
+template<class T>
+T Lerp(T a, T b, T t) {
+	return a * (1 - t) + b * t;
+}
+
+template<class T>
+T Inv_Lerp(T a, T b, T t) {
+	return (t - a) / b;
+}
+
+string Double_To_String(double d, int precision);
 
 void Test_Function(void* arg);
 

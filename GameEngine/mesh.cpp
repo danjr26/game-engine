@@ -36,11 +36,11 @@ void Material::Apply() {
 	if (prog->name != "default_shader")
 		Die("Wrong shader!");
 
-	glUniform4fv(glGetUniformLocation(prog->vertexArrayID, "mat.amb"), 1, &ambient.r);
-	glUniform4fv(glGetUniformLocation(prog->vertexArrayID, "mat.dif"), 1, &diffuse.r);
-	glUniform4fv(glGetUniformLocation(prog->vertexArrayID, "mat.spe"), 1, &specular.r);
-	glUniform1f(glGetUniformLocation(prog->vertexArrayID, "mat.shi"), shininess);
-	glUniform1i(glGetUniformLocation(prog->vertexArrayID, "mat.lig"), lighting);
+	glUniform4fv(glGetUniformLocation(prog->id, "mat.amb"), 1, &ambient.r);
+	glUniform4fv(glGetUniformLocation(prog->id, "mat.dif"), 1, &diffuse.r);
+	glUniform4fv(glGetUniformLocation(prog->id, "mat.spe"), 1, &specular.r);
+	glUniform1f(glGetUniformLocation(prog->id, "mat.shi"), shininess);
+	glUniform1i(glGetUniformLocation(prog->id, "mat.lig"), lighting);
 }
 
 void Material::Apply(bool front, bool back) {
@@ -244,13 +244,13 @@ SphereTree::~SphereTree() {
 }
 
 SubMesh::SubMesh(Vector3f* vertices, Vector3f* norms, Vector2f* texcs, int nVertices, Material material) :
-vertexArrayID		(0),
+id(0),
 vertbuffer	(0),
 normbuffer	(0),
 texcbuffer	(0),
 indxbuffer	(0),
 material	(material),
-nVertices		(nVertices) {
+nVertices	(nVertices) {
 	Vector3f* vertbufferdata =	new Vector3f[nVertices];
 	Vector3f* normbufferdata =	new Vector3f[nVertices];
 	Vector2f* texcbufferdata =	new Vector2f[nVertices];
@@ -293,8 +293,8 @@ nVertices		(nVertices) {
 			texcbufferdata[i] = Vector2f();
 	}
 
-	glGenVertexArrays(1, &vertexArrayID);
-	glBindVertexArray(vertexArrayID);
+	glGenVertexArrays(1, &id);
+	glBindVertexArray(id);
 	
 	glGenBuffers(1, &vertbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertbuffer);
@@ -328,7 +328,7 @@ SubMesh::~SubMesh() {
 	if (texcbuffer)
 		glDeleteBuffers(1, &texcbuffer);
 	glDeleteBuffers(1, &indxbuffer);
-	glDeleteVertexArrays(1, &vertexArrayID);
+	glDeleteVertexArrays(1, &id);
 }
 
 void SubMesh::Render(Flags callflags) {
@@ -336,8 +336,8 @@ void SubMesh::Render(Flags callflags) {
 	switch(callflags) {
 	case RenderType::shadow:
 		modelmat = modelStack.Top();
-		glUniformMatrix4fv(glGetUniformLocation(ShaderProgram::active->vertexArrayID, "modmatrix"), 1, GL_FALSE, modelmat.data);
-		glBindVertexArray(vertexArrayID);
+		glUniformMatrix4fv(glGetUniformLocation(ShaderProgram::active->id, "modmatrix"), 1, GL_FALSE, modelmat.data);
+		glBindVertexArray(id);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indxbuffer);
 
 		glDisable(GL_CULL_FACE);
@@ -357,13 +357,13 @@ void SubMesh::Render(Flags callflags) {
 			material.texture->Activate();
 ;
 		glActiveTexture(GL_TEXTURE0);
-		glUniformMatrix4fv(glGetUniformLocation(ShaderProgram::active->vertexArrayID, "viematrix"), 1, GL_FALSE, viewmat.data);
-		glUniformMatrix4fv(glGetUniformLocation(ShaderProgram::active->vertexArrayID, "promatrix"), 1, GL_TRUE, projmat.data);
-		glUniformMatrix4fv(glGetUniformLocation(ShaderProgram::active->vertexArrayID, "modmatrix"), 1, GL_FALSE, modelmat.data);
-		glUniform1i(glGetUniformLocation(ShaderProgram::active->vertexArrayID, "tex"), 0);
-		glUniform1i(glGetUniformLocation(ShaderProgram::active->vertexArrayID, "texbnd"), (material.texture != nullptr));
+		glUniformMatrix4fv(glGetUniformLocation(ShaderProgram::active->id, "viematrix"), 1, GL_FALSE, viewmat.data);
+		glUniformMatrix4fv(glGetUniformLocation(ShaderProgram::active->id, "promatrix"), 1, GL_TRUE, projmat.data);
+		glUniformMatrix4fv(glGetUniformLocation(ShaderProgram::active->id, "modmatrix"), 1, GL_FALSE, modelmat.data);
+		glUniform1i(glGetUniformLocation(ShaderProgram::active->id, "tex"), 0);
+		glUniform1i(glGetUniformLocation(ShaderProgram::active->id, "texbnd"), (material.texture != nullptr));
 
-		glBindVertexArray(vertexArrayID);
+		glBindVertexArray(id);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indxbuffer);
 
 		glEnable(GL_CULL_FACE);
@@ -609,9 +609,9 @@ void Mesh::Load_OBJ() {
 		if (length > 7 && s.substr(0, 7) == "map_Kd ") {
 			s = s.substr(7, length - 7);
 			if (GEngine::Get().Resource().Get_Resource(s) != nullptr)
-				currentmatl->texture = (Texture2D*)(GEngine::Get().Resource().Get_Resource(s));
+				currentmatl->texture = (Texture2*)(GEngine::Get().Resource().Get_Resource(s));
 			else {
-				currentmatl->texture = new Texture2D("img/", s, GL_RGBA8, 0);
+				currentmatl->texture = new Texture2("img/", s, GL_RGBA8, 0);
 				currentmatl->texture->Load_TGA();
 			}
 			continue;
@@ -717,7 +717,7 @@ Mesh::~Mesh() {
 }
 
 void Mesh::Render(Flags callflags) {
-	glUseProgram(((ShaderProgram*)GEngine::Get().Resource().Get_Resource("default_shader"))->vertexArrayID);
+	glUseProgram(((ShaderProgram*)GEngine::Get().Resource().Get_Resource("default_shader"))->id);
 	for (int i = 0; i < nsubmeshes; i++)
 		submeshes[i]->Render(callflags);
 	glUseProgram(0);
@@ -1182,7 +1182,62 @@ Mesh::~Mesh() {
 }
 
 CustomArray<Mesh*> Mesh::Load_Mesh_File(string in_filePath, string in_fileName) {
+	ifstream fileStream;
+	fileStream.open(in_filePath + in_fileName);
+	if (!fileStream.is_open()) {
+		throw NotFoundException(in_filePath + in_fileName, string("Mesh:Load_Mesh_File"));
+	}
 	
+	stringstream handOff;
+	handOff << fileStream.rdbuf();
+	string fileString = handOff.str();
+
+	MMLElement rootElement;
+	Parse_MML_String(rootElement, fileString);
+
+	if (rootElement.title != "MeshFile") {
+		InvalidObjectException("Mesh:Mesh_File:invalid mesh file");
+	}
+
+	for (uint i = 0; i < rootElement.children.size(); i++) {
+		MMLElement& element = rootElement.children.at(i);
+		if (element.title == "Textures") {
+			uint nTextures = stoi(element.Get_Attribute("count"));
+			if (nTextures != element.children.size()) {
+				InvalidObjectException("Mesh:Mesh_File:invalid mesh file");
+			}
+			Texture2** textures = new Texture2*[nTextures];
+			for (uint j = 0; j < nTextures; j++) {
+				MMLElement& textureElement = element.children.at(j);
+				if (textureElement.title != "Texture") {
+					InvalidObjectException("Mesh:Mesh_File:invalid mesh file");
+				}
+				new Texture2("", textureElement.Get_Attribute("fileName"), GL_RGBA8
+			}
+			continue;
+		}
+		if (element.title == "Materials") {
+
+			continue;
+		}
+		if (element.title == "Meshes") {
+
+			continue;
+		}
+		InvalidObjectException("Mesh:Mesh_File:invalid mesh file");
+	}
 }
 
+string MMLElement::Get_Attribute(string in_key) {
+	if (attributes.count(in_key) == 0) {
+		throw NotFoundException(in_key, "MMLAttribute:Get_Attribute");
+	}
+	return attributes.at(in_key);
+}
 
+string MMLElement::Get_Attribute(string in_key, string in_defaultValue) {
+	if (attributes.count(in_key) == 0) {
+		return in_defaultValue;
+	}
+	return attributes.at(in_key);
+}

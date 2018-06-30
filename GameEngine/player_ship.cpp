@@ -277,7 +277,7 @@ trans					(settings.startup, settings.cooldown) {
 	MeshBlanketSettings mbsettings = {
 		new PlayerShipShieldMesBlaGen(),
 		parent->mesh,
-		(Texture2D*)GEngine::Get().Resource().Get("glow.tga"),
+		(Texture2*)GEngine::Get().Resource().Get("glow.tga"),
 		BlendSettings {
 			true,
 			GL_ONE_MINUS_SRC_ALPHA,
@@ -353,7 +353,7 @@ firstperson		(false) {
 		new PlayerShipTrailGen(this),
 		new PlayerShipTrailPop(),
 		Transform3d(Vector3d()),
-		(Texture2D*)GEngine::Get().Resource().Get("explosion.tga"),
+		(Texture2*)GEngine::Get().Resource().Get("explosion.tga"),
 		BlendSettings{
 		true,
 		GL_ONE,
@@ -378,7 +378,7 @@ firstperson		(false) {
 		Vector3d(0, 0, -1), 180.0f,
 		1.0f, 1.5f,
 		2.0f, 2.0f,
-		(Texture2D*) GEngine::Get().Resource().Get_Resource("smoke.tga"),
+		(Texture2*) GEngine::Get().Resource().Get_Resource("smoke.tga"),
 		Vector2f(1, 1), 0.5, 1.0, 
 		Color4f(0.5, 0.5, 0.5, 0.5),
 		Color4f(0.0, 0.0, 0.0, 0.0),
@@ -434,7 +434,7 @@ void PlayerShip::Set_Person(bool firstperson) {
 }
 
 void PlayerShip::Update(double t) {
-//	CollidableComponent::stepper.step = (velocity.Is_Zero()) ? 1.0 : 1.0 / velocity.Magnitude();
+//	CollidableComponent3::stepper.step = (velocity.Is_Zero()) ? 1.0 : 1.0 / velocity.Magnitude();
 	propulsion.		Update(t);
 	reactor.		Update(t);
 	shield.			Update(t);
@@ -454,7 +454,7 @@ void PlayerShip::Update(double t) {
 	//smoke->settings.position = transform.S_To_O(Vector3d(0.25, 1, 1));
 }
 
-bool PlayerShip::Collide(CollidableComponent* that, Collision* collision) {
+bool PlayerShip::Collide(CollidableComponent3* that, Collision* collision) {
 	switch (that->type) {
 	case Identity::pulse:
 		new CameraShake(0.4, 0.1, 1.2);

@@ -139,12 +139,12 @@ void InitScript::Init_Meshes() {
 
 void InitScript::Init_Fonts() {
 	for (int i = 0; i < file.nfonts; i++)
-		new Font(file.fontpath, file.fonts[i]);
+		new FontFace(file.fontpath, file.fonts[i]);
 }
 
 void InitScript::Init_Textures() {
 	for (int i = 0; i < file.ntextures; i++) {
-		Texture2D* texture = new Texture2D(file.texturepath, file.textures[i], GL_RGBA8, 0);
+		Texture2* texture = new Texture2(file.texturepath, file.textures[i], GL_RGBA8, 0);
 		texture->Load_TGA();
 	}
 }

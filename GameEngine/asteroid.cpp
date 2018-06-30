@@ -8,7 +8,7 @@ meshData(meshData) {
 	mesh->transform = transform;
 }
 
-bool Asteroid::Collide(CollidableComponent* that, Collision* collision) {
+bool Asteroid::Collide(CollidableComponent3* that, Collision* collision) {
 	return false;
 }
 
@@ -52,7 +52,7 @@ Mesh* Asteroid::Random(int detail, float minr, float maxr) {
 	Material matl;
 	matl.ambient = Color4f(0.05f, 0.05f, 0.05f, 1.0f);
 	matl.diffuse = Color4f(0.5f, 0.25f, 0.1f, 1.0f);
-	matl.texture = (Texture2D*)GEngine::Get().Resource().Get_Resource("rock.tga");
+	matl.texture = (Texture2*)GEngine::Get().Resource().Get_Resource("rock.tga");
 
 	Mesh* mesh = new Mesh("", "asteroid");
 	mesh->Load_Raw(icosphere.vertices, icosphere.norms, icosphere.texcs, icosphere.ntris, matl);

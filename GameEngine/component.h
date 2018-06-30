@@ -3,101 +3,13 @@
 #include "array.h"
 #include "transform.h"
 #include "misc.h"
-#include <mutex>
 
-class	CollisionMask;
+class	SphereTreeCollisionMask;
 struct	Collision;
 class	MechTR;
 class	AITR;
 class	SphereTree;
 class	Clock;
-
-class MutexProtected {
-public:
-	mutable std::mutex mutex;
-
-	MutexProtected();
-	~MutexProtected();
-};
-
-class Stepper {
-public:
-	double step;
-	double accumulation;
-
-			Stepper		(double in_step);
-			Stepper		(double in_step, double in_accumulation);
-			~Stepper	();
-	int		Step_Number	(double in_newAccumulation);
-	double	Step_Total	(double in_newAccumulation);
-};
-
-class ProgressTracker {
-public:
-	double	accumulation;
-	double	maxAccumulation;
-	bool	capAtMax;
-
-			ProgressTracker	(double in_maxAccumulation, bool in_capAtMax);
-	void	Update			(double in_newAccumulation);
-	double	Progress		() const;
-	double	Inv_Progress	() const;
-	bool	Is_Done			() const;
-
-	template<class T>
-	T Lin_Interp(T in_a, T in_b) const {
-		double progress = Progress(); 
-		double inverseProgress = 1.0 - progress;
-		return (T)(in_a * inverseProgress + in_b * progress);
-	} 
-};
-
-namespace TransitionStates {
-	enum : Flags {
-		off,
-		offToOn,
-		on,
-		onToOff
-	};
-}
-
-class TransitionTracker {
-private:
-	Flags			state;
-	ProgressTracker	progressTracker;
-	double			offToOnDuration;
-	double			onToOffDuration;
-
-public:
-			TransitionTracker			(double in_offToOnDuration, double in_onToOffDuration);
-	void	Update						(double in_newAccumulation);
-	void	Turn_On						();
-	void	Turn_Off					();
-	void	Toggle						();
-	bool	Is_Transitioning			() const;
-	Flags	Get_State					() const;
-	double	Get_Turn_On_Duration		() const;
-	double	Get_Turn_Off_Duration		() const;
-	double	Get_Progress_Accumulation	() const;
-	void	Set_State					(Flags in_state);
-	void	Set_Turn_On_Duration		(double in_offToOnDuration);
-	void	Set_Turn_Off_Duration		(double in_onToOffDuration);
-	void	Set_Progress_Accumulation	(double in_progressAccumulation);
-	template<class T>
-	T Lin_Interp(T in_a, T in_b) const {
-		switch (state) {
-		case TransitionStates::on:
-			return in_b;
-		case TransitionStates::off:
-			return in_a;
-		case TransitionStates::offToOn:
-			return progressTracker.Lin_Interp(in_a, in_b);
-		case TransitionStates::onToOff:
-			return progressTracker.Lin_Interp(in_b, in_a);
-		}
-		return in_a;
-	}
-};
 
 class MechanicalComponent {
 	friend class MechanicsManager;
@@ -171,20 +83,20 @@ enum class Identity : Flags {
 	explosionblast
 };
 
-class CollidableComponent {
+class CollidableComponent3 {
 	friend class CollisionManager;
 private:
 	uint collisionManagerArrayIndex;
 protected:
-	CollisionMask*	mask;
+	CollisionMask3*	mask;
 	Identity		type;
 
 public:
-							CollidableComponent		(Identity in_type, CollisionMask* in_mask);
-	virtual					~CollidableComponent	();
-	virtual bool			Collide					(const CollidableComponent* in_that, const Collision* in_collision);
-	virtual bool			Should_Check_Collision	(const CollidableComponent* in_that) const;
-	CollisionMask const*	Mask					() const;
+							CollidableComponent3		(Identity in_type, SphereTreeCollisionMask* in_mask);
+	virtual					~CollidableComponent3	();
+	virtual bool			Collide					(const CollidableComponent3* in_that, const Collision* in_collision);
+	virtual bool			Should_Check_Collision	(const CollidableComponent3* in_that) const;
+	SphereTreeCollisionMask const*	Mask					() const;
 	Identity				Type					() const;
 };
 
@@ -194,7 +106,7 @@ enum class Allegiance : Flags {
 	neutral
 };
 
-class Entity : public MechanicalComponent, public CollidableComponent {
+class Entity : public MechanicalComponent, public CollidableComponent3 {
 public:
 	Transform3d	transform;
 	Vector3d	velocity;
@@ -202,22 +114,20 @@ public:
 	Allegiance	allegiance;
 	uint		entityManagerArrayIndex;
 
-					Entity					(Transform3d in_transform, Identity in_type, Allegiance in_allegiance, 
-						SphereTree* in_tree, double in_mechanicsStep);
+					Entity					(Transform3d in_transform, Identity in_type, Allegiance in_allegiance, SphereTreeCollisionMask in_mask, double in_mechanicsStep);
 	virtual			~Entity					();
 	virtual void	Update					(double in_timePassed);
-	virtual bool	Collide					(const CollidableComponent* in_that, const Collision* in_collision) override;
-	virtual bool	Should_Check_Collision	(const CollidableComponent* in_that) const override;
+	virtual bool	Collide					(const CollidableComponent3* in_that, const Collision* in_collision) override;
+	virtual bool	Should_Check_Collision	(const CollidableComponent3* in_that) const override;
 };
 
 class NPC : public Entity, public AIComponent {
 public:
-					NPC						(Transform3d in_transform, Identity in_type, Allegiance in_allegiance, 
-						SphereTree* in_tree, double in_mechanicsStep, double in_aiSstep);
+					NPC						(Transform3d in_transform, Identity in_type, Allegiance in_allegiance, SphereTreeCollisionMask in_mask, double in_mechanicsStep, double in_aiSstep);
 	virtual			~NPC					();
 	virtual void	Update					(double in_timePassed) override;
-	virtual bool	Collide					(const CollidableComponent* in_that, const Collision* in_collision) override;
-	virtual bool	Should_Check_Collision	(const CollidableComponent* in_that) const override;
+	virtual bool	Collide					(const CollidableComponent3* in_that, const Collision* in_collision) override;
+	virtual bool	Should_Check_Collision	(const CollidableComponent3* in_that) const override;
 	virtual void	Refresh					() override;
 };
 /*

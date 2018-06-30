@@ -2,26 +2,28 @@
 #define CLOCK_H
 #include <Windows.h>
 #include <chrono>
-#include "component.h"
+#include <mutex>
 
-using SysClock =		std::chrono::high_resolution_clock;
-using SysTimePoint =	std::chrono::time_point<SysClock>;
-using ExactTime =		SysClock::duration;
+using SysClock = std::chrono::high_resolution_clock;
+using SysTimePoint = std::chrono::time_point<SysClock>;
+using ExactTime = SysClock::duration;
 
-class Clock : public MutexProtected {
+class Clock {
 private:
+	mutable std::mutex mutex;
 	SysTimePoint startTime;
 	SysTimePoint pauseTime;
 
 public:
 	Clock();
+	Clock(const Clock& in_source);
 
-	double	Now			();
+	double	Now			() const;
 	void	Set_Epoch	();
 	void	Set_Epoch	(double in_epoch);
 	void	Pause		();
 	void	Resume		();
-	bool	Is_Paused	();
+	bool	Is_Paused	() const;
 };
 
 #endif

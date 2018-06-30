@@ -90,12 +90,12 @@ class ParticleSystem : public MechanicalComponent {
 public:
 	ParticleData	data;
 	Transform3d		transform;
-	Texture2D*		texture;
+	Texture2*		texture;
 	BlendSettings	blend;
 	int				psmindex;
 	int				face;
 
-					ParticleSystem	(Transform3d transform, Texture2D* texture, BlendSettings blend, 
+					ParticleSystem	(Transform3d transform, Texture2* texture, BlendSettings blend, 
 						int maxpcls, int nelem, double step, int face);
 	virtual			~ParticleSystem	();
 	virtual void	Update			(double t) override;
@@ -151,7 +151,7 @@ struct EmitterSettings {
 	EmitterGenerator*	generator;
 	EmitterPopulator*	populator;
 	Transform3d			transform;
-	Texture2D*			texture;
+	Texture2*			texture;
 	BlendSettings		blend;
 	int					maxpcls;
 	int					npcls;
@@ -267,7 +267,7 @@ public:
 struct MeshBlanketSettings {
 	MeshBlanketGenerator*	generator;
 	MeshInstance*			parent;
-	Texture2D*				texture;
+	Texture2*				texture;
 	BlendSettings			blend;
 	int						npcls;
 	bool					statics[MB__END];

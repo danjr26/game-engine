@@ -5,19 +5,22 @@
 #include <sstream>
 #include <utility>
 #include <map>
-#include "vectors.h"
+#include "vector.h"
 #include "resources.h"
 #include "shader.h"
 #include "texture.h"
 
 class Mesh;
-class Texture2D;
+class Texture2;
 
 struct MMLElement {
 	string title;
 	string body;
 	std::map<uint, MMLElement> children;
 	std::map<string, string> attributes;
+
+	string Get_Attribute(string in_key);
+	string Get_Attribute(string in_key, string in_defaultValue);
 };
 
 void Parse_MML_String(MMLElement& inout_element, string in_string);
@@ -37,62 +40,6 @@ public:
 				Material(string in_name, Color4f in_ambient, Color4f in_diffuse, Color4f in_specular, 
 		Color4f in_emission, BlendSettings in_blendSettings = BlendSettings());
 };
-
-template<class T>
-class Plane {
-public:
-	enum Side {
-		front,
-		on,
-		back
-	};
-private:
-	T pointDot;
-	Vector3<T> axis;
-
-public:
-	Plane(Vector3<T> in_point, Vector3<T> in_axis) :
-	pointDot(in_point),
-	axis	(in_axis)
-	{}
-
-	Side Which_Side(Vector3<T> in_point) {
-		T thatDot = axis.Dot(in_point);
-
-		if (thatDot > pointDot) {
-			return Side::front;
-		}
-		if (thatDot < pointDot) {
-			return Side::back;
-		} 
-		return Side::on;
-	}
-
-	T Signed_Distance_To(Vector3<T> in_point) {
-		return axis.Dot(in_point) - pointDot;
-	}
-
-	T Unsigned_Distance_To(Vector3<T> in_point) {
-		return abs(axis.Dot(in_point) - pointDot);
-	}
-
-	template<class T>
-	Vector3<T> Coincidence(Plane<T> in_plane) {
-		return axis.Cross(in_plane.axis);
-	}
-};
-
-using Planef = Plane<float>;
-using Planed = Plane<double>;
-
-template<class T>
-struct Sphere {
-	Vector3<T>	center;
-	T			radius;
-};
-
-using Spheref = Sphere<float>;
-using Sphered = Sphere<double>;
 
 class SphereNode {
 private:

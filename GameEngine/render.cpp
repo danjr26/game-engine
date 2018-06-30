@@ -1,128 +1,6 @@
 #include "render.h"
 #include "framework.h"
 
-Window::Window(HINSTANCE hinst, Vector2i dim, std::wstring name) {
-	winclass.hInstance =		hinst;
-	winclass.lpszClassName =	name.c_str();
-	winclass.lpfnWndProc =		WindowProc;
-	winclass.style =			CS_DBLCLKS | CS_OWNDC;
-	winclass.cbSize =			sizeof(WNDCLASSEX);
-	winclass.hIcon =			LoadIcon(nullptr, IDI_APPLICATION);
-	winclass.hIconSm =			LoadIcon(nullptr, IDI_APPLICATION);
-	winclass.hCursor =			LoadCursor(nullptr, IDC_ARROW);
-	winclass.lpszMenuName =		nullptr;
-	winclass.cbClsExtra =		0;
-	winclass.cbWndExtra =		0;
-	winclass.hbrBackground =	(HBRUSH)COLOR_BACKGROUND;
-
-	if (!RegisterClassEx(&winclass)) {
-		throw MethodFailureException("Window:Window:RegisterClassEx");
-	}
-
-	RECT rect = { 0, 0, dim.x, dim.y };
-;
-	if (!AdjustWindowRect((LPRECT)&rect, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU, false)) {
-		throw MethodFailureException("Window:Window:AdjustWindowRect");
-	}
-
-	hwnd = CreateWindowEx(
-		0,                   
-		winclass.lpszClassName,
-		winclass.lpszClassName,       	
-		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU,
-		CW_USEDEFAULT,       
-		CW_USEDEFAULT,       
-		rect.right - rect.left,                
-		rect.bottom - rect.top,                 
-		HWND_DESKTOP,        
-		nullptr,               
-		hinst,      
-		nullptr 
-	);
-
-	hdc = GetDC(hwnd);
-	PIXELFORMATDESCRIPTOR pfd = {
-		sizeof(PIXELFORMATDESCRIPTOR),
-		1,
-		PFD_DRAW_TO_WINDOW |
-		PFD_DOUBLEBUFFER |
-		PFD_SUPPORT_OPENGL,
-		PFD_TYPE_RGBA,
-		32,
-		0, 0, 0, 0, 0, 0, 0, 0,
-		0,
-		0, 0, 0, 0,
-		32,
-		0,
-		0,
-		0,
-		PFD_MAIN_PLANE,
-		0, 0, 0
-	};
-
-	int pixelformat = ChoosePixelFormat(hdc, &pfd);
-
-	SetPixelFormat(hdc, pixelformat, &pfd);
-
-	hglrc = wglCreateContext(hdc);
-	wglMakeCurrent(hdc, hglrc);
-	
-	HGLRC testhglrc = wglGetCurrentContext();
-
-	ShowWindow(hwnd, SW_SHOWNORMAL);
-}
-
-Window::~Window() {
-	std::lock_guard<std::mutex> lock(mutex);
-	DestroyWindow(hwnd);
-}
-
-void Window::Flip_Buffers() {
-	std::lock_guard<std::mutex> lock(mutex);
-	SwapBuffers(hdc);
-}
-
-Vector2i Window::Get_Pos() {
-	std::lock_guard<std::mutex> lock(mutex);
-	RECT rect;
-	GetClientRect(hwnd, &rect);
-	return Vector2i(rect.left, rect.top);
-}
-
-Vector2i Window::Get_Dim() {
-	std::lock_guard<std::mutex> lock(mutex);
-	RECT rect;
-	GetClientRect(hwnd, &rect);
-	return Vector2i(rect.right - rect.left, rect.bottom - rect.top);
-}
-
-Vector2i Window::Get_Full_Pos() {
-	std::lock_guard<std::mutex> lock(mutex);
-	RECT rect;
-	GetWindowRect(hwnd, &rect);
-	return Vector2i(rect.left, rect.top);
-}
-
-Vector2i Window::Get_Full_Dim() {
-	std::lock_guard<std::mutex> lock(mutex);
-	RECT rect;
-	GetWindowRect(hwnd, &rect);
-	return Vector2i(rect.right - rect.left, rect.bottom - rect.top);
-}
-
-void Window::Set_Position(Vector2i pos) {
-	std::lock_guard<std::mutex> lock(mutex);
-	SetWindowPos(hwnd, 0, pos.x, pos.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-}
-
-void Window::Set_Dim(Vector2i dim) {
-	std::lock_guard<std::mutex> lock(mutex);
-	SetWindowPos(hwnd, 0, 0, 0, dim.x, dim.y, SWP_NOMOVE | SWP_NOZORDER);
-}
-
-HWND Window::Get_Handle() {
-	return hwnd;
-}
 
 RenderManager::RenderManager(Vector2i resolution, double step) :
 components		(1024, offsetof(class RenderComponent, renderManagerArrayIndex)),
@@ -151,10 +29,10 @@ resolution		(resolution) {
 	lasermanager.Init_Arrays();
 	psmanager.Init_Arrays();
 
-	Texture2D* fbcoltex1 = new Texture2D("", "fbcol", GL_RGBA16F, 0);
-	Texture2D* fbdeptex1 = new Texture2D("", "fbdep", GL_DEPTH_COMPONENT, 0);
-	Texture2D* fbcoltex2 = new Texture2D("", "fbcol", GL_RGBA16F, 0);
-	Texture2D* fbdeptex2 = new Texture2D("", "fbdep", GL_DEPTH_COMPONENT, 0);
+	Texture2* fbcoltex1 = new Texture2("", "fbcol", GL_RGBA16F, 0);
+	Texture2* fbdeptex1 = new Texture2("", "fbdep", GL_DEPTH_COMPONENT, 0);
+	Texture2* fbcoltex2 = new Texture2("", "fbcol", GL_RGBA16F, 0);
+	Texture2* fbdeptex2 = new Texture2("", "fbdep", GL_DEPTH_COMPONENT, 0);
 
 	Color4c white = Color4c(1, 1, 1, 1);
 	fbcoltex1->Load_Blank(&white.r, 800, 600, 4);

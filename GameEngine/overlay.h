@@ -38,7 +38,7 @@ public:
 	Transform2d		transform;
 	double			depth;
 
-	Texture2D*		tex;
+	Texture2*		tex;
 	Color4f			col;
 	BlendSettings	blend;
 
@@ -47,7 +47,7 @@ public:
 	Flags			flags;
 
 public:
-						Rect2D			(Transform2d transform, double depth, Texture2D* tex, Color4f col, uint maxchildren);
+						Rect2D			(Transform2d transform, double depth, Texture2* tex, Color4f col, uint maxchildren);
 						~Rect2D			();
 	virtual void		Render			();
 	virtual bool		Process_Click	(Vector2d coords);
@@ -63,7 +63,7 @@ public:
 	double	timeAccumulation;
 	double	lifet;
 
-					ScreenFade	(Texture2D* tex, Color4f color1, Color4f color2, double lifet);
+					ScreenFade	(Texture2* tex, Color4f color1, Color4f color2, double lifet);
 					~ScreenFade	();
 	void			Reset		();
 	void			Reverse		();
@@ -71,7 +71,7 @@ public:
 };
 
 struct SimpleRectButtonSettings {
-	Texture2D*	tex;
+	Texture2*	tex;
 	Color4f		color;
 	Color4f		textcolor;
 	

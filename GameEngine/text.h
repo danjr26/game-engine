@@ -10,7 +10,7 @@ extern "C" {
 #include "texture.h"
 #include <sstream>
 
-class Font;
+class FontFace;
 
 class TextManager {
 public:
@@ -28,21 +28,21 @@ public:
 	GLuint			texes;
 	Vector2f		texdim;
 	Vector2f		texcs	['~' - ' ' + 1];
-	Font*			font;
+	FontFace*		font;
 	int				size;
 	uint			findex;
 
-	FontSize	(Font* font, int size);
+	FontSize	(FontFace* font, int size);
 	~FontSize	();
 };
 
-class Font : public Resource {
+class FontFace : public Resource {
 public:
 	FT_Face		font;
 	IndexedArray<FontSize> sizes;
 	
-				Font		(std::string path, std::string name);
-				~Font		();
+				FontFace		(std::string path, std::string name);
+				~FontFace		();
 	void		Cache_Size	(int size);
 	void		Uncache_Size(int size);
 	FontSize*	Get_Size	(int size);
@@ -55,7 +55,7 @@ enum TextJustify {
 };
 
 struct TextFormat {
-	Font*		font;
+	FontFace*	font;
 	TextJustify	justify;
 	Color4f		color;
 	int			size;

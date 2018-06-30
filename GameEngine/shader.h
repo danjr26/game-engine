@@ -1,59 +1,42 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include "resources.h"
-/*
-namespace ShaderFlags {
-	enum : Flags {
-		resposloc = 0,
-		resnorloc = 1,
-		rescolloc = 2,
-		restxcloc = 3,
+#include <GL\glew.h>
+#include <string>
+#include <fstream>
+#include "log.h"
+#include "definitions.h"
+#include "asset.h"
 
-		resmodmatloc = 0,
-		resviematloc = 1,
-		respromatloc = 2,
-		rescoltexloc = 3,
-		rescoltexbndloc = 4
-	};
-}*/
-
-struct BlendSettings {
-	GLenum	destinationFactor;
-	GLenum	sourceFactor;
-	GLenum	operation;
-	bool	useBlending;
-
-	BlendSettings(bool useBlending = false, GLenum in_destinationFactor = GL_ZERO, GLenum in_sourceFactor = GL_ONE, GLenum in_operation = GL_ADD);
-};
-
-class Shader : public Resource {
+class Shader : public Asset {
+	friend class ShaderProgram;
 public:
 	enum AttributeIndex {
-		vertex,
-		normal,
-		color,
-		uv,
-		materialIndex
+		position = 0,
+		normal = 1,
+		color = 2,
+		uv = 3
 	};
-	GLuint shadertype;
-	GLuint vertexArrayID;
 
-	Shader	(GLuint shader, string path, string name);
-	~Shader	();
-};
+	enum class Type : GLuint {
+		vertex = GL_VERTEX_SHADER,
+		fragment = GL_FRAGMENT_SHADER,
+		geometry = GL_GEOMETRY_SHADER,
+		tess_control = GL_TESS_CONTROL_SHADER,
+		tess_eval = GL_TESS_EVALUATION_SHADER,
+		compute = GL_COMPUTE_SHADER
+	};
 
-class ShaderProgram : public Resource {
+private:
+	Type type;
+	GLuint id;
+
 public:
-	static ShaderProgram* active;
-	GLuint	vertexArrayID;
-
-			ShaderProgram	(string name, Shader* vshader, Shader* fshader, Shader* gshader, Shader* tshader);
-			~ShaderProgram	();
-	void	Activate		();
-
-	static void Activate	(string name);
-	static void Deactivate	();
+	Shader(Type in_type, std::string in_filename);
+	~Shader();
+	Type Get_Type();
 };
+
+
 
 #endif

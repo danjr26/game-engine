@@ -94,14 +94,14 @@ void SwarmDroid::Update(double t) {
 		else
 			return;
 	}
-//	CollidableComponent::stepper.step = 2.5 / velocity.Magnitude();
+//	CollidableComponent3::stepper.step = 2.5 / velocity.Magnitude();
 	reactor.	Update(t);
 	propulsion.	Update(t);
 	pulsegun.	Update(t);
 	mesh->transform = transform;
 }
 
-bool SwarmDroid::Collide(CollidableComponent* that, Collision* collision) {
+bool SwarmDroid::Collide(CollidableComponent3* that, Collision* collision) {
 	/*switch (that->type) {
 	case TYPE_PULSE:
 		if (((Pulse*)that)->parent == (Entity*)this)
@@ -160,7 +160,7 @@ void DefaultExplosion(Vector3d position, float size) {
 		new ExplosionSmokeGen(size),
 		nullptr,
 		Transform3d(position),
-		(Texture2D*)GEngine::Get().Resource().Get("explosion.tga"),
+		(Texture2*)GEngine::Get().Resource().Get("explosion.tga"),
 		BlendSettings{
 		true,
 		GL_ONE_MINUS_SRC_ALPHA,
@@ -177,7 +177,7 @@ void DefaultExplosion(Vector3d position, float size) {
 		new ExplosionFlameGen(size),
 		nullptr,
 		Transform3d(position),
-		(Texture2D*)GEngine::Get().Resource().Get("explosion.tga"),
+		(Texture2*)GEngine::Get().Resource().Get("explosion.tga"),
 		BlendSettings{
 		true,
 		GL_ONE,
@@ -194,7 +194,7 @@ void DefaultExplosion(Vector3d position, float size) {
 		new ExplosionFlashGen(size),
 		nullptr,
 		Transform3d(position),
-		(Texture2D*)GEngine::Get().Resource().Get("explosion.tga"),
+		(Texture2*)GEngine::Get().Resource().Get("explosion.tga"),
 		BlendSettings{
 		true,
 		GL_ONE,
@@ -211,7 +211,7 @@ void DefaultExplosion(Vector3d position, float size) {
 		new ExplosionSparksGen(size),
 		nullptr,
 		Transform3d(position),
-		(Texture2D*)GEngine::Get().Resource().Get("explosion.tga"),
+		(Texture2*)GEngine::Get().Resource().Get("explosion.tga"),
 		BlendSettings{
 		true,
 		GL_ONE,
@@ -228,7 +228,7 @@ void DefaultExplosion(Vector3d position, float size) {
 		new ExplosionSparkTrailsGen(size),
 		nullptr,
 		Transform3d(position),
-		(Texture2D*)GEngine::Get().Resource().Get("explosion.tga"),
+		(Texture2*)GEngine::Get().Resource().Get("explosion.tga"),
 		BlendSettings{
 		true,
 		GL_ONE,
@@ -245,7 +245,7 @@ void DefaultExplosion(Vector3d position, float size) {
 		new ExplosionSmokeTrailsGen(size),
 		nullptr,
 		Transform3d(position),
-		(Texture2D*)GEngine::Get().Resource().Get("explosion.tga"),
+		(Texture2*)GEngine::Get().Resource().Get("explosion.tga"),
 		BlendSettings{
 		true,
 		GL_ONE_MINUS_SRC_ALPHA,

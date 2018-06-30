@@ -117,7 +117,7 @@ public:
 	void			Take_Damage	(float damage);
 	void			Set_Person	(bool firstperson);
 	virtual void	Update		(double tstep);
-	virtual bool	Collide		(CollidableComponent* that, Collision* collision);
+	virtual bool	Collide		(CollidableComponent3* that, Collision* collision);
 };
 
 

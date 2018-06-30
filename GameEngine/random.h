@@ -1,6 +1,6 @@
 #ifndef RANDOM_H
 #define RANDOM_H
-#include "vectors.h"
+#include "vector.h"
 
 int		Rand_Int	(int floor, int ceiling);
 float	Rand_Float	(float floor, float ceiling);

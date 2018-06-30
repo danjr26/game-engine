@@ -11,13 +11,13 @@ OctTree::~OctTree()
 {}
 
 void OctTree::Refresh() {
-	IndexedArray<CollidableComponent>& components = GEngine::Get().Collision().components;
+	IndexedArray<CollidableComponent3>& components = GEngine::Get().Collision().components;
 	for (int i = 0; i < 1024; i++)
 		structure[i].data = nullptr;
 	length = Calculate_Level(components.Pointer(), components.Size(), nullptr, 0, 0, 0);
 }
 
-uint OctTree::Calculate_Level(CollidableComponent** read1, uint nread1, CollidableComponent** read2, uint nread2, uint writei, uint depthcount) {
+uint OctTree::Calculate_Level(CollidableComponent3** read1, uint nread1, CollidableComponent3** read2, uint nread2, uint writei, uint depthcount) {
 	if (writei + 1 + nread1 + nread2 >= 1024)
 		Die("OctTree.Calculate_Level: overflow");
 	OctInfo node;

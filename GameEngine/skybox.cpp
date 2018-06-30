@@ -3,18 +3,18 @@
 
 Skybox::Skybox(string path, string name) :
 RenderComponent(RenderType::first) {
-	Texture2D* texes[6];
-	texes[0] = new Texture2D(path, name + "_right1.tga", GL_RGBA8, TextureFlags::readable);
-	texes[1] = new Texture2D(path, name + "_left2.tga", GL_RGBA8, TextureFlags::readable);
-	texes[2] = new Texture2D(path, name + "_top3.tga", GL_RGBA8, TextureFlags::readable);
-	texes[3] = new Texture2D(path, name + "_bottom4.tga", GL_RGBA8, TextureFlags::readable);
-	texes[4] = new Texture2D(path, name + "_front5.tga", GL_RGBA8, TextureFlags::readable);
-	texes[5] = new Texture2D(path, name + "_back6.tga", GL_RGBA8, TextureFlags::readable);
+	Texture2* texes[6];
+	texes[0] = new Texture2(path, name + "_right1.tga", GL_RGBA8, TextureFlags::readable);
+	texes[1] = new Texture2(path, name + "_left2.tga", GL_RGBA8, TextureFlags::readable);
+	texes[2] = new Texture2(path, name + "_top3.tga", GL_RGBA8, TextureFlags::readable);
+	texes[3] = new Texture2(path, name + "_bottom4.tga", GL_RGBA8, TextureFlags::readable);
+	texes[4] = new Texture2(path, name + "_front5.tga", GL_RGBA8, TextureFlags::readable);
+	texes[5] = new Texture2(path, name + "_back6.tga", GL_RGBA8, TextureFlags::readable);
 	for (int i = 0; i < 6; i++)
 		texes[i]->Load_TGA();
 
 	Color4c white = Color4c(255, 255, 255, 255);
-	Texture2D whitetex = Texture2D("", "", GL_RGBA8, TextureFlags::readable);
+	Texture2 whitetex = Texture2("", "", GL_RGBA8, TextureFlags::readable);
 	whitetex.Load_Blank(&white.r, 200, 200, 4);
 
 	glActiveTexture(GL_TEXTURE1);

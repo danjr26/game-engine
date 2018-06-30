@@ -7,7 +7,7 @@
 #include "component.h"
 #include "texture.h"
 #include "camera.h"
-#include "vectors.h"
+#include "vector.h"
 #include "light.h"
 #include "fx.h"
 #include "particle_system.h"
@@ -18,26 +18,6 @@
 #include "trq.h"
 
 class RenderTR;
-
-class Window : MutexProtected {
-private:
-	HWND		hwnd;
-	WNDCLASSEX	winclass;
-	HDC			hdc;
-	HGLRC		hglrc;
-
-public:
-				Window		(HINSTANCE hinst, Vector2i dim, std::wstring name);
-				~Window		();
-	void		Flip_Buffers();
-	Vector2i	Get_Pos		();
-	Vector2i	Get_Dim		();	
-	Vector2i	Get_Full_Pos();
-	Vector2i	Get_Full_Dim();
-	void		Set_Position(Vector2i pos);
-	void		Set_Dim		(Vector2i dim);
-	HWND		Get_Handle	();
-};
 
 
 namespace RenderType {

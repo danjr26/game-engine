@@ -42,8 +42,8 @@ public:
 			Laser		(Entity* parent, LaserSettings& settings, Transform3d& transform);
 			~Laser		();
 	void	Update		(double t) override final;
-	bool	Collide		(CollidableComponent* that, Collision* collision) override final;
-	bool	Should_Check_Collision(CollidableComponent* that) override final;
+	bool	Collide		(CollidableComponent3* that, Collision* collision) override final;
+	bool	Should_Check_Collision(CollidableComponent3* that) override final;
 };
 
 class Missile : public NPC {
@@ -57,7 +57,7 @@ public:
 					Missile		(Entity* parent, Entity* target, MissileSettings& settings, Transform3d& transform);
 					~Missile	();
 	virtual void	Update		(double t);
-	virtual bool	Collide		(CollidableComponent* that, Collision* collision);
+	virtual bool	Collide		(CollidableComponent3* that, Collision* collision);
 	virtual void		(double t);
 };
 
@@ -72,8 +72,8 @@ public:
 			Pulse		(Entity* parent, PulseSettings& settings, Transform3d& transform);
 			~Pulse		();
 	void	Update		(double t);
-	bool	Collide		(CollidableComponent* that, Collision* collision);
-	bool	Should_Check_Collision(CollidableComponent* that) override final;
+	bool	Collide		(CollidableComponent3* that, Collision* collision);
+	bool	Should_Check_Collision(CollidableComponent3* that) override final;
 };
 
 class PulseOrb : public Entity {
@@ -81,7 +81,7 @@ public:
 	
 };
 
-class ExplosionBlast : public MechanicalComponent, public CollidableComponent {
+class ExplosionBlast : public MechanicalComponent, public CollidableComponent3 {
 public:
 	Transform3d transform;
 	Vector3d	vel;
@@ -94,7 +94,7 @@ public:
 						float damagek, float forcek);
 					~ExplosionBlast	();
 	virtual void	Update			(double t);
-	virtual bool	Collide			(CollidableComponent* that, Collision* collision);
+	virtual bool	Collide			(CollidableComponent3* that, Collision* collision);
 	float			Get_Damage		(float d);
 	float			Get_Force		(float d);
 };

@@ -1,141 +1,89 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include <Windows.h>
-#include <gl/glew.h>
-#include <GL/wglew.h>
-#include <fstream>
-#include <string>
-#include "resources.h"
+#include "definitions.h"
+#include <GL\glew.h>
+#include "definitions.h"
+#include "vector.h"
+#define cimg_use_png
+#include "CImg-2.2.3\CImg.h"
+#include "texture_settings.h"
+#include "asset.h"
 
-
-
-namespace TextureFlags {
-	enum {
-		readable =	0x01,
-		mipmaps =	0x02
-	};
-}
-
-class Texture2D: public Resource {
+class Texture : public Asset {
+	friend class TextureSettings;
 	friend class Framebuffer;
-private:
-	CustomArray
-		<uchar> data;
-	uint	textureID;
-
-	GLenum	pixelFormat;
-	GLenum	internalFormat;
-
-	Vector2i dimensions;
-	uchar	nComponents;
-	Flags	flags;
-
-	bool	loaded;
-
 public:
-			Texture2D		(string in_path, string in_name, GLenum in_internalFormat, Flags in_flags = TextureFlags::mipmaps);
-			Texture2D		(string in_name, Vector2i in_dimensions, CustomArray<uchar> in_data, uchar in_nComponents = 4);
-			Texture2D		(string in_name, Vector2i in_dimensions, Color4f in_color = Color4f(1.0, 1.0, 1.0, 1.0), uchar in_nComponents = 4);
-			~Texture2D		();
+	enum Flags : uint {
+		none = 0,
+		readable = 1,
+		mipmaps = readable << 1,
+		hdr = mipmaps << 1,
+		depth = hdr << 1
+	};
 
-	void	Load_TGA		();
-
-	uchar*	Read			();
-
-	void 	Activate		();
-	void 	Deactivate		();
-
-	uint	W				();
-	uint	H				();
+	enum Type : GLenum {
+		_1d = GL_TEXTURE_1D,
+		_1d_array = GL_TEXTURE_1D_ARRAY,
+		_2d = GL_TEXTURE_2D,
+		_2d_array = GL_TEXTURE_2D_ARRAY,
+		_3d = GL_TEXTURE_3D,
+		cubemap_positive_x = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+		cubemap_positive_y = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+		cubemap_positive_z = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+		cubemap_negative_x = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+		cubemap_negative_y = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+		cubemap_negative_z = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
+	};
 
 private:
-	void	Load_To_OpenGL	();
-//	void	Swizzle			();
+	Type type;
 
-	static GLenum	Calc_Pixel_Format	(GLenum intformat);
-	static int		Calc_Components		(GLenum pixformat);
-};
+	ubyte* data;
+	GLuint id;
 
-namespace TextureInfluences {
-	enum {
-		ambient_color,
-		diffuse_color,
-		specular_color,
-		specular_hardness,
-		emission_color,
-		color_intensity,
-		alpha_intensity,
-		number_influences
-	};
-}
+	GLenum pixelFormat;
+	GLenum internalFormat;
+	GLenum target;
 
-enum TextureInfluence {
-	ambient,
-	diffuse,
-	specular,
-	hardness,
-	emission,
-	intensity,
-	alpha,
-	normal,
-	num_textures_influences
-};
+	Vector3i dimensions;
+	ubyte nChannels;
+	ubyte nBitsPerChannel;
+	ubyte nSamplesMSAA;
 
-namespace TextureFiltering {
-	enum {
-		none,
-		bilinear,
-		trilinear
-	};
-}
+	uint flags;
 
-class TextureInstance2D {
-	Texture2D* texture;
-	CustomArray
-		<float> influences;
-	uint shaderLocation;
-	
-};
-
-namespace FramebufferFlags {
-	enum : Flags {
-		color =		0x01,
-		depth =		0x02,
-		stencil =	0x04,
-
-		read =		0x01,
-		write =		0x02,
-		readwrite = read | write
-	};
-}
-
-class Framebuffer {
-public:
-	static Framebuffer* active;
-
-private:
-	uint		vertexArrayID;
-
-	Texture2D*	color;
-	Texture2D*	depth;
-	Texture2D*	stencil;
-
-	uint		w, h;
-
-	struct {
-		uint vertexArrayID, positionBuffer, uvBuffer;
-	} rect;
+	TextureSettings activeSettings;
 
 public:
-			Framebuffer	(Texture2D* color, Texture2D* depth, Texture2D* stencil);
-			~Framebuffer();
-	void	Apply		(Flags mode);
-	void	Unapply		(Flags mode);
-	void	Copy_To		(Framebuffer* fb, Flags buffers);
-	void	Render_To	(Framebuffer* fb);
+	Texture(Type in_type, std::string in_filename, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA = 0);
+	Texture(Type in_type, Vector3i in_dimensions, ubyte* in_data, ubyte in_nChannels, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA = 0);
+	Texture(Type in_type, Vector3i in_dimensions, ColorRGBAc in_color, ubyte in_nChannels, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA = 0);
+	Texture(Type in_type, Vector3i in_dimensions, ubyte in_nChannels, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA = 0);
 
-	static void Apply_Default(Flags mode);
+
+	const ubyte* Read();
+	void Refresh_From_OpenGL();
+
+	void Use(ubyte in_slot = 0);
+	void Use_None(ubyte in_slot = 0);
+
+	Type Get_Type();
+	Vector3i Get_Dimensions();
+	ubyte Get_Number_Channels();
+	ubyte Get_Number_Bits_Per_Channel();
+	ubyte Get_Number_Samples_MSAA();
+	uint Get_Flags();
+	TextureSettings Get_Active_Settings();
+
+protected:
+	void Finish_Setup();
+	void Load_To_OpenGL();
+
+	GLenum Determine_Pixel_Format();
+	GLenum Determine_Internal_Format();
+	GLenum Determine_Target();
+	ubyte Determine_Span();
 };
 
 #endif

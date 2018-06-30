@@ -7,7 +7,7 @@ public:
 	GLuint	texglid;
 	GLuint	meshglid;
 	GLuint	vertbuffer;
-	//Texture2D* texes[6]; //r, l, t, b, f, b
+	//Texture2* texes[6]; //r, l, t, b, f, b
 
 			Skybox	(string path, string name);
 			~Skybox	();

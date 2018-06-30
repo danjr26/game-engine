@@ -6,7 +6,12 @@ Clock::Clock() {
 	pauseTime = SysTimePoint();
 }
 
-double Clock::Now() {
+Clock::Clock(const Clock& in_source) :
+startTime(in_source.startTime),
+pauseTime(in_source.pauseTime)
+{}
+
+double Clock::Now() const {
 	std::lock_guard<std::mutex> lock(mutex);
 	if (pauseTime.time_since_epoch().count() != 0)
 		return std::chrono::duration_cast<std::chrono::duration<double>>(pauseTime - startTime).count();
@@ -35,7 +40,7 @@ void Clock::Resume() {
 	pauseTime = SysTimePoint();
 }
 
-bool Clock::Is_Paused() {
+bool Clock::Is_Paused() const {
 	std::lock_guard<std::mutex> lock(mutex);
 	return pauseTime == SysTimePoint();
 }

@@ -56,7 +56,7 @@ void OverlayManager::Process_Click(Vector2d coords) {
 	}
 }
 
-Rect2D::Rect2D(Transform2d transform, double depth, Texture2D* tex, Color4f col, uint maxchildren) :
+Rect2D::Rect2D(Transform2d transform, double depth, Texture2* tex, Color4f col, uint maxchildren) :
 OverlayComponent(maxchildren),
 transform	(transform),
 depth		(depth),
@@ -184,7 +184,7 @@ void Rect2D::Init_Arrays() {
 	glBindVertexArray(0);
 }
 
-ScreenFade::ScreenFade(Texture2D* tex, Color4f color1, Color4f color2, double lifet) :
+ScreenFade::ScreenFade(Texture2* tex, Color4f color1, Color4f color2, double lifet) :
 Rect2D(Transform2d(Vector2d(0, 0), Orientation2d(), Vector2d(800, 600)), 0.99, tex, color1, 0),
 MechanicalComponent(0.017),
 color1	(color1),
@@ -326,7 +326,7 @@ MechanicalComponent(step),
 parent(parent),
 text(nullptr) {
 	TextFormat format = {
-		(Font*)GEngine::Get().Resource().Get("consola.ttf"),
+		(FontFace*)GEngine::Get().Resource().Get("consola.ttf"),
 		TJ_LEFT,
 		Color4f(1, 1, 1, 1),
 		12,
@@ -371,7 +371,7 @@ parent(parent) {
 	for (int i = 0; i < 6; i++) {
 		*icons[i] = new Rect2D(
 				Transform2d(Vector2d(0, ystart + size * i), Orientation2d(), Vector2d(size, size)), 0.0, 
-				(Texture2D*)GEngine::Get().Resource().Get(iconnames[i]), 
+				(Texture2*)GEngine::Get().Resource().Get(iconnames[i]), 
 				Color4f(1.0, 1.0, 1.0, 1.0), 0
 				);
 	}
@@ -419,7 +419,7 @@ void PlayerShipSystemsStatus::Update(double t) {
 Reticule::Reticule(PlayerShip* parent) :
 MechanicalComponent(0.01),
 Rect2D(Transform2d(Vector2d(0, 0), Orientation2d(), Vector2d(32, 32)), 0.5, 
-(Texture2D*)GEngine::Get().Resource().Get("reticule.tga"), 
+(Texture2*)GEngine::Get().Resource().Get("reticule.tga"), 
 Color4f(1.0, 1.0, 1.0, 1.0), 0),
 parent(parent) 
 {}
@@ -448,7 +448,7 @@ void Reticule::Update(double t) {
 Cursor::Cursor() :
 MechanicalComponent(0.01),
 Rect2D(Transform2d(Vector2d(0, 0), Orientation2d(), Vector2d(10, 10)), 0.5, 
-(Texture2D*)GEngine::Get().Resource().Get("cursor.tga"), 
+(Texture2*)GEngine::Get().Resource().Get("cursor.tga"), 
 Color4f(1.0, 1.0, 1.0, 1.0), 0) {
 	ShowCursor(false);
 }

@@ -14,24 +14,24 @@ TextManager::~TextManager() {
 	FT_Done_FreeType(library);
 }
 
-Font::Font(std::string path, std::string name) :
+FontFace::FontFace(std::string path, std::string name) :
 Resource	(path, name),
 sizes(16, offsetof(FontSize, findex)) {
 	if(FT_New_Face(TextManager::active->library, (path + name).c_str(), 0, &font))
 		Die(string("Font.Font: font file '") + path + name + string("' not found."));
 }
 
-Font::~Font() {
+FontFace::~FontFace() {
 	FT_Done_Face(font);
 	for (int i = 0; i < sizes.Size(); i++)
 		delete sizes[i];
 }
 
-void Font::Cache_Size(int size) {
+void FontFace::Cache_Size(int size) {
 	sizes.Add(new FontSize(this, size));
 }
 
-void Font::Uncache_Size(int size) {
+void FontFace::Uncache_Size(int size) {
 	for (int i = 0; i < sizes.Size(); i++) {
 		if (sizes[i]->size == size) {
 			sizes.Remove(sizes[i]);
@@ -39,7 +39,7 @@ void Font::Uncache_Size(int size) {
 	}
 }
 
-FontSize* Font::Get_Size(int size) {
+FontSize* FontFace::Get_Size(int size) {
 	for (int i = 0; i < sizes.Size(); i++) {
 		if (sizes[i]->size == size) {
 			return sizes[i];
@@ -48,11 +48,11 @@ FontSize* Font::Get_Size(int size) {
 	return nullptr;
 }
 
-FontSize::FontSize(Font* font, int size) :
+FontSize::FontSize(FontFace* font, int size) :
 font	(font),
 size	(size) {
 	FT_Set_Char_Size(font->font, size << 6, 0, TextManager::active->resolution, 0);
-	int gindex;
+	int gindex;	
 	FT_Glyph tempglyph = nullptr;
 	texdim = Vector2f();
 	for (char c = ' '; c <= '~'; c++) {
@@ -73,7 +73,7 @@ size	(size) {
 		if (glyphs[c - ' ']->bitmap.rows == 0 || glyphs[c - ' ']->bitmap.width == 0)
 			texcs[c - ' '] = Vector2f();
 		else
-			texcs[c - ' '] = Vector2f(1.0, 1.0);//Vector2f(texdim.x / glyphs[c - ' ']->bitmap.width, texdim.y / glyphs[c - ' ']->bitmap.rows);
+			texcs[c - ' '] = Vector2f(1.0, 1.0);//Vector2f(tex	dim.x / glyphs[c - ' ']->bitmap.width, texdim.y / glyphs[c - ' ']->bitmap.rows);
 	}
 	texes = Text2D::Glyphs_To_Texture(glyphs, texdim.x, texdim.y);
 }

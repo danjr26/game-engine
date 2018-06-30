@@ -30,7 +30,7 @@
 #include "text.h"
 #include "texture.h"
 #include "trq.h"
-#include "vectors.h"
+#include "vector.h"
 
 #include <windows.h>
 #include <gl/glew.h>
