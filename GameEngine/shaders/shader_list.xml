@@ -1,0 +1,14 @@
+<ShaderList>
+	<ShaderProgram name="DeferredShader">
+		<Shader type="vertex" file="shaders/deferred_1_v.glsl"/>
+		<Shader type="fragment" file="shaders/deferred_1_f.glsl"/>
+	</ShaderProgram>
+	<ShaderProgram name="TextShader">
+		<Shader type="vertex" file="shaders/text_v.glsl"/>
+		<Shader type="fragment" file="shaders/text_f.glsl"/>
+	</ShaderProgram>
+	<ShaderProgram name="MonoShader">
+		<Shader type="vertex" file="shaders/monochromatic_v.glsl"/>
+		<Shader type="fragment" file="shaders/monochromatic_f.glsl"/>
+	</ShaderProgram>
+</ShaderList>

@@ -50,3 +50,14 @@ Shader::Type Shader::Get_Type() {
 	return type;
 }
 
+Shader::Type Shader::Parse_Type(const std::string& in_text) {
+	if (in_text == "vertex") return Type::vertex;
+	if (in_text == "fragment") return Type::fragment;
+	if (in_text == "geometry") return Type::geometry;
+	if (in_text == "tess_control") return Type::tess_control;
+	if (in_text == "tess_eval") return Type::tess_eval;
+	if (in_text == "compute") return Type::compute;
+	Log::main(std::string("invalid shader type string literal '") + in_text + "'");
+	exit(-1);
+}
+

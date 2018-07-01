@@ -20,6 +20,7 @@ void Test_Render(Window* window) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	/*
 	Shader vertexShaderDeferred(Shader::Type::vertex, "shaders/deferred_1_v.glsl");
 	Shader fragmentShaderDeferred(Shader::Type::fragment, "shaders/deferred_1_f.glsl");
 	std::vector<Shader*> shadersDeferred;
@@ -35,6 +36,9 @@ void Test_Render(Window* window) {
 	shadersText.push_back(&fragmentShaderText);
 	ShaderProgram* shaderProgramText = new ShaderProgram(shadersText);
 	GE.Assets().Add("TextShader", shaderProgramText);
+	*/
+
+	ShaderProgram::Load_XML_List("shaders/shader_list.xml");
 
 	FontFace* fontFace = GE.Assets().Get<FontFace>("ConsolasFontFace");
 
@@ -61,8 +65,8 @@ void Test_Render(Window* window) {
 
 	TestSpriteMover mover = TestSpriteMover(&inputContext, &rect);
 
-	rect.Get_Transform().Translate(Vector3d(1, 1, -0.5));
-	rect.Get_Transform().Set_Rotation(Matrix4f::Rotation(Vector3f(0, 0, -1), PI / 4));
+	//rect.Get_Transform().Translate(Vector3d(1, 1, -0.5));
+	//rect.Get_Transform().Set_Rotation(Matrix4f::Rotation(Vector3f(0, 0, -1), PI / 4));
 
 	GE.Render().Add(&rect);
 

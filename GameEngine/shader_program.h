@@ -16,6 +16,8 @@ public:
 	GLint Get_Uniform_Location(std::string in_name);
 
 	static void Use_None();
+
+	static void Load_XML_List(std::string in_filename);
 };
 
 #endif
