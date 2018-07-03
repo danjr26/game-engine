@@ -27,17 +27,13 @@ params(in_params) {
 	windowClass.hbrBackground = (HBRUSH)COLOR_BACKGROUND;
 
 	if (!RegisterClassEx(&windowClass)) {
-		Log::main("error: failed to create window class");
-		Log::main(Get_Windows_Error_Message());
-		exit(-1);
+		throw ProcessFailureException(std::string("failed to create window class with error message:\n") + Get_Windows_Error_Message());
 	}
 
 	RECT rect = { 0, 0, params.dimensions.X(), params.dimensions.Y() };
 	
 	if (!AdjustWindowRectEx((LPRECT)&rect, params.style, false, params.exStyle)) {
-		Log::main("error: failed to create window");
-		Log::main(Get_Windows_Error_Message());
-		exit(-1);
+		throw ProcessFailureException(std::string("failed to create window with error message:\n") + Get_Windows_Error_Message());
 	}
 
 	hWindow = CreateWindowEx(

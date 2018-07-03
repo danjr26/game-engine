@@ -4,7 +4,7 @@
 FontManager::FontManager() {
 	FT_Error error = FT_Init_FreeType(&library);
 	if (error) {
-		Log::main("error: failure to initialize font library");
+		throw ProcessFailureException("could not initialize font library");
 	}
 }
 

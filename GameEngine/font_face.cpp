@@ -42,8 +42,7 @@ FontFaceRasterSet* FontFace::Rasterize(uint in_size) {
 			FT_Get_Glyph(face->glyph, &tempGlyph) ||
 			FT_Glyph_To_Bitmap(&tempGlyph, FT_RENDER_MODE_NORMAL, nullptr, true)) {
 
-			Log::main("error: could not rasterize glyph");
-			exit(-1);
+			throw ProcessFailureException("could not rasterize text glyph");
 		}
 
 		glyph = (FT_BitmapGlyph)tempGlyph;

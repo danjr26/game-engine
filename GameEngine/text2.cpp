@@ -9,8 +9,7 @@ Text2::Text2(std::string in_text, FontFaceRasterSet* in_rasterSet, Transform in_
 	bitmapArray(in_rasterSet->texture) {
 	
 	if (in_rasterSet->texture == nullptr || in_rasterSet->texture->Get_Type() != Texture::Type::_2d_array) {
-		Log::main("error: invalid texture passed to text object");
-		exit(-1);
+		throw InvalidArgumentException("invalid raster texture passed to text");
 	}
 
 	bitmapArray.Settings().Set_Magnify_Filter(TextureSettings::FilterMode::none);

@@ -11,8 +11,7 @@ void InputManager::Add_Before(InputContext* in_beforeWhat, InputContext* in_cont
 	else {
 		auto position = std::find(contexts.begin(), contexts.end(), in_beforeWhat);
 		if (position == contexts.end()) {
-			Log::main("error: could not find reference context");
-			exit(-1);
+			throw InvalidArgumentException("could not find reference input context for insertion");
 		}
 		contexts.insert(position, in_context);
 	}
@@ -25,8 +24,7 @@ void InputManager::Add_After(InputContext* in_afterWhat, InputContext* in_contex
 	else {
 		auto position = std::find(contexts.begin(), contexts.end(), in_afterWhat);
 		if (position == contexts.end()) {
-			Log::main("error: could not find reference context");
-			exit(-1);
+			throw InvalidArgumentException("could not find reference input context for insertion");
 		}
 		contexts.insert(position + 1, in_context);
 	}

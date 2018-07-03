@@ -1,15 +1,14 @@
 #include "asset.h"
 #include "log.h"
+#include "exceptions.h"
 
 void Asset::Set_Name(std::string in_name) {
 	if (in_name == "") {
-		Log::main("error: empty name given to asset");
-		exit(-1);
+		throw InvalidArgumentException("asset name was empty string");
 	}
 
 	if (name != "") {
-		Log::main("error: cannot override extant asset name");
-		exit(-1);
+		throw InvalidArgumentException("asset with given name already exists");
 	}
 
 	name = in_name;

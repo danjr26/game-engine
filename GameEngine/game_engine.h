@@ -12,6 +12,7 @@
 #include "log.h"
 #include "window_manager.h"
 #include "misc.h"
+#include "exceptions.h"
 
 #define GE GameEngine::Instance()
 

@@ -6,7 +6,7 @@
 
 ShaderProgram::ShaderProgram(std::vector<Shader*> in_shaders) {
 	if (in_shaders.size() == 0) {
-		Log::main("error: no shaders provided to program linker");
+		throw InvalidArgumentException("no shaders provided to linker");
 	}
 
 	id = glCreateProgram();
@@ -24,8 +24,7 @@ ShaderProgram::ShaderProgram(std::vector<Shader*> in_shaders) {
 		glGetProgramiv(id, GL_INFO_LOG_LENGTH, &logLength);
 		char* log = new char[logLength];
 		glGetProgramInfoLog(id, logLength, nullptr, log);
-		Log::main(std::string("\nerror: shader program linking failed:\n") + log);
-		exit(-1);
+		throw InvalidArgumentException(std::string("shader linking failed with error message:\n") + log);
 	}
 }
 

@@ -1,6 +1,7 @@
 #include "texture_instance.h"
 #include "texture.h"
 #include "log.h"
+#include "exceptions.h"
 
 TextureInstance::TextureInstance(Texture* in_texture) :
 	texture(in_texture),
@@ -17,8 +18,7 @@ TextureSettings& TextureInstance::Settings() {
 
 void TextureInstance::Set_Influence(Influence in_influence, float value) {
 	if (in_influence >= Influence::count) {
-		Log::main("error: invalid texture influence identifier");
-		exit(-1);
+		throw InvalidArgumentException("invalid texture influence identifier");
 	}
 
 	influences[(uint)in_influence] = value;
@@ -26,8 +26,7 @@ void TextureInstance::Set_Influence(Influence in_influence, float value) {
 
 float TextureInstance::Get_Influence(Influence in_influence) {
 	if (in_influence >= Influence::count) {
-		Log::main("error: invalid texture influence identifier");
-		exit(-1);
+		throw InvalidArgumentException("invalid texture influence identifier");
 	}
 
 	return influences[(uint)in_influence];
@@ -35,8 +34,7 @@ float TextureInstance::Get_Influence(Influence in_influence) {
 
 void TextureInstance::Use(ubyte in_slot) {
 	if (texture == nullptr) {
-		Log::main("error: null texture");
-		exit(-1);
+		throw InvalidArgumentException("texture was null");
 	}
 
 	settings.Use(&texture->Get_Active_Settings(), in_slot);

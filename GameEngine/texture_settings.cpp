@@ -118,8 +118,7 @@ void TextureSettings::Use(TextureSettings* in_currentSettings, ubyte in_slot) {
 	}
 	else {
 		if (texture != in_currentSettings->Get_Texture()) {
-			Log::main("error: texture settings parent texture mismatch");
-			exit(-1);
+			throw InvalidArgumentException("texture settings parent mismatch");
 		}
 		if (in_currentSettings->borderColor != borderColor) {
 			glTexParameterfv(target, GL_TEXTURE_BORDER_COLOR, ColorRGBAf(borderColor).Pointer());

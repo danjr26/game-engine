@@ -2,6 +2,7 @@
 #define PER_FRAME_UPDATEABLE_OBJECT_H
 
 #include "disableable_object.h"
+#include "definitions.h"
 
 class PerFrameUpdateableObject : public DisableableObject {
 protected:

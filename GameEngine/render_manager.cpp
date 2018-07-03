@@ -50,8 +50,7 @@ void RenderManager::Render_Frame() {
 
 	for (uint i = 0; i < passes.size(); i++) {
 		if (passes[i] == nullptr) {
-			Log::main("error: null render pass");
-			exit(-1);
+			throw InvalidArgumentException("render pass was null");
 		}
 		Render_Pass(passes[i]);
 	}

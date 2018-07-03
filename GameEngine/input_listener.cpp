@@ -1,13 +1,11 @@
 #include "input_listener.h"
 #include "input_context.h"
+#include "exceptions.h"
 
 InputListener::InputListener(InputContext* in_context) :
 	context(in_context) {
 
-	if (in_context == nullptr) {
-		Log::main("error: null input context");
-		exit(-1);
-	}
+	if (in_context == nullptr) throw InvalidArgumentException("input context was null");
 
 	in_context->Add(this);
 }

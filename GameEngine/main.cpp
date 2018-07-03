@@ -15,6 +15,7 @@
 #include "font_face.h"
 #include "text2.h"
 #include "test_input_context.h"
+#include <exception>
 
 void Test_Render(Window* window) {
 	glEnable(GL_BLEND);
@@ -151,12 +152,9 @@ void Test_Render(Window* window) {
 }
 
 int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nArgs) {
-	//_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_CHECK_ALWAYS_DF);
-
-	//new GEngine(in_hInst);
-	//GEngine::Get().TRQ().Updater_Thread_Entry();
-
 	new GameEngine();
+
+	FatalAppExitA(0, "Oh no!");
 
 	Window::Params params =
 		Window::Params(in_hInst)

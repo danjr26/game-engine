@@ -55,8 +55,7 @@ Texture2::Texture2(std::string in_name, Vector2i in_dimensions, ubyte in_nChanne
 	activeSettings(this) {
 
 	if (dimensions.X() <= 0 || dimensions.Y() <= 0) {
-		Log::main("error: invalid texture dimensions");
-		exit(-1);
+		throw InvalidArgumentException("invalid texture dimensions");
 	}
 
 	if (!Is_Between_Inc<ubyte>(in_nChannels, 1, 4) || (flags & Flags::depth && in_nChannels != 1)) {

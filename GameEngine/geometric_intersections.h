@@ -3,6 +3,7 @@
 
 #include "geometric_figures.h"
 #include "matrix.h"
+#include "exceptions.h"
 
 template<class T, uint n>
 class GeometricIntersection {
@@ -120,12 +121,10 @@ public:
 				return false;
 
 			case 3:
-				Log::main("error: not implemented");
-				exit(-1);
+				throw NotImplementedException();
 				break;
 			default:
-				Log::main("error: not implemented");
-				exit(-1);
+				throw NotImplementedException();
 			}
 		}
 	}
@@ -141,8 +140,7 @@ public:
 			}
 			return false;
 		case FigureSolidity::solid:
-			Log::main("error: not implemented");
-			exit(-1);
+			throw NotImplementedException();
 		}
 	}
 

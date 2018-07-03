@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <string>
 #include <mutex>
+#include "exceptions.h"
 
 class Log {
 public:

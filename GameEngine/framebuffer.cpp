@@ -217,21 +217,18 @@ Framebuffer::Framebuffer(std::vector<Texture*> in_colorTextures, Texture* in_dep
 colorTextures(in_colorTextures),
 depthTexture(in_depthTexture) {
 	if (colorTextures.size() == 0) {
-		Log::main("error: no color textures passed to framebuffer");
-		exit(-1);
+		throw InvalidArgumentException("no color textures passed to framebuffer");
 	}
 
 	Vector3i dimensions = colorTextures[0]->Get_Dimensions();
 	for (uint i = 1; i < colorTextures.size(); i++) {
 		if (colorTextures[i] == nullptr || colorTextures[i]->Get_Dimensions() != dimensions) {
-			Log::main("error: no framebuffer texture mismatch");
-			exit(-1);
+			throw InvalidArgumentException("invalid color texture passed to framebuffer");
 		}
 	}
 
 	if(depthTexture != nullptr && depthTexture->Get_Dimensions() != dimensions) {
-		Log::main("error: no framebuffer texture mismatch");
-		exit(-1);
+		throw InvalidArgumentException("invalid depth texture passed to framebuffer");
 	}
 
 	glGenFramebuffers(1, &id);
@@ -246,8 +243,7 @@ depthTexture(in_depthTexture) {
 	}
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		Log::main("error: cannot initialize framebuffer");
-		exit(-1);
+		throw ProcessFailureException("could not initialize framebuffer");
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

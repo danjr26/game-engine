@@ -501,6 +501,12 @@
     <ClInclude Include="window_manager.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
+    <ClInclude Include="mesh_vertex_data.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ai_manager.cpp">
@@ -792,6 +798,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="window_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="exceptions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_vertex_data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -82,8 +82,7 @@ const ubyte* Texture::Read() {
 		return data;
 	}
 	else {
-		Log::main("error: cannot read from texture not specified as readable");
-		exit(-1);
+		throw ProcessFailureException("attempt to read texture marked as non-readable");
 	}
 }
 
@@ -92,8 +91,7 @@ void Texture::Refresh_From_OpenGL() {
 		glGetTextureImage(id, 0, pixelFormat, GL_UNSIGNED_BYTE, dimensions.Component_Product() * nChannels, data);
 	}
 	else {
-		Log::main("error: cannot refresh texture not specified as readable");
-		exit(-1);
+		throw ProcessFailureException("attempt to refresh texture marked as non-readable");
 	}
 }
 
@@ -200,8 +198,7 @@ GLenum Texture::Determine_Internal_Format() {
 		case 32:
 			return GL_DEPTH_COMPONENT32;
 		default:
-			Log::main("error: invalid texture internal format");
-			exit(-1);
+			throw InvalidArgumentException("invalid internal format");
 		}
 	}
 	else {
@@ -270,8 +267,7 @@ GLenum Texture::Determine_Internal_Format() {
 				}
 			}
 		default:
-			Log::main("error: invalid texture internal format");
-			exit(-1);
+			throw InvalidArgumentException("invalid texture internal format");
 		}
 	}
 }
@@ -281,30 +277,26 @@ GLenum Texture::Determine_Target() {
 		switch (type) {
 		case Type::_1d:
 		case Type::_1d_array:
-			Log::main("error: multisampling not supported for 1d textures");
-			exit(-1);
+			throw InvalidArgumentException("multisampling not supported for 1d textures");
 		case Type::_2d:
 			return GL_TEXTURE_2D_MULTISAMPLE;
 		case Type::_2d_array:
 			return GL_TEXTURE_2D_MULTISAMPLE_ARRAY;
 		case Type::_3d:
-			Log::main("error: multisampling not supported for 3d textures");
-			exit(-1);
+			throw InvalidArgumentException("multisampling not supported for 3d textures");
 		case Type::cubemap_positive_x:
 		case Type::cubemap_positive_y:
 		case Type::cubemap_positive_z:
 		case Type::cubemap_negative_x:
 		case Type::cubemap_negative_y:
 		case Type::cubemap_negative_z:
-			Log::main("error: multisampling not supported for cubemap textures");
-			exit(-1);
+			throw InvalidArgumentException("multisampling not supported for cubemap textures");
 		}
 	}
 	else {
 		return type;
 	}
-	Log::main("error: invalid texture state");
-	exit(-1);
+	throw InvalidArgumentException("invalid texture target type");
 }
 
 ubyte Texture::Determine_Span() {
@@ -324,5 +316,5 @@ ubyte Texture::Determine_Span() {
 	case _3d:
 		return 3;
 	}
-	return 0;
+	throw InvalidArgumentException("invalid texture span");
 }

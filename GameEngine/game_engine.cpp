@@ -5,8 +5,7 @@ GameEngine* GameEngine::instance = nullptr;
 GameEngine::GameEngine() :
 hasBegun(false) {
 	if (instance != nullptr) {
-		Log::main("error: multiple instances of engine");
-		exit(-1);
+		throw ProcessFailureException("game engine already created");
 	}
 	else {
 		instance = this;
@@ -51,8 +50,7 @@ WindowManager& GameEngine::Windows() {
 
 void GameEngine::Begin() {
 	if (hasBegun) {
-		Log::main("error: engine already started");
-		exit(-1);
+		throw ProcessFailureException("game engine already started");
 	}
 	hasBegun = true;
 
