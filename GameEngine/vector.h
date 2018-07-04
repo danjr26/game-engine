@@ -26,12 +26,6 @@ public:
 		}
 	}
 
-	/*Vector(T* in_members) {
-		for (int i = 0; i < n; i++) {
-			members[i] = in_members[i];
-		}
-	}*/
-
 	template<class T2>
 	Vector(const Vector<T2, n>& v) {
 		for (int i = 0; i < n; i++) {
@@ -377,6 +371,43 @@ public:
 	T W() {
 		return members[3];
 	}
+
+	template<typename = typename std::enable_if<n >= 4, void>::type>
+	Vector<T, 4> Hamilton(const Vector<T, 4>& v) const {
+		return Vector<T, 4>(
+			members[0] * v.members[3] + members[1] * v.members[2] + members[2] * v.members[1] - members[3] * v.members[0],
+			members[0] * v.members[2] - members[1] * v.members[3] + members[2] * v.members[0] + members[3] * v.members[1],
+			members[0] * v.members[1] + members[1] * v.members[0] - members[2] * v.members[3] + members[3] * v.members[2],
+			members[0] * v.members[0] - members[1] * v.members[1] - members[2] * v.members[2] - members[3] * v.members[3]
+		);
+	}
+
+	template<typename = typename std::enable_if<n >= 4, void>::type>
+	Vector<T, 4> Inverse() const {
+		Vector<T, 4> vOut = members;
+		vOut.Invert();
+		return vOut;
+	}
+
+	template<typename = typename std::enable_if<n >= 4, void>::type>
+	void Invert() {
+		Conjugate();
+		(*this) /= Dot_Self();
+	}
+
+	template<typename = typename std::enable_if<n >= 4, void>::type>
+	Vector<T, 4> Conjugated() {
+		Vector<T, 4> vOut = members;
+		vOut.Conjugate();
+		return vOut;
+	}
+
+	template<typename = typename std::enable_if<n >= 4, void>::type>
+	void Conjugate() {
+		members[0] = -members[0];
+		members[1] = -members[1];
+		members[2] = -members[2];
+	}
 };
 
 using Vector2ui = Vector<uint, 2>;
@@ -391,6 +422,9 @@ using Vector3d = Vector<double, 3>;
 using Vector4i = Vector<int, 4>;
 using Vector4f = Vector<float, 4>;
 using Vector4d = Vector<double, 4>;
+
+using Quaternionf = Vector<float, 4>;
+using Quaterniond = Vector<double, 4>;
 
 /*
 template<class T>

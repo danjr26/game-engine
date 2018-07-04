@@ -3,6 +3,7 @@
 
 #include "vector.h"
 #include "matrix.h"
+#include "rotation.h"
 
 class Transform {
 private:
@@ -37,6 +38,8 @@ public:
 	Matrix4d Get_Matrix() const;
 	Matrix4d Get_World_Matrix() const;
 };
+
+
 
 #endif
 

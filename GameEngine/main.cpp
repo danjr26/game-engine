@@ -152,9 +152,9 @@ void Test_Render(Window* window) {
 }
 
 int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nArgs) {
-	new GameEngine();
+	Rotationf rotation = Rotationf(Vector3f(18, 79, 23).Normalized(), 26);
 
-	FatalAppExitA(0, "Oh no!");
+	new GameEngine();
 
 	Window::Params params =
 		Window::Params(in_hInst)

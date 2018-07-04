@@ -101,7 +101,7 @@ void MeshVertexData::Remove_Face(uint in_index) {
 	indices.erase(
 		indices.begin() + in_index * 3,
 		indices.begin() + (in_index + 1) * 3
-	)
+	);
 }
 
 const float* MeshVertexData::Get_Position(ushort in_index) const {

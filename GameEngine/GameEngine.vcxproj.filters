@@ -420,9 +420,6 @@
     <ClInclude Include="asset.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
-    <ClInclude Include="window_proc.h">
-      <Filter>Header Files\framework</Filter>
-    </ClInclude>
     <ClInclude Include="id.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
@@ -506,6 +503,15 @@
     </ClInclude>
     <ClInclude Include="exceptions.h">
       <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="window_proc.h">
+      <Filter>Header Files\framework\input</Filter>
+    </ClInclude>
+    <ClInclude Include="debug_mesh_vertex_data_renderer.h">
+      <Filter>Header Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="rotation.h">
+      <Filter>Header Files\geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -728,9 +734,6 @@
     <ClCompile Include="disableable_object.cpp">
       <Filter>Source Files\framework</Filter>
     </ClCompile>
-    <ClCompile Include="window_proc.cpp">
-      <Filter>Source Files\framework</Filter>
-    </ClCompile>
     <ClCompile Include="asset.cpp">
       <Filter>Source Files\framework</Filter>
     </ClCompile>
@@ -788,22 +791,28 @@
     <ClCompile Include="keyboard_range_identifier.cpp">
       <Filter>Source Files\framework\input</Filter>
     </ClCompile>
-    <ClCompile Include="mouse_action_identifier.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="mouse_state_identifier.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="mouse_range_identifier.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="window_manager.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="mesh_vertex_data.cpp">
+      <Filter>Source Files\geometry</Filter>
     </ClCompile>
     <ClCompile Include="exceptions.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\util</Filter>
     </ClCompile>
-    <ClCompile Include="mesh_vertex_data.cpp">
+    <ClCompile Include="mouse_action_identifier.cpp">
+      <Filter>Source Files\framework\input</Filter>
+    </ClCompile>
+    <ClCompile Include="mouse_range_identifier.cpp">
+      <Filter>Source Files\framework\input</Filter>
+    </ClCompile>
+    <ClCompile Include="window_manager.cpp">
+      <Filter>Source Files\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="mouse_state_identifier.cpp">
+      <Filter>Source Files\framework\input</Filter>
+    </ClCompile>
+    <ClCompile Include="window_proc.cpp">
+      <Filter>Source Files\framework\input</Filter>
+    </ClCompile>
+    <ClCompile Include="debug_mesh_vertex_data_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

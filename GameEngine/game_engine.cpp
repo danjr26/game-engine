@@ -49,19 +49,27 @@ WindowManager& GameEngine::Windows() {
 }
 
 void GameEngine::Begin() {
-	if (hasBegun) {
-		throw ProcessFailureException("game engine already started");
-	}
-	hasBegun = true;
-
-	frameRateManager.Reset_Timer();
-
-	for(uint i = 0; i < 6000; i++) {
-		Next_Frame();
-		frameRateManager.Yield_Until_Next_Frame();
-		if (i % 60 == 0) {
-			Log::main(to_string(frameRateManager.Get_Real_FPS()));
+	try {
+		if (hasBegun) {
+			throw ProcessFailureException("game engine already started");
 		}
+		hasBegun = true;
+
+		frameRateManager.Reset_Timer();
+
+		for (uint i = 0; true; i++) {
+			Next_Frame();
+			frameRateManager.Yield_Until_Next_Frame();
+			if (i % 60 == 0) {
+				Log::main(to_string(frameRateManager.Get_Real_FPS()));
+			}
+		}
+	}
+	catch (const std::exception& e) {
+		Handle_Fatal_Exception(e);
+	}
+	catch (...) {
+		Handle_Fatal_Exception();
 	}
 }
 

@@ -17,7 +17,6 @@ protected:
 	};
 
 	std::vector<ubyte> componentCounts;
-
 	std::vector<std::vector<float>> members;
 	std::vector<ushort> indices;
 

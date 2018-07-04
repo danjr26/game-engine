@@ -173,6 +173,7 @@
     <ClInclude Include="color_ia.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="debug_mesh_vertex_data_renderer.h" />
     <ClInclude Include="disableable_object.h" />
     <ClInclude Include="display_units.h" />
     <ClInclude Include="exceptions.h" />
@@ -221,6 +222,7 @@
     <ClInclude Include="render_pass.h" />
     <ClInclude Include="render_target.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="rotation.h" />
     <ClInclude Include="shader_program.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="test_input_context.h" />
@@ -469,6 +471,7 @@
     <ClCompile Include="component.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="debug_mesh_vertex_data_renderer.cpp" />
     <ClCompile Include="defsettings.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
