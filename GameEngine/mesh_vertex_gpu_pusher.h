@@ -4,6 +4,7 @@
 #include "mesh_vertex_data.h"
 #include "extra_mesh_vertex_datum.h"
 
+/*
 class MeshVertexGPUPusher {
 public:
 	using MemberIndex = MeshVertexData::MemberIndex;
@@ -41,5 +42,5 @@ public:
 
 	void Draw();
 };
-
+*/
 #endif

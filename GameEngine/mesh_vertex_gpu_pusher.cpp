@@ -1,6 +1,6 @@
 #include "mesh_vertex_gpu_pusher.h"
 #include "game_engine.h"
-
+/*
 MeshVertexGPUPusher::MeshVertexGPUPusher() :
 	data(nullptr),
 	vertexArrayID(0),
@@ -102,3 +102,4 @@ void MeshVertexGPUPusher::Draw() {
 	}
 	glDrawElements(GL_TRIANGLES, data->Get_Number_Vertices(), GL_UNSIGNED_SHORT, 0);
 }
+*/

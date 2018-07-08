@@ -3,8 +3,8 @@
 #include "game_engine.h"
 
 Sprite::Sprite(const Vector3d& in_topLeft, const Vector2d& in_dimensions, Texture* in_texture) :
-	meshVertexData(3, 0, 0, 2), 
-	gpuPusher(&meshVertexData),
+	//meshVertexData(3, 0, 0, 2), 
+	//gpuPusher(&meshVertexData),
 	tint(255, 255, 255, 255),
 	textureInstance(in_texture) {
 
@@ -30,8 +30,8 @@ Sprite::Sprite(const Vector3d& in_topLeft, const Vector2d& in_dimensions, Textur
 		2, 1, 3
 	};
 
-	meshVertexData.Add_Vertices(4, (float*)positions, nullptr, nullptr, (float*)uvs);
-	meshVertexData.Add_Faces(2, indices);
+	//meshVertexData.Add_Vertices(4, (float*)positions, nullptr, nullptr, (float*)uvs);
+	//meshVertexData.Add_Faces(2, indices);
 
 	glGenVertexArrays(1, &vertexArrayID);
 	glBindVertexArray(vertexArrayID);

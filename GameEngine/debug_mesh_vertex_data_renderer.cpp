@@ -1,5 +1,6 @@
 #include "debug_mesh_vertex_data_renderer.h"
 
+/*
 DebugMeshVertexDataRenderer::DebugMeshVertexDataRenderer(MeshVertexData* in_meshVertexData) :
 	meshVertexData(in_meshVertexData)
 {}
@@ -15,3 +16,4 @@ bool DebugMeshVertexDataRenderer::Should_Cull() const {
 void DebugMeshVertexDataRenderer::Render() {
 	
 }
+*/

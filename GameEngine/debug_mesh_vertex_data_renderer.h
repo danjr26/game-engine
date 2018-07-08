@@ -5,6 +5,7 @@
 #include "renderable_object.h"
 #include "transformable_object.h"
 
+/*
 class DebugMeshVertexDataRenderer : public RenderableObject, public TransformableObject {
 private:
 	MeshVertexData* meshVertexData;
@@ -14,4 +15,5 @@ public:
 	virtual bool Should_Cull() const override;
 	virtual void Render() override;
 };
+*/
 #endif

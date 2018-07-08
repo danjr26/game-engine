@@ -1,6 +1,9 @@
 #include "mesh_vertex_data.h"
 #include "game_engine.h"
 
+
+
+/*
 MeshVertexData::MeshVertexData(ubyte in_nPositionComponents, ubyte in_nNormalComponents, ubyte in_nColorComponents, ubyte in_nUVComponents) :
 	members(MemberIndex::count),
 	componentCounts{ in_nPositionComponents, in_nNormalComponents, in_nColorComponents, in_nUVComponents } {
@@ -130,6 +133,159 @@ const float* MeshVertexData::Get_Member_Pointer(MemberIndex in_member) const {
 const ushort* MeshVertexData::Get_Index_Pointer() const {
 	return indices.data();
 }
+*/
 
+ubyte MeshVertexData::Get_Data_Type_Size(DataType in_type) {
+	switch (in_type) {
+	case _byte: return sizeof(char);
+	case _ubyte: return sizeof(ubyte);
+	case _short: return sizeof(short);
+	case _ushort: return sizeof(ushort);
+	case _int: return sizeof(int);
+	case _uint: return sizeof(uint);
+	case _float: return sizeof(float);
+	case _double: return sizeof(double);
+	default: throw InvalidArgumentException("invalid data type");
+	}
+}
 
+MeshVertexData::MeshVertexData(DataType in_indexType) :
+	members(),
+	indices(),
+	indexType(in_indexType),
+	idToIndex(),
+	nVertices(0)
+{}
 
+uint MeshVertexData::Get_Number_Vertices() const {
+	return nVertices;
+}
+
+uint MeshVertexData::Get_Number_Faces() const {
+	return indices.size() / Get_Data_Type_Size(indexType) / 3;
+}
+
+void MeshVertexData::Add_Member(const Member& in_member) {
+	if (in_member.data.size() / in_member.Get_Vertex_Size() != nVertices) {
+		throw InvalidArgumentException("mesh vertex member data was wrong size");
+	}
+
+	if (!idToIndex.insert(std::pair<ubyte, ubyte>(in_member.id, members.size())).second) {
+		throw InvalidArgumentException("duplicate mesh member id");
+	}
+
+	members.push_back(in_member);
+}
+
+void MeshVertexData::Remove_Member(ubyte in_member) {
+	if (in_member >= members.size()) {
+		throw InvalidArgumentException("invalid index");
+	}
+
+	idToIndex.erase(members[in_member].id);
+	members.erase(members.begin() + in_member);
+}
+
+void MeshVertexData::Set_Member_Value(ubyte in_member, uint in_index, const void* in_value) {
+	Member& member = members[in_member];
+	for (uint i = 0; i < member.depth; i++) {
+		member.data[in_index * member.Get_Vertex_Size() + i] = ((const char*)in_value)[i];
+	}
+	
+}
+
+bool MeshVertexData::Has_Member(ubyte in_id) const {
+	return idToIndex.find(in_id) != idToIndex.end();
+}
+
+ubyte MeshVertexData::Get_Member_Index_By_ID(ubyte in_id) const {
+	return idToIndex.at(in_id);
+}
+
+MeshVertexData::DataType MeshVertexData::Get_Member_Type(ubyte in_member) const {
+	return members[in_member].type;
+}
+
+ubyte MeshVertexData::Get_Member_Depth(ubyte in_member) const {
+	return members[in_member].depth;
+}
+
+void MeshVertexData::Reserve_Total(uint in_nVertices, uint in_nFaces) {
+	for (uint i = 0; i < members.size(); i++) {
+		members[i].data.reserve(in_nVertices * members[i].Get_Vertex_Size());
+	}
+	indices.reserve(in_nFaces * 3);
+}
+
+void MeshVertexData::Reserve_Additional(uint in_nVertices, uint in_nFaces) {
+	Reserve_Total(Get_Number_Vertices() + in_nVertices, Get_Number_Faces() * in_nFaces);
+}
+
+void MeshVertexData::Add_Vertices(uint in_nVertices, std::initializer_list<const void*> in_data) {
+	if (in_data.size() != members.size()) {
+		throw InvalidArgumentException("vertex data of wrong dimension");
+	}
+	for (uint i = 0; i < members.size(); i++) {
+		const ubyte* ptr = (const ubyte*) *(in_data.begin() + i);
+		members[i].data.insert(members[i].data.end(), ptr, ptr + in_nVertices * members[i].Get_Vertex_Size());
+	}
+
+	nVertices += in_nVertices;
+}
+
+void MeshVertexData::Remove_Vertex(uint in_index) {
+	if (in_index >= nVertices) {
+		throw InvalidArgumentException("invalid index");
+	}
+
+	for (uint i = 0; i < members.size(); i++) {
+		auto begin = members[i].data.begin() + (in_index * members[i].Get_Vertex_Size());
+		auto end = begin + members[i].Get_Vertex_Size();
+		members[i].data.erase(begin, end);
+	}
+
+	nVertices--;
+}
+
+void MeshVertexData::Set_Vertex(uint in_index, std::initializer_list<const void*> in_data) {
+	if (in_data.size() != members.size()) {
+		throw InvalidArgumentException("vertex data of wrong dimension");
+	}
+	for (uint i = 0; i < members.size(); i++) {
+		Set_Member_Value(i, in_index, *(in_data.begin() + i));
+	}
+}
+
+void MeshVertexData::Add_Faces(uint in_nFaces, const void* in_indices) {
+	uint length = in_nFaces * 3 * Get_Data_Type_Size(indexType);
+	const ubyte* ptr = (const ubyte*)in_indices;
+	indices.insert(indices.end(), ptr, ptr + length);
+}
+
+void MeshVertexData::Remove_Face(uint in_index) {
+	uint faceSize = 3 * Get_Data_Type_Size(indexType);
+	indices.erase(indices.begin() + in_index * faceSize, indices.begin() + (in_index + 1) * faceSize);
+}
+
+const void* MeshVertexData::Get_Face(uint in_index) const {
+	return indices.data() + in_index * 3 * Get_Data_Type_Size(indexType);
+}
+
+void MeshVertexData::Set_Face(uint in_faceIndex, const void* in_indices) {
+	const ubyte* ptr = (const ubyte*)in_indices;
+	for (uint i = 0; i < 3 * Get_Data_Type_Size(indexType); i++) {
+		indices[in_faceIndex * 3 * Get_Data_Type_Size(indexType) + i] = ptr[i];
+	}
+}
+
+const void* MeshVertexData::Get_Member_Pointer(ubyte in_member) const {
+	return members[in_member].data.data();
+}
+
+const void* MeshVertexData::Get_Index_Pointer() const {
+	return indices.data();
+}
+
+ubyte MeshVertexData::Member::Get_Vertex_Size() const {
+	return depth * MeshVertexData::Get_Data_Type_Size(type);
+}

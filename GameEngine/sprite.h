@@ -11,8 +11,8 @@
 
 class Sprite : public RenderableObject, public TransformableObject {
 private:
-	MeshVertexData meshVertexData;
-	MeshVertexGPUPusher gpuPusher;
+	//MeshVertexData meshVertexData;
+	//MeshVertexGPUPusher gpuPusher;
 	TextureInstance textureInstance;
 	GLuint vertexArrayID;
 	GLuint vertexBufferID;
