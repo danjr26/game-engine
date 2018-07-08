@@ -3,13 +3,15 @@
 #include "game_engine.h"
 
 Sprite::Sprite(const Vector3d& in_topLeft, const Vector2d& in_dimensions, Texture* in_texture) :
-tint(255, 255, 255, 255),
-textureInstance(in_texture) {
+	meshVertexData(3, 0, 0, 2), 
+	gpuPusher(&meshVertexData),
+	tint(255, 255, 255, 255),
+	textureInstance(in_texture) {
 
-	transform.Set_Position(in_topLeft);
-	transform.Scale(Vector3d(in_dimensions, 1.0));
+	transform.Set_Local_Position(in_topLeft);
+	transform.Scale_Local(Vector3d(in_dimensions, 1.0));
 
-	Vector3f vertices[] = {
+	Vector3f positions[] = {
 		Vector3f(0.0f, 0.0f, 0.0f),
 		Vector3f(0.0f, 1.0f, 0.0f),
 		Vector3f(1.0f, 1.0f, 0.0f),
@@ -28,12 +30,15 @@ textureInstance(in_texture) {
 		2, 1, 3
 	};
 
+	meshVertexData.Add_Vertices(4, (float*)positions, nullptr, nullptr, (float*)uvs);
+	meshVertexData.Add_Faces(2, indices);
+
 	glGenVertexArrays(1, &vertexArrayID);
 	glBindVertexArray(vertexArrayID);
 
 	glGenBuffers(1, &vertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * 4, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * 4, positions, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
@@ -80,7 +85,7 @@ TextureInstance& Sprite::Texture_Instance() {
 }
 
 double Sprite::Z() const {
-	return transform.Get_Position().Z();
+	return transform.Get_Local_Position().Z();
 }
 
 bool Sprite::Should_Cull() const {
@@ -111,7 +116,7 @@ void Sprite::Render() {
 	glBindVertexArray(vertexArrayID);
 
 	shaderProgram->Use();
-	glUniformMatrix4fv(locations[0], 1, GL_TRUE, ((Matrix4f)transform.Get_Matrix()).Pointer());
+	glUniformMatrix4fv(locations[0], 1, GL_TRUE, ((Matrix4f)transform.Get_World_Matrix()).Pointer());
 	glUniformMatrix4fv(locations[1], 1, GL_TRUE, GE.Cameras().active->Get_View_Matrix().Pointer());
 	glUniformMatrix4fv(locations[2], 1, GL_TRUE, GE.Cameras().active->Get_Projection_Matrix().Pointer());
 	glUniform4fv(locations[3], 1, tintFloat.Pointer());

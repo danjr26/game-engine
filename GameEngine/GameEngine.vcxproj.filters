@@ -513,6 +513,12 @@
     <ClInclude Include="rotation.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
+    <ClInclude Include="extra_mesh_vertex_datum.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh_vertex_gpu_pusher.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ai_manager.cpp">
@@ -813,6 +819,12 @@
       <Filter>Source Files\framework\input</Filter>
     </ClCompile>
     <ClCompile Include="debug_mesh_vertex_data_renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_vertex_gpu_pusher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="extra_mesh_vertex_datum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

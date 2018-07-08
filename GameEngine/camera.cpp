@@ -13,7 +13,7 @@ Matrix4f Camera::Get_Projection_Matrix() {
 }
 
 Matrix4f Camera::Get_View_Matrix() {
-	return transform.Inverted().Get_Matrix();
+	return transform.Get_World_Inverse_Matrix();
 }
 
 Matrix4f Camera::Get_Matrix() {

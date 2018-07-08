@@ -1,16 +1,6 @@
 #include "mesh_vertex_data.h"
 #include "game_engine.h"
 
-const float* MeshVertexData::Get_Component(MemberIndex in_member, uint in_index) const {
-	return &members[in_member][in_index * componentCounts[in_member]];
-}
-
-void MeshVertexData::Set_Component(MemberIndex in_member, uint in_index, const float* in_values) {
-	for (ubyte i = 0; i < componentCounts[in_member]; i++) {
-		members[in_member][in_index * componentCounts[in_member] + i] = in_values[i];
-	}
-}
-
 MeshVertexData::MeshVertexData(ubyte in_nPositionComponents, ubyte in_nNormalComponents, ubyte in_nColorComponents, ubyte in_nUVComponents) :
 	members(MemberIndex::count),
 	componentCounts{ in_nPositionComponents, in_nNormalComponents, in_nColorComponents, in_nUVComponents } {
@@ -39,6 +29,14 @@ ushort MeshVertexData::Get_Number_Vertices() const {
 
 uint MeshVertexData::Get_Number_Faces() const {
 	return indices.size() / 3;
+}
+
+bool MeshVertexData::Has_Member(MemberIndex in_member) const {
+	return componentCounts[in_member] != 0;
+}
+
+ubyte MeshVertexData::Get_Member_Depth(MemberIndex in_member) const {
+	return componentCounts[in_member];
 }
 
 void MeshVertexData::Reserve_Total(ushort in_nVertices, uint in_nFaces) {
@@ -104,63 +102,29 @@ void MeshVertexData::Remove_Face(uint in_index) {
 	);
 }
 
-const float* MeshVertexData::Get_Position(ushort in_index) const {
-	return Get_Component(MemberIndex::position, in_index);
-}
-
-const float* MeshVertexData::Get_Normal(ushort in_index) const {
-	return Get_Component(MemberIndex::normal, in_index);
-}
-
-const float* MeshVertexData::Get_Color(ushort in_index) const {
-	return Get_Component(MemberIndex::color, in_index);
-}
-
-const float* MeshVertexData::Get_UV(ushort in_index) const {
-	return Get_Component(MemberIndex::uv, in_index);
+const float* MeshVertexData::Get_Member_Value(MemberIndex in_member, ushort in_index) const {
+	return &members[in_member][in_index * componentCounts[in_member]];
 }
 
 ushort MeshVertexData::Get_Index(uint in_face, ubyte in_index) const {
 	return indices[in_face * 3 + in_index];
 }
 
-void MeshVertexData::Set_Position(ushort in_index, const float* in_position) {
-	Set_Component(MemberIndex::position, in_index, in_position);
-}
-
-void MeshVertexData::Set_Normal(ushort in_index, const float* in_normal) {
-	Set_Component(MemberIndex::normal, in_index, in_normal);
-}
-
-void MeshVertexData::Set_Color(ushort in_index, const float* in_color) {
-	Set_Component(MemberIndex::color, in_index, in_color);
-}
-
-void MeshVertexData::Set_UV(ushort in_index, const float* in_uv) {
-	Set_Component(MemberIndex::uv, in_index, in_uv);
+void MeshVertexData::Set_Member_Value(MemberIndex in_member, ushort in_index, const float* in_value) {
+	for (ubyte i = 0; i < componentCounts[in_member]; i++) {
+		members[in_member][in_index * componentCounts[in_member] + i] = in_value[i];
+	}
 }
 
 void MeshVertexData::Set_Vertex(ushort in_index, const float* in_position, const float* in_normal, const float* in_color, const float* in_uv) {
-	Set_Position(in_index, in_position);
-	Set_Normal(in_index, in_normal);
-	Set_Color(in_index, in_color);
-	Set_UV(in_index, in_uv);
+	Set_Member_Value(MemberIndex::position, in_index, in_position);
+	Set_Member_Value(MemberIndex::normal, in_index, in_normal);
+	Set_Member_Value(MemberIndex::color, in_index, in_color);
+	Set_Member_Value(MemberIndex::uv, in_index, in_uv);
 }
 
-const float* MeshVertexData::Get_Position_Pointer() const {
-	return members[MemberIndex::position].data();
-}
-
-const float* MeshVertexData::Get_Normal_Pointer() const {
-	return members[MemberIndex::normal].data();
-}
-
-const float* MeshVertexData::Get_Color_Pointer() const {
-	return members[MemberIndex::color].data();
-}
-
-const float* MeshVertexData::Get_UV_Pointer() const {
-	return members[MemberIndex::uv].data();
+const float* MeshVertexData::Get_Member_Pointer(MemberIndex in_member) const {
+	return members[in_member].data();
 }
 
 const ushort* MeshVertexData::Get_Index_Pointer() const {

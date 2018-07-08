@@ -46,15 +46,14 @@ void Test_Render(Window* window) {
 	FontFaceRasterSet* rasterSet = fontFace->Rasterize(24);
 
 	Transform textTransform = Transform();
-	textTransform.Translate(Vector3d(75, 150, -0.25));
-	textTransform.Set_Rotation(Matrix4f::Rotation(Vector3d(0, 0, -1), 0));
+	textTransform.Translate_Local(Vector3d(75, 150, -0.25));
 	//textTransform.Translate(Vector3d(50, -50, 0));
 
 	Text2 testText = Text2("A line of text.\nYay more text!", rasterSet, textTransform);
 
 	GE.Render().Add(&testText);
 
-	Vector3d pos = Vector3f(0, 100, 0);//DisplayUnits3::Pixels(Vector3f(50, 50, 0), window->Get_Dimensions()).OpenGL_Position();
+	Vector3d pos = Vector3f(0, 0, 0);//DisplayUnits3::Pixels(Vector3f(50, 50, 0), window->Get_Dimensions()).OpenGL_Position();
 	Vector2d dim = Vector2f(200, 200); // DisplayUnits2::Pixels(Vector2f(50, 50), window->Get_Dimensions()).OpenGL_Displacement();
 
 	Texture imageTex = Texture(Texture::Type::_2d, "img/pngtest.png", 8, Texture::Flags::mipmaps);
@@ -67,14 +66,14 @@ void Test_Render(Window* window) {
 	TestSpriteMover mover = TestSpriteMover(&inputContext, &rect);
 
 	//rect.Get_Transform().Translate(Vector3d(1, 1, -0.5));
-	//rect.Get_Transform().Set_Rotation(Matrix4f::Rotation(Vector3f(0, 0, -1), PI / 4));
+	//rect.Get_Transform().Set_Local_Rotation(Matrix4f::Rotation(Vector3f(0, 0, -1), PI / 4));
 
 	GE.Render().Add(&rect);
 
 	rect.Texture_Instance().Settings().Set_Minify_Filter(TextureSettings::FilterMode::none);
 	rect.Texture_Instance().Settings().Set_Magnify_Filter(TextureSettings::FilterMode::none);
 	Vector2d imageDim = DisplayUnits2::Pixels((Vector2i)rect.Texture_Instance().Get_Texture()->Get_Dimensions(), window->Get_Dimensions()).OpenGL_Displacement();
-	//rect.Get_Transform().Set_Scale_Factor(Vector3d(imageDim, 1.0));
+	//rect.Get_Transform().Set_Local_Scale(Vector3d(imageDim, 1.0));
 
 	Vector2i winDim = window->Get_Dimensions();
 
@@ -148,11 +147,17 @@ void Test_Render(Window* window) {
 	*/
 
 	GE.Begin();
-	
 }
 
 int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nArgs) {
-	Rotationf rotation = Rotationf(Vector3f(18, 79, 23).Normalized(), 26);
+	Transform transform1 = Transform();
+	Transform transform2 = Transform();
+	transform2.Set_Parent(&transform1);
+
+	transform1.Translate_Local(Vector3d(5, 0, 0));
+	transform2.Rotate_Local(Rotationd(Vector3d(1, 0, 0), Vector3d(0, 1, 1).Normalized()));
+
+	Vector3d v = transform2.Apply_To_World_Point(Vector3d(6, 0, 0));
 
 	new GameEngine();
 

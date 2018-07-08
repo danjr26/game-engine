@@ -5,12 +5,13 @@ DebugMeshVertexDataRenderer::DebugMeshVertexDataRenderer(MeshVertexData* in_mesh
 {}
 
 double DebugMeshVertexDataRenderer::Z() const {
-	return 0.0;
-	//return transform.
+	return transform.Get_World_Position().Z();
 }
 
 bool DebugMeshVertexDataRenderer::Should_Cull() const {
 	return false;
 }
 
-void DebugMeshVertexDataRenderer::Render() {}
+void DebugMeshVertexDataRenderer::Render() {
+	
+}

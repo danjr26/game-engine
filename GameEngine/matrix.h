@@ -264,11 +264,11 @@ public:
 	}
 
 	template<typename = typename std::enable_if<m == 4 && n == 4, void>::type>
-	static Matrix<T, m, n> Scale(T in_factor) {
+	static Matrix<T, m, n> Scale(const Vector<T, 3>& in_factor) {
 		return {
-			in_factor, (T)0, (T)0, (T)0,
-			(T)0, in_factor, (T)0, (T)0,
-			(T)0, (T)0, in_factor, (T)0,
+			in_factor.X(), (T)0, (T)0, (T)0,
+			(T)0, in_factor.Y(), (T)0, (T)0,
+			(T)0, (T)0, in_factor.Z(), (T)0,
 			(T)0, (T)0, (T)0, (T)1
 		};
 	}
@@ -280,7 +280,7 @@ public:
 			(T)0, (T)1, (T)0, in_translation.Y(),
 			(T)0, (T)0, (T)1, in_translation.Z(),
 			(T)0, (T)0, (T)0, (T)1
-		}
+		};
 	}
 
 	template<typename = typename std::enable_if<m == 4 && n == 4, void>::type>

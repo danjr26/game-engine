@@ -7,9 +7,12 @@
 #include "texture_instance.h"
 #include "display_units.h"
 #include "texture_instance.h"
+#include "mesh_vertex_gpu_pusher.h"
 
 class Sprite : public RenderableObject, public TransformableObject {
 private:
+	MeshVertexData meshVertexData;
+	MeshVertexGPUPusher gpuPusher;
 	TextureInstance textureInstance;
 	GLuint vertexArrayID;
 	GLuint vertexBufferID;

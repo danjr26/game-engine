@@ -45,7 +45,8 @@ void TestSpriteMover::Update(double in_dt) {
 		input.Get_Context()->Get_Range(TestInputContext::Range::movement_y),
 		0.0) * 100.0f * in_dt);*/
 
-	object->Get_Transform().Set_Position(
+	/*
+	object->Get_Transform().Set_Local_Position(
 		DisplayUnits3::Percent(
 			Vector3f(
 				input.Get_Context()->Get_Range(TestInputContext::Range::pointer_x),
@@ -54,4 +55,6 @@ void TestSpriteMover::Update(double in_dt) {
 			) * 100.0f
 		).Pixels(GE.Render().mainWindow->Get_Dimensions())
 	);
+	*/
+	object->Get_Transform().Rotate_Local_Around_Local_Point(Rotationd(Vector3d(0, 0, -1), PI * in_dt / 20), Vector3d(50, 50, 0));
 }

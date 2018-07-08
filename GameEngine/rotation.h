@@ -9,6 +9,11 @@ class Rotation {
 private:
 	Vector<T, 4> quaternion;
 
+private:
+	Rotation(const Vector<T, 4>& in_quaternion) :
+		quaternion(in_quaternion)
+	{}
+
 public:
 	Rotation() :
 		quaternion(0, 0, 0, 1)
@@ -19,9 +24,24 @@ public:
 	{}
 
 	Rotation(const Vector<T, 3>& in_from, const Vector<T, 3> in_to) {
-		Vector<T, 3> axis = in_from.Cross(in_to).Normalized();
 		T angle = in_from.Theta(in_to);
+		Vector<T, 3> axis;
+		if (abs(angle - PI) < PI / 10000.0) {
+			axis = in_from.Cross(Vector<T, 3>(in_from.X(), in_from.Y(), in_from.Z() + 10).Normalized()).Normalized();
+			angle = PI;
+		}
+		else {
+			axis = in_from.Cross(in_to).Normalized();
+		}
 		quaternion = Vector<T, 4>(axis  * sin(angle / 2), cos(angle / 2));
+	}
+
+	void Invert() {
+		quaternion.Conjugate();
+	}
+
+	Rotation<T> Get_Inverse() const {
+		return Rotation<T>(quaternion.Conjugated());
 	}
 
 	Rotation<T> Followed_By(const Rotation<T>& in_rotation) const {
@@ -55,32 +75,36 @@ public:
 		return Vector<T, 3>(quaternion) / sqrt(1 - members[3] * members[3]);
 	}
 
-	Rotation<T> With_Axis(const Vector<T, 3>& in_axis) {
+	Rotation<T> With_Axis(const Vector<T, 3>& in_axis) const {
 		return Rotation(Get_Angle(), in_axis);
 	}
 
-	Matrix4f Get_Matrix() {
+	Vector<T, 3> Apply_To(const Vector<T, 3>& in_point) const {
+		return Vector<T, 3>(quaternion.Hamilton(Vector<T, 4>(in_point, 0)).Hamilton(quaternion.Inverse()));
+	}
+
+	Matrix<T, 4, 4> Get_Matrix() const {
 		T x = quaternion.X();
 		T y = quaternion.Y();
 		T z = quaternion.Z();
 		T w = quaternion.W();
 
-		xx = 2 * x * x;
-		xy = 2 * x * y;
-		xz = 2 * x * z;
-		xw = 2 * x * w;
-		yy = 2 * y * y;
-		yz = 2 * y * z;
-		yw = 2 * y * w;
-		zz = 2 * z * z;
-		zw = 2 * z * w;
-		ww = 2 * w * w;
+		T xx = 2 * x * x;
+		T xy = 2 * x * y;
+		T xz = 2 * x * z;
+		T xw = 2 * x * w;
+		T yy = 2 * y * y;
+		T yz = 2 * y * z;
+		T yw = 2 * y * w;
+		T zz = 2 * z * z;
+		T zw = 2 * z * w;
+		T ww = 2 * w * w;
 
 		return {
-			1 - yy - zz, xy - zw, xz - yw, 0,
-			xy + zw, 1 - zz - xx, yz - xw, 0,
-			xz - yw, yz + xw, 1 - xx - yy, 0,
-			0, 0, 0, 1
+			1 - yy - zz, xy - zw, xz - yw, (T)0,
+			xy + zw, 1 - zz - xx, yz - xw, (T)0,
+			xz - yw, yz + xw, 1 - xx - yy, (T)0,
+			(T)0, (T)0, (T)0, (T)1
 		};
 	}
 };

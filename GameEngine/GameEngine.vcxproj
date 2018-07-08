@@ -177,6 +177,7 @@
     <ClInclude Include="disableable_object.h" />
     <ClInclude Include="display_units.h" />
     <ClInclude Include="exceptions.h" />
+    <ClInclude Include="extra_mesh_vertex_datum.h" />
     <ClInclude Include="filtered_object.h" />
     <ClInclude Include="filter_query.h" />
     <ClInclude Include="font_face.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="input_bindings.h" />
     <ClInclude Include="keyboard_state_identifier.h" />
     <ClInclude Include="mesh_vertex_data.h" />
+    <ClInclude Include="mesh_vertex_gpu_pusher.h" />
     <ClInclude Include="mouse_action_identifier.h" />
     <ClInclude Include="mouse_button.h" />
     <ClInclude Include="mouse_range_identifier.h" />
@@ -483,6 +485,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="exceptions.cpp" />
+    <ClCompile Include="extra_mesh_vertex_datum.cpp" />
     <ClCompile Include="filtered_object.cpp" />
     <ClCompile Include="filter_query.cpp" />
     <ClCompile Include="font_face.cpp" />
@@ -531,6 +534,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="mesh_vertex_data.cpp" />
+    <ClCompile Include="mesh_vertex_gpu_pusher.cpp" />
     <ClCompile Include="misc.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>

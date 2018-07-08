@@ -126,7 +126,7 @@ Text2::~Text2()
 {}
 
 double Text2::Z() const {
-	return transform.Get_Position().Z();
+	return transform.Get_Local_Position().Z();
 }
 
 bool Text2::Should_Cull() const {
@@ -147,7 +147,7 @@ void Text2::Render() {
 	glBindVertexArray(vertexArrayID);
 
 	shaderProgram->Use();
-	glUniformMatrix4fv(locations[0], 1, GL_TRUE, (GE.Cameras().active->Get_Matrix() * (Matrix4f)transform.Get_Matrix()).Pointer());
+	glUniformMatrix4fv(locations[0], 1, GL_TRUE, (GE.Cameras().active->Get_Matrix() * (Matrix4f)transform.Get_World_Matrix()).Pointer());
 
 	glDrawElements(GL_TRIANGLES, 6 * Get_Number_Printable(), GL_UNSIGNED_SHORT, 0);
 
