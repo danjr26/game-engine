@@ -130,7 +130,7 @@ const float* MeshVertexData::Get_Member_Pointer(MemberIndex in_member) const {
 	return members[in_member].data();
 }
 
-const ushort* MeshVertexData::Get_Index_Pointer() const {
+const ushort* MeshVertexData::Get_Face_Pointer() const {
 	return indices.data();
 }
 */
@@ -165,16 +165,21 @@ uint MeshVertexData::Get_Number_Faces() const {
 	return indices.size() / Get_Data_Type_Size(indexType) / 3;
 }
 
-void MeshVertexData::Add_Member(const Member& in_member) {
-	if (in_member.data.size() / in_member.Get_Vertex_Size() != nVertices) {
-		throw InvalidArgumentException("mesh vertex member data was wrong size");
-	}
+uint MeshVertexData::Get_Number_Members() const {
+	return members.size();
+}
 
-	if (!idToIndex.insert(std::pair<ubyte, ubyte>(in_member.id, members.size())).second) {
+void MeshVertexData::Add_Member(ubyte in_id, DataType in_type, ubyte in_depth, const void* in_data) {
+	if (!idToIndex.insert(std::pair<ubyte, ubyte>(in_id, members.size())).second) {
 		throw InvalidArgumentException("duplicate mesh member id");
 	}
 
-	members.push_back(in_member);
+	if (in_data == nullptr) {
+		members.emplace_back(in_id, in_type, in_depth, nVertices);
+	}
+	else {
+		members.emplace_back(in_id, in_type, in_depth, nVertices, in_data);
+	}
 }
 
 void MeshVertexData::Remove_Member(ubyte in_member) {
@@ -184,6 +189,10 @@ void MeshVertexData::Remove_Member(ubyte in_member) {
 
 	idToIndex.erase(members[in_member].id);
 	members.erase(members.begin() + in_member);
+
+	for (uint i = in_member; i < members.size(); i++) {
+		idToIndex[members[i].id] = i;
+	}
 }
 
 void MeshVertexData::Set_Member_Value(ubyte in_member, uint in_index, const void* in_value) {
@@ -200,6 +209,10 @@ bool MeshVertexData::Has_Member(ubyte in_id) const {
 
 ubyte MeshVertexData::Get_Member_Index_By_ID(ubyte in_id) const {
 	return idToIndex.at(in_id);
+}
+
+ubyte MeshVertexData::Get_Member_ID(ubyte in_member) const {
+	return members[in_member].id;
 }
 
 MeshVertexData::DataType MeshVertexData::Get_Member_Type(ubyte in_member) const {
@@ -227,7 +240,21 @@ void MeshVertexData::Add_Vertices(uint in_nVertices, std::initializer_list<const
 	}
 	for (uint i = 0; i < members.size(); i++) {
 		const ubyte* ptr = (const ubyte*) *(in_data.begin() + i);
-		members[i].data.insert(members[i].data.end(), ptr, ptr + in_nVertices * members[i].Get_Vertex_Size());
+		if(ptr == nullptr) members[i].data.resize(members[i].data.size() + in_nVertices * members[i].Get_Vertex_Size());
+		else members[i].data.insert(members[i].data.end(), ptr, ptr + in_nVertices * members[i].Get_Vertex_Size());
+	}
+
+	nVertices += in_nVertices;
+}
+
+void MeshVertexData::Add_Vertices(uint in_nVertices, const std::vector<const void*>& in_data) {
+	if (in_data.size() != members.size()) {
+		throw InvalidArgumentException("vertex data of wrong dimension");
+	}
+	for (uint i = 0; i < members.size(); i++) {
+		const ubyte* ptr = (const ubyte*) *(in_data.begin() + i);
+		if (ptr == nullptr) members[i].data.resize(members[i].data.size() + in_nVertices * members[i].Get_Vertex_Size());
+		else members[i].data.insert(members[i].data.end(), ptr, ptr + in_nVertices * members[i].Get_Vertex_Size());
 	}
 
 	nVertices += in_nVertices;
@@ -282,9 +309,23 @@ const void* MeshVertexData::Get_Member_Pointer(ubyte in_member) const {
 	return members[in_member].data.data();
 }
 
-const void* MeshVertexData::Get_Index_Pointer() const {
+const void* MeshVertexData::Get_Face_Pointer() const {
 	return indices.data();
 }
+
+MeshVertexData::Member::Member(ubyte in_id, DataType in_type, ubyte in_depth, uint in_nVertices, const void* in_data) :
+	id(in_id),
+	type(in_type),
+	depth(in_depth),
+	data(((const ubyte*)in_data), ((const ubyte*)in_data) + (in_nVertices * in_depth * Get_Data_Type_Size(in_type)))
+{}
+
+MeshVertexData::Member::Member(ubyte in_id, DataType in_type, ubyte in_depth, uint in_nVertices) :
+	id(in_id),
+	type(in_type),
+	depth(in_depth),
+	data(in_nVertices * in_depth * Get_Data_Type_Size(in_type))
+{}
 
 ubyte MeshVertexData::Member::Get_Vertex_Size() const {
 	return depth * MeshVertexData::Get_Data_Type_Size(type);

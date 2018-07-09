@@ -2,45 +2,85 @@
 #define MESH_VERTEX_GPU_PUSHER_H
 
 #include "mesh_vertex_data.h"
-#include "extra_mesh_vertex_datum.h"
 
-/*
+
 class MeshVertexGPUPusher {
 public:
-	using MemberIndex = MeshVertexData::MemberIndex;
+	using DataType = MeshVertexData::DataType;
+
 	enum class UseCase {
 		changes_rarely,
 		changes_often,
 		temporary_use
 	};
 
+	struct ExtraParams {
+		UseCase useCase;
+		uint nVerticesToReserve;
+		uint nFacesToReserve;
+		ulong memberIndicesToIgnore;
+		bool shouldPushData;
+
+		ExtraParams();
+	};
+
 private:
+	struct Member {
+		ubyte id;
+		DataType type;
+		ubyte depth;
+		GLuint bufferID;
+
+		ubyte Get_Vertex_Size() const;
+	};
+
 	MeshVertexData* data;
 
 	GLuint vertexArrayID;
-	GLuint indexBufferID;
 
-	std::vector<GLuint> memberBufferIDs;
-	std::vector<GLuint> extraBufferIDs;
+	std::vector<Member> vertexMembers;
+	Member indexMember;
+
+	uint reservedVertices;
+	uint usedVertices;
+
+	uint reservedFaces;
+	uint usedFaces;
 
 	UseCase useCase;
+
+	std::map<ubyte, ubyte> idToIndex;
 
 public:
 	MeshVertexGPUPusher();
 	~MeshVertexGPUPusher();
 
-	void Initialize(MeshVertexData* in_data, const std::vector<ExtraMeshVertexDatum>& in_extraData = std::vector<ExtraMeshVertexDatum>(), UseCase in_useCase = UseCase::changes_rarely);
-	void Push_All();
+	void Initialize(MeshVertexData* in_data, const ExtraParams& in_params);
+
+	uint Get_Number_Vertices() const;
+	uint Get_Number_Faces() const;
+
+	void Reserve_Total(uint in_nVertices, uint in_nFaces);
+	void Reserve_Additional(uint in_nVertices, uint in_nFaces);
+
+	void Add_Member(uint in_id);
+	void Remove_Member(uint in_id);
+	bool Has_Member(uint in_id);
+
+	void Push_Vertex_Count();
+	void Push_Face_Count();
+
 	void Push_Vertices();
-	void Push_Vertices(uint in_index, uint in_nToPush);
-	void Push_Vertex_Member(MemberIndex in_member);
-	void Push_Vertex_Member(MemberIndex in_member, uint in_index, uint in_nToPush);
+	void Push_Vertices(uint in_start, uint in_length);
+	void Push_Member(uint in_id);
+	void Push_Member(uint in_id, uint in_start, uint in_length);
 	void Push_Faces();
-	void Push_Faces(uint in_index, uint in_nToPush);
+	void Push_Faces(uint in_start, uint in_length);
 
 	bool Is_Initialized() const;
 
 	void Draw();
+	void Draw(uint in_start, uint in_length);
 };
-*/
+
 #endif

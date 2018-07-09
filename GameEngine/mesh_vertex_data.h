@@ -31,35 +31,40 @@ public:
 		_double = GL_DOUBLE
 	};
 
+	static ubyte Get_Data_Type_Size(DataType in_type);
+
+protected:
 	struct Member {
 		ubyte id;
 		DataType type;
 		ubyte depth;
 		std::vector<ubyte> data;
 
+		Member(ubyte in_id, DataType in_type, ubyte in_depth, uint in_nVertices, const void* in_data);
+		Member(ubyte in_id, DataType in_type, ubyte in_depth, uint in_nVertices);
+
 		ubyte Get_Vertex_Size() const;
 	};
 
-protected:
 	std::vector<Member> members;
 	std::vector<ubyte> indices;
 	DataType indexType;
 	std::map<ubyte, ubyte> idToIndex;
 	uint nVertices;
 
-	static ubyte Get_Data_Type_Size(DataType in_type);
-
 public:
 	MeshVertexData(DataType in_indexType);
 
 	uint Get_Number_Vertices() const;
 	uint Get_Number_Faces() const;
+	uint Get_Number_Members() const;
 
-	void Add_Member(const Member& in_member);
+	void Add_Member(ubyte in_id, DataType in_type, ubyte in_depth, const void* in_data);
 	void Remove_Member(ubyte in_member);
 	void Set_Member_Value(ubyte in_member, uint in_index, const void* in_value);
 	bool Has_Member(ubyte in_id) const;
 	ubyte Get_Member_Index_By_ID(ubyte in_id) const;
+	ubyte Get_Member_ID(ubyte in_member) const;
 	DataType Get_Member_Type(ubyte in_member) const;
 	ubyte Get_Member_Depth(ubyte in_member) const;
 
@@ -67,6 +72,7 @@ public:
 	void Reserve_Additional(uint in_nVertices, uint in_nFaces);
 
 	void Add_Vertices(uint in_nVertices, std::initializer_list<const void*> in_data);
+	void Add_Vertices(uint in_nVertices, const std::vector<const void*>& in_data);
 	void Remove_Vertex(uint in_index);
 	void Set_Vertex(uint in_index, std::initializer_list<const void*> in_data);
 
@@ -77,7 +83,7 @@ public:
 
 
 	const void* Get_Member_Pointer(ubyte in_member) const;
-	const void* Get_Index_Pointer() const;
+	const void* Get_Face_Pointer() const;
 
 protected:
 	template<class T> inline DataType To_Data_Type();
