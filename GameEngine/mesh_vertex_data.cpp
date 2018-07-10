@@ -208,6 +208,9 @@ bool MeshVertexData::Has_Member(ubyte in_id) const {
 }
 
 ubyte MeshVertexData::Get_Member_Index_By_ID(ubyte in_id) const {
+	if (!Has_Member(in_id)) {
+		throw InvalidArgumentException("invalid id");
+	}
 	return idToIndex.at(in_id);
 }
 
@@ -303,6 +306,14 @@ void MeshVertexData::Set_Face(uint in_faceIndex, const void* in_indices) {
 	for (uint i = 0; i < 3 * Get_Data_Type_Size(indexType); i++) {
 		indices[in_faceIndex * 3 * Get_Data_Type_Size(indexType) + i] = ptr[i];
 	}
+}
+
+ubyte MeshVertexData::Get_Face_Size() const {
+	return Get_Data_Type_Size(indexType) * 3;
+}
+
+MeshVertexData::DataType MeshVertexData::Get_Face_Type() const {
+	return indexType;
 }
 
 const void* MeshVertexData::Get_Member_Pointer(ubyte in_member) const {

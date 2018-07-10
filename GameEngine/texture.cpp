@@ -22,7 +22,6 @@ Texture::Texture(Type in_type, std::string in_filename, ubyte in_nBitsPerChannel
 				x * nChannels +
 				c] = image(x, y, z, c);
 	}
-
 	Finish_Setup();
 }
 
@@ -139,9 +138,7 @@ void Texture::Finish_Setup() {
 	internalFormat = Determine_Internal_Format();
 
 	glCreateTextures(target, 1, &id);
-
 	activeSettings.Use();
-
 	Load_To_OpenGL();
 
 	if (!(flags & Flags::readable)) {

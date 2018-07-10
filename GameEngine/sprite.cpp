@@ -3,7 +3,7 @@
 #include "game_engine.h"
 
 Sprite::Sprite(const Vector3d& in_topLeft, const Vector2d& in_dimensions, Texture* in_texture) :
-	meshVertexData(MeshVertexData::DataType::_ubyte), 
+	meshVertexData(MeshVertexData::DataType::_ushort), 
 	//gpuPusher(&meshVertexData),
 	tint(255, 255, 255, 255),
 	textureInstance(in_texture) {
@@ -35,8 +35,7 @@ Sprite::Sprite(const Vector3d& in_topLeft, const Vector2d& in_dimensions, Textur
 	meshVertexData.Add_Member(MeshVertexData::MemberID::uv, MeshVertexData::DataType::_float, 2, uvs);
 	meshVertexData.Add_Faces(2, indices);
 
-	//meshVertexData.Add_Vertices(4, (float*)positions, nullptr, nullptr, (float*)uvs);
-	//meshVertexData.Add_Faces(2, indices);
+	gpuPusher.Initialize(&meshVertexData);
 
 	glGenVertexArrays(1, &vertexArrayID);
 	glBindVertexArray(vertexArrayID);
@@ -126,6 +125,7 @@ void Sprite::Render() {
 	glUniformMatrix4fv(locations[2], 1, GL_TRUE, GE.Cameras().active->Get_Projection_Matrix().Pointer());
 	glUniform4fv(locations[3], 1, tintFloat.Pointer());
 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);	
+	gpuPusher.Draw();
+	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);	
 	//glDrawArrays(GL_TRIANGLES, 0, 3);
 }

@@ -12,5 +12,6 @@ layout (location = 1) out vec4 normal_o;
 
 void main() {
 	color_o = texture(colorTexture, uv_f);
+	//color_o = vec4(1.0);
 	normal_o = vec4(normal_f, 1.0);
 }

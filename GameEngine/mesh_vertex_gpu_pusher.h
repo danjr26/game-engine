@@ -9,9 +9,9 @@ public:
 	using DataType = MeshVertexData::DataType;
 
 	enum class UseCase {
-		changes_rarely,
-		changes_often,
-		temporary_use
+		changes_rarely = GL_STATIC_DRAW,
+		changes_often = GL_DYNAMIC_DRAW,
+		temporary_use = GL_STREAM_DRAW
 	};
 
 	struct ExtraParams {
@@ -19,7 +19,6 @@ public:
 		uint nVerticesToReserve;
 		uint nFacesToReserve;
 		ulong memberIndicesToIgnore;
-		bool shouldPushData;
 
 		ExtraParams();
 	};
@@ -39,7 +38,7 @@ private:
 	GLuint vertexArrayID;
 
 	std::vector<Member> vertexMembers;
-	Member indexMember;
+	GLuint indexBufferID;
 
 	uint reservedVertices;
 	uint usedVertices;
@@ -50,12 +49,11 @@ private:
 	UseCase useCase;
 
 	std::map<ubyte, ubyte> idToIndex;
-
 public:
 	MeshVertexGPUPusher();
 	~MeshVertexGPUPusher();
 
-	void Initialize(MeshVertexData* in_data, const ExtraParams& in_params);
+	void Initialize(MeshVertexData* in_data, const ExtraParams& in_params = ExtraParams());
 
 	uint Get_Number_Vertices() const;
 	uint Get_Number_Faces() const;

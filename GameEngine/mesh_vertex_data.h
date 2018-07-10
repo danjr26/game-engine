@@ -80,7 +80,8 @@ public:
 	void Remove_Face(uint in_index);
 	const void* Get_Face(uint in_index) const;
 	void Set_Face(uint in_faceIndex, const void* in_indices);
-
+	DataType Get_Face_Type() const;
+	ubyte Get_Face_Size() const;
 
 	const void* Get_Member_Pointer(ubyte in_member) const;
 	const void* Get_Face_Pointer() const;

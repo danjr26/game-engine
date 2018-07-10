@@ -57,9 +57,7 @@ void Test_Render(Window* window) {
 	Vector2d dim = Vector2f(200, 200); // DisplayUnits2::Pixels(Vector2f(50, 50), window->Get_Dimensions()).OpenGL_Displacement();
 
 	Texture imageTex = Texture(Texture::Type::_2d, "img/pngtest.png", 8, Texture::Flags::mipmaps);
-
 	Sprite rect = Sprite(pos, dim, &imageTex);
-
 	TestInputContext inputContext = TestInputContext();
 	GE.Input().Add_After(nullptr, &inputContext);
 
