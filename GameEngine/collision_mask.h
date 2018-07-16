@@ -1,40 +1,20 @@
 #ifndef COLLISION_MASK_H
 #define COLLISION_MASK_H
-#include "mesh_instance.h"
 
-class CollisionMask3 {
-protected:
-	enum Type {
-		sphere_tree
-	} type;
+#include "mesh_vertex_data.h"
+#include "filtered_object.h"
+#include "disableable_object.h"
+#include "collision.h"
+#include "collision_evaluator.h"
+#include "transformable_object.h"
+#include <tuple>
 
+class CircleCollisionMask;
+
+class CollisionMask : public FilteredObject, public DisableableObject, public TransformableObject {
 public:
-	CollisionMask3	(Type type);
-	~CollisionMask3	();
-
-	virtual Collision Is_Colliding(CollisionMask3& in_otherMask);
-
-	Type Get_Type();
-};
-
-class SphereTreeCollisionMask : public CollisionMask3 {
-private:
-	Transform3d&		transform;
-	CustomArray
-		<SphereNode>	sphereTree;
-
-public:
-				SphereTreeCollisionMask	(Transform3d& in_transform, CustomArray<SphereNode> in_sphereTree);
-				~SphereTreeCollisionMask();
-	Collision	Is_Colliding			(CollisionMask3& in_otherMask) override;
-	Collision	Is_Colliding			(SphereTreeCollisionMask& in_otherMask);
-
-private:
-	Collision Is_Colliding_Sphere_Tree(SphereTreeCollisionMask& in_otherMask);
-
-	static Collision Triangles_Are_Colliding(const SphereNode* in_sphere1, const SphereNode* in_sphere2);
-	static Collision Spheres_Are_Colliding(const SphereNode* in_sphere1, const SphereNode* in_sphere2);
-	//static Collision Sphere_And_Triangle_Are_Colliding(const SphereNode* in_sphere, const SphereNode* in_triangle);
+	virtual Collisionf Accept_Evaluator(CollisionEvaluator* in_evaluator, CollisionMask* in_other) = 0;
+	virtual Collisionf Accept_Secondhand_Evaluation(CollisionEvaluator* in_evaluator, CircleCollisionMask* in_other) = 0;
 };
 
 #endif

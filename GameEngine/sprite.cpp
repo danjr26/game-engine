@@ -2,10 +2,10 @@
 #include "display_units.h"
 #include "game_engine.h"
 
-Sprite::Sprite(const Vector3d& in_topLeft, const Vector2d& in_dimensions, Texture* in_texture) :
+Sprite::Sprite(const Vector3d& in_topLeft, const Vector2d& in_dimensions, Texture* in_texture, const ColorRGBAf& in_color) :
 	meshVertexData(MeshVertexData::DataType::_ushort), 
-	//gpuPusher(&meshVertexData),
-	tint(255, 255, 255, 255),
+	gpuPusher(),
+	color(in_color),
 	textureInstance(in_texture) {
 
 	transform.Set_Local_Position(in_topLeft);
@@ -36,36 +36,10 @@ Sprite::Sprite(const Vector3d& in_topLeft, const Vector2d& in_dimensions, Textur
 	meshVertexData.Add_Faces(2, indices);
 
 	gpuPusher.Initialize(&meshVertexData);
-
-	glGenVertexArrays(1, &vertexArrayID);
-	glBindVertexArray(vertexArrayID);
-
-	glGenBuffers(1, &vertexBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * 4, positions, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-	glGenBuffers(1, &uvBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, uvBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * 4, uvs, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-	glGenBuffers(1, &indexBufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ushort) * 6, indices, GL_STATIC_DRAW);
-
-	glBindVertexArray(0);
-
 }
 
-Sprite::~Sprite() {
-	glDeleteVertexArrays(1, &vertexArrayID);
-	glDeleteBuffers(1, &vertexBufferID);
-	glDeleteBuffers(1, &uvBufferID);
-	glDeleteBuffers(1, &indexBufferID);
-}
+Sprite::~Sprite() 
+{}
 
 void Sprite::Set_UVs(const Vector2f& in_topLeft, const Vector2f& in_bottomRight) {
 	Vector2f uvs[] = {
@@ -74,14 +48,13 @@ void Sprite::Set_UVs(const Vector2f& in_topLeft, const Vector2f& in_bottomRight)
 		in_bottomRight,
 		Vector2f(in_bottomRight.X(), in_topLeft.Y())
 	};
-	glBindVertexArray(vertexArrayID);
-	glBindBuffer(GL_ARRAY_BUFFER, uvBufferID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vector2f) * 4, uvs);
-	glBindVertexArray(0);
+
+	meshVertexData.Set_Member_Values(MeshVertexData::MemberID::uv, 0, 4, uvs);
+	gpuPusher.Push_Member(MeshVertexData::MemberID::uv);
 }
 
-void Sprite::Set_Tint(const ColorRGBAc& in_tint) {
-	tint = in_tint;
+void Sprite::Set_Color(const ColorRGBAf& in_color) {
+	color = in_color;
 }
 
 TextureInstance& Sprite::Texture_Instance() {
@@ -105,19 +78,17 @@ void Sprite::Render() {
 		shaderProgram->Get_Uniform_Location("modelMatrix"),
 		shaderProgram->Get_Uniform_Location("viewMatrix"),
 		shaderProgram->Get_Uniform_Location("projectionMatrix"),
-		shaderProgram->Get_Uniform_Location("colorTint")
+		shaderProgram->Get_Uniform_Location("color")
 	};
 
 	if (textureInstance.Get_Texture() != nullptr) {
 		textureInstance.Use();
 	}
 	else {
-		textureInstance.Get_Texture()->Use_None();
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	ColorRGBAf tintFloat = tint;
-
-	glBindVertexArray(vertexArrayID);
+	ColorRGBAf tintFloat = color;
 
 	shaderProgram->Use();
 	glUniformMatrix4fv(locations[0], 1, GL_TRUE, ((Matrix4f)transform.Get_World_Matrix()).Pointer());
@@ -126,6 +97,4 @@ void Sprite::Render() {
 	glUniform4fv(locations[3], 1, tintFloat.Pointer());
 
 	gpuPusher.Draw();
-	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);	
-	//glDrawArrays(GL_TRIANGLES, 0, 3);
 }

@@ -15,63 +15,23 @@
 #include "font_face.h"
 #include "text2.h"
 #include "test_input_context.h"
+#include "circle_collision_mask.h"
+#include "in_place_collision_evaluator.h"
+#include "circle_renderer.h"
 #include <exception>
 
 void Test_Render(Window* window) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	/*
-	Shader vertexShaderDeferred(Shader::Type::vertex, "shaders/deferred_1_v.glsl");
-	Shader fragmentShaderDeferred(Shader::Type::fragment, "shaders/deferred_1_f.glsl");
-	std::vector<Shader*> shadersDeferred;
-	shadersDeferred.push_back(&vertexShaderDeferred);
-	shadersDeferred.push_back(&fragmentShaderDeferred);
-	ShaderProgram* shaderProgramDeferred = new ShaderProgram(shadersDeferred);
-	GE.Assets().Add("DeferredShader", shaderProgramDeferred);
-
-	Shader vertexShaderText(Shader::Type::vertex, "shaders/text_v.glsl");
-	Shader fragmentShaderText(Shader::Type::fragment, "shaders/text_f.glsl");
-	std::vector<Shader*> shadersText;
-	shadersText.push_back(&vertexShaderText);
-	shadersText.push_back(&fragmentShaderText);
-	ShaderProgram* shaderProgramText = new ShaderProgram(shadersText);
-	GE.Assets().Add("TextShader", shaderProgramText);
-	*/
-
 	ShaderProgram::Load_XML_List("shaders/shader_list.xml");
 
 	FontFace* fontFace = GE.Assets().Get<FontFace>("ConsolasFontFace");
-
 	FontFaceRasterSet* rasterSet = fontFace->Rasterize(24);
 
-	Transform textTransform = Transform();
-	textTransform.Translate_Local(Vector3d(75, 150, -0.25));
-	//textTransform.Translate(Vector3d(50, -50, 0));
+	CircleRenderer circle(Vector3d(400, 400, 0), 100.0, ColorRGBAf(0.5, 0.7, 0.9, 0.5), 20, ColorRGBAf(0, 0, 0, 0.5));
 
-	Text2 testText = Text2("A line of text.\nYay more text!", rasterSet, textTransform);
-
-	GE.Render().Add(&testText);
-
-	Vector3d pos = Vector3f(0, 0, 0);//DisplayUnits3::Pixels(Vector3f(50, 50, 0), window->Get_Dimensions()).OpenGL_Position();
-	Vector2d dim = Vector2f(200, 200); // DisplayUnits2::Pixels(Vector2f(50, 50), window->Get_Dimensions()).OpenGL_Displacement();
-
-	Texture imageTex = Texture(Texture::Type::_2d, "img/pngtest.png", 8, Texture::Flags::mipmaps);
-	Sprite rect = Sprite(pos, dim, &imageTex);
-	TestInputContext inputContext = TestInputContext();
-	GE.Input().Add_After(nullptr, &inputContext);
-
-	TestSpriteMover mover = TestSpriteMover(&inputContext, &rect);
-
-	//rect.Get_Transform().Translate(Vector3d(1, 1, -0.5));
-	//rect.Get_Transform().Set_Local_Rotation(Matrix4f::Rotation(Vector3f(0, 0, -1), PI / 4));
-
-	GE.Render().Add(&rect);
-
-	rect.Texture_Instance().Settings().Set_Minify_Filter(TextureSettings::FilterMode::none);
-	rect.Texture_Instance().Settings().Set_Magnify_Filter(TextureSettings::FilterMode::none);
-	Vector2d imageDim = DisplayUnits2::Pixels((Vector2i)rect.Texture_Instance().Get_Texture()->Get_Dimensions(), window->Get_Dimensions()).OpenGL_Displacement();
-	//rect.Get_Transform().Set_Local_Scale(Vector3d(imageDim, 1.0));
+	GE.Render().Add(&circle);
 
 	Vector2i winDim = window->Get_Dimensions();
 
@@ -116,34 +76,25 @@ void Test_Render(Window* window) {
 	GE.Render().passes.push_back(&testPass2);
 
 	/*
+	std::vector<uint> m;
+	m.push_back(10);
+	uint q = 0;
 	Clock clock;
-
-	uint n = 1;
-
+	uint n = 1000000;
 	double t1 = clock.Now();
 	for (uint i = 0; i < n; i++) {
-		this_thread::sleep_for(std::chrono::milliseconds(16));
-		GE.Render().Render_Frame();
-		window->Flip_Buffers();
+		q += m[0];
 	}
 	double t2 = clock.Now();
 	double t = (t2 - t1);
-
 	t1 = clock.Now();
-	for (uint i = 0; i < n; i++) {
-		this_thread::sleep_for(std::chrono::milliseconds(16));
-	}
+	for (volatile uint i = 0; i < n; i++) {}
 	t2 = clock.Now();
-
 	t -= (t2 - t1);
-
 	t *= 1000.0 / n;
-
 	Log::main(string("\nAverage execution time:\n") + to_string(t) + " millisec");
-
 	delete rasterSet;
 	*/
-
 	GE.Begin();
 }
 

@@ -62,6 +62,7 @@ public:
 	void Add_Member(ubyte in_id, DataType in_type, ubyte in_depth, const void* in_data);
 	void Remove_Member(ubyte in_member);
 	void Set_Member_Value(ubyte in_member, uint in_index, const void* in_value);
+	void Set_Member_Values(ubyte in_member, uint in_index, uint in_nValues, const void* in_values);
 	bool Has_Member(ubyte in_id) const;
 	ubyte Get_Member_Index_By_ID(ubyte in_id) const;
 	ubyte Get_Member_ID(ubyte in_member) const;
@@ -75,11 +76,13 @@ public:
 	void Add_Vertices(uint in_nVertices, const std::vector<const void*>& in_data);
 	void Remove_Vertex(uint in_index);
 	void Set_Vertex(uint in_index, std::initializer_list<const void*> in_data);
+	void Set_Vertices(uint in_index, uint in_nVertices, std::initializer_list<const void*> in_data);
 
 	void Add_Faces(uint in_nFaces, const void* in_indices);
 	void Remove_Face(uint in_index);
 	const void* Get_Face(uint in_index) const;
 	void Set_Face(uint in_faceIndex, const void* in_indices);
+	void Set_Faces(uint in_faceIndex, uint in_nFaces, const void* in_indices);
 	DataType Get_Face_Type() const;
 	ubyte Get_Face_Size() const;
 

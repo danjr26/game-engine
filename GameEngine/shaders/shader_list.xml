@@ -11,4 +11,8 @@
 		<Shader type="vertex" file="shaders/monochromatic_v.glsl"/>
 		<Shader type="fragment" file="shaders/monochromatic_f.glsl"/>
 	</ShaderProgram>
+	<ShaderProgram name="EllipseShader">
+		<Shader type="vertex" file="shaders/ellipse_v.glsl"/>
+		<Shader type="fragment" file="shaders/ellipse_f.glsl"/>
+	</ShaderProgram>
 </ShaderList>

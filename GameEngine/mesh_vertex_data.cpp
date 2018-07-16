@@ -200,7 +200,11 @@ void MeshVertexData::Set_Member_Value(ubyte in_member, uint in_index, const void
 	for (uint i = 0; i < member.depth; i++) {
 		member.data[in_index * member.Get_Vertex_Size() + i] = ((const char*)in_value)[i];
 	}
-	
+}
+
+void MeshVertexData::Set_Member_Values(ubyte in_member, uint in_index, uint in_nValues, const void* in_values) {
+	Member& member = members[in_member];
+	memcpy(&member.data[in_index * member.Get_Vertex_Size()], in_values, in_nValues * member.Get_Vertex_Size());
 }
 
 bool MeshVertexData::Has_Member(ubyte in_id) const {
@@ -286,6 +290,15 @@ void MeshVertexData::Set_Vertex(uint in_index, std::initializer_list<const void*
 	}
 }
 
+void MeshVertexData::Set_Vertices(uint in_index, uint in_nVertices, std::initializer_list<const void*> in_data) {
+	if (in_data.size() != members.size()) {
+		throw InvalidArgumentException("vertex data of wrong dimension");
+	}
+	for (uint i = 0; i < members.size(); i++) {
+		Set_Member_Values(i, in_index, in_nVertices, *(in_data.begin() + i));
+	}
+}
+
 void MeshVertexData::Add_Faces(uint in_nFaces, const void* in_indices) {
 	uint length = in_nFaces * 3 * Get_Data_Type_Size(indexType);
 	const ubyte* ptr = (const ubyte*)in_indices;
@@ -306,6 +319,10 @@ void MeshVertexData::Set_Face(uint in_faceIndex, const void* in_indices) {
 	for (uint i = 0; i < 3 * Get_Data_Type_Size(indexType); i++) {
 		indices[in_faceIndex * 3 * Get_Data_Type_Size(indexType) + i] = ptr[i];
 	}
+}
+
+void MeshVertexData::Set_Faces(uint in_faceIndex, uint in_nFaces, const void* in_indices) {
+	memcpy(&indices[in_faceIndex * 3 * Get_Data_Type_Size(indexType)], in_indices, in_nFaces * 3 * Get_Data_Type_Size(indexType));
 }
 
 ubyte MeshVertexData::Get_Face_Size() const {

@@ -41,5 +41,9 @@ void TextureInstance::Use(ubyte in_slot) {
 }
 
 void TextureInstance::Use_None(ubyte in_slot) {
+	if (texture == nullptr) {
+		throw InvalidArgumentException("texture was null");
+	}
+
 	texture->Use_None(in_slot);
 }
