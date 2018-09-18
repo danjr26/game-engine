@@ -46,6 +46,13 @@ public:
 		}
 	}
 
+	explicit Vector(const Vector<T, n - 1> v) {
+		for (int i = 0; i < n - 1; i++) {
+			members[i] = v.members[i];
+		}
+		members[n - 1] = 0;
+	}
+
 	template<typename = typename std::enable_if<n == 1, void>::type>
 	operator T() const {
 		return *members;

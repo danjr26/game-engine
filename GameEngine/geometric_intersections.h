@@ -28,7 +28,7 @@ private:
 		LineSegment<T, n> lineSegment;
 		Line<T, n> line;
 		NPlane<T, n> plane;
-		NSphere<T, n> sphere;
+		Sphere<T, n> sphere;
 		PromotedCircle<T, n> promotedCircle;
 	} intersection;
 
@@ -80,7 +80,7 @@ public:
 	}
 
 	template<class T, uint n>
-	GeometricIntersection(const Vector<T, n>& in_point, const NSphere<T, n>& in_sphere, FigureSolidity in_solidity) {
+	GeometricIntersection(const Vector<T, n>& in_point, const Sphere<T, n>& in_sphere, FigureSolidity in_solidity) {
 		switch (in_solidity) {
 		case FigureSolidity::wireframe:
 			return (in_point - in_sphere.center).Dot_Self() == in_sphere.radius * in_sphere.radius;
@@ -173,7 +173,7 @@ public:
 	template<class T, uint n>
 	GeometricIntersection(
 		const Ray<T, n>& in_ray, 
-		const NSphere<T, n>& in_sphere, 
+		const Sphere<T, n>& in_sphere, 
 		LineSegment<T, n>& out_segment, 
 		FigureSolidity in_solidity = FigureSolidity::wireframe
 	);
@@ -190,7 +190,7 @@ public:
 	GeometricIntersection(const Line<T, 2>& in_line1, const Line<T, 2>& in_line2, Vector<T, 2>& out_point);
 
 	template<class T>
-	GeometricIntersection(const Line<T, 2>& in_line, const NSphere<T, 2>& in_circle, Vector<T, 2>& out_point1, Vector<T, 2>& out_point2);
+	GeometricIntersection(const Line<T, 2>& in_line, const Sphere<T, 2>& in_circle, Vector<T, 2>& out_point1, Vector<T, 2>& out_point2);
 
 	template<class T>
 	GeometricIntersection(const Line<T, 3>& in_line1, const Line<T, 3>& in_line2, Vector<T, 3>& out_point);

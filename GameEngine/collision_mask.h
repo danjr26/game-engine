@@ -9,12 +9,41 @@
 #include "transformable_object.h"
 #include <tuple>
 
+class AxisAlignedRectangleCollisionMask;
 class CircleCollisionMask;
+class HalfSpace2CollisionMask;
+class Line2CollisionMask;
+class LineSegment2CollisionMask;
+class Point2CollisionMask;
+class Ray2CollisionMask;
+class RectangleCollisionMask;
+class Triangle2CollisionMask;
 
-class CollisionMask : public FilteredObject, public DisableableObject, public TransformableObject {
+template<uint n>
+class CollisionMask : public FilteredObject, public DisableableObject, public TransformableObject {};
+
+template<>
+class CollisionMask<2> : public FilteredObject, public DisableableObject, public TransformableObject {
 public:
-	virtual Collisionf Accept_Evaluator(CollisionEvaluator* in_evaluator, CollisionMask* in_other) = 0;
-	virtual Collisionf Accept_Secondhand_Evaluation(CollisionEvaluator* in_evaluator, CircleCollisionMask* in_other) = 0;
+	virtual Collision2d Accept_Evaluator(CollisionEvaluator2* in_evaluator, CollisionMask<2>* in_other) { throw NotImplementedException(); return Collision2d(); }
+	virtual Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2* in_evaluator, AxisAlignedRectangleCollisionMask* in_other) { throw NotImplementedException(); return Collision2d(); }
+	virtual Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2* in_evaluator, CircleCollisionMask* in_other) { throw NotImplementedException(); return Collision2d(); }
+	virtual Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2* in_evaluator, HalfSpace2CollisionMask* in_other) { throw NotImplementedException(); return Collision2d(); }
+	virtual Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2* in_evaluator, Line2CollisionMask* in_other) { throw NotImplementedException(); return Collision2d(); }
+	virtual Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2* in_evaluator, LineSegment2CollisionMask* in_other) { throw NotImplementedException(); return Collision2d(); }
+	virtual Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2* in_evaluator, Point2CollisionMask* in_other) { throw NotImplementedException(); return Collision2d(); }
+	virtual Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2* in_evaluator, Ray2CollisionMask* in_other) { throw NotImplementedException(); return Collision2d(); }
+	virtual Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2* in_evaluator, RectangleCollisionMask* in_other) { throw NotImplementedException(); return Collision2d(); }
+	virtual Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2* in_evaluator, Triangle2CollisionMask* in_other) { throw NotImplementedException(); return Collision2d(); }
 };
+
+template<>
+class CollisionMask<3> : public FilteredObject, public DisableableObject, public TransformableObject {
+public:
+	
+};
+
+using CollisionMask2 = CollisionMask<2>;
+using CollisionMask3 = CollisionMask<3>;
 
 #endif

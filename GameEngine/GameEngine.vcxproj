@@ -158,6 +158,8 @@
     <ClInclude Include="asset_manager.h" />
     <ClInclude Include="async_task.h" />
     <ClInclude Include="async_task_manager.h" />
+    <ClInclude Include="axis_aligned_box.h" />
+    <ClInclude Include="axis_aligned_rectangle_collision_mask.h" />
     <ClInclude Include="bit_manipulation.h" />
     <ClInclude Include="blend.h" />
     <ClInclude Include="box.h" />
@@ -179,6 +181,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="debug_mesh_vertex_data_renderer.h" />
+    <ClInclude Include="deep_2d_shape.h" />
     <ClInclude Include="disableable_object.h" />
     <ClInclude Include="display_units.h" />
     <ClInclude Include="exceptions.h" />
@@ -194,17 +197,21 @@
     </ClInclude>
     <ClInclude Include="frame_rate_manager.h" />
     <ClInclude Include="game_engine.h" />
+    <ClInclude Include="half_space.h" />
+    <ClInclude Include="half_space2_collision_mask.h" />
     <ClInclude Include="id.h" />
     <ClInclude Include="input_context.h" />
     <ClInclude Include="input_event.h" />
     <ClInclude Include="input_listener.h" />
-    <ClInclude Include="in_place_collision_evaluator.h" />
+    <ClInclude Include="in_place_collision_evaluator2.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="keyboard_action_identifier.h" />
     <ClInclude Include="keyboard_range_identifier.h" />
     <ClInclude Include="keyboard_state.h" />
     <ClInclude Include="input_bindings.h" />
     <ClInclude Include="keyboard_state_identifier.h" />
+    <ClInclude Include="line2_collision_mask.h" />
+    <ClInclude Include="line_segment2_collision_mask.h" />
     <ClInclude Include="mesh_vertex_data.h" />
     <ClInclude Include="mesh_vertex_gpu_pusher.h" />
     <ClInclude Include="mouse_action_identifier.h" />
@@ -214,6 +221,8 @@
     <ClInclude Include="mouse_state_identifier.h" />
     <ClInclude Include="per_frame_update_manager.h" />
     <ClInclude Include="input_identifiers.h" />
+    <ClInclude Include="point2_collision_mask.h" />
+    <ClInclude Include="range.h" />
     <ClInclude Include="raw_input_event.h" />
     <ClInclude Include="input_manager.h" />
     <ClInclude Include="matrix4.h">
@@ -221,6 +230,8 @@
     </ClInclude>
     <ClInclude Include="packaged_async_task.h" />
     <ClInclude Include="raw_input_state.h" />
+    <ClInclude Include="ray2_collision_mask.h" />
+    <ClInclude Include="rectangle_collision_mask.h" />
     <ClInclude Include="renderable_object.h" />
     <ClInclude Include="renderer.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -252,6 +263,7 @@
     <ClInclude Include="trackable_async_task.h" />
     <ClInclude Include="transformable_object.h" />
     <ClInclude Include="per_frame_updateable_object.h" />
+    <ClInclude Include="triangle2_collision_mask.h" />
     <ClInclude Include="windows_error.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="promoted_circle.h" />
@@ -309,7 +321,7 @@
     </ClInclude>
     <ClInclude Include="line_segment.h" />
     <ClInclude Include="matrix.h" />
-    <ClInclude Include="n_sphere.h">
+    <ClInclude Include="sphere.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="n_plane.h">
@@ -431,18 +443,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="vector.h" />
-    <ClInclude Include="vector2.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="vector3.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="vector4.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="vectors.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="weapons.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
@@ -461,6 +461,7 @@
     </ClCompile>
     <ClCompile Include="async_task.cpp" />
     <ClCompile Include="async_task_handler.cpp" />
+    <ClCompile Include="axis_aligned_rectangle_collision_mask.cpp" />
     <ClCompile Include="camera.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -505,6 +506,7 @@
     </ClCompile>
     <ClCompile Include="frame_rate_manager.cpp" />
     <ClCompile Include="game_engine.cpp" />
+    <ClCompile Include="half_space2_collision_mask.cpp" />
     <ClCompile Include="input.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -518,6 +520,7 @@
     <ClCompile Include="input_context.cpp" />
     <ClCompile Include="input_listener.cpp" />
     <ClCompile Include="input_manager.cpp" />
+    <ClCompile Include="in_place_collision_evaluator2.cpp" />
     <ClCompile Include="key.cpp" />
     <ClCompile Include="keyboard_action_identifier.cpp" />
     <ClCompile Include="keyboard_range_identifier.cpp" />
@@ -526,9 +529,11 @@
     <ClCompile Include="light.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="line2_collision_mask.cpp" />
     <ClCompile Include="linear_proj_func.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="line_segment2_collision_mask.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -571,6 +576,7 @@
     <ClCompile Include="player_ship.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="point2_collision_mask.cpp" />
     <ClCompile Include="progress_tracker.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -585,6 +591,8 @@
     </ClCompile>
     <ClCompile Include="raw_input_event.cpp" />
     <ClCompile Include="raw_input_state.cpp" />
+    <ClCompile Include="ray2_collision_mask.cpp" />
+    <ClCompile Include="rectangle_collision_mask.cpp" />
     <ClCompile Include="render.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -652,6 +660,7 @@
     <ClCompile Include="time_request_queue.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="triangle2_collision_mask.cpp" />
     <ClCompile Include="weapons.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>

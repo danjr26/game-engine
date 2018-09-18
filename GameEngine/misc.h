@@ -95,8 +95,6 @@ T Sign(T n) {
 	return (n > 0) ? 1 : ((n < 0) ? -1 : 0);
 }
 
-
-
 string Double_To_String(double d, int precision);
 
 void Test_Function(void* arg);

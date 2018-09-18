@@ -61,9 +61,6 @@
     <Filter Include="Header Files\geometry\trash">
       <UniqueIdentifier>{ed9d3640-d4dd-4cda-b802-28ca784705b8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\geometry\vector">
-      <UniqueIdentifier>{0f0258d1-7772-4f1b-8ff0-ca52752c32f0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\framework\async">
       <UniqueIdentifier>{dc87b505-7272-48a7-b4db-14156372a565}</UniqueIdentifier>
     </Filter>
@@ -84,6 +81,18 @@
     </Filter>
     <Filter Include="Source Files\framework\input">
       <UniqueIdentifier>{f98f1388-eab9-4e5f-b138-09b568fd44c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\collision\masks">
+      <UniqueIdentifier>{1003c182-3be5-48f9-a72b-b37535b8cf5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\collision\evaluators">
+      <UniqueIdentifier>{6756d4b3-c81f-4474-8d80-00c815081f4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\collision\evaluators">
+      <UniqueIdentifier>{b895a3d9-7d03-495f-bbc9-ca5c592e2439}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\collision\masks">
+      <UniqueIdentifier>{a80cd48d-6853-40c6-b5cc-1c2c151fed2a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -249,28 +258,10 @@
     <ClInclude Include="line.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="vector.h">
-      <Filter>Header Files\geometry\vector</Filter>
-    </ClInclude>
-    <ClInclude Include="vector2.h">
-      <Filter>Header Files\geometry\vector</Filter>
-    </ClInclude>
-    <ClInclude Include="vector3.h">
-      <Filter>Header Files\geometry\vector</Filter>
-    </ClInclude>
-    <ClInclude Include="vector4.h">
-      <Filter>Header Files\geometry\vector</Filter>
-    </ClInclude>
-    <ClInclude Include="vectors.h">
-      <Filter>Header Files\geometry\vector</Filter>
-    </ClInclude>
     <ClInclude Include="triangle.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
     <ClInclude Include="promoted_circle.h">
-      <Filter>Header Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="n_sphere.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
     <ClInclude Include="log.h">
@@ -513,26 +504,68 @@
     <ClInclude Include="mesh_vertex_gpu_pusher.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="collision_mask_old.h">
-      <Filter>Header Files\collision</Filter>
-    </ClInclude>
-    <ClInclude Include="collision_mask.h">
-      <Filter>Header Files\collision</Filter>
-    </ClInclude>
-    <ClInclude Include="collision_evaluator.h">
-      <Filter>Header Files\collision</Filter>
-    </ClInclude>
-    <ClInclude Include="in_place_collision_evaluator.h">
-      <Filter>Header Files\collision</Filter>
-    </ClInclude>
-    <ClInclude Include="circle_collision_mask.h">
-      <Filter>Header Files\collision</Filter>
-    </ClInclude>
     <ClInclude Include="circle_renderer.h">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
     <ClInclude Include="shader_program_instance.h">
       <Filter>Header Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="axis_aligned_box.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="vector.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="sphere.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="deep_2d_shape.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="circle_collision_mask.h">
+      <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_mask.h">
+      <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_mask_old.h">
+      <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_evaluator.h">
+      <Filter>Header Files\collision\evaluators</Filter>
+    </ClInclude>
+    <ClInclude Include="axis_aligned_rectangle_collision_mask.h">
+      <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
+    <ClInclude Include="range.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="point2_collision_mask.h">
+      <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
+    <ClInclude Include="half_space.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="half_space2_collision_mask.h">
+      <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
+    <ClInclude Include="line2_collision_mask.h">
+      <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
+    <ClInclude Include="line_segment2_collision_mask.h">
+      <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
+    <ClInclude Include="ray2_collision_mask.h">
+      <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
+    <ClInclude Include="rectangle_collision_mask.h">
+      <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
+    <ClInclude Include="triangle2_collision_mask.h">
+      <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
+    <ClInclude Include="in_place_collision_evaluator2.h">
+      <Filter>Header Files\collision\evaluators</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -839,20 +872,47 @@
     <ClCompile Include="collision_mask_old.cpp">
       <Filter>Source Files\collision</Filter>
     </ClCompile>
-    <ClCompile Include="collision_evaluator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="collision_mask.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="circle_collision_mask.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="circle_renderer.cpp">
+      <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="shader_program_instance.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\render</Filter>
     </ClCompile>
-    <ClCompile Include="circle_renderer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="collision_evaluator.cpp">
+      <Filter>Source Files\collision\evaluators</Filter>
+    </ClCompile>
+    <ClCompile Include="circle_collision_mask.cpp">
+      <Filter>Source Files\collision\masks</Filter>
+    </ClCompile>
+    <ClCompile Include="point2_collision_mask.cpp">
+      <Filter>Source Files\collision\masks</Filter>
+    </ClCompile>
+    <ClCompile Include="collision_mask.cpp">
+      <Filter>Source Files\collision\masks</Filter>
+    </ClCompile>
+    <ClCompile Include="axis_aligned_rectangle_collision_mask.cpp">
+      <Filter>Source Files\collision\masks</Filter>
+    </ClCompile>
+    <ClCompile Include="half_space2_collision_mask.cpp">
+      <Filter>Source Files\collision\masks</Filter>
+    </ClCompile>
+    <ClCompile Include="line_segment2_collision_mask.cpp">
+      <Filter>Source Files\collision\masks</Filter>
+    </ClCompile>
+    <ClCompile Include="line2_collision_mask.cpp">
+      <Filter>Source Files\collision\masks</Filter>
+    </ClCompile>
+    <ClCompile Include="ray2_collision_mask.cpp">
+      <Filter>Source Files\collision\masks</Filter>
+    </ClCompile>
+    <ClCompile Include="rectangle_collision_mask.cpp">
+      <Filter>Source Files\collision\masks</Filter>
+    </ClCompile>
+    <ClCompile Include="triangle2_collision_mask.cpp">
+      <Filter>Source Files\collision\masks</Filter>
+    </ClCompile>
+    <ClCompile Include="in_place_collision_evaluator2.cpp">
+      <Filter>Source Files\collision\evaluators</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

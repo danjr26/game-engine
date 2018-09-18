@@ -7,24 +7,28 @@
 
 template<class T, uint n>
 class Line {
-public:
+private:
 	Vector<T, n> point;
 	Vector<T, n> direction;
 
-	Line(const Vector<T, n>& in_point, const Vector<T, n>& in_direction) :
+	Line(const Vector<T, n>& in_point, const Vector<T, n> in_direction) :
 		point(in_point),
 		direction(in_direction)
 	{}
 
-	explicit Line(const Ray<T, n>& in_ray) :
-		point(in_ray.point),
-		direction(in_ray.direction)
-	{}
+public:
+	static Line<T, n> From_Points(const Vector<T, n>& in_point1, const Vector<T, n>& in_point2) {
+		return Line<T, n>(in_point1, in_point2 - in_point1);
+	}
 
-	explicit Line(const LineSegment<T, n>& in_segment) :
-		point(in_segment.point1),
-		direction(in_segment.point2 - in_segmenet.point1)
-	{}
+	static Line<T, n> From_Point_Direction(const Vector<T, n>& in_point, const Vector<T, n>& in_direction) {
+		return Line<T, n>(in_point, in_direction);
+	}
 };
+
+using Line2f = Line<float, 2>;
+using Line2d = Line<double, 2>;
+using Line3f = Line<float, 3>;
+using Line3d = Line<double, 3>;
 
 #endif

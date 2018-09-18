@@ -1,19 +1,18 @@
-#ifndef CIRCLE_COLLISION_MASK_H
-#define CIRCLE_COLLISION_MASK_H
+#ifndef LINE_SEGMENT2_COLLISION_MASK_H
+#define LINE_SEGMENT2_COLLISION_MASK_H
 
 #include "collision_mask.h"
-#include "sphere.h"
+#include "line_segment.h"
 
-// WARNING: does not behave as an ellipse upon non-uniform scaling
-class CircleCollisionMask : public CollisionMask2 {
+class LineSegment2CollisionMask : public CollisionMask2 {
 private:
-	Circled circle;
+	LineSegment2d lineSegment;
 
 public:
-	CircleCollisionMask(const Circled& in_circle);
+	LineSegment2CollisionMask(const LineSegment2d& in_LineSegment);
 
-	Circled& Get_Circle();
-	Circled Get_Transformed_Circle();
+	LineSegment2d& Get_Line_Segment();
+	LineSegment2d Get_Transformed_Line_Segment();
 
 	Collision2d Accept_Evaluator(CollisionEvaluator2* in_evaluator, CollisionMask2* in_other) override;
 	Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2* in_evaluator, AxisAlignedRectangleCollisionMask* in_other) override;

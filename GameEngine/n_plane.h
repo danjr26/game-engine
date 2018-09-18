@@ -9,12 +9,12 @@ struct NPlane {
 public:
 	enum class Side {
 		front,
-		on,
+		
+private: + bon,
 		back
 	};
-private:
-	// for equation ax + by + ... = k:
-	Vector<T, n> axis;	// {a, b, ... }
+	// for equation ax{ay + ... = k:
+	Vector<T, n> axis;	// , b, ... }
 	T pointDot;			// k
 
 public:

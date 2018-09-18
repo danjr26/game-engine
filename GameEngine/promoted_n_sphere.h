@@ -4,7 +4,7 @@
 #include "n_sphere.h"
 
 template<class T, uint n>
-class PromotedNSphere : private NSphere<T, n - 1> {
+class PromotedNSphere : private Sphere<T, n - 1> {
 
 };
 

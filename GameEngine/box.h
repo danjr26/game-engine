@@ -1,26 +1,25 @@
 #ifndef BOX_H
 #define BOX_H
 
-#include "transform.h"
+#include "transformable_object.h"
 #include "definitions.h"
+#include <initializer_list>
 
 template<class T, uint n>
 struct Box {
 private:
-	Vector<T, n> minima;
-	Vector<T, n> maxima;
+	Vector<T, n> origin;
+	Vector<T, n> axes[n];
 
-	Box(const Vector<T, n>& in_minima, const Vector<T, n>& in_maxima) :
-		minima(in_minima),
-		maxima(in_maxima)
-	{}
+private:
+	Box(const Vector<T, n>& in_origin, std::initializer_list<const Vector<T, n>&> in_axes);
+
+public:
+	
 };
 
-using Rectanglei = Box<int, 2>;
 using Rectanglef = Box<float, 2>;
 using Rectangled = Box<double, 2>;
-
-using Boxi = Box<int, 3>;
 using Boxf = Box<float, 3>;
 using Boxd = Box<double, 3>;
 

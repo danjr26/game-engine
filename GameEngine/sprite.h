@@ -9,6 +9,7 @@
 #include "texture_instance.h"
 #include "mesh_vertex_gpu_pusher.h"
 #include "shader_program_instance.h"
+#include "geometric_figures.h"
 
 class Sprite : public RenderableObject, public TransformableObject {
 protected:
@@ -18,7 +19,7 @@ protected:
 	//ShaderProgramInstance shaderInstance;
 	ColorRGBAf color;
 public:
-	Sprite(const Vector3d& in_topLeft, const Vector2d& in_dimensions, Texture* in_texture, const ColorRGBAf& in_color = ColorRGBAf(1, 1, 1, 1));
+	Sprite(const DeepAxisAlignedRectangled& in_rectangle, Texture* in_texture, const ColorRGBAf& in_color = ColorRGBAf(1, 1, 1, 1));
 	~Sprite();
 	void Set_UVs(const Vector2f& in_topLeft, const Vector2f& in_bottomRight);
 	void Set_Color(const ColorRGBAf& in_color);

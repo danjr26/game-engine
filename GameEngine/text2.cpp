@@ -47,7 +47,7 @@ Text2::Text2(std::string in_text, FontFaceRasterSet* in_rasterSet, Transform in_
 			Vector2f maxCoords = minCoords + dimensions;
 
 			Vector2f minUVs = Vector2f(0.0f, 0.0f);
-			Vector2f maxUVs = dimensions.Compwise((Vector2f(rasterSet->texture->Get_Dimensions())).Component_Inverted());
+			Vector2f maxUVs = dimensions.Compwise((Vector2f(Vector3f(rasterSet->texture->Get_Dimensions()))).Component_Inverted());
 
 			Vector2f minScreenCoords = DisplayUnits2::Pixels(minCoords, targetDimensions).OpenGL_Position();
 			Vector2f maxScreenCoords = DisplayUnits2::Pixels(maxCoords, targetDimensions).OpenGL_Position();

@@ -16,8 +16,9 @@
 #include "text2.h"
 #include "test_input_context.h"
 #include "circle_collision_mask.h"
-#include "in_place_collision_evaluator.h"
+#include "in_place_collision_evaluator2.h"
 #include "circle_renderer.h"
+#include "debug_mesh_vertex_data_renderer.h"
 #include <exception>
 
 void Test_Render(Window* window) {
@@ -29,9 +30,38 @@ void Test_Render(Window* window) {
 	FontFace* fontFace = GE.Assets().Get<FontFace>("ConsolasFontFace");
 	FontFaceRasterSet* rasterSet = fontFace->Rasterize(24);
 
-	CircleRenderer circle(Vector3d(400, 400, 0), 100.0, ColorRGBAf(0.5, 0.7, 0.9, 0.5), 20, ColorRGBAf(0, 0, 0, 0.5));
+	Circled circle1 = Circled::From_Point_Radius(Vector2d(400.0, 200.0), 100.0);
+	CircleRenderer circleRenderer1(DeepCircled(circle1, 0.0), ColorRGBAf(1, 1, 1, 0.5), 10.0, ColorRGBAf(1, 0.5, 0.5, 1.0));
+	GE.Render().Add(&circleRenderer1);
+	CircleCollisionMask circleCollider1(circle1);
 
-	GE.Render().Add(&circle);
+	Circled circle2 = Circled::From_Point_Radius(Vector2d(560.0, 200.0), 50.0);
+	CircleRenderer circleRenderer2(DeepCircled(circle2, 0.0), ColorRGBAf(1, 1, 1, 0), 2.0, ColorRGBAf(1, 1, 1, 1.0));
+	GE.Render().Add(&circleRenderer2);
+	CircleCollisionMask circleCollider2(circle2);
+
+	InPlaceCollisionEvaluator2 collEval = InPlaceCollisionEvaluator2();
+	Collision coll = collEval.Evaluate(&circleCollider1, &circleCollider2);
+
+	Vector3f positions[] = {
+		Vector3f(0.0f, 0.0f, 0.0f),
+		Vector3f(0.0f, 100.0f, 0.0f),
+		Vector3f(200.0f, 200.0f, 0.0f),
+		Vector3f(100.0f, 0.0f, 0.0f)
+	};
+
+	uchar indices[] = {
+		0, 3, 1,
+		2, 1, 3
+	};
+
+	MeshVertexData meshData(MeshVertexData::DataType::_ubyte);
+	meshData.Add_Vertices(4, {});
+	meshData.Add_Member(MeshVertexData::MemberID::position, MeshVertexData::DataType::_float, 3, positions);
+	meshData.Add_Faces(2, indices);
+
+	DebugMeshVertexDataRenderer meshRenderer(&meshData);
+	GE.Render().Add(&meshRenderer);
 
 	Vector2i winDim = window->Get_Dimensions();
 
@@ -54,8 +84,10 @@ void Test_Render(Window* window) {
 	GE.Render().passes.push_back(&testPass);
 
 	Sprite rect2 = Sprite(
-		DisplayUnits3::Percent(Vector3f(0, 0, 0)).OpenGL_Position(),
-		DisplayUnits2::Percent(Vector2f(100, 100)).OpenGL_Displacement(),
+		DeepAxisAlignedRectangled(AxisAlignedRectangled::From_Extrema(
+			DisplayUnits2::Percent(Vector2d(0.0, 0.0)).OpenGL_Position(),
+			DisplayUnits2::Percent(Vector2d(100.0, 100.0)).OpenGL_Position()
+		), 0.0),
 		&fbColor
 	);
 
@@ -99,15 +131,6 @@ void Test_Render(Window* window) {
 }
 
 int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nArgs) {
-	Transform transform1 = Transform();
-	Transform transform2 = Transform();
-	transform2.Set_Parent(&transform1);
-
-	transform1.Translate_Local(Vector3d(5, 0, 0));
-	transform2.Rotate_Local(Rotationd(Vector3d(1, 0, 0), Vector3d(0, 1, 1).Normalized()));
-
-	Vector3d v = transform2.Apply_To_World_Point(Vector3d(6, 0, 0));
-
 	new GameEngine();
 
 	Window::Params params =
