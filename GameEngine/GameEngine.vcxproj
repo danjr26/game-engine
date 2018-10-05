@@ -199,6 +199,7 @@
     <ClInclude Include="game_engine.h" />
     <ClInclude Include="half_space.h" />
     <ClInclude Include="half_space2_collision_mask.h" />
+    <ClInclude Include="Header.h" />
     <ClInclude Include="id.h" />
     <ClInclude Include="input_context.h" />
     <ClInclude Include="input_event.h" />

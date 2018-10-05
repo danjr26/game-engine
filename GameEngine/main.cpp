@@ -35,13 +35,38 @@ void Test_Render(Window* window) {
 	GE.Render().Add(&circleRenderer1);
 	CircleCollisionMask circleCollider1(circle1);
 
-	Circled circle2 = Circled::From_Point_Radius(Vector2d(560.0, 200.0), 50.0);
+	Circled circle2 = Circled::From_Point_Radius(Vector2d(450.0, 200.0), 50.0);
 	CircleRenderer circleRenderer2(DeepCircled(circle2, 0.0), ColorRGBAf(1, 1, 1, 0), 2.0, ColorRGBAf(1, 1, 1, 1.0));
 	GE.Render().Add(&circleRenderer2);
 	CircleCollisionMask circleCollider2(circle2);
 
 	InPlaceCollisionEvaluator2 collEval = InPlaceCollisionEvaluator2();
 	Collision coll = collEval.Evaluate(&circleCollider1, &circleCollider2);
+
+	///////////////////////////
+
+	Point2CollisionMask pointCollider = Point2CollisionMask(Vector2d(400, 250));
+	AxisAlignedRectangleCollisionMask aab1 = AxisAlignedRectangleCollisionMask(
+		AxisAlignedRectangled::From_Extrema(Vector2d(0, 0), Vector2d(100, 100))
+	);
+	AxisAlignedRectangleCollisionMask aab2 = AxisAlignedRectangleCollisionMask(
+		AxisAlignedRectangled::From_Extrema(Vector2d(50, 50), Vector2d(200, 200))
+	);
+
+	aab1.Set_Ignore_Transform(true);
+	aab2.Set_Ignore_Transform(true);
+
+	Clock c;
+	uint n = 1000000;
+	double t1 = c.Now();
+	for (uint i = 0; i < n; i++) {
+		collEval.Evaluate(&aab1, &circleCollider1);
+	}
+	double t2 = c.Now();
+	double averageT = (t2 - t1) / n;
+	Log::main(to_string(averageT * 1000000) + " us");
+
+	////////////////////////////
 
 	Vector3f positions[] = {
 		Vector3f(0.0f, 0.0f, 0.0f),

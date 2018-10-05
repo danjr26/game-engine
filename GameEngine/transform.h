@@ -20,6 +20,9 @@ public:
 	Transform* Get_Parent();
 	void Set_Parent(Transform* in_parent);
 
+	bool Is_Local_Identity() const;
+	bool Is_Global_Identity() const;
+
 	Rotationd Get_Local_Rotation();
 	Rotationd Get_World_Rotation();
 	void Set_Local_Rotation(const Rotationd& in_rotation);

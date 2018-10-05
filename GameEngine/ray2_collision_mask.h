@@ -10,7 +10,7 @@ private:
 	Ray2d ray;
 
 public:
-	Ray2CollisionMask(const Ray2d& in_Ray);
+	Ray2CollisionMask(const Ray2d& in_ray, bool in_ignoreTransform = false);
 
 	Ray2d& Get_Ray();
 	Ray2d Get_Transformed_Ray();

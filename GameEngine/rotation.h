@@ -36,6 +36,10 @@ public:
 		quaternion = Vector<T, 4>(axis  * sin(angle / 2), cos(angle / 2));
 	}
 
+	bool Is_Identity() const {
+		return quaternion == Vector<T, 4>(0, 0, 0, 1);
+	}
+
 	void Invert() {
 		quaternion.Conjugate();
 	}

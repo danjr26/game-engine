@@ -1,5 +1,20 @@
 #include "line2_collision_mask.h"
 
+Line2CollisionMask::Line2CollisionMask(const Line2d & in_line, bool in_ignoreTransform) :
+	CollisionMask2(ignoreTransform),
+	line(in_line)
+{}
+
+Line2d& Line2CollisionMask::Get_Line() {
+	return line;
+}
+
+Line2d Line2CollisionMask::Get_Transformed_Line() {
+	Line2d out = line;
+	if (!ignoreTransform) line.Apply_Transform(transform);
+	return out;
+}
+
 Collision2d Line2CollisionMask::Accept_Evaluator(CollisionEvaluator2 * in_evaluator, CollisionMask2 * in_other) {
 	return in_other->Accept_Secondhand_Evaluator(in_evaluator, this);
 }

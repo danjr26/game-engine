@@ -21,12 +21,22 @@ public:
 
 		for (uint i = 0; i < nCorners; i++) {
 			for (uint j = 0; j < n; j++) {
-				corners[i][j] = ((i >> j) & 1) ? maxima[j] : minima[j];
+				out_corners[i][j] = ((i >> j) & 1) ? maxima[j] : minima[j];
 			}
 		}
 	}
 
-	void Apply_Transform(const Transform& transform) {
+	void Apply_Transform(Transform& transform) {
+		if (transform.Get_World_Rotation().Is_Identity()) {
+			for (Transform* t = &transform; t != nullptr; t = t->Get_Parent()) {
+				minima = minima.Compwise(Vector<T, n>(t->Get_Local_Scale()));
+				minima += Vector<T, n>(t->Get_Local_Position());
+
+				maxima = maxima.Compwise(Vector<T, n>(t->Get_Local_Scale()));
+				maxima += Vector<T, n>(t->Get_Local_Position());
+			}
+		}
+
 		const uint nCorners = 1 << n;
 
 		Vector<T, n> corners[nCorners];
@@ -37,6 +47,14 @@ public:
 		}
 
 		(*this) = AxisAlignedBox<T, n>::From_Bounded_Points(nCorners, corners);
+	}
+
+	Vector<T, n> Get_Center() const {
+		return (minima + maxima) / 2;
+	}
+
+	Vector<T, n> Get_Dimensions() const {
+		return maxima - minima;
 	}
 
 	Vector<T, n> Get_Minima() const {
@@ -53,10 +71,6 @@ public:
 
 	void Set_Maxima(const Vector<T, n>& in_maxima) {
 		maxima = in_maxima;
-	}
-
-	Vector<T, n> Get_Dimensions() const {
-		return maxima - minima;
 	}
 
 	inline static AxisAlignedBox<T, n> From_Extrema(const Vector<T, n>& in_minima, const Vector<T, n>& in_maxima) {

@@ -8,7 +8,7 @@ private:
 	Vector2d point;
 
 public:
-	Point2CollisionMask(const Vector2d& in_point);
+	Point2CollisionMask(const Vector2d& in_point, bool in_ignoreTransform = false);
 
 	Vector2d& Get_Point();
 	Vector2d Get_Transformed_Point() const;

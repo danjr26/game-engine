@@ -94,6 +94,9 @@
     <Filter Include="Source Files\collision\masks">
       <UniqueIdentifier>{a80cd48d-6853-40c6-b5cc-1c2c151fed2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\physics">
+      <UniqueIdentifier>{f1105bb4-a658-404b-9acb-0268738838f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="transform.h">
@@ -566,6 +569,9 @@
     </ClInclude>
     <ClInclude Include="in_place_collision_evaluator2.h">
       <Filter>Header Files\collision\evaluators</Filter>
+    </ClInclude>
+    <ClInclude Include="Header.h">
+      <Filter>Header Files\physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

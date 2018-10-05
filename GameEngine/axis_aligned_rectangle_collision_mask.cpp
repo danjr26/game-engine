@@ -1,6 +1,7 @@
 #include "axis_aligned_rectangle_collision_mask.h"
 
-AxisAlignedRectangleCollisionMask::AxisAlignedRectangleCollisionMask(const AxisAlignedRectangled& in_rectangle) :
+AxisAlignedRectangleCollisionMask::AxisAlignedRectangleCollisionMask(const AxisAlignedRectangled& in_rectangle, bool in_ignoreTransform) :
+	CollisionMask2(in_ignoreTransform),
 	rectangle(in_rectangle)
 {}
 
@@ -9,17 +10,9 @@ AxisAlignedRectangled& AxisAlignedRectangleCollisionMask::Get_Rectangle() {
 }
 
 AxisAlignedRectangled AxisAlignedRectangleCollisionMask::Get_Transformed_Rectangle() {
-	Vector2d corners[4];
-	corners[0] = rectangle.Get_Minima();
-	corners[1] = rectangle.Get_Maxima();
-	corners[2] = Vector2d(corners[0].X(), corners[1].Y());
-	corners[3] = Vector2d(corners[1].X(), corners[0].Y());
-
-	for (uint i = 0; i < 4; i++) {
-		corners[i] = Vector2d(transform.Apply_To_Local_Point(Vector3d(corners[i], 0.0)));
-	}
-
-	return AxisAlignedRectangled::From_Bounded_Points(4, corners);
+	AxisAlignedRectangled out = rectangle;
+	if(!ignoreTransform) out.Apply_Transform(transform);
+	return out;
 }
 
 Collision2d AxisAlignedRectangleCollisionMask::Accept_Evaluator(CollisionEvaluator2* in_evaluator, CollisionMask* in_other) {

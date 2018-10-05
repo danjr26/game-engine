@@ -53,12 +53,12 @@ public:
 		members[n - 1] = 0;
 	}
 
-	template<typename = typename std::enable_if<n == 1, void>::type>
+	template<typename = typename std::enable_if_t<n == 1, void>>
 	operator T() const {
 		return *members;
 	}
 
-	template<typename = typename std::enable_if<n == 1, void>::type>
+	template<typename = typename std::enable_if_t<n == 1, void>>
 	Vector(T in_source) {
 		members[0] = in_source;
 	}
@@ -380,7 +380,7 @@ public:
 	}
 
 	template<typename = typename std::enable_if<n >= 4, void>::type>
-	Vector<T, 4> Hamilton(const Vector<T, 4>& v) const {
+	inline Vector<T, 4> Hamilton(const Vector<T, 4>& v) const {
 		return Vector<T, 4>(
 			members[3] * v.members[0] + members[0] * v.members[3] + members[1] * v.members[2] - members[2] * v.members[1],
 			members[3] * v.members[1] - members[0] * v.members[2] + members[1] * v.members[3] + members[2] * v.members[0],

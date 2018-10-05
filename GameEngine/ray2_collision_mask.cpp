@@ -1,5 +1,20 @@
 #include "ray2_collision_mask.h"
 
+Ray2CollisionMask::Ray2CollisionMask(const Ray2d& in_ray, bool in_ignoreTransform) :
+	CollisionMask2(in_ignoreTransform),
+	ray(in_ray)
+{}
+
+Ray2d& Ray2CollisionMask::Get_Ray() {
+	return ray;
+}
+
+Ray2d Ray2CollisionMask::Get_Transformed_Ray() {
+	Ray2d out = ray;
+	if (!ignoreTransform) out.Apply_Transform(transform);
+	return out;
+}
+
 Collision2d Ray2CollisionMask::Accept_Evaluator(CollisionEvaluator2 * in_evaluator, CollisionMask2 * in_other) {
 	return in_other->Accept_Secondhand_Evaluator(in_evaluator, this);
 }

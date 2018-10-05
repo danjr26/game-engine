@@ -9,7 +9,7 @@ private:
 	Triangle2d triangle;
 
 public:
-	Triangle2CollisionMask(const Triangle2d& in_Triangle);
+	Triangle2CollisionMask(const Triangle2d& in_triangle, bool in_ignoreTransform = false);
 
 	Triangle2d& Get_Triangle();
 	Triangle2d Get_Transformed_Triangle();

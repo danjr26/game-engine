@@ -1,5 +1,20 @@
 #include "triangle2_collision_mask.h"
 
+Triangle2CollisionMask::Triangle2CollisionMask(const Triangle2d & in_triangle, bool in_ignoreTransform) :
+	CollisionMask2(in_ignoreTransform),
+	triangle(in_triangle)
+{}
+
+Triangle2d & Triangle2CollisionMask::Get_Triangle() {
+	return triangle;
+}
+
+Triangle2d Triangle2CollisionMask::Get_Transformed_Triangle() {
+	Triangle2d out = triangle;
+	if (!ignoreTransform) triangle.Apply_Transform(transform);
+	return out;	
+}
+
 Collision2d Triangle2CollisionMask::Accept_Evaluator(CollisionEvaluator2 * in_evaluator, CollisionMask2 * in_other) {
 	return in_other->Accept_Secondhand_Evaluator(in_evaluator, this);
 }

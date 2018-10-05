@@ -9,7 +9,7 @@ private:
 	Rectangled rectangle;
 
 public:
-	RectangleCollisionMask(const Rectangled& in_LineSegment);
+	RectangleCollisionMask(const Rectangled& in_rectangle, bool in_ignoreTransform = false);
 
 	Rectangled& Get_Rectangle();
 	Rectangled Get_Transformed_Rectangle();

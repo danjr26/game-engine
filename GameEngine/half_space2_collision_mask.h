@@ -9,7 +9,7 @@ private:
 	HalfSpace2d halfSpace;
 
 public:
-	HalfSpace2CollisionMask(const HalfSpace2d& in_halfSpace);
+	HalfSpace2CollisionMask(const HalfSpace2d& in_halfSpace, bool in_ignoreTransform = false);
 
 	HalfSpace2d& Get_Half_Space();
 	HalfSpace2d Get_Transformed_Half_Space();

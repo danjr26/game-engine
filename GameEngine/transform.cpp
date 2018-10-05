@@ -15,6 +15,17 @@ void Transform::Set_Parent(Transform* in_parent) {
 	parent = in_parent;
 }
 
+bool Transform::Is_Local_Identity() const {
+	return translation.Is_Zero() && scale.Is_Zero() && rotation.Is_Identity();
+}
+
+bool Transform::Is_Global_Identity() const {
+	for (Transform const* transform = parent; transform != nullptr; transform = transform->parent) {
+		if (!transform->Is_Local_Identity()) return false;
+	}
+	return true;
+}
+
 Rotationd Transform::Get_Local_Rotation() {
 	return rotation;
 }

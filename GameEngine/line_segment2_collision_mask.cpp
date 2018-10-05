@@ -1,5 +1,11 @@
 #include "line_segment2_collision_mask.h"
 
+LineSegment2d LineSegment2CollisionMask::Get_Transformed_Line_Segment() {
+	LineSegment2d out = lineSegment;
+	if (!ignoreTransform) lineSegment.Apply_Transform(transform);
+	return out;
+}
+
 Collision2d LineSegment2CollisionMask::Accept_Evaluator(CollisionEvaluator2 * in_evaluator, CollisionMask2 * in_other) {
 	return in_other->Accept_Secondhand_Evaluator(in_evaluator, this);
 }

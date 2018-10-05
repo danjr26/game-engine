@@ -11,10 +11,35 @@ private:
 
 	Ray(const Vector<T, n>& in_point, const Vector<T, n>& in_direction) :
 		point(in_point),
-		direction(in_direction)
+		direction(in_direction.Normalized())
 	{}
 
 public:
+	void Apply_Transform(Transform& in_transform) {
+		point = Vector<T, n>(in_transform.Apply_To_Local_Point(Vector<T, 3>(point)));
+		direction = Vector<T, n>(in_transform.Apply_To_Local_Direction(Vector<T, 3>(direction)));
+	}
+
+	Vector<T, n> Get_Point() const {
+		return point;
+	}
+
+	Vector<T, n> Get_Direction() const {
+		return direction;
+	}
+
+	T Get_Projection_Coefficient() const {
+		return direction.Dot(point);
+	}
+
+	T Get_Projection_Coefficient(const Vector<T, n>& in_point) {
+		return (in_point - point).Projection_Coeff(direction);
+	}
+
+	Vector<T, n> Get_Projection(const Vector<T, n>& in_point) {
+		return (in_point - point).Projection(direction) + point;
+	}
+
 	static Ray<T, n> From_Point_Direction(const Vector<T, n>& in_point, const Vector<T, n>& in_direction) {
 		return Ray<T, n>(in_point, in_direction);
 	}

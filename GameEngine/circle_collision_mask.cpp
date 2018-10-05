@@ -1,6 +1,7 @@
 #include "circle_collision_mask.h"
 
-CircleCollisionMask::CircleCollisionMask(const Circled& in_circle) :
+CircleCollisionMask::CircleCollisionMask(const Circled& in_circle, bool in_ignoreTransform) :
+	CollisionMask2(in_ignoreTransform),
 	circle(in_circle) 
 {}
 
@@ -10,16 +11,8 @@ Circled& CircleCollisionMask::Get_Circle() {
 
 Circled CircleCollisionMask::Get_Transformed_Circle() {
 	Circled out = circle;
-	out.Apply_Transform(transform);
+	if (!ignoreTransform) out.Apply_Transform(transform);
 	return out;
-	/*double scale = 1.0;
-	for (Transform* t = &transform; t != nullptr; t = t->Get_Parent()) {
-		scale *= max(t->Get_Local_Scale().X(), t->Get_Local_Scale().Y());
-	}
-	return Circled::From_Point_Radius(
-		Vector2d(transform.Apply_To_Local_Point(Vector3d(circle.Get_Center(), 0.0))), 
-		circle.Get_Radius() * scale
-	);*/
 }
 
 Collision2d CircleCollisionMask::Accept_Evaluator(CollisionEvaluator2* in_evaluator, CollisionMask2* in_other) {

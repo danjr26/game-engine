@@ -20,11 +20,22 @@ class RectangleCollisionMask;
 class Triangle2CollisionMask;
 
 template<uint n>
-class CollisionMask : public FilteredObject, public DisableableObject, public TransformableObject {};
+class CollisionMask : public FilteredObject, public DisableableObject, public TransformableObject 
+{};
 
 template<>
 class CollisionMask<2> : public FilteredObject, public DisableableObject, public TransformableObject {
+protected:
+	bool ignoreTransform;
+
 public:
+	CollisionMask(bool in_ignoreTransform = false) : ignoreTransform(in_ignoreTransform)
+	{}
+
+	void Set_Ignore_Transform(bool in_value) { 
+		ignoreTransform = in_value;
+	}
+
 	virtual Collision2d Accept_Evaluator(CollisionEvaluator2* in_evaluator, CollisionMask<2>* in_other) { throw NotImplementedException(); return Collision2d(); }
 	virtual Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2* in_evaluator, AxisAlignedRectangleCollisionMask* in_other) { throw NotImplementedException(); return Collision2d(); }
 	virtual Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2* in_evaluator, CircleCollisionMask* in_other) { throw NotImplementedException(); return Collision2d(); }

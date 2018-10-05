@@ -10,7 +10,7 @@ private:
 	AxisAlignedRectangled rectangle;
 
 public:
-	AxisAlignedRectangleCollisionMask(const AxisAlignedRectangled& in_rectangle);
+	AxisAlignedRectangleCollisionMask(const AxisAlignedRectangled& in_rectangle, bool in_ignoreTransform = false);
 
 	AxisAlignedRectangled& Get_Rectangle();
 	AxisAlignedRectangled Get_Transformed_Rectangle();

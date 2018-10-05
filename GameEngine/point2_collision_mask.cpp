@@ -1,6 +1,7 @@
 #include "point2_collision_mask.h"
 
-Point2CollisionMask::Point2CollisionMask(const Vector2d& in_point) :
+Point2CollisionMask::Point2CollisionMask(const Vector2d& in_point, bool in_ignoreTransform) :
+	CollisionMask2(in_ignoreTransform),
 	point(in_point)
 {}
 
@@ -9,7 +10,9 @@ Vector2d& Point2CollisionMask::Get_Point() {
 }
 
 Vector2d Point2CollisionMask::Get_Transformed_Point() const {
-	return Vector2d(transform.Apply_To_Local_Point(Vector3d(point, 0.0)));
+	Vector2d out = point;
+	if (!ignoreTransform) out = Vector2d(transform.Apply_To_Local_Point(Vector3d(out)));
+	return out;
 }
 
 Collision2d Point2CollisionMask::Accept_Evaluator(CollisionEvaluator2* in_evaluator, CollisionMask2* in_other) {

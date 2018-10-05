@@ -9,7 +9,7 @@ private:
 	Line2d line;
 
 public:
-	Line2CollisionMask(const Line2d& in_Line);
+	Line2CollisionMask(const Line2d& in_line, bool in_ignoreTransform = false);
 
 	Line2d& Get_Line();
 	Line2d Get_Transformed_Line();

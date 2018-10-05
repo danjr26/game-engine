@@ -10,7 +10,7 @@ private:
 	Circled circle;
 
 public:
-	CircleCollisionMask(const Circled& in_circle);
+	CircleCollisionMask(const Circled& in_circle, bool in_ignoreTransform = false);
 
 	Circled& Get_Circle();
 	Circled Get_Transformed_Circle();

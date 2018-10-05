@@ -9,7 +9,7 @@ private:
 	LineSegment2d lineSegment;
 
 public:
-	LineSegment2CollisionMask(const LineSegment2d& in_LineSegment);
+	LineSegment2CollisionMask(const LineSegment2d& in_LineSegment, bool in_ignoreTransform = false);
 
 	LineSegment2d& Get_Line_Segment();
 	LineSegment2d Get_Transformed_Line_Segment();
