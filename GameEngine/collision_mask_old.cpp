@@ -258,11 +258,11 @@ Collision SphereTreeCollisionMask::Triangles_Are_Colliding(
 
 	if (Is_Between_Inc(min2, min1, max1)) {
 		// 1 2 1 2 or 1 2 2 1
-		collision = { true, axis * Mean(min2, Lesser_Of(max1, max2)) };
+		collision = { true, axis * Mean(min2, Min(max1, max2)) };
 	}
 	else if (Is_Between_Inc(max2, min1, max1)) {
 		// 2 1 2 1
-		collision = { true, axis * Mean(max2, Greater_Of(min1, max1)) };
+		collision = { true, axis * Mean(max2, Max(min1, max1)) };
 	}
 	else if (Is_Between_Inc(min1, min2, max2) && Is_Between_Inc(max1, min2, max2)) {
 		// 2 1 1 2

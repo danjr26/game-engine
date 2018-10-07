@@ -5,10 +5,12 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
 #include <windows.h>
 #include <gl/glew.h>
 #include <gl/wglew.h>
 #include <functional>
+#include <initializer_list>
 #include "definitions.h"
 using namespace std;
 
@@ -61,7 +63,7 @@ bool Is_Between_Inc(T a, T b1, T b2) {
 }
 
 template<class T>
-T Lesser_Of(T a, T b) {
+T Min(T a, T b) {
 	if (b < a) {
 		return b;
 	}
@@ -70,8 +72,38 @@ T Lesser_Of(T a, T b) {
 	}
 }
 
+template<class T>
+T Min(std::initializer_list<T> vList) {
+	if (vList.size() == 0) return 0;
+	T out = *(vList.begin());
+	for (auto it = vList.begin() + 1; it < vList.end(); it++) {
+		if (*it < out) out = *it;
+	}
+	return out;
+}
+
+template<class T>
+T Min(T* vList, uint n) {
+	if (n == 0) return 0;
+	T out = vList[0];
+	for (uint i = 1; i < n; i++) {
+		if (vList[i] < out) out = vList[i];
+	}
+	return out;
+}
+
+template<class T>
+T Min(std::vector<T> vList) {
+	if (vList.size() == 0) return 0;
+	T out = vList[0];
+	for (auto it = vList.begin() + 1; it < vList.end(); it++) {
+		if (*it < out) out = *it;
+	}
+	return out;
+}
+
 template<class T> 
-T Greater_Of(T a, T b) {
+T Max(T a, T b) {
 	if (b > a) {
 		return b;
 	}
@@ -81,6 +113,69 @@ T Greater_Of(T a, T b) {
 }
 
 template<class T>
+T Max(std::initializer_list<T> vList) {
+	if (vList.size() == 0) return 0;
+	T out = *(vList.begin());
+	for (auto it = vList.begin() + 1; it < vList.end(); it++) {
+		if (*it > out) out = *it;
+	}
+	return out;
+}
+
+template<class T>
+T Max(T* vList, uint n) {
+	if (n == 0) return 0;
+	T out = vList[0];
+	for (uint i = 1; i < n; i++) {
+		if (vList[i] > out) out = vList[i];
+	}
+	return out;
+}
+
+template<class T>
+T Max(std::vector<T> vList) {
+	if (vList.size() == 0) return 0;
+	T out = vList[0];
+	for (auto it = vList.begin() + 1; it < vList.end(); it++) {
+		if (*it > out) out = *it;
+	}
+	return out;
+}
+
+template<class T>
+void Min_Max(const std::initializer_list<T>& vList, T& out_min, T& out_max) {
+	if (vList.size() == 0) return;
+	out_min = *(vList.begin());
+	out_max = out_min;
+	for (auto it = vList.begin() + 1; it < vList.end(); it++) {
+		if (*it < out_min) out_min = *it;
+		if (*it > out_max) out_max = *it;
+	}
+}
+
+template<class T>
+void Min_Max(T* vList, uint n, T& out_min, T& out_max) {
+	if (n == 0) return;
+	out_min = vList[0];
+	out_max = out_min;
+	for (uint i = 1; i < n; i++) {
+		if (vList[i] < out_min) out_min = vList[i];
+		if (vLost[i] < out_max) out_max = vList[i];
+	}
+}
+
+template<class T>
+void Min_Max(const std::vector<T>& vList, T& out_min, T& out_max) {
+	if (vList.size() == 0) return;
+	out_min = *(vList.begin());
+	out_max = out_min;
+	for (auto it = vList.begin() + 1; it < vList.end(); it++) {
+		if (*it < out_min) out_min = *it;
+		if (*it > out_max) out_max = *it;
+	}
+}
+
+template<class T>	
 T Lerp(T a, T b, T t) {
 	return a * (1 - t) + b * t;
 }

@@ -149,8 +149,8 @@ void MeshVertexGPUPusher::Initialize(MeshVertexData* in_data, const ExtraParams&
 	useCase = in_params.useCase;
 	usedVertices = data->Get_Number_Vertices();
 	usedFaces = data->Get_Number_Faces();
-	reservedVertices = Greater_Of(in_params.nVerticesToReserve, usedVertices);
-	reservedFaces = Greater_Of(in_params.nFacesToReserve, usedFaces);
+	reservedVertices = Max(in_params.nVerticesToReserve, usedVertices);
+	reservedFaces = Max(in_params.nFacesToReserve, usedFaces);
 
 	glGenVertexArrays(1, &vertexArrayID);
 	glBindVertexArray(vertexArrayID);

@@ -41,7 +41,7 @@ void Test_Render(Window* window) {
 	CircleCollisionMask circleCollider2(circle2);
 
 	InPlaceCollisionEvaluator2 collEval = InPlaceCollisionEvaluator2();
-	Collision coll = collEval.Evaluate(&circleCollider1, &circleCollider2);
+	Collision coll = collEval.Evaluate(circleCollider1, circleCollider2);
 
 	///////////////////////////
 
@@ -60,7 +60,7 @@ void Test_Render(Window* window) {
 	uint n = 1000000;
 	double t1 = c.Now();
 	for (uint i = 0; i < n; i++) {
-		collEval.Evaluate(&aab1, &circleCollider1);
+		collEval.Evaluate(aab1, circleCollider1);
 	}
 	double t2 = c.Now();
 	double averageT = (t2 - t1) / n;

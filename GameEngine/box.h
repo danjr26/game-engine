@@ -2,6 +2,7 @@
 #define BOX_H
 
 #include "transformable_object.h"
+#include "matrix.h"
 #include "definitions.h"
 #include <initializer_list>
 
@@ -23,8 +24,25 @@ public:
 		return origin;
 	}
 
+	Vector<T, n> Get_Center() {
+		Vector2d out = origin;
+		for (uint i = 0; i < n; i++) out += axes[i] / 2.0;
+		return out;
+	}
+
 	void Get_Axes(Vector<T, n>* out_axes) {
 		for (uint i = 0; i < n; i++) out_axes[i] = axes[i];
+	}
+
+	void Get_Corners(Vector<T, n>* out_corners) {
+		const uint nCorners = 1 << n;
+
+		for (uint i = 0; i < nCorners; i++) {
+			out_corners[i] = origin;
+			for (uint j = 0; j < n; j++) {
+				if ((i >> j) & 1) out_corners[i] += axes[j];
+			}
+		}
 	}
 
 	void Apply_Transform(Transform& transform) {
@@ -34,8 +52,24 @@ public:
 		}
 	}
 
-	static Box From_Origin_Axes(const Vector<T, n>& in_origin, std::initializer_list<const Vector<T, n>&> in_axes) {
-		return Box(in_origin, in_axes.begin);
+	static Box From_Center_Axes(const Vector<T, n>& in_center, const Vector<T, n>* in_axes) {
+		Vector2d origin = in_center;
+		for (uint i = 0; i < n; i++) origin -= axes[i] / 2.0;
+		return Box(origin, in_axes);
+	}
+
+	static Box From_Center_Axes(const Vector<T, n>& in_origin, std::initializer_list<Vector<T, n>> in_axes) {
+		Vector2d origin = in_center;
+		for (uint i = 0; i < n; i++) origin -= axes.begin()[i] / 2.0;
+		return Box(origin, in_axes.begin());
+	}
+
+	static Box From_Origin_Axes(const Vector<T, n>& in_origin, const Vector<T, n>* in_axes) {
+		return Box(in_origin, in_axes);
+	}
+
+	static Box From_Origin_Axes(const Vector<T, n>& in_origin, std::initializer_list<Vector<T, n>> in_axes) {
+		return Box(in_origin, in_axes.begin());
 	}
 };
 

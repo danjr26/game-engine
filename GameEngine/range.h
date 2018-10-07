@@ -20,23 +20,15 @@ public:
 	}
 
 	Range(uint in_nVals, const T* in_vals) {
-		if (in_nVals == 0) {
-			low = 0;
-			high = 0;
-		}
-		else {
-			low = in_vals[0];
-			high = in_vals[0];
+		Min_Max(in_vals, in_nVals, low, high);
+	}
 
-			for (uint i = 1; i < in_nVals; i++) {
-				if (in_vals[i] < low) {
-					low = in_vals[i];
-				}
-				else if (in_vals[i] > high) {
-					high = in_vals[i];
-				}
-			}
-		}
+	Range(const std::initializer_list<T>& in_vals) {
+		Min_Max(in_vals, low, high);
+	}
+
+	Range(const std::vector<T>& in_vals) {
+		Min_Max(in_vals, low, high);
 	}
 
 	T Get_Low() const {
@@ -54,22 +46,20 @@ public:
 	T Get_Mean() const {
 		return (high + low) / 2;
 	}
+
+	void Expand_To(T in_val) {
+		high = Max(high, in_val);
+		low = Min(low, in_val);
+	}
 	
 	void Set_Values(T in_val1, T in_val2) {
-		if (in_val1 > in_val2) {
-			low = in_val2;
-			high = in_val1;
-		}
-		else {
-			low = in_val1;
-			high = in_val2;
-		}
+		Min_Max({ in_val1, in_val2 }, low, high);
 	}
 
 	bool Intersection(const Range& in_other, Range& out_result) {
 		if (low >= in_other.Get_Low()) {
 			if (low <= in_other.Get_High()) {
-				out_result.Set_Values(low, Lesser_Of<T>(high, in_other.Get_High()));
+				out_result.Set_Values(low, Min<T>(high, in_other.Get_High()));
 				return true;
 			}
 			else {
@@ -78,12 +68,21 @@ public:
 		}
 		else {
 			if (high >= in_other.Get_Low()) {
-				out_result.Set_Values(in_other.Get_Low(), Lesser_Of<T>(high, in_other.Get_High()));
+				out_result.Set_Values(in_other.Get_Low(), Min<T>(high, in_other.Get_High()));
 				return true;
 			}
 			else {
 				return false;
 			}
+		}
+	}
+
+	bool Intersection(const Range& in_other) {
+		if (low >= in_other.Get_Low()) {
+			return low <= in_other.Get_High();
+		}
+		else {
+			return high >= in_other.Get_Low();
 		}
 	}
 };

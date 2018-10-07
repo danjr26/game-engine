@@ -27,22 +27,22 @@ struct DisplayDistance {
 		Vector2i dimensions = in_target.Get_Dimensions();
 		switch (units) {
 		case percent:
-			for (uint i = 0; i < Lesser_Of(n, 2U); i++) {
+			for (uint i = 0; i < Min(n, 2U); i++) {
 				output[i] = value[i] / 100.0 * 2.0;
 			}
 			break;
 		case percent_x:
-			for (uint i = 0; i < Lesser_Of(n, 2U); i++) {
+			for (uint i = 0; i < Min(n, 2U); i++) {
 				output[i] = value[i] * dimensions[i] / dimensions[0] / 100.0 * 2.0;
 			}
 			break;
 		case percent_y:
-			for (uint i = 0; i < Lesser_Of(n, 2U); i++) {
+			for (uint i = 0; i < Min(n, 2U); i++) {
 				output[i] = value[i] * dimensions[i] / dimensions[1] / 100.0 * 2.0;
 			}
 			break;
 		case pixels:
-			for (uint i = 0; i < Lesser_Of(n, 2U); i++) {
+			for (uint i = 0; i < Min(n, 2U); i++) {
 				output[i] = value[i] / dimensions[i] * 2.0f;
 			}
 			break;
@@ -53,7 +53,7 @@ struct DisplayDistance {
 
 	Vector<double, n> As_Position(const RenderTarget& in_target) {
 		Vector<double, n> output = As_Displacement(in_target);
-		for (uint i = 0; i < Lesser_Of(n, 2U); i++) {
+		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] -= 1.0;
 		}
 
@@ -80,7 +80,7 @@ private:
 public:
 	Vector<float, n> Percent() {
 		Vector<float, n> output = value;
-		for (uint i = 0; i < Lesser_Of(n, 2U); i++) {
+		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = value[i] * 100.0f;
 		}
 		return output;
@@ -102,7 +102,7 @@ public:
 
 	Vector<float, n> Pixels(Vector2i in_targetDimensions) {
 		Vector<float, n> output = value;
-		for (uint i = 0; i < Lesser_Of(n, 2U); i++) {
+		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = output[i] * in_targetDimensions[i];
 		}
 		return output;
@@ -110,7 +110,7 @@ public:
 
 	Vector<float, n> OpenGL_Position() {
 		Vector<float, n> output = value;
-		for (uint i = 0; i < Lesser_Of(n, 2U); i++) {
+		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = output[i] * 2.0f - 1.0f;
 		}
 		return output;
@@ -118,7 +118,7 @@ public:
 
 	Vector<float, n> OpenGL_Displacement() {
 		Vector<float, n> output = value;
-		for (uint i = 0; i < Lesser_Of(n, 2U); i++) {
+		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = output[i] * 2.0f;
 		}
 		return output;
@@ -147,7 +147,7 @@ public:
 
 	static DisplayUnits Pixels(Vector<float, n> in_value, Vector2i in_targetDimensions) {
 		Vector<float, n> output = in_value;
-		for (uint i = 0; i < Lesser_Of(n, 2U); i++) {
+		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = output[i] / in_targetDimensions[i];
 		}
 		return output;
@@ -155,7 +155,7 @@ public:
 
 	static DisplayUnits OpenGL_Position(Vector<float, n> in_value) {
 		Vector<float, n> output = in_value;
-		for (uint i = 0; i < Lesser_Of(n, 2U); i++) {
+		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = (output[i] + 1.0f) / 2.0f;
 		}
 		return output;
@@ -163,7 +163,7 @@ public:
 
 	static DisplayUnits OpenGL_Displacement(Vector<float, n> in_value) {
 		Vector<float, n> output = in_value;
-		for (uint i = 0; i < Lesser_Of(n, 2U); i++) {
+		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = output[i] / 2.0f;
 		}
 		return output;

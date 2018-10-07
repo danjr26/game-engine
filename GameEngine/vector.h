@@ -190,6 +190,16 @@ public:
 		return sqrt(Dot_Self());
 	}
 
+	void Add_To_Magnitude(T s) {
+		T magnitude = Magnitude();
+		if (magnitude == 0) {
+			return;
+		}
+		else {
+			*this *= 1 + (s / magnitude);
+		}
+	}
+
 	Vector<T, n> Normalized() const {
 		Vector<T, n> vOut = members;
 		vOut.Normalize();
