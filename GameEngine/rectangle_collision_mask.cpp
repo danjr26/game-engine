@@ -19,6 +19,14 @@ Collision2d RectangleCollisionMask::Accept_Evaluator(CollisionEvaluator2& in_eva
 	return in_other.Accept_Secondhand_Evaluator(in_evaluator, *this);
 }
 
+Collision2d RectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedHalfSpace2CollisionMask& in_other) {
+	return in_evaluator.Evaluate_Typed(in_other, *this);
+}
+
+Collision2d RectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedLine2CollisionMask& in_other) {
+	return in_evaluator.Evaluate_Typed(in_other, *this);
+}
+
 Collision2d RectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedRectangleCollisionMask& in_other) {
 	return in_evaluator.Evaluate_Typed(in_other, *this);
 }

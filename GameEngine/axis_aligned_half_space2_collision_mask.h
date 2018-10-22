@@ -1,20 +1,19 @@
-#ifndef AXIS_ALIGNED_RECTANGLE_COLLISION_MASK_H
-#define AXIS_ALIGNED_RECTANGLE_COLLISION_MASK_H
+#ifndef AXIS_ALIGNED_HALF_SPACE2_COLLISION_MASK_H
+#define AXIS_ALIGNED_HALF_SPACE2_COLLISION_MASK_H
 
 #include "collision_mask.h"
-#include "axis_aligned_box.h"
-#include "range.h"
+#include "axis_aligned_half_space.h"
 
-class AxisAlignedRectangleCollisionMask : public CollisionMask2 {
+class AxisAlignedHalfSpace2CollisionMask : public CollisionMask2 {
 private:
-	AxisAlignedRectangled rectangle;
+	AxisAlignedHalfSpace2d halfSpace;
 
 public:
-	AxisAlignedRectangleCollisionMask(const AxisAlignedRectangled& in_rectangle, bool in_ignoreTransform = false);
+	AxisAlignedHalfSpace2CollisionMask(const AxisAlignedHalfSpace2d& in_halfSpace, bool in_ignoreTransform = false);
 
-	AxisAlignedRectangled& Get_Rectangle();
-	AxisAlignedRectangled Get_Transformed_Rectangle();
-			
+	AxisAlignedHalfSpace2d& Get_Half_Space();
+	AxisAlignedHalfSpace2d Get_Transformed_Half_Space();
+
 	Collision2d Accept_Evaluator(CollisionEvaluator2& in_evaluator, CollisionMask2& in_other) override;
 	Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedHalfSpace2CollisionMask& in_other) override;
 	Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedLine2CollisionMask& in_other) override;

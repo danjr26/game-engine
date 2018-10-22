@@ -28,6 +28,10 @@ public:
 		return point2;
 	}
 
+	Vector<T, n> Get_Center() const {
+		return (point1 + point2) / 2.0;
+	}
+
 	Vector<T, n> Get_Offset() const {
 		return point2 - point1;
 	}
@@ -50,6 +54,10 @@ public:
 
 	Vector<T, n> Get_Projection(const Vector<T, n>& in_point) {
 		return (in_point - point1).Projection(Get_Direction()) + point1;
+	}
+
+	T Get_Length() {
+		return (point2 - point1).Magnitude();
 	}
 
 	static LineSegment<T, n> From_Points(Vector<T, n>& in_point1, Vector<T, n>& in_point2) {

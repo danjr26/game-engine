@@ -38,8 +38,42 @@ public:
 		return center;
 	}
 
-	void Set_Center(const Vector<T, n> in_center) {
+	void Set_Center(const Vector<T, n>& in_center) {
 		center = in_center;
+	}
+
+	Vector<T, n> Get_Extrema(uint in_dimension, bool in_isPositive) const {
+		if (in_dimension >= n) {
+			throw InvalidArgumentException();
+		}
+		Vector<T, n> out = center;
+		out[in_dimension] += (in_isPositive) ? radius : -radius;
+		return out;
+	}
+
+	template<typename = typename std::enable_if_t<n == 2, void>>
+	T Get_Area() const {
+		return PI * radius * radius;
+	}
+
+	template<typename = typename std::enable_if_t<n == 2, void>>
+	T Get_Circumference() const {
+		return 2.0 * PI * radius;
+	}
+
+	template<typename = typename std::enable_if_t<n == 2, void>>
+	T Get_Volume() const {
+		return 4.0 / 3.0 * PI * radius * radius * radius;
+	}
+
+	template<typename = typename std::enable_if_t<n == 2, void>>
+	T Get_Surface_Area() const {
+		return 4.0 * PI * radius * radius;
+	}
+
+	template<typename = typename std::enable_if_t<n == 3, void>>
+	T Get_Major_Circumference() const {
+		return 2.0 * PI * radius;
 	}
 
 	static Sphere<T, n> From_Point_Radius(const Vector<T, n>& in_center, T in_radius) {

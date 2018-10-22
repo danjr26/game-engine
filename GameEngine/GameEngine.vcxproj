@@ -159,7 +159,12 @@
     <ClInclude Include="async_task.h" />
     <ClInclude Include="async_task_manager.h" />
     <ClInclude Include="axis_aligned_box.h" />
+    <ClInclude Include="axis_aligned_half_space.h" />
+    <ClInclude Include="axis_aligned_half_space2_collision_mask.h" />
+    <ClInclude Include="axis_aligned_line.h" />
+    <ClInclude Include="axis_aligned_line2_collision_mask.h" />
     <ClInclude Include="axis_aligned_rectangle_collision_mask.h" />
+    <ClInclude Include="binary_collision_tree.h" />
     <ClInclude Include="bit_manipulation.h" />
     <ClInclude Include="blend.h" />
     <ClInclude Include="box.h" />
@@ -462,6 +467,8 @@
     </ClCompile>
     <ClCompile Include="async_task.cpp" />
     <ClCompile Include="async_task_handler.cpp" />
+    <ClCompile Include="axis_aligned_half_space2_collision_mask.cpp" />
+    <ClCompile Include="axis_aligned_line2_collision_mask.cpp" />
     <ClCompile Include="axis_aligned_rectangle_collision_mask.cpp" />
     <ClCompile Include="camera.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

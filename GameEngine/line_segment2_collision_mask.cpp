@@ -1,5 +1,14 @@
 #include "line_segment2_collision_mask.h"
 
+LineSegment2CollisionMask::LineSegment2CollisionMask(const LineSegment2d& in_lineSegment, bool in_ignoreTransform) :
+	CollisionMask2(in_ignoreTransform),
+	lineSegment(in_lineSegment)
+{}
+
+LineSegment2d & LineSegment2CollisionMask::Get_Line_Segment() {
+	return lineSegment;
+}
+
 LineSegment2d LineSegment2CollisionMask::Get_Transformed_Line_Segment() {
 	LineSegment2d out = lineSegment;
 	if (!ignoreTransform) lineSegment.Apply_Transform(transform);
@@ -8,6 +17,14 @@ LineSegment2d LineSegment2CollisionMask::Get_Transformed_Line_Segment() {
 
 Collision2d LineSegment2CollisionMask::Accept_Evaluator(CollisionEvaluator2& in_evaluator, CollisionMask2& in_other) {
 	return in_other.Accept_Secondhand_Evaluator(in_evaluator, *this);
+}
+
+Collision2d LineSegment2CollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedHalfSpace2CollisionMask& in_other) {
+	return in_evaluator.Evaluate_Typed(in_other, *this);
+}
+
+Collision2d LineSegment2CollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedLine2CollisionMask& in_other) {
+	return in_evaluator.Evaluate_Typed(in_other, *this);
 }
 
 Collision2d LineSegment2CollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedRectangleCollisionMask& in_other) {

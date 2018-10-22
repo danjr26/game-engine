@@ -19,6 +19,7 @@
 #include "in_place_collision_evaluator2.h"
 #include "circle_renderer.h"
 #include "debug_mesh_vertex_data_renderer.h"
+#include "binary_collision_tree.h"
 #include <exception>
 
 void Test_Render(Window* window) {
@@ -45,6 +46,24 @@ void Test_Render(Window* window) {
 
 	///////////////////////////
 
+	QuadTree quadTree(AxisAlignedRectangled::From_Extrema(Vector2d(0, 0), Vector2d(256, 256)));
+
+	Triangle2d triangle = Triangle2d::From_Points(
+		Vector2d(1.0f, 1.0f),
+		Vector2d(0.0f, 100.0f),
+		Vector2d(100.0f, 0.0f)
+	);
+
+	Triangle2CollisionMask triangleMask = Triangle2CollisionMask(triangle);
+
+	QuadTree::Evaluation quadedTriangle;
+	quadTree.Evaluate(triangleMask, 6, quadedTriangle);
+
+	QuadTree::Evaluation quadedCircle;
+	quadTree.Evaluate(circleCollider1, 6, quadedCircle);
+
+	bool quadIntersect = quadedTriangle.Intersection(quadedCircle);
+
 	Point2CollisionMask pointCollider = Point2CollisionMask(Vector2d(400, 250));
 	AxisAlignedRectangleCollisionMask aab1 = AxisAlignedRectangleCollisionMask(
 		AxisAlignedRectangled::From_Extrema(Vector2d(0, 0), Vector2d(100, 100))
@@ -57,10 +76,11 @@ void Test_Render(Window* window) {
 	aab2.Set_Ignore_Transform(true);
 
 	Clock c;
-	uint n = 1000000;
+	uint n = 2000000;
 	double t1 = c.Now();
 	for (uint i = 0; i < n; i++) {
-		collEval.Evaluate(aab1, circleCollider1);
+		//collEval.Evaluate(circleCollider1, triangleMask);
+		quadedTriangle.Intersection(quadedCircle);
 	}
 	double t2 = c.Now();
 	double averageT = (t2 - t1) / n;

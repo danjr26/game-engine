@@ -63,6 +63,11 @@ bool Is_Between_Inc(T a, T b1, T b2) {
 }
 
 template<class T>
+bool Ceq_Switch(T a, T b, bool geq) {
+	return a == b || (geq) ? a > b : a < b;
+}
+
+template<class T>
 T Min(T a, T b) {
 	if (b < a) {
 		return b;
@@ -182,7 +187,12 @@ T Lerp(T a, T b, T t) {
 
 template<class T>
 T Inv_Lerp(T a, T b, T t) {
-	return (t - a) / b;
+	return (a == b) ? 0 : t / (b - a);
+}
+
+template<class T>
+T Lerp(T a, T b, T t, T ta, T tb) {
+	return Lerp(a, b, Inv_Lerp(ta, tb, t));
 }
 
 template<class T>

@@ -2,6 +2,7 @@
 #define AXIS_ALIGNED_BOX_H
 
 #include "transform.h"
+#include "range.h"
 
 template<class T, uint n = 3>
 class AxisAlignedBox {
@@ -35,6 +36,7 @@ public:
 				maxima = maxima.Compwise(Vector<T, n>(t->Get_Local_Scale()));
 				maxima += Vector<T, n>(t->Get_Local_Position());
 			}
+			return;
 		}
 
 		const uint nCorners = 1 << n;
@@ -71,6 +73,44 @@ public:
 
 	void Set_Maxima(const Vector<T, n>& in_maxima) {
 		maxima = in_maxima;
+	}
+
+	Range<T> Get_Range(uint dimension) {
+		if (dimension >= n) {
+			throw InvalidArgumentException();
+		}
+		return Ranged(minima[dimension], maxima[dimension]);
+	}
+
+	template<typename = typename std::enable_if_t<n == 2>>
+	T Get_Area() const {
+		return (maxima - minima).Component_Product();
+	}
+
+	template<typename = typename std::enable_if_t<n == 2>>
+	T Get_Perimeter() const {
+		return (maxima - minima).Component_Sum() * 2.0;
+	}
+
+	template<typename = typename std::enable_if_t<n == 3>>
+	T Get_Volume() const{
+		return (maxima - minima).Component_Product();
+
+	}
+
+	template<typename = typename std::enable_if_t<n == 3>>
+	T Get_Surface_Area() const {
+		Vector<T, n> edgeLengths = maxima - minima;
+		return (
+			edgeLengths.X() * edgeLengths.Y() +
+			edgeLengths.Y() * edgeLengths.Z() +
+			edgeLengths.Z() * edgeLengths.X()
+			) * 2.0;
+	}
+
+	template<typename = typename std::enable_if_t<n == 3>>
+	T Get_Total_Edge_Length() const {
+		return (maxima - minima).Component_Sum() * 2.0;
 	}
 
 	inline static AxisAlignedBox<T, n> From_Extrema(const Vector<T, n>& in_minima, const Vector<T, n>& in_maxima) {

@@ -15,8 +15,16 @@ AxisAlignedRectangled AxisAlignedRectangleCollisionMask::Get_Transformed_Rectang
 	return out;
 }
 
-Collision2d AxisAlignedRectangleCollisionMask::Accept_Evaluator(CollisionEvaluator2& in_evaluator, CollisionMask& in_other) {
+Collision2d AxisAlignedRectangleCollisionMask::Accept_Evaluator(CollisionEvaluator2& in_evaluator, CollisionMask2& in_other) {
 	return in_other.Accept_Secondhand_Evaluator(in_evaluator, *this);
+}
+
+Collision2d AxisAlignedRectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedHalfSpace2CollisionMask& in_other) {
+	return in_evaluator.Evaluate_Typed(in_other, *this);
+}
+
+Collision2d AxisAlignedRectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedLine2CollisionMask& in_other) {
+	return in_evaluator.Evaluate_Typed(in_other, *this);
 }
 
 Collision2d AxisAlignedRectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedRectangleCollisionMask& in_other) {

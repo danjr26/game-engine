@@ -15,7 +15,7 @@ public:
 		members{} 
 	{}
 
-	template<typename... Args, typename = typename std::enable_if<sizeof...(Args) == n, void>::type>
+	template<typename... Args, typename = std::enable_if_t<sizeof...(Args) == n>>
 	Vector(Args... in_members) :
 		members{(T)in_members...} 
 	{}
@@ -53,12 +53,12 @@ public:
 		members[n - 1] = 0;
 	}
 
-	template<typename = typename std::enable_if_t<n == 1, void>>
+	template<typename = std::enable_if_t<n == 1, void>>
 	operator T() const {
 		return *members;
 	}
 
-	template<typename = typename std::enable_if_t<n == 1, void>>
+	template<typename = std::enable_if_t<n == 1, void>>
 	Vector(T in_source) {
 		members[0] = in_source;
 	}
@@ -216,12 +216,24 @@ public:
 		}
 	}
 
+	Vector<T, n> Lerp(T s, const Vector<T, n> v) const {
+		return *this * (1.0 - s) + v * s;
+	}
+
 	Vector<T, n> Compwise(const Vector<T, n>& v) const {
 		Vector<T, n> vOut = members;
 		for (int i = 0; i < n; i++) {
 			vOut[i] *= v.members[i];
 		}
 		return vOut;
+	}
+
+	T Component_Sum() const {
+		T sum = 0;
+		for (uint i = 0; i < n; i++) {
+			sum += members[i];
+		}
+		return sum;
 	}
 
 	T Component_Product() const {
@@ -293,19 +305,19 @@ public:
 
 	// Vector1-specific
 
-	template<typename = typename std::enable_if<n >= 1, void>::type>
+	template<typename = std::enable_if_t<n >= 1, void>>
 	T X() const {
 		return members[0];
 	}
 
 	// Vector2-specific
 
-	template<typename = typename std::enable_if<n >= 2, void>::type>
+	template<typename = std::enable_if_t<n >= 2, void>>
 	T Y() const {
 		return members[1];
 	}
 
-	template<typename = typename std::enable_if<n == 2, void>::type>
+	template<typename = std::enable_if_t<n == 2, void>>
 	void Rotate(T angle) {
 		angle = angle * DEG_TO_RAD;
 		T sine = sin(angle);
@@ -315,26 +327,26 @@ public:
 		members[0] = tempX;
 	}
 
-	template<typename = typename std::enable_if<n == 2, void>::type>
+	template<typename = std::enable_if_t<n == 2, void>>
 	Vector<T, 2> Rotated(T angle) const {
 		Vector<T, 2> vOut = members;
 		vOut.Rotate(angle);
 		return vOut;
 	}
 
-	template<typename = typename std::enable_if<n == 2, void>::type>
+	template<typename = std::enable_if_t<n == 2, void>>
 	Vector<T, 2> Orthogonal() const {
 		return { members[1], -members[0] };
 	}
 
 	// Vector3-specific
 
-	template<typename = typename std::enable_if<n >= 3, void>::type>
+	template<typename = std::enable_if_t<n >= 3, void>>
 	T Z() const {
 		return members[2];
 	}
 
-	template<typename = typename std::enable_if<n == 3, void>::type>
+	template<typename = std::enable_if_t<n == 3, void>>
 	void Rotate(const Vector<T, 3>& v) {
 		T angle = v.Magnitude();
 		if (angle == 0) {
@@ -366,14 +378,14 @@ public:
 			(cosine + z * z * oneMinusCosine) * old.Z();
 	}
 
-	template<typename = typename std::enable_if<n == 3, void>::type>
+	template<typename = std::enable_if_t<n == 3, void>>
 	Vector<T, 3> Rotated(const Vector<T, 3>& v) const {
 		Vector<T, 3> vOut = members;
 		vOut.Rotate(v);
 		return vOut;
 	}
 
-	template<typename = typename std::enable_if<n == 3, void>::type>
+	template<typename = std::enable_if_t<n == 3, void>>
 	Vector<T, 3> Cross(const Vector<T, 3>& v) const {
 		return Vector<T, 3>(
 			members[1] * v.members[2] - members[2] * v.members[1],
@@ -384,12 +396,12 @@ public:
 
 	// Vector4-specific
 
-	template<typename = typename std::enable_if<n >= 4, void>::type>
+	template<typename = std::enable_if_t<n >= 4, void>>
 	T W() const {
 		return members[3];
 	}
 
-	template<typename = typename std::enable_if<n >= 4, void>::type>
+	template<typename = std::enable_if_t<n >= 4, void>>
 	inline Vector<T, 4> Hamilton(const Vector<T, 4>& v) const {
 		return Vector<T, 4>(
 			members[3] * v.members[0] + members[0] * v.members[3] + members[1] * v.members[2] - members[2] * v.members[1],
@@ -399,27 +411,27 @@ public:
 		);
 	}
 
-	template<typename = typename std::enable_if<n >= 4, void>::type>
+	template<typename = std::enable_if_t<n >= 4, void>>
 	Vector<T, 4> Inverse() const {
 		Vector<T, 4> vOut = members;
 		vOut.Invert();
 		return vOut;
 	}
 
-	template<typename = typename std::enable_if<n >= 4, void>::type>
+	template<typename = std::enable_if_t<n >= 4, void>>
 	void Invert() {
 		Conjugate();
 		(*this) /= Dot_Self();
 	}
 
-	template<typename = typename std::enable_if<n >= 4, void>::type>
+	template<typename = std::enable_if_t<n >= 4, void>>
 	Vector<T, 4> Conjugated() const {
 		Vector<T, 4> vOut = members;
 		vOut.Conjugate();
 		return vOut;
 	}
 
-	template<typename = typename std::enable_if<n >= 4, void>::type>
+	template<typename = std::enable_if_t<n >= 4, void>>
 	void Conjugate() {
 		members[0] = -members[0];
 		members[1] = -members[1];

@@ -7,7 +7,7 @@ PerFrameUpdateManager::PerFrameUpdateManager()
 void PerFrameUpdateManager::Update(double in_dt) {
 	for (uint i = 0; i < updateables.size(); i++) {
 		if (updateables[i]->Is_Enabled()) {
-			updateables[i]->Update(in_dt);
+			updateables[i]->Next_Frame(in_dt);
 		}
 	}
 }

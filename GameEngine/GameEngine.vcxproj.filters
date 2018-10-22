@@ -573,6 +573,21 @@
     <ClInclude Include="Header.h">
       <Filter>Header Files\physics</Filter>
     </ClInclude>
+    <ClInclude Include="binary_collision_tree.h">
+      <Filter>Header Files\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="axis_aligned_line.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="axis_aligned_half_space.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="axis_aligned_half_space2_collision_mask.h">
+      <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
+    <ClInclude Include="axis_aligned_line2_collision_mask.h">
+      <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ai_manager.cpp">
@@ -919,6 +934,12 @@
     </ClCompile>
     <ClCompile Include="in_place_collision_evaluator2.cpp">
       <Filter>Source Files\collision\evaluators</Filter>
+    </ClCompile>
+    <ClCompile Include="axis_aligned_half_space2_collision_mask.cpp">
+      <Filter>Source Files\collision\masks</Filter>
+    </ClCompile>
+    <ClCompile Include="axis_aligned_line2_collision_mask.cpp">
+      <Filter>Source Files\collision\masks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

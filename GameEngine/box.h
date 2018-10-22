@@ -52,15 +52,49 @@ public:
 		}
 	}
 
+	template<typename = typename std::enable_if_t<n == 2>>
+	T Get_Area() const {
+		return axes[0].Magnitude() * axes[1].Magnitude();
+	}
+
+	template<typename = typename std::enable_if_t<n == 2>>
+	T Get_Perimeter() const {
+		return (axes[0].Magnitude() + axes[1].Magnitude()) * 2.0;
+	}
+
+	template<typename = typename std::enable_if_t<n == 3>>
+	T Get_Volume() const {
+		return axes[0].Magnitude() * axes[1].Magnitude() * axes[2].Magnitude();
+	}
+
+	template<typename = typename std::enable_if_t<n == 3>>
+	T Get_Surface_Area() const {
+		Vector<T, n> edgeLengths = {
+			axes[0].Magnitude(),
+			axes[1].Magnitude(),
+			axes[2].Magnitude()
+		};
+		return (
+			edgeLengths.X() * edgeLengths.Y() + 
+			edgeLengths.Y() * edgeLengths.Z() + 
+			edgeLengths.Z() * edgeLengths.X()
+			) * 2.0;
+	}
+
+	template<typename = typename std::enable_if_t<n == 3>>
+	T Get_Total_Edge_Length() const {
+		return (axes[0].Magnitude() + axes[1].Magnitude() + axes[2].Magnitude()) * 2.0;
+	}
+
 	static Box From_Center_Axes(const Vector<T, n>& in_center, const Vector<T, n>* in_axes) {
 		Vector2d origin = in_center;
-		for (uint i = 0; i < n; i++) origin -= axes[i] / 2.0;
+		for (uint i = 0; i < n; i++) origin -= in_axes[i] / 2.0;
 		return Box(origin, in_axes);
 	}
 
 	static Box From_Center_Axes(const Vector<T, n>& in_origin, std::initializer_list<Vector<T, n>> in_axes) {
 		Vector2d origin = in_center;
-		for (uint i = 0; i < n; i++) origin -= axes.begin()[i] / 2.0;
+		for (uint i = 0; i < n; i++) origin -= in_axes.begin()[i] / 2.0;
 		return Box(origin, in_axes.begin());
 	}
 
