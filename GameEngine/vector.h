@@ -11,8 +11,7 @@ class Vector {
 protected:
 	T members[n];
 public:
-	Vector() :
-		members{} 
+	Vector() 
 	{}
 
 	template<typename... Args, typename = std::enable_if_t<sizeof...(Args) == n>>

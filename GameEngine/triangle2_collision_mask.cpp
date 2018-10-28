@@ -10,9 +10,18 @@ Triangle2d& Triangle2CollisionMask::Get_Triangle() {
 }
 
 Triangle2d Triangle2CollisionMask::Get_Transformed_Triangle() {
-	Triangle2d out = triangle;
-	if (!ignoreTransform) triangle.Apply_Transform(transform);
-	return out;	
+	if (ignoreTransform) {
+		return triangle;
+	}
+	else {
+		Triangle2d out = triangle;
+		out.Apply_Transform(transform);
+		return out;
+	}
+}
+
+void Triangle2CollisionMask::Apply_Transform() {
+	triangle.Apply_Transform(transform);
 }
 
 Collision2d Triangle2CollisionMask::Accept_Evaluator(CollisionEvaluator2& in_evaluator, CollisionMask2& in_other) {

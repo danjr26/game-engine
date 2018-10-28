@@ -10,9 +10,18 @@ AxisAlignedHalfSpace2d& AxisAlignedHalfSpace2CollisionMask::Get_Half_Space() {
 }
 
 AxisAlignedHalfSpace2d AxisAlignedHalfSpace2CollisionMask::Get_Transformed_Half_Space() {
-	AxisAlignedHalfSpace2d out = halfSpace;
-	if (!ignoreTransform) out.Apply_Transform(transform);
-	return out;
+	if (ignoreTransform) {
+		return halfSpace;
+	}
+	else {
+		AxisAlignedHalfSpace2d out = halfSpace;
+		out.Apply_Transform(transform);
+		return out;
+	}
+}
+
+void AxisAlignedHalfSpace2CollisionMask::Apply_Transform() {
+	halfSpace.Apply_Transform(transform);
 }
 
 Collision2d AxisAlignedHalfSpace2CollisionMask::Accept_Evaluator(CollisionEvaluator2& in_evaluator, CollisionMask2& in_other) {
@@ -62,3 +71,4 @@ Collision2d AxisAlignedHalfSpace2CollisionMask::Accept_Secondhand_Evaluator(Coll
 Collision2d AxisAlignedHalfSpace2CollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, Triangle2CollisionMask& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
+

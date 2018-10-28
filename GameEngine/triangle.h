@@ -20,7 +20,7 @@ public:
 	}
 
 	void Get_Points(Vector<T, n>* out_points) {
-		for (uint i = 0; i < 3; i++) out_points[i] = points[i];
+		memcpy(out_points, points, sizeof(Vector<T, n>) * 3);
 	}
 
 	void Get_Point_Offsets(Vector<T, n>* out_offsets) {

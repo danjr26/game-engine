@@ -38,6 +38,8 @@ public:
 		ignoreTransform = in_value;
 	}
 
+	virtual void Apply_Transform() = 0;
+
 	virtual Collision2d Accept_Evaluator(CollisionEvaluator2& in_evaluator, CollisionMask<2>& in_other) { throw NotImplementedException(); return Collision2d(); }
 	virtual Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedHalfSpace2CollisionMask& in_other) { throw NotImplementedException(); return Collision2d(); }
 	virtual Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedLine2CollisionMask& in_other) { throw NotImplementedException(); return Collision2d(); }

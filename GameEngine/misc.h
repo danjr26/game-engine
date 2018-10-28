@@ -15,7 +15,7 @@
 using namespace std;
 
 template<class T>
-T Clamp(T n, T floor, T ceiling) {
+inline T Clamp(T n, T floor, T ceiling) {
 	if (n < floor)
 		return floor;
 	if (n > ceiling)
@@ -24,21 +24,21 @@ T Clamp(T n, T floor, T ceiling) {
 }
 
 template<class T>
-T Clamp_Floor(T n, T floor) {
+inline T Clamp_Floor(T n, T floor) {
 	if (n < floor)
 		return floor;
 	return n;
 }
 
 template<class T>
-T Clamp_Ceiling(T n, T ceiling) {
+inline T Clamp_Ceiling(T n, T ceiling) {
 	if (n > ceiling)
 		return ceiling;
 	return n;
 }
 
 template<class T>
-T Mean(T a, T b) {
+inline T Mean(T a, T b) {
 	return (a + b) * 0.5;
 }
 
@@ -63,12 +63,12 @@ bool Is_Between_Inc(T a, T b1, T b2) {
 }
 
 template<class T>
-bool Ceq_Switch(T a, T b, bool geq) {
-	return a == b || (geq) ? a > b : a < b;
+inline bool Ceq_Switch(T a, T b, bool geq) {
+	return (geq) ? a >= b : a <= b;
 }
 
 template<class T>
-T Min(T a, T b) {
+inline T Min(T a, T b) {
 	if (b < a) {
 		return b;
 	}
@@ -78,7 +78,7 @@ T Min(T a, T b) {
 }
 
 template<class T>
-T Min(std::initializer_list<T> vList) {
+inline T Min(std::initializer_list<T> vList) {
 	if (vList.size() == 0) return 0;
 	T out = *(vList.begin());
 	for (auto it = vList.begin() + 1; it < vList.end(); it++) {
@@ -88,7 +88,7 @@ T Min(std::initializer_list<T> vList) {
 }
 
 template<class T>
-T Min(T* vList, uint n) {
+inline T Min(T* vList, uint n) {
 	if (n == 0) return 0;
 	T out = vList[0];
 	for (uint i = 1; i < n; i++) {
@@ -98,7 +98,7 @@ T Min(T* vList, uint n) {
 }
 
 template<class T>
-T Min(std::vector<T> vList) {
+inline T Min(std::vector<T> vList) {
 	if (vList.size() == 0) return 0;
 	T out = vList[0];
 	for (auto it = vList.begin() + 1; it < vList.end(); it++) {
@@ -108,7 +108,7 @@ T Min(std::vector<T> vList) {
 }
 
 template<class T> 
-T Max(T a, T b) {
+inline T Max(T a, T b) {
 	if (b > a) {
 		return b;
 	}
@@ -118,7 +118,7 @@ T Max(T a, T b) {
 }
 
 template<class T>
-T Max(std::initializer_list<T> vList) {
+inline T Max(std::initializer_list<T> vList) {
 	if (vList.size() == 0) return 0;
 	T out = *(vList.begin());
 	for (auto it = vList.begin() + 1; it < vList.end(); it++) {
@@ -128,7 +128,7 @@ T Max(std::initializer_list<T> vList) {
 }
 
 template<class T>
-T Max(T* vList, uint n) {
+inline T Max(T* vList, uint n) {
 	if (n == 0) return 0;
 	T out = vList[0];
 	for (uint i = 1; i < n; i++) {
@@ -138,7 +138,7 @@ T Max(T* vList, uint n) {
 }
 
 template<class T>
-T Max(std::vector<T> vList) {
+inline T Max(std::vector<T> vList) {
 	if (vList.size() == 0) return 0;
 	T out = vList[0];
 	for (auto it = vList.begin() + 1; it < vList.end(); it++) {
@@ -148,7 +148,7 @@ T Max(std::vector<T> vList) {
 }
 
 template<class T>
-void Min_Max(const std::initializer_list<T>& vList, T& out_min, T& out_max) {
+inline void Min_Max(const std::initializer_list<T>& vList, T& out_min, T& out_max) {
 	if (vList.size() == 0) return;
 	out_min = *(vList.begin());
 	out_max = out_min;
@@ -159,7 +159,7 @@ void Min_Max(const std::initializer_list<T>& vList, T& out_min, T& out_max) {
 }
 
 template<class T>
-void Min_Max(T* vList, uint n, T& out_min, T& out_max) {
+inline void Min_Max(T* vList, uint n, T& out_min, T& out_max) {
 	if (n == 0) return;
 	out_min = vList[0];
 	out_max = out_min;
@@ -170,7 +170,7 @@ void Min_Max(T* vList, uint n, T& out_min, T& out_max) {
 }
 
 template<class T>
-void Min_Max(const std::vector<T>& vList, T& out_min, T& out_max) {
+inline void Min_Max(const std::vector<T>& vList, T& out_min, T& out_max) {
 	if (vList.size() == 0) return;
 	out_min = *(vList.begin());
 	out_max = out_min;
@@ -181,23 +181,37 @@ void Min_Max(const std::vector<T>& vList, T& out_min, T& out_max) {
 }
 
 template<class T>	
-T Lerp(T a, T b, T t) {
+inline T Lerp(T a, T b, T t) {
 	return a * (1 - t) + b * t;
 }
 
 template<class T>
-T Inv_Lerp(T a, T b, T t) {
+inline T Inv_Lerp(T a, T b, T t) {
 	return (a == b) ? 0 : t / (b - a);
 }
 
 template<class T>
-T Lerp(T a, T b, T t, T ta, T tb) {
+inline T Lerp(T a, T b, T t, T ta, T tb) {
 	return Lerp(a, b, Inv_Lerp(ta, tb, t));
 }
 
 template<class T>
-T Sign(T n) {
+inline T Sign(T n) {
 	return (n > 0) ? 1 : ((n < 0) ? -1 : 0);
+}
+
+template<class C, class T>
+inline T Sum(C& values, uint begin, uint end) {
+	T s = 0;
+	for (uint i = begin; i < end; i++) s += values[i];
+	return s;
+}
+
+template<class C, class T>
+inline T Sum(C& values, uint n) {
+	T s = 0;
+	for (uint i = 0; i < n; i++) s += values[i];
+	return s;
 }
 
 string Double_To_String(double d, int precision);

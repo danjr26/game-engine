@@ -13,6 +13,7 @@ public:
 
 	AxisAlignedHalfSpace2d& Get_Half_Space();
 	AxisAlignedHalfSpace2d Get_Transformed_Half_Space();
+	void Apply_Transform() override;
 
 	Collision2d Accept_Evaluator(CollisionEvaluator2& in_evaluator, CollisionMask2& in_other) override;
 	Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedHalfSpace2CollisionMask& in_other) override;
@@ -26,6 +27,7 @@ public:
 	Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, Ray2CollisionMask& in_other) override;
 	Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, RectangleCollisionMask& in_other) override;
 	Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, Triangle2CollisionMask& in_other) override;
+
 };
 
 #endif

@@ -31,7 +31,7 @@ void Test_Render(Window* window) {
 	FontFace* fontFace = GE.Assets().Get<FontFace>("ConsolasFontFace");
 	FontFaceRasterSet* rasterSet = fontFace->Rasterize(24);
 
-	Circled circle1 = Circled::From_Point_Radius(Vector2d(400.0, 200.0), 100.0);
+	Circled circle1 = Circled::From_Point_Radius(Vector2d(305.0, 50.0), 100.0);
 	CircleRenderer circleRenderer1(DeepCircled(circle1, 0.0), ColorRGBAf(1, 1, 1, 0.5), 10.0, ColorRGBAf(1, 0.5, 0.5, 1.0));
 	GE.Render().Add(&circleRenderer1);
 	CircleCollisionMask circleCollider1(circle1);
@@ -46,7 +46,7 @@ void Test_Render(Window* window) {
 
 	///////////////////////////
 
-	QuadTree quadTree(AxisAlignedRectangled::From_Extrema(Vector2d(0, 0), Vector2d(256, 256)));
+	QuadTree quadTree(AxisAlignedRectangled::From_Extrema(Vector2d(0, 0), Vector2d(800, 600)));
 
 	Triangle2d triangle = Triangle2d::From_Points(
 		Vector2d(1.0f, 1.0f),
@@ -56,35 +56,19 @@ void Test_Render(Window* window) {
 
 	Triangle2CollisionMask triangleMask = Triangle2CollisionMask(triangle);
 
-	QuadTree::Evaluation quadedTriangle;
-	quadTree.Evaluate(triangleMask, 6, quadedTriangle);
-
-	QuadTree::Evaluation quadedCircle;
-	quadTree.Evaluate(circleCollider1, 6, quadedCircle);
-
-	bool quadIntersect = quadedTriangle.Intersection(quadedCircle);
-
-	Point2CollisionMask pointCollider = Point2CollisionMask(Vector2d(400, 250));
-	AxisAlignedRectangleCollisionMask aab1 = AxisAlignedRectangleCollisionMask(
-		AxisAlignedRectangled::From_Extrema(Vector2d(0, 0), Vector2d(100, 100))
-	);
-	AxisAlignedRectangleCollisionMask aab2 = AxisAlignedRectangleCollisionMask(
-		AxisAlignedRectangled::From_Extrema(Vector2d(50, 50), Vector2d(200, 200))
-	);
-
-	aab1.Set_Ignore_Transform(true);
-	aab2.Set_Ignore_Transform(true);
-
 	Clock c;
-	uint n = 2000000;
+	uint n = 50000;
 	double t1 = c.Now();
 	for (uint i = 0; i < n; i++) {
 		//collEval.Evaluate(circleCollider1, triangleMask);
-		quadedTriangle.Intersection(quadedCircle);
+		//quadTree.Intersection(quadedTriangle, quadedCircle);
+		//quadTree.Evaluate(triangleMask, 1, quadedTriangle);
+		//quadTree.Group(evals, nEvals, grouping);
 	}
 	double t2 = c.Now();
 	double averageT = (t2 - t1) / n;
 	Log::main(to_string(averageT * 1000000) + " us");
+
 
 	////////////////////////////
 

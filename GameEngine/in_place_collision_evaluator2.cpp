@@ -1650,24 +1650,37 @@ Collision2d InPlaceCollisionEvaluator2::Evaluate_Typed(AxisAlignedHalfSpace2Coll
 }
 
 Collision2d InPlaceCollisionEvaluator2::Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask& in_mask1, Triangle2CollisionMask& in_mask2) {
+	Collision2d collision;
+
+	AxisAlignedHalfSpace2d halfSpace = in_mask1.Get_Transformed_Half_Space();
 	Triangle2d triangle = in_mask2.Get_Transformed_Triangle();
 
 	Vector2d corners[3];
 	triangle.Get_Points(corners);
 
-	uint dimension = in_mask1.Get_Half_Space().Get_Dimension();
+	uint dimension = halfSpace.Get_Dimension();
 
 	uint minIndex = 0;
 	uint maxIndex = 0;
 	for (uint i = 1; i < 3; i++) {
+		if (!collision.didCollide && Ceq_Switch(halfSpace.Get_Value(), corners[i][dimension], halfSpace.Is_Positive())) {
+			collision.didCollide = true;
+			if (!returnPoint) {
+				return collision;
+			}
+		}
 		if (corners[i][dimension] < corners[minIndex][dimension]) minIndex = i;
 		if (corners[i][dimension] > corners[maxIndex][dimension]) maxIndex = i;
 	}
 
-	return Evaluate_Typed(
-		in_mask1,
-		LineSegment2CollisionMask(LineSegment2d::From_Points(corners[minIndex], corners[maxIndex]), true)
-	);
+	if (returnPoint && collision.didCollide) {
+		collision = Evaluate_Typed(
+			AxisAlignedHalfSpace2CollisionMask(halfSpace, true),
+			LineSegment2CollisionMask(LineSegment2d::From_Points(corners[minIndex], corners[maxIndex]), true)
+		);
+	}
+
+	return collision;
 }
 
 Collision2d InPlaceCollisionEvaluator2::Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask& in_mask1, AxisAlignedHalfSpace2CollisionMask& in_mask2) {

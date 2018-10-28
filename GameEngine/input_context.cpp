@@ -25,7 +25,7 @@ InputEvent InputContext::Auto_Translate_State(InputBindings::Iterator& in_iter, 
 	return _event;
 }
 
-InputEvent InputContext::Auto_Translate_Range(InputBindings::Iterator & in_iter, float in_newValue) {
+InputEvent InputContext::Auto_Translate_Range(InputBindings::Iterator& in_iter, float in_newValue) {
 	InputEvent _event;
 	_event.context = this;
 	_event.type = InputEvent::Type::range_change;

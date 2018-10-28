@@ -34,7 +34,7 @@ public:
 	{}
 
 	void Return_Point(bool in_val) {
-		returnPoint = true;
+		returnPoint = in_val;
 	}
 
 	Collision2d Evaluate(CollisionMask<2>& in_mask1, CollisionMask<2>& in_mask2);

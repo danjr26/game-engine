@@ -12,6 +12,7 @@ public:
 
 	Vector2d& Get_Point();
 	Vector2d Get_Transformed_Point() const;
+	void Apply_Transform() override;
 
 	Collision2d Accept_Evaluator(CollisionEvaluator2& in_evaluator, CollisionMask2& in_other) override;
 	Collision2d Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedHalfSpace2CollisionMask& in_other) override;

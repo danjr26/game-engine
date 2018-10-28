@@ -15,6 +15,10 @@ HalfSpace2d HalfSpace2CollisionMask::Get_Transformed_Half_Space() {
 	return out;
 }
 
+void HalfSpace2CollisionMask::Apply_Transform() {
+	halfSpace.Apply_Transform(transform);
+}
+
 Collision2d HalfSpace2CollisionMask::Accept_Evaluator(CollisionEvaluator2& in_evaluator, CollisionMask2& in_other) {
 	return in_other.Accept_Secondhand_Evaluator(in_evaluator, *this);
 }

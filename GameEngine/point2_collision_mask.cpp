@@ -15,6 +15,10 @@ Vector2d Point2CollisionMask::Get_Transformed_Point() const {
 	return out;
 }
 
+void Point2CollisionMask::Apply_Transform() {
+	point = Vector2d(transform.Apply_To_Local_Point(Vector3d(point)));
+}
+
 Collision2d Point2CollisionMask::Accept_Evaluator(CollisionEvaluator2& in_evaluator, CollisionMask2& in_other) {
 	return in_other.Accept_Secondhand_Evaluator(in_evaluator, *this);
 }

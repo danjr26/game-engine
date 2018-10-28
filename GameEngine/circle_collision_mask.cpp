@@ -15,6 +15,10 @@ Circled CircleCollisionMask::Get_Transformed_Circle() {
 	return out;
 }
 
+void CircleCollisionMask::Apply_Transform() {
+	circle.Apply_Transform(transform);
+}
+
 Collision2d CircleCollisionMask::Accept_Evaluator(CollisionEvaluator2& in_evaluator, CollisionMask2& in_other) {
 	return in_other.Accept_Secondhand_Evaluator(in_evaluator, *this);
 }

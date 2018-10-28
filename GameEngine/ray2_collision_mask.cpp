@@ -15,6 +15,10 @@ Ray2d Ray2CollisionMask::Get_Transformed_Ray() {
 	return out;
 }
 
+void Ray2CollisionMask::Apply_Transform() {
+	ray.Apply_Transform(transform);
+}
+
 Collision2d Ray2CollisionMask::Accept_Evaluator(CollisionEvaluator2& in_evaluator, CollisionMask2& in_other) {
 	return in_other.Accept_Secondhand_Evaluator(in_evaluator, *this);
 }

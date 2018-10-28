@@ -16,7 +16,7 @@ private:
 
 public:
 	Rotation() :
-		quaternion(0, 0, 0, 1)
+		quaternion((T)0, (T)0, (T)0, (T)1)
 	{}
 
 	Rotation(const Vector<T, 3>& in_axis, T in_angle) :
@@ -37,7 +37,7 @@ public:
 	}
 
 	bool Is_Identity() const {
-		return quaternion == Vector<T, 4>(0, 0, 0, 1);
+		return quaternion.X() == (T)0 && quaternion.Y() == (T)0 && quaternion.Z() == (T)0 && quaternion.W() == (T)1;
 	}
 
 	void Invert() {
@@ -84,7 +84,12 @@ public:
 	}
 
 	Vector<T, 3> Apply_To(const Vector<T, 3>& in_point) const {
-		return Vector<T, 3>(quaternion.Hamilton(Vector<T, 4>(in_point, 0)).Hamilton(quaternion.Inverse()));
+		if (!Is_Identity()) {
+			return Vector<T, 3>(quaternion.Hamilton(Vector<T, 4>(in_point, 0)).Hamilton(quaternion.Inverse()));
+		}
+		else {
+			return in_point;
+		}
 	}
 
 	Matrix<T, 4, 4> Get_Matrix() const {
