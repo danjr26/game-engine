@@ -2,6 +2,7 @@
 #define RANGE_H
 
 #include "misc.h"
+#include "definitions.h"
 
 template<class T>
 class Range {
@@ -87,6 +88,8 @@ public:
 	}
 };
 
+using Rangeui = Range<uint>;
+using Rangei = Range<int>;
 using Rangef = Range<float>;
 using Ranged = Range<double>;
 

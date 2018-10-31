@@ -20,32 +20,12 @@ TestSpriteMover::TestSpriteMover(TestInputContext* in_inputContext, Transformabl
 {}
 
 void TestSpriteMover::Update(double in_dt) {
-	InputEvent _event;
-	while (input.Get_Number_Events()) {
-		_event = input.Pop_Event();
-		/*
-		switch (_event.type) {
-		case TestInputContext::Action::start_move_up:
-			object->Get_Transform().Translate(Vector3d(0, -5, 0));
-			break;
-		case TestInputContext::Action::start_move_left:
-			object->Get_Transform().Translate(Vector3d(-5, 0, 0));
-			break;
-		case TestInputContext::Action::start_move_down:
-			object->Get_Transform().Translate(Vector3d(0, 5, 0));
-			break;
-		case TestInputContext::Action::start_move_right:
-			object->Get_Transform().Translate(Vector3d(5, 0, 0));
-			break;
-		}
-		*/
-	}
-	/*object->Get_Transform().Translate(Vector3f(
+	/*object->Get_Transform().Translate_Local(Vector3f(
 		input.Get_Context()->Get_Range(TestInputContext::Range::movement_x),
 		input.Get_Context()->Get_Range(TestInputContext::Range::movement_y),
-		0.0) * 100.0f * in_dt);*/
-
-	/*
+		0.0) * 100.0f * in_dt);
+	*/
+	
 	object->Get_Transform().Set_Local_Position(
 		DisplayUnits3::Percent(
 			Vector3f(
@@ -55,6 +35,5 @@ void TestSpriteMover::Update(double in_dt) {
 			) * 100.0f
 		).Pixels(GE.Render().mainWindow->Get_Dimensions())
 	);
-	*/
-	object->Get_Transform().Rotate_Local_Around_Local_Point(Rotationd(Vector3d(0, 0, -1), PI * in_dt / 20), Vector3d(50, 50, 0));
+	
 }

@@ -97,6 +97,15 @@
     <Filter Include="Header Files\physics">
       <UniqueIdentifier>{f1105bb4-a658-404b-9acb-0268738838f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\framework\input\identifiers">
+      <UniqueIdentifier>{27041821-5a32-487b-abc2-f837c621ea8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\framework\input\states">
+      <UniqueIdentifier>{32484f91-94ab-41f5-ad1e-8f1167b2f6b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\framework\input\contexts">
+      <UniqueIdentifier>{c475370c-e0c0-425d-a5ff-6ac9b1e306f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="transform.h">
@@ -423,19 +432,7 @@
     <ClInclude Include="input_manager.h">
       <Filter>Header Files\framework\input</Filter>
     </ClInclude>
-    <ClInclude Include="keyboard_state.h">
-      <Filter>Header Files\framework\input</Filter>
-    </ClInclude>
     <ClInclude Include="mouse_button.h">
-      <Filter>Header Files\framework\input</Filter>
-    </ClInclude>
-    <ClInclude Include="mouse_state.h">
-      <Filter>Header Files\framework\input</Filter>
-    </ClInclude>
-    <ClInclude Include="input_context.h">
-      <Filter>Header Files\framework\input</Filter>
-    </ClInclude>
-    <ClInclude Include="raw_input_state.h">
       <Filter>Header Files\framework\input</Filter>
     </ClInclude>
     <ClInclude Include="test_input_context.h">
@@ -462,28 +459,7 @@
     <ClInclude Include="input.h">
       <Filter>Header Files\framework\input</Filter>
     </ClInclude>
-    <ClInclude Include="keyboard_action_identifier.h">
-      <Filter>Header Files\framework\input</Filter>
-    </ClInclude>
-    <ClInclude Include="input_identifiers.h">
-      <Filter>Header Files\framework\input</Filter>
-    </ClInclude>
-    <ClInclude Include="keyboard_state_identifier.h">
-      <Filter>Header Files\framework\input</Filter>
-    </ClInclude>
     <ClInclude Include="input_bindings.h">
-      <Filter>Header Files\framework\input</Filter>
-    </ClInclude>
-    <ClInclude Include="keyboard_range_identifier.h">
-      <Filter>Header Files\framework\input</Filter>
-    </ClInclude>
-    <ClInclude Include="mouse_action_identifier.h">
-      <Filter>Header Files\framework\input</Filter>
-    </ClInclude>
-    <ClInclude Include="mouse_state_identifier.h">
-      <Filter>Header Files\framework\input</Filter>
-    </ClInclude>
-    <ClInclude Include="mouse_range_identifier.h">
       <Filter>Header Files\framework\input</Filter>
     </ClInclude>
     <ClInclude Include="window_manager.h">
@@ -587,6 +563,51 @@
     </ClInclude>
     <ClInclude Include="axis_aligned_line2_collision_mask.h">
       <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboard_action_identifier.h">
+      <Filter>Header Files\framework\input\identifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboard_range_identifier.h">
+      <Filter>Header Files\framework\input\identifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboard_state_identifier.h">
+      <Filter>Header Files\framework\input\identifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="mouse_action_identifier.h">
+      <Filter>Header Files\framework\input\identifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="mouse_range_identifier.h">
+      <Filter>Header Files\framework\input\identifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="mouse_state_identifier.h">
+      <Filter>Header Files\framework\input\identifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="input_identifiers.h">
+      <Filter>Header Files\framework\input\identifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="mouse_state.h">
+      <Filter>Header Files\framework\input\states</Filter>
+    </ClInclude>
+    <ClInclude Include="raw_input_state.h">
+      <Filter>Header Files\framework\input\states</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboard_state.h">
+      <Filter>Header Files\framework\input\states</Filter>
+    </ClInclude>
+    <ClInclude Include="overlay_input_context.h">
+      <Filter>Header Files\framework\input</Filter>
+    </ClInclude>
+    <ClInclude Include="editable_text.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="input_context.h">
+      <Filter>Header Files\framework\input\contexts</Filter>
+    </ClInclude>
+    <ClInclude Include="text_input_context.h">
+      <Filter>Header Files\framework\input\contexts</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboard_text_input_context.h">
+      <Filter>Header Files\framework\input\contexts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -940,6 +961,15 @@
     </ClCompile>
     <ClCompile Include="axis_aligned_line2_collision_mask.cpp">
       <Filter>Source Files\collision\masks</Filter>
+    </ClCompile>
+    <ClCompile Include="editable_text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="text_input_context.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="keyboard_text_input_context.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

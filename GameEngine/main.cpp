@@ -20,6 +20,8 @@
 #include "circle_renderer.h"
 #include "debug_mesh_vertex_data_renderer.h"
 #include "binary_collision_tree.h"
+#include "keyboard_text_input_context.h"
+#include "editable_text.h"
 #include <exception>
 
 void Test_Render(Window* window) {
@@ -46,6 +48,24 @@ void Test_Render(Window* window) {
 
 	///////////////////////////
 
+	Transform textTransform;
+	textTransform.Set_Local_Position(Vector3d(300, 300, 0));
+	//Text2 text = Text2("Hello, world.\nHow are you?", rasterSet, textTransform);
+	//GE.Render().Add(&text);
+
+	//text.Insert("cruel ", 7);
+
+	KeyboardTextInputContext textInput;
+	GE.Input().Add_After(nullptr, &textInput);
+
+	EditableText eText = EditableText(&textInput, rasterSet, Transform());
+
+	TestInputContext ic;
+	GE.Input().Add_After(nullptr, &ic);
+
+	TestSpriteMover sm = TestSpriteMover(&ic, &circleRenderer1);
+	GE.Per_Frame_Update().Add(&sm);
+
 	QuadTree quadTree(AxisAlignedRectangled::From_Extrema(Vector2d(0, 0), Vector2d(800, 600)));
 
 	Triangle2d triangle = Triangle2d::From_Points(
@@ -57,13 +77,10 @@ void Test_Render(Window* window) {
 	Triangle2CollisionMask triangleMask = Triangle2CollisionMask(triangle);
 
 	Clock c;
-	uint n = 50000;
+	uint n = 10000;
 	double t1 = c.Now();
 	for (uint i = 0; i < n; i++) {
-		//collEval.Evaluate(circleCollider1, triangleMask);
-		//quadTree.Intersection(quadedTriangle, quadedCircle);
-		//quadTree.Evaluate(triangleMask, 1, quadedTriangle);
-		//quadTree.Group(evals, nEvals, grouping);
+		
 	}
 	double t2 = c.Now();
 	double averageT = (t2 - t1) / n;

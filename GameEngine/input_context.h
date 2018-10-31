@@ -43,6 +43,7 @@ public:
 
 	void Add(InputListener* in_listener);
 	void Remove(InputListener* in_listener);
+	void Sort();
 };
 
 #endif

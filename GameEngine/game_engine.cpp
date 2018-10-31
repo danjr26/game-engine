@@ -61,7 +61,7 @@ void GameEngine::Begin() {
 			Next_Frame();
 			frameRateManager.Yield_Until_Next_Frame();
 			if (i % 60 == 0) {
-				Log::main(to_string(frameRateManager.Get_Real_FPS()).substr(0, 5));
+				Log::main(to_string(frameRateManager.Get_Real_FPS()).substr(0, 4));
 			}
 		}
 	}

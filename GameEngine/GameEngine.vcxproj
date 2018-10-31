@@ -189,6 +189,7 @@
     <ClInclude Include="deep_2d_shape.h" />
     <ClInclude Include="disableable_object.h" />
     <ClInclude Include="display_units.h" />
+    <ClInclude Include="editable_text.h" />
     <ClInclude Include="exceptions.h" />
     <ClInclude Include="filtered_object.h" />
     <ClInclude Include="filter_query.h" />
@@ -207,6 +208,8 @@
     <ClInclude Include="Header.h" />
     <ClInclude Include="id.h" />
     <ClInclude Include="input_context.h" />
+    <ClInclude Include="keyboard_text_input_context.h" />
+    <ClInclude Include="overlay_input_context.h" />
     <ClInclude Include="input_event.h" />
     <ClInclude Include="input_listener.h" />
     <ClInclude Include="in_place_collision_evaluator2.h" />
@@ -266,6 +269,7 @@
     <ClInclude Include="texture_manager.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="text_input_context.h" />
     <ClInclude Include="trackable_async_task.h" />
     <ClInclude Include="transformable_object.h" />
     <ClInclude Include="per_frame_updateable_object.h" />
@@ -497,6 +501,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="disableable_object.cpp" />
+    <ClCompile Include="editable_text.cpp" />
     <ClCompile Include="entity_manager.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -534,6 +539,7 @@
     <ClCompile Include="keyboard_range_identifier.cpp" />
     <ClCompile Include="keyboard_state.cpp" />
     <ClCompile Include="keyboard_state_identifier.cpp" />
+    <ClCompile Include="keyboard_text_input_context.cpp" />
     <ClCompile Include="light.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -657,6 +663,7 @@
     <ClCompile Include="texture_manager.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="text_input_context.cpp" />
     <ClCompile Include="trackable_async_task.cpp" />
     <ClCompile Include="transform.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

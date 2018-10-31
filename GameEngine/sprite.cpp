@@ -72,29 +72,48 @@ bool Sprite::Should_Cull() const {
 void Sprite::Render() {
 	Matrix<float, 4, 4> iden = Matrix<float, 4, 4>::Identity();
 
-	ShaderProgram* shaderProgram = GE.Assets().Get<ShaderProgram>("DeferredShader");
+	ShaderProgram* shaderProgram;
 
-	GLint locations[4] = { 
-		shaderProgram->Get_Uniform_Location("modelMatrix"),
-		shaderProgram->Get_Uniform_Location("viewMatrix"),
-		shaderProgram->Get_Uniform_Location("projectionMatrix"),
-		shaderProgram->Get_Uniform_Location("color")
-	};
+	Matrix4f modelMatrix = transform.Get_World_Matrix();
+	Matrix4f viewMatrix = GE.Cameras().active->Get_View_Matrix();
+	Matrix4f projectionMatrix = GE.Cameras().active->Get_Projection_Matrix();
 
-	if (textureInstance.Get_Texture() != nullptr) {
-		textureInstance.Use();
+	if (textureInstance.Get_Texture() == nullptr) {
+		shaderProgram = GE.Assets().Get<ShaderProgram>("MonoShader");
+
+		GLint locations[2] = {
+			shaderProgram->Get_Uniform_Location("mvpMatrix"),
+			shaderProgram->Get_Uniform_Location("color")
+		};
+
+		ColorRGBAf tintFloat = color;
+
+		projectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
+
+		shaderProgram->Use();
+		glUniformMatrix4fv(locations[0], 1, GL_TRUE, projectionMatrix.Pointer());
+		glUniform4fv(locations[1], 1, tintFloat.Pointer());
 	}
 	else {
-		glBindTexture(GL_TEXTURE_2D, 0);
+		shaderProgram = GE.Assets().Get<ShaderProgram>("DeferredShader");
+
+		GLint locations[4] = {
+			shaderProgram->Get_Uniform_Location("modelMatrix"),
+			shaderProgram->Get_Uniform_Location("viewMatrix"),
+			shaderProgram->Get_Uniform_Location("projectionMatrix"),
+			shaderProgram->Get_Uniform_Location("color")
+		};
+
+		textureInstance.Use();
+
+		ColorRGBAf tintFloat = color;
+
+		shaderProgram->Use();
+		glUniformMatrix4fv(locations[0], 1, GL_TRUE, modelMatrix.Pointer());
+		glUniformMatrix4fv(locations[1], 1, GL_TRUE, viewMatrix.Pointer());
+		glUniformMatrix4fv(locations[2], 1, GL_TRUE, projectionMatrix.Pointer());
+		glUniform4fv(locations[3], 1, tintFloat.Pointer());
 	}
-
-	ColorRGBAf tintFloat = color;
-
-	shaderProgram->Use();
-	glUniformMatrix4fv(locations[0], 1, GL_TRUE, ((Matrix4f)transform.Get_World_Matrix()).Pointer());
-	glUniformMatrix4fv(locations[1], 1, GL_TRUE, GE.Cameras().active->Get_View_Matrix().Pointer());
-	glUniformMatrix4fv(locations[2], 1, GL_TRUE, GE.Cameras().active->Get_Projection_Matrix().Pointer());
-	glUniform4fv(locations[3], 1, tintFloat.Pointer());
 
 	gpuPusher.Draw();
 }

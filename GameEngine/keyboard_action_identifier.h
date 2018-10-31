@@ -7,10 +7,14 @@
 
 struct KeyboardActionIdentifier {
 	RawInputEvent::Type type;
-	Key key;
+	union {
+		Key key;
+		char character;
+	};
 	bool acceptRepeat;
 
 	KeyboardActionIdentifier(RawInputEvent::Type in_type, Key in_key, bool in_acceptRepeat = false);
+	KeyboardActionIdentifier(RawInputEvent::Type in_type, char in_character, bool in_acceptRepeat = false);
 	bool operator()(const RawInputEvent& in_event, const RawInputState& in_state) const;
 };
 

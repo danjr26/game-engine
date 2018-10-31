@@ -77,7 +77,7 @@ InputStateChange InputBindings::Evaluate_State(uint in_slot, const RawInputEvent
 	}
 }
 
-float InputBindings::Evaluate_Range(uint in_slot, const RawInputEvent & in_event, const RawInputState & in_state) {
+float InputBindings::Evaluate_Range(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state) {
 	if (ranges[in_slot] == nullptr) {
 		return NAN;
 	}
@@ -90,11 +90,11 @@ bool InputBindings::Evaluate_Action(const Iterator& in_iter) {
 	return Evaluate_Action(in_iter.index, in_iter._event, in_iter.state);
 }
 
-InputStateChange InputBindings::Evaluate_State(const Iterator & in_iter) {
+InputStateChange InputBindings::Evaluate_State(const Iterator& in_iter) {
 	return Evaluate_State(in_iter.index, in_iter._event, in_iter.state);
 }
 
-float InputBindings::Evaluate_Range(const Iterator & in_iter) {
+float InputBindings::Evaluate_Range(const Iterator& in_iter) {
 	return Evaluate_Range(in_iter.index, in_iter._event, in_iter.state);
 }
 
@@ -102,11 +102,11 @@ InputBindings::Iterator InputBindings::Iterate_Actions(const RawInputEvent& in_e
 	return Iterator(Iterator::Mode::action, *this, in_event, in_state);
 }
 
-InputBindings::Iterator InputBindings::Iterate_States(const RawInputEvent & in_event, const RawInputState & in_state) {
+InputBindings::Iterator InputBindings::Iterate_States(const RawInputEvent& in_event, const RawInputState& in_state) {
 	return Iterator(Iterator::Mode::state, *this, in_event, in_state);
 }
 
-InputBindings::Iterator InputBindings::Iterate_Ranges(const RawInputEvent & in_event, const RawInputState & in_state) {
+InputBindings::Iterator InputBindings::Iterate_Ranges(const RawInputEvent& in_event, const RawInputState& in_state) {
 	return Iterator(Iterator::Mode::range, *this, in_event, in_state);
 }
 

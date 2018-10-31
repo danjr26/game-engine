@@ -1,5 +1,6 @@
 #include "input_context.h"
 #include "game_engine.h"
+#include <algorithm>
 
 InputContext::InputContext(uint in_nActions, uint in_nStates, uint in_nRanges) :
 	bindings(in_nActions, in_nStates, in_nRanges),
@@ -77,7 +78,7 @@ bool InputContext::Auto_Update_Actions(const RawInputEvent& in_event) {
 	return out;
 }
 
-bool InputContext::Auto_Update_States(const RawInputEvent & in_event) {
+bool InputContext::Auto_Update_States(const RawInputEvent& in_event) {
 	bool out = false;
 	for (auto iter = bindings.Iterate_States(in_event, GE.Input().Get_Raw_State()); iter; ++iter) {
 		out = Auto_Process_State(iter) || out;
@@ -85,7 +86,7 @@ bool InputContext::Auto_Update_States(const RawInputEvent & in_event) {
 	return out;
 }
 
-bool InputContext::Auto_Update_Ranges(const RawInputEvent & in_event) {
+bool InputContext::Auto_Update_Ranges(const RawInputEvent& in_event) {
 	bool out = false;
 	for (auto iter = bindings.Iterate_Ranges(in_event, GE.Input().Get_Raw_State()); iter; ++iter) {
 		out = Auto_Process_Range(iter) || out;
@@ -103,7 +104,7 @@ bool InputContext::Auto_Update(const RawInputEvent& in_event) {
 
 void InputContext::Distribute_Event(const InputEvent& in_event) {
 	for (uint i = 0; i < listeners.size(); i++) {
-		listeners[i]->Post_Event(in_event);
+		if (listeners[i]->Post_Event(in_event)) break;
 	}
 }
 
@@ -121,6 +122,7 @@ float InputContext::Get_Range(uint in_index) {
 
 void InputContext::Add(InputListener* in_listener) {
 	listeners.push_back(in_listener);
+	Sort();
 }
 
 void InputContext::Remove(InputListener* in_listener) {
@@ -128,4 +130,9 @@ void InputContext::Remove(InputListener* in_listener) {
 	if (position != listeners.end()) {
 		listeners.erase(position);
 	}
+	Sort();
+}
+
+void InputContext::Sort() {
+	std::sort(listeners.begin(), listeners.end(), InputListener::Compare_Pointers);
 }

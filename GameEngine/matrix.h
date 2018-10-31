@@ -48,7 +48,7 @@ public:
 	template<typename = typename std::enable_if<n == 1, void>::type>
 	Matrix(const Vector<T, m>& vec) {
 		for (uint i = 0; i < m; i++) {
-			data[i][0] = vec[i];
+			data[i][0] = vec.Get(i);
 		}
 	}
 
