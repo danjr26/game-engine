@@ -11,8 +11,10 @@
 #include "input_manager.h"
 #include "log.h"
 #include "window_manager.h"
+#include "collision_manager.h"
 #include "misc.h"
 #include "exceptions.h"
+#include "async_task_manager.h"
 
 #define GE GameEngine::Instance()
 
@@ -31,6 +33,8 @@ private:
 	FontManager fontManager;
 	RenderManager renderManager;
 	WindowManager windowManager;
+	CollisionManagerd collisionManager;
+	AsyncTaskManager asyncTaskManager;
 
 public:
 	GameEngine();
@@ -44,6 +48,8 @@ public:
 	FontManager& Fonts();
 	RenderManager& Render();
 	WindowManager& Windows();
+	CollisionManagerd& Collision();
+	AsyncTaskManager& Async();
 
 	void Begin();
 

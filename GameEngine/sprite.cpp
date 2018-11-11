@@ -2,14 +2,14 @@
 #include "display_units.h"
 #include "game_engine.h"
 
-Sprite::Sprite(const DeepAxisAlignedRectangled& in_rectangle, Texture* in_texture, const ColorRGBAf& in_color) :
+Sprite::Sprite(const AxisAlignedRectangled& in_rectangle, Texture* in_texture, const ColorRGBAf& in_color) :
 	meshVertexData(MeshVertexData::DataType::_ushort), 
 	gpuPusher(),
 	color(in_color),
 	textureInstance(in_texture) {
 
-	transform.Set_Local_Position(Vector3d(in_rectangle.Get_Minima(), in_rectangle.Get_Depth()));
-	transform.Scale_Local(Vector3d(in_rectangle.Get_Dimensions(), 1.0));
+	transform.Set_Local_Position(in_rectangle.Get_Minima());
+	transform.Scale_Local(in_rectangle.Get_Dimensions());
 
 	Vector3f positions[] = {
 		Vector3f(0.0f, 0.0f, 0.0f),
@@ -62,7 +62,7 @@ TextureInstance& Sprite::Texture_Instance() {
 }
 
 double Sprite::Z() const {
-	return transform.Get_Local_Position().Z();
+	return depthTransform.Get_World_Depth();
 }
 
 bool Sprite::Should_Cull() const {

@@ -1,7 +1,8 @@
 #include "async_task_manager.h"
 #include "log.h"
+#include "packaged_async_task.h"
 
-AsyncTaskManager::AsyncTaskManager(const Clock& in_clock, uint in_nTasks, uint in_nThreads) :
+AsyncTaskManager::AsyncTaskManager(const Clock& in_clock, uint in_nThreads) :
 clock(in_clock),
 threads(),
 tasks(),
@@ -9,7 +10,6 @@ terminate(false) {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	in_nThreads = (in_nThreads == 0) ? std::thread::hardware_concurrency() : in_nThreads;
 	threads.reserve(in_nThreads);
-	tasks.reserve(in_nTasks);
 	for (uint i = 0; i < in_nThreads; i++) {
 		threads.push_back(new std::thread(Call_Thread_Entry, std::ref(*this)));
 	}
@@ -26,51 +26,60 @@ AsyncTaskManager::~AsyncTaskManager() {
 	}
 }
 
-void AsyncTaskManager::Thread_Entry() {
-	int taskIndex = -1;
+bool AsyncTaskManager::Thread_Entry() {
+	TaskIterator taskIt;
 	AsyncTask* task = nullptr;
 	{
 		std::lock_guard<std::recursive_mutex> lock(mutex);
-		taskIndex = Get_Next_Task_Index(false);
-		if (taskIndex < 0) {
-			taskIndex = Get_Next_Task_Index(true);
-			if (taskIndex < 0) {
-				std::this_thread::sleep_for(std::chrono::microseconds(1));
-				return;
+
+		taskIt = Get_Next_Task(false);
+		if (taskIt == tasks.end()) {
+			taskIt = Get_Next_Task(true);
+			if (taskIt == tasks.end()) {
+				return false;
 			}
 		}
-		task = Get(taskIndex);
-		Remove(taskIndex);
+
+		task = Get(taskIt);
+		Remove(taskIt);
 	}
 	task->Run();
+	return true;
 }
 
-int AsyncTaskManager::Get_Next_Task_Index(bool in_useEpsilon) {
+AsyncTaskManager::TaskIterator AsyncTaskManager::Get_Next_Task(bool in_useEpsilon) {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	double threshold;
 	double now = clock.Now();
-	for (int i = 0; i < tasks.size(); i++) {
-		threshold = (in_useEpsilon) ? tasks[i]->time - tasks[i]->epsilon : tasks[i]->time;
+	TaskIterator it;
+	for (it = tasks.begin(); it != tasks.end(); it++) {
+		threshold = (in_useEpsilon) ? (*it)->time - (*it)->epsilon : (*it)->time;
 		if (now >= threshold) {
-			return i;
+			return it;
 		}
 	}
-	return -1;
+	return it;
 }
 
 void AsyncTaskManager::Add(AsyncTask* in_task) {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
+	for (auto it = tasks.begin(); it != tasks.end(); it++) {
+		if (in_task->time >= (*it)->time) {
+			tasks.insert(it, in_task);
+			return;
+		}
+	}
 	tasks.push_back(in_task);
 }
 
-void AsyncTaskManager::Remove(uint in_index) {
+void AsyncTaskManager::Remove(TaskIterator in_it) {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
-	tasks.erase(tasks.begin() + in_index);
+	tasks.erase(in_it);
 }
 
-AsyncTask* AsyncTaskManager::Get(uint in_index) {
+AsyncTask* AsyncTaskManager::Get(TaskIterator in_it) {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
-	return tasks[in_index];
+	return (*in_it);
 }
 
 void AsyncTaskManager::Terminate() {
@@ -83,8 +92,14 @@ bool AsyncTaskManager::Is_Terminating() const {
 	return terminate;
 }
 
+void AsyncTaskManager::Help_Until_Empty() {
+	while (Thread_Entry());
+}
+
 void AsyncTaskManager::Call_Thread_Entry(AsyncTaskManager& in_handler) {
 	while (!in_handler.terminate) {
-		in_handler.Thread_Entry();
+		if (!in_handler.Thread_Entry()) {
+			std::this_thread::sleep_for(std::chrono::microseconds(10));
+		}
 	}
 }

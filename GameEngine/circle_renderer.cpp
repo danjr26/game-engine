@@ -29,7 +29,7 @@ void CircleRenderer::Render() {
 	glUniformMatrix4fv(locations[0], 1, GL_TRUE, mvpMatrix.Pointer());
 	glUniform4fv(locations[1], 1, color.Pointer());
 	glUniform4fv(locations[2], 1, outlineColor.Pointer());
-	glUniform1f(locations[3], outlineWidth);
+	glUniform1f(locations[3], (float)outlineWidth);
 	glUniform2fv(locations[4], 1, Vector2f(Vector3f(Get_Transform().Get_Local_Scale())).Pointer());
 
 	/*

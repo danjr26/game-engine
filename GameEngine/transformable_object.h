@@ -3,13 +3,18 @@
 
 #include "transform.h"
 
+template<class T, uint n>
 class TransformableObject {
 protected:
-	Transform transform;
+	Transform<T, n> transform;
 public:
 	TransformableObject();
-	TransformableObject(Transform in_transform);
-	Transform& Get_Transform();
+	Transform<T, n>& Get_Transform();
 };
+
+using TransformableObject2f = TransformableObject<float, 2>;
+using TransformableObject2d = TransformableObject<double, 2>;
+using TransformableObject3f = TransformableObject<float, 3>;
+using TransformableObject3d = TransformableObject<double, 3>;
 
 #endif

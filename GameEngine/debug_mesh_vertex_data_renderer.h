@@ -7,7 +7,7 @@
 #include "transformable_object.h"
 
 
-class DebugMeshVertexDataRenderer : public RenderableObject, public TransformableObject {
+class DebugMeshVertexDataRenderer : public RenderableObject, public TransformableObject3d {
 private:
 	MeshVertexData* meshVertexData;
 	MeshVertexGPUPusher gpuPusher;

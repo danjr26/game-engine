@@ -7,15 +7,26 @@
 template<class T>
 class PackagedAsyncTask : public AsyncTask {
 private:
-	std::function<T(void)> func;
+	const std::function<T(void)> func;
 
 public:
-	PackagedAsyncTask(std::function<T(void)> in_function) :
+	PackagedAsyncTask(const std::function<T(void)>& in_function) :
 		func(in_function)
 	{}
+
+	PackagedAsyncTask(const PackagedAsyncTask<T>& in_other) :
+		func(in_other.func) 
+	{}
 	
+	bool Is_Valid() {
+		return bool(func);
+	}
+
 protected:
-	void Run() override final {
+	void _Run() override final {
+		if (!func) {
+			throw InvalidArgumentException();
+		}
 		func();
 	}
 };

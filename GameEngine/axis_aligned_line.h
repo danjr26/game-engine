@@ -33,8 +33,8 @@ public:
 		return out;
 	}
 
-	void Apply_Transform(Transform& in_transform) {
-		for (Transform* t = &in_transform; t != nullptr; t = t->Get_Parent()) {
+	void Apply_Transform(Transform<T, n>& in_transform) {
+		for (Transform<T, n>* t = &in_transform; t != nullptr; t = t->Get_Parent()) {
 			value *= t->Get_Local_Scale()[dimension];
 			value += t->Get_Local_Position()[dimension];
 		}

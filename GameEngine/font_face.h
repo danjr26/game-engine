@@ -22,6 +22,8 @@ public:
 
 	static bool Is_Printable(uchar in_char);
 	static bool Is_Printable_Or_EOL(uchar in_char);
+
+	static void Load_XML_List(const std::string& in_filename);
 };
 
 #endif

@@ -230,7 +230,7 @@ void MeshVertexGPUPusher::Add_Member(uint in_id) {
 	Member newMember = {
 		in_id,
 		data->Get_Member_Type(index),
-		data->Get_Member_Depth(index),
+		(ubyte)data->Get_Member_Depth(index),
 		0
 	};
 

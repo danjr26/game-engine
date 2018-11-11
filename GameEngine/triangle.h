@@ -13,9 +13,9 @@ private:
 	}
 
 public:
-	void Apply_Transform(Transform& in_transform) {
+	void Apply_Transform(Transform<T, n>& in_transform) {
 		for (uint i = 0; i < 3; i++) {
-			points[i] = Vector<T, n>(in_transform.Apply_To_Local_Point(Vector<T, 3>(points[i])));
+			points[i] = in_transform.Apply_To_Local_Point(points[i]);
 		}
 	}
 
@@ -24,7 +24,10 @@ public:
 	}
 
 	void Get_Point_Offsets(Vector<T, n>* out_offsets) {
-		for (uint i = 0; i < 3; i++) out_offsets[i] = points[(i + 1) % 3] - points[i];
+		for (uint i = 0; i < 3; i++) {
+			out_offsets[i] = points[(i + 1) % 3];
+			out_offsets[i] -= points[i];
+		}
 	}
 
 	template<typename = typename std::enable_if_t<n == 2, void>>

@@ -12,15 +12,15 @@ InputBindings::InputBindings(uint in_nActions, uint in_nStates, uint in_nRanges)
 }
 
 uint InputBindings::Get_Number_Actions() const {
-	return actions.size();
+	return (uint)actions.size();
 }
 
 uint InputBindings::Get_Number_States() const {
-	return states.size();
+	return (uint)states.size();
 }
 
 uint InputBindings::Get_Number_Ranges() const {
-	return ranges.size();
+	return (uint)ranges.size();
 }
 
 void InputBindings::Bind_Action(uint in_slot, InputActionIdentifier in_action) {
@@ -127,13 +127,13 @@ InputBindings::Iterator::Iterator(Mode in_mode, InputBindings& in_parent, const 
 InputBindings::Iterator::operator bool() {
 	switch (mode) {
 	case Mode::action:
-		return index < parent.Get_Number_Actions();
+		return index < (int)parent.Get_Number_Actions();
 		break;
 	case Mode::state:
-		return index < parent.Get_Number_States();
+		return index < (int)parent.Get_Number_States();
 		break;
 	case Mode::range:
-		return index < parent.Get_Number_Ranges();
+		return index < (int)parent.Get_Number_Ranges();
 		break;
 	}
 	return false;
@@ -142,13 +142,13 @@ InputBindings::Iterator::operator bool() {
 InputBindings::Iterator& InputBindings::Iterator::operator++() {
 	switch (mode) {
 	case Mode::action:
-		do { index++; } while (index < parent.Get_Number_Actions() && !parent.Evaluate_Action(index, _event, state));
+		do { index++; } while (index < (int)parent.Get_Number_Actions() && !parent.Evaluate_Action(index, _event, state));
 		break;
 	case Mode::state:
-		do { index++; } while (index < parent.Get_Number_States() && parent.Evaluate_State(index, _event, state) == InputStateChange::no_change);
+		do { index++; } while (index < (int)parent.Get_Number_States() && parent.Evaluate_State(index, _event, state) == InputStateChange::no_change);
 		break;
 	case Mode::range:
-		do { index++; } while (index < parent.Get_Number_Ranges() && std::isnan(parent.Evaluate_Range(index, _event, state)));
+		do { index++; } while (index < (int)parent.Get_Number_Ranges() && std::isnan(parent.Evaluate_Range(index, _event, state)));
 		break;
 	}
 	return *this;

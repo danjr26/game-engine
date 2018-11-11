@@ -8,8 +8,13 @@
 template<class T, uint n>
 class Vector {
 	friend class Vector;
+	friend Vector<T, n> operator*(T s, const Vector<T, n>& v) {
+		return v * s;
+	}
+
 protected:
 	T members[n];
+
 public:
 	Vector() 
 	{}
@@ -318,7 +323,7 @@ public:
 
 	template<typename = std::enable_if_t<n == 2, void>>
 	void Rotate(T angle) {
-		angle = angle * DEG_TO_RAD;
+		angle = angle * (T)DEG_TO_RAD;
 		T sine = sin(angle);
 		T cosine = cos(angle);
 		T tempX = members[0] * cosine - members[1] * sine;
@@ -352,35 +357,32 @@ public:
 			return;
 		}
 		Vector<T, 3> axis = v / angle;
-
-		T sine = sin(angle);
-		T cosine = cos(angle);
-		T oneMinusCosine = (T)1 - cos(angle);
-
-		T x = v.members[0];
-		T y = v.members[1];
-		T z = v.members[2];
-
-		Vector<T, 3> old = members;
-
-		members[0] =
-			(cosine + x * x * oneMinusCosine) * old.X() +
-			(x * y * oneMinusCosine - z * sine) * old.Y() +
-			(x * z * oneMinusCosine + y * sine) * old.Z();
-		members[1] =
-			(y * x * oneMinusCosine + z * sine) * old.X() +
-			(cosine + y * y * oneMinusCosine) * old.Y() +
-			(y * z * oneMinusCosine - x * sine) * old.Z();
-		members[2] =
-			(z * x * oneMinusCosine - y * sine) * old.X() +
-			(z * y * oneMinusCosine + x * sine) * old.Y() +
-			(cosine + z * z * oneMinusCosine) * old.Z();
+		Rotate(axis, angle);
 	}
 
 	template<typename = std::enable_if_t<n == 3, void>>
 	Vector<T, 3> Rotated(const Vector<T, 3>& v) const {
 		Vector<T, 3> vOut = members;
 		vOut.Rotate(v);
+		return vOut;
+	}
+
+	template<typename = std::enable_if_t<n == 3, void>>
+	void Rotate(const Vector<T, 3>& axis, T angle) {
+		if (angle == 0) {
+			return;
+		}
+
+		T sine = sin(angle);
+		T cosine = cos(angle);
+
+		*this = *this * cosine + axis.Cross(*this) * sine + axis * axis.Dot(*this) * ((T)1 - cosine);
+	}
+
+	template<typename = std::enable_if_t<n == 3, void>>
+	Vector<T, 3> Rotated(const Vector<T, 3>& axis, T angle) const {
+		Vector<T, 3> vOut = members;
+		vOut.Rotate(axis, angle);
 		return vOut;
 	}
 
@@ -443,6 +445,7 @@ using Vector2i = Vector<int, 2>;
 using Vector2f = Vector<float, 2>;
 using Vector2d = Vector<double, 2>;
 
+using Vector3ui = Vector<uint, 3>;
 using Vector3i = Vector<int, 3>;
 using Vector3f = Vector<float, 3>;
 using Vector3d = Vector<double, 3>;

@@ -15,13 +15,13 @@ private:
 	{}
 
 public:
-	void Apply_Transform(Transform& transform) {
+	void Apply_Transform(Transform<T, n>& transform) {
 		double scale = 1.0;
-		for (Transform* t = &transform; t != nullptr; t = t->Get_Parent()) {
-			scale *= max(t->Get_Local_Scale().X(), t->Get_Local_Scale().Y());
+		for (Transform<T, n>* t = &transform; t != nullptr; t = t->Get_Parent()) {
+			scale *= t->Get_Local_Scale().Max_Component();
 		}
 		(*this) = Sphere<T, n>::From_Point_Radius(
-			Vector<T, n>(transform.Apply_To_Local_Point(Vector<T, 3>(center))),
+			transform.Apply_To_Local_Point(center),
 			radius * scale
 		);
 	}

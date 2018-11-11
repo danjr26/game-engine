@@ -15,9 +15,9 @@ private:
 	{}
 
 public:
-	void Apply_Transform(Transform& in_transform) {
-		point = Vector<T, n>(in_transform.Apply_To_Local_Point(Vector<T, 3>(point)));
-		direction = Vector<T, n>(in_transform.Apply_To_Local_Direction(Vector<T, 3>(direction)));
+	void Apply_Transform(Transform<T, n>& in_transform) {
+		point = in_transform.Apply_To_Local_Point(point);
+		direction = in_transform.Apply_To_Local_Direction(direction);
 	}
 
 	Vector<T, n> Get_Point() const {

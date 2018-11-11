@@ -5,69 +5,73 @@
 #include "matrix.h"
 #include "rotation.h"
 
+template<class T, uint n>
 class Transform {
 	// applies components in this order:
 	// scale, rotation, translation
 private:
-	Transform* parent;
-	Vector3d translation;
-	Vector3d scale;
-	Rotationd rotation;
+	Transform<T, n>* parent;
+	Vector<T, n> translation;
+	Vector<T, n> scale;
+	Rotation<T, n> rotation;
 
 public:
 	Transform();
 
-	Transform* Get_Parent();
-	void Set_Parent(Transform* in_parent);
+	Transform<T, n>* Get_Parent();
+	void Set_Parent(Transform<T, n>* in_parent);
 
 	bool Is_Local_Identity() const;
-	bool Is_Global_Identity() const;
+	bool Is_World_Identity() const;
 
-	Rotationd Get_Local_Rotation();
-	Rotationd Get_World_Rotation();
-	void Set_Local_Rotation(const Rotationd& in_rotation);
-	void Set_World_Rotation(const Rotationd& in_rotation);
-	void Rotate_Local(const Rotationd& in_rotation);
-	void Rotate_World(const Rotationd& in_rotation);
-	void Rotate_Local_Around_Local_Point(const Rotationd& in_rotation, const Vector3d& in_point);
-	void Rotate_World_Around_Local_Point(const Rotationd& in_rotation, const Vector3d& in_point);
-	void Rotate_Local_Around_World_Point(const Rotationd& in_rotation, const Vector3d& in_point);
-	void Rotate_World_Around_World_Point(const Rotationd& in_rotation, const Vector3d& in_point);
+	Rotation<T, n> Get_Local_Rotation();
+	Rotation<T, n> Get_World_Rotation();
+	void Set_Local_Rotation(const Rotation<T, n>& in_rotation);
+	void Set_World_Rotation(const Rotation<T, n>& in_rotation);
+	void Rotate_Local(const Rotation<T, n>& in_rotation);
+	void Rotate_World(const Rotation<T, n>& in_rotation);
+	void Rotate_Local_Around_Local_Point(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point);
+	void Rotate_World_Around_Local_Point(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point);
+	void Rotate_Local_Around_World_Point(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point);
+	void Rotate_World_Around_World_Point(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point);
 
-	Vector3d Get_Local_Scale() const;
-	void Set_Local_Scale(const Vector3d& in_factor);
-	void Scale_Local(const Vector3d& in_factor);
+	Vector<T, n> Get_Local_Scale() const;
+	void Set_Local_Scale(const Vector<T, n>& in_factor);
+	void Scale_Local(const Vector<T, n>& in_factor);
 
-	Vector3d Get_Local_Position() const;
-	Vector3d Get_World_Position() const;
-	void Set_Local_Position(const Vector3d& in_position);
-	void Translate_Local(const Vector3d& in_translation);
-	void Translate_World(const Vector3d& in_translation);
+	Vector<T, n> Get_Local_Position() const;
+	Vector<T, n> Get_World_Position() const;
+	void Set_Local_Position(const Vector<T, n>& in_position);
+	void Translate_Local(const Vector<T, n>& in_translation);
+	void Translate_World(const Vector<T, n>& in_translation);
 
-	Vector3d Apply_To_Local_Point(const Vector3d& in_point) const;
-	Vector3d Apply_To_World_Point(const Vector3d& in_point) const;
-	Vector3d Apply_To_Local_Direction(const Vector3d& in_direction) const;
-	Vector3d Apply_To_World_Direction(const Vector3d& in_direction) const;
-	Vector3d Apply_To_Local_Vector(const Vector3d& in_vector) const;
-	Vector3d Apply_To_World_Vector(const Vector3d& in_vector) const;
+	Vector<T, n> Apply_To_Local_Point(const Vector<T, n>& in_point) const;
+	Vector<T, n> Apply_To_World_Point(const Vector<T, n>& in_point) const;
+	Vector<T, n> Apply_To_Local_Direction(const Vector<T, n>& in_direction) const;
+	Vector<T, n> Apply_To_World_Direction(const Vector<T, n>& in_direction) const;
+	Vector<T, n> Apply_To_Local_Vector(const Vector<T, n>& in_vector) const;
+	Vector<T, n> Apply_To_World_Vector(const Vector<T, n>& in_vector) const;
 
-	Matrix4d Get_Local_Matrix() const;
-	Matrix4d Get_World_Matrix() const;
-	Matrix4d Get_Local_Inverse_Matrix() const;
-	Matrix4d Get_World_Inverse_Matrix() const;
+	Matrix<T, 4, 4> Get_Local_Matrix() const;
+	Matrix<T, 4, 4> Get_World_Matrix() const;
+	Matrix<T, 4, 4> Get_Local_Inverse_Matrix() const;
+	Matrix<T, 4, 4> Get_World_Inverse_Matrix() const;
 
 private:
-	Vector3d World_To_Local_Point(const Vector3d& in_point) const;
-	Vector3d Local_To_World_Point(const Vector3d& in_point) const;
-	Vector3d World_To_Local_Direction(const Vector3d& in_direction) const;
-	Vector3d Local_To_World_Direction(const Vector3d& in_direction) const;
-	Vector3d World_To_Local_Vector(const Vector3d& in_vector) const;
-	Vector3d Local_To_World_Vector(const Vector3d& in_vector) const;
-	Rotationd World_To_Local_Rotation(const Rotationd& in_rotation) const;
-	Rotationd Local_To_World_Rotation(const Rotationd& in_rotation) const;
+	Vector<T, n> World_To_Local_Point(const Vector<T, n>& in_point) const;
+	Vector<T, n> Local_To_World_Point(const Vector<T, n>& in_point) const;
+	Vector<T, n> World_To_Local_Direction(const Vector<T, n>& in_direction) const;
+	Vector<T, n> Local_To_World_Direction(const Vector<T, n>& in_direction) const;
+	Vector<T, n> World_To_Local_Vector(const Vector<T, n>& in_vector) const;
+	Vector<T, n> Local_To_World_Vector(const Vector<T, n>& in_vector) const;
+	Rotation<T, n> World_To_Local_Rotation(const Rotation<T, n>& in_rotation) const;
+	Rotation<T, n> Local_To_World_Rotation(const Rotation<T, n>& in_rotation) const;
 };
 
-
+using Transform2f = Transform<float, 2>;
+using Transform2d = Transform<double, 2>;
+using Transform3f = Transform<float, 3>;
+using Transform3d = Transform<double, 3>;
 
 #endif
 

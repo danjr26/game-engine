@@ -45,10 +45,10 @@ public:
 		}
 	}
 
-	void Apply_Transform(Transform& transform) {
-		origin = Vector<T, n>(transform.Apply_To_Local_Point(Vector<T, 3>(origin)));
+	void Apply_Transform(Transform<T, n>& transform) {
+		origin = transform.Apply_To_Local_Point(origin);
 		for (uint i = 0; i < n; i++) {
-			axes[i] = Vector<T, n>(transform.Apply_To_Local_Vector(Vector<T, 3>(axes[i])));
+			axes[i] = transform.Apply_To_Local_Vector(axes[i]);
 		}
 	}
 

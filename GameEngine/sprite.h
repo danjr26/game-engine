@@ -3,7 +3,7 @@
 
 #include "texture.h"
 #include "renderable_object.h"
-#include "transformable_object.h"
+#include "deep_transformable_object.h"
 #include "texture_instance.h"
 #include "display_units.h"
 #include "texture_instance.h"
@@ -11,7 +11,7 @@
 #include "shader_program_instance.h"
 #include "geometric_figures.h"
 
-class Sprite : public RenderableObject, public TransformableObject {
+class Sprite : public RenderableObject, public DeepTransformableObject2f {
 protected:
 	MeshVertexData meshVertexData;
 	MeshVertexGPUPusher gpuPusher;
@@ -19,7 +19,7 @@ protected:
 	//ShaderProgramInstance shaderInstance;
 	ColorRGBAf color;
 public:
-	Sprite(const DeepAxisAlignedRectangled& in_rectangle, Texture* in_texture, const ColorRGBAf& in_color = ColorRGBAf(1, 1, 1, 1));
+	Sprite(const AxisAlignedRectangled& in_rectangle, Texture* in_texture, const ColorRGBAf& in_color = ColorRGBAf(1, 1, 1, 1));
 	~Sprite();
 	void Set_UVs(const Vector2f& in_topLeft, const Vector2f& in_bottomRight);
 	void Set_Color(const ColorRGBAf& in_color);

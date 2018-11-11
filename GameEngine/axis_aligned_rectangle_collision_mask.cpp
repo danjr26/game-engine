@@ -1,68 +1,92 @@
 #include "axis_aligned_rectangle_collision_mask.h"
 
-AxisAlignedRectangleCollisionMask::AxisAlignedRectangleCollisionMask(const AxisAlignedRectangled& in_rectangle, bool in_ignoreTransform) :
-	CollisionMask2(in_ignoreTransform),
+template<class T>
+AxisAlignedRectangleCollisionMask<T>::AxisAlignedRectangleCollisionMask(const AxisAlignedRectangle<T>& in_rectangle, bool in_ignoreTransform) :
+	CollisionMask<T, 2>(in_ignoreTransform),
 	rectangle(in_rectangle)
 {}
 
-AxisAlignedRectangled& AxisAlignedRectangleCollisionMask::Get_Rectangle() {
+template<class T>
+AxisAlignedRectangle<T>& AxisAlignedRectangleCollisionMask<T>::Get_Rectangle() {
 	return rectangle;
 }
 
-AxisAlignedRectangled AxisAlignedRectangleCollisionMask::Get_Transformed_Rectangle() {
-	AxisAlignedRectangled out = rectangle;
+template<class T>
+AxisAlignedRectangle<T> AxisAlignedRectangleCollisionMask<T>::Get_Transformed_Rectangle() {
+	AxisAlignedRectangle<T> out = rectangle;
 	if(!ignoreTransform) out.Apply_Transform(transform);
 	return out;
 }
 
-void AxisAlignedRectangleCollisionMask::Apply_Transform() {
+template<class T>
+void AxisAlignedRectangleCollisionMask<T>::Apply_Transform() {
 	rectangle.Apply_Transform(transform);
 }
 
-Collision2d AxisAlignedRectangleCollisionMask::Accept_Evaluator(CollisionEvaluator2& in_evaluator, CollisionMask2& in_other) {
+template<class T>
+AxisAlignedRectangleCollisionMask<T>* AxisAlignedRectangleCollisionMask<T>::Clone() const {
+	return new AxisAlignedRectangleCollisionMask<T>(*this);
+}
+
+template<class T>
+Collision<T, 2> AxisAlignedRectangleCollisionMask<T>::Accept_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, CollisionMask<T, 2>& in_other) {
 	return in_other.Accept_Secondhand_Evaluator(in_evaluator, *this);
 }
 
-Collision2d AxisAlignedRectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedHalfSpace2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> AxisAlignedRectangleCollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AxisAlignedHalfSpace2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(in_other, *this);
 }
 
-Collision2d AxisAlignedRectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedLine2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> AxisAlignedRectangleCollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AxisAlignedLine2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(in_other, *this);
 }
 
-Collision2d AxisAlignedRectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedRectangleCollisionMask& in_other) {
+template<class T>
+Collision<T, 2> AxisAlignedRectangleCollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AxisAlignedRectangleCollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
 
-Collision2d AxisAlignedRectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, CircleCollisionMask& in_other) {
+template<class T>
+Collision<T, 2> AxisAlignedRectangleCollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, CircleCollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
 
-Collision2d AxisAlignedRectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, HalfSpace2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> AxisAlignedRectangleCollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, HalfSpace2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
 
-Collision2d AxisAlignedRectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, Line2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> AxisAlignedRectangleCollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Line2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
 
-Collision2d AxisAlignedRectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, LineSegment2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> AxisAlignedRectangleCollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, LineSegment2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
 
-Collision2d AxisAlignedRectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, Point2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> AxisAlignedRectangleCollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Point2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
 
-Collision2d AxisAlignedRectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, Ray2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> AxisAlignedRectangleCollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Ray2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
 
-Collision2d AxisAlignedRectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, RectangleCollisionMask& in_other) {
+template<class T>
+Collision<T, 2> AxisAlignedRectangleCollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, RectangleCollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
 
-Collision2d AxisAlignedRectangleCollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, Triangle2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> AxisAlignedRectangleCollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Triangle2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
+
+template class AxisAlignedRectangleCollisionMask<float>;
+template class AxisAlignedRectangleCollisionMask<double>;

@@ -5,10 +5,13 @@
 #include "shader_program.h"
 #include "filtered_object.h"
 #include "disableable_object.h"
+#include "axis_aligned_box.h"
 
 class Renderer;
 
 class RenderableObject : public FilteredObject, public DisableableObject {
+private:
+	AxisAlignedRectangled cullingRectangle;
 public:
 	RenderableObject();
 	virtual ~RenderableObject();

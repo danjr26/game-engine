@@ -359,5 +359,4 @@ std::vector<Window::DisplayMode> Window::Get_Supported_Display_Modes() {
 void Window::_Draw_To_This() {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	glViewport(0, 0, params.dimensions.X(), params.dimensions.Y());
-
 }

@@ -25,7 +25,7 @@ public:
 
 private:
 	struct Member {
-		ubyte id;
+		uint id;
 		DataType type;
 		ubyte depth;
 		GLuint bufferID;

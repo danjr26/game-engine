@@ -2,15 +2,17 @@
 #include "display_units.h"
 #include "game_engine.h"
 
-Text2::Text2(const std::string& in_text, FontFaceRasterSet* in_rasterSet, Transform in_transform, ColorRGBAc in_color) :
-	TransformableObject(in_transform),
+Text2::Text2(const std::string& in_text, FontFaceRasterSet* in_rasterSet, ColorRGBAc in_color) :
 	text(in_text),
 	rasterSet(in_rasterSet),
-	bitmapArray(in_rasterSet->texture) {
+	bitmapArray(in_rasterSet->texture),
+	containerDimensions(300, 300) {
 	
 	if (in_rasterSet->texture == nullptr || in_rasterSet->texture->Get_Type() != Texture::Type::_2d_array) {
 		throw InvalidArgumentException("invalid raster texture passed to text");
 	}
+
+	scrollTransform.Set_Parent(&transform);
 
 	Create_OpenGL();
 }
@@ -48,7 +50,7 @@ Vector2f Text2::Get_Char_Dimensions(uint in_index) const {
 }
 
 uint Text2::Get_Number_Lines() const {
-	uint out = 1 + lineWrap.size();
+	uint out = 1u + (uint)lineWrap.size();
 	for (uint i = 0; i < text.size(); i++) {
 		if (text[i] == '\n') {
 			out++;
@@ -74,7 +76,7 @@ uint Text2::Get_Line_Index(uint in_charIndex) const {
 
 Rangeui Text2::Get_Line_Range(uint in_lineIndex) const {
 	uint low = 0;
-	uint high = text.size();
+	uint high = (uint)text.size();
 	uint lineIndex = 0;
 	uint lineWrapI = 0;
 	uint i;
@@ -101,13 +103,17 @@ float Text2::Get_Char_Height() const {
 	return rasterSet->topToBaseline;
 }
 
+float Text2::Get_Newline_Height() const {
+	return (float)rasterSet->size;
+}
+
 uint Text2::Get_Closest_Char_Index(Vector2f in_point) const {
-	int lineIndex = in_point.Y() / Get_Char_Height();
+	int lineIndex = (int)(in_point.Y() / Get_Newline_Height());
 	if (lineIndex < 0) {
 		return 0;
 	}
-	if (lineIndex >= Get_Number_Lines()) {
-		return text.size();
+	if (lineIndex >= (int)Get_Number_Lines()) {
+		return (uint)text.size();
 	}
 	Rangeui lineRange = Get_Line_Range(lineIndex);
 
@@ -118,7 +124,7 @@ uint Text2::Get_Closest_Char_Index(Vector2f in_point) const {
 	Vector2f lastPen = Vector2f(0.0f, in_point.Y());
 	for (Vector2f pen = Vector2f(0.0f, in_point.Y()); charIndex < lineRange.Get_High(); Increment_Pen(pen, charIndex++)) {
 		if (pen.X() >= in_point.X()) {
-			if (Inv_Lerp(lastPen.X(), pen.X(), in_point.X()) > 0.5) {
+			if (lastPen.X() == pen.X() || Inv_Lerp(lastPen.X(), pen.X(), in_point.X()) > 0.5) {
 				return charIndex;
 			}
 			else {
@@ -130,8 +136,52 @@ uint Text2::Get_Closest_Char_Index(Vector2f in_point) const {
 	return charIndex;
 }
 
+Vector2f Text2::Get_Container_Dimensions() const {
+	return containerDimensions;
+}
+
+Transform2f& Text2::Get_Scroll_Transform() {
+	return scrollTransform;
+}
+
+void Text2::Set_Scroll_Position(Vector2f in_position) {
+	scrollTransform.Set_Local_Position(in_position);
+}
+
+Vector2f Text2::Get_Scroll_To_Include_Char(uint in_charIndex) const {
+	Vector2d minima = Get_Local_Char_Position(in_charIndex);
+	Vector2d maxima = minima + Get_Char_Dimensions(in_charIndex);
+	Vector2d currentMinima = -Vector2d(scrollTransform.Get_Local_Position());
+	Vector2d currentMaxima = currentMinima + Get_Container_Dimensions();
+
+	Vector2d out = Vector2d(scrollTransform.Get_Local_Position());
+	if (std::find(lineWrap.begin(), lineWrap.end(), in_charIndex) == lineWrap.end()) {
+		if (minima.X() < currentMinima.X()) {
+			out[0] = minima.X();
+		}
+		else if (maxima.X() > currentMaxima.X()) {
+			out[0] -= maxima.X() - currentMaxima.X();
+		}
+	}
+
+	if (minima.Y() < currentMinima.Y()) {
+		out[1] = minima.Y();
+	}
+	else if (maxima.Y() > currentMaxima.Y()) {
+		out[1] -= maxima.Y() - currentMaxima.Y();
+	}
+
+	return out;
+}
+
 std::string Text2::Get_Text() const {
 	return text;
+}
+
+void Text2::Insert(char in_char, uint in_index) {
+	std::string s;
+	s += in_char;
+	Insert(s, in_index);
 }
 
 void Text2::Insert(const std::string& in_text, uint in_index) {
@@ -159,7 +209,7 @@ void Text2::Replace(const std::string& in_text, uint in_start, uint in_number) {
 }
 
 double Text2::Z() const {
-	return transform.Get_Local_Position().Z();
+	return depthTransform.Get_World_Depth();
 }
 
 bool Text2::Should_Cull() const {
@@ -169,29 +219,22 @@ bool Text2::Should_Cull() const {
 void Text2::Render() {
 	ShaderProgram* shaderProgram = GE.Assets().Get<ShaderProgram>("TextShader");
 
-	glDisable(GL_CULL_FACE);
+	// glDisable(GL_CULL_FACE);
 
-	Matrix4f modelMatrix = transform.Get_World_Matrix();
+	Matrix4f modelMatrix = scrollTransform.Get_World_Matrix();
 	Matrix4f viewMatrix = GE.Cameras().active->Get_Matrix();
 	Matrix4f modelviewMatrix = viewMatrix * modelMatrix;
 
-	Vector2f cullLow = Vector2f(0, 0);
-	Vector2f cullHigh = Vector2f(100, 100);
-
-	GLint locations[3] = {
-		shaderProgram->Get_Uniform_Location("matrix"),
-		shaderProgram->Get_Uniform_Location("cullLow"),
-		shaderProgram->Get_Uniform_Location("cullHigh")
+	GLint locations[1] = {
+		shaderProgram->Get_Uniform_Location("matrix")
 	};
-
+	
 	bitmapArray.Use();
 
 	glBindVertexArray(vertexArrayID);
 
 	shaderProgram->Use();
 	glUniformMatrix4fv(locations[0], 1, GL_TRUE, modelviewMatrix.Pointer());
-	glUniform2fv(locations[1], 1, cullLow.Pointer());
-	glUniform2fv(locations[2], 1, cullHigh.Pointer());
 
 	glDrawElements(GL_TRIANGLES, 6 * Get_Number_Printable(), GL_UNSIGNED_SHORT, 0);
 
@@ -208,14 +251,19 @@ uint Text2::Get_Number_Printable() {
 	return nPrintable;
 }
 
-void Text2::Increment_Pen(Vector2f& pen, uint in_index) const {
+void Text2::Increment_Pen(Vector2f& inout_pen, uint in_index) const {
+	if (std::find(lineWrap.begin(), lineWrap.end(), in_index) != lineWrap.end()) {
+		inout_pen[0] = 0;
+		inout_pen[1] += Get_Newline_Height();
+	}
+
 	if (FontFace::Is_Printable(text[in_index])) {
 		uint charIndex = text[in_index] - ' ';
-		pen[0] += rasterSet->advances[charIndex];
+		inout_pen[0] += rasterSet->advances[charIndex];
 	}
 	else if (text[in_index] == '\n') {
-		pen[0] = 0;
-		pen[1] += rasterSet->size;
+		inout_pen[0] = 0;
+		inout_pen[1] += Get_Newline_Height();
 	}
 }
 
@@ -244,10 +292,20 @@ void Text2::Create_OpenGL() {
 	uint glyphIndex = 0;
 	Vector2f pen = Vector2f(0, rasterSet->topToBaseline);
 
-	for (uint i = 0; i < text.size(); i++) {
-		if (FontFace::Is_Printable(text[i])) {
-			uint charIndex = text[i] - ' ';
+	lineWrap.clear();
 
+	for (uint i = 0; i < text.size(); i++) {
+		uint charIndex = text[i] - ' ';
+		Vector2f testPen = pen;
+		Increment_Pen(testPen, i);
+		bool isPrintable = FontFace::Is_Printable(text[i]);
+		bool didWrap = isPrintable ? testPen.X() > containerDimensions.X() : false;
+		if (didWrap) {
+			pen[0] = 0;
+			pen[1] += Get_Newline_Height();
+		}
+
+		if (isPrintable) {
 			Vector2i targetDimensions = GE.Render().mainTarget->Get_Dimensions();
 
 			Vector2f minCoords = pen + rasterSet->offsets[charIndex];
@@ -257,8 +315,8 @@ void Text2::Create_OpenGL() {
 			Vector2f minUVs = Vector2f(0.0f, 0.0f);
 			Vector2f maxUVs = dimensions.Compwise((Vector2f(Vector3f(rasterSet->texture->Get_Dimensions()))).Component_Inverted());
 
-			Vector2f minScreenCoords = DisplayUnits2::Pixels(minCoords, targetDimensions).OpenGL_Position();
-			Vector2f maxScreenCoords = DisplayUnits2::Pixels(maxCoords, targetDimensions).OpenGL_Position();
+			Vector2f minScreenCoords = DisplayUnits2f::Pixels(minCoords, targetDimensions).OpenGL_Position();
+			Vector2f maxScreenCoords = DisplayUnits2f::Pixels(maxCoords, targetDimensions).OpenGL_Position();
 
 			vertices.push_back(Vector2f(minCoords.X(), minCoords.Y()));
 			vertices.push_back(Vector2f(minCoords.X(), maxCoords.Y()));
@@ -279,7 +337,12 @@ void Text2::Create_OpenGL() {
 
 			glyphIndex++;
 		}
+
 		Increment_Pen(pen, i);
+
+		if (didWrap) {
+			lineWrap.push_back(i);
+		}
 	}
 
 	glGenVertexArrays(1, &vertexArrayID);

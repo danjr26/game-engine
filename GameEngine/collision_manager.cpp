@@ -1,88 +1,76 @@
-#include "collision.h"
-#include "framework.h"
+#include "collision_manager.h"
 
-CollisionManager::CollisionManager() :
-components	(512, offsetof(CollidableComponent3, collisionManagerArrayIndex), true),
-octTree		(2),
-timeRequest	(&GEngine::Get().Play_Clock(), 1.0 / 100.0) 
+template<class T>
+CollisionManager<T>::CollisionManager() :
+	activeContext2(nullptr)
 {}
 
-CollisionManager::~CollisionManager() {
-	while (components.Size())
-		delete components[0];
-}
-
-void CollisionManager::Check_Collisions() {
-	octTree.Refresh();
-
-	CollidableComponent3* deletions[512];
-	uint nDeletions = 0;
-
-	uint count = 0;
-	for (uint i = 0; i < components.Size(); i++) {
-		for (int j = octTree.length - 1; j > 0; j--) {
-			if (octTree.structure[j].data == components[i]) {
-				OctInfo* node = nullptr;
-				int nodei;
-				for (int k = j - 1; k >= 0; k--) {
-					if (octTree.structure[k].node.nodecode == 0xf0f0f0f0) {
-						node = &octTree.structure[k];
-						nodei = k;
-						break;
-					}
-				}
-				if (node == nullptr)
-					Die("CollisiomManager.CheckCollisions: OctTree node not found");
-				for (int k = nodei + 1; k < nodei + node->node.ncomponents + 1; k++) {
-					if (k != j) {
-						count++;
-						Collision collision = (octTree.structure[j].data->Should_Check_Collision(octTree.structure[k].data)) ? 
-							octTree.structure[j].data->mask->Is_Colliding(octTree.structure[k].data->mask) :
-							Collision{ false, Vector3d() };
-						if (collision.didCollide) {
-							if (octTree.structure[j].data->Collide(octTree.structure[k].data, &collision)) {
-								bool alreadyDeleted = false;
-								for (uint i = 0; i < nDeletions; i++) {
-									if (deletions[i] == octTree.structure[j].data) {
-										alreadyDeleted = true;
-										break;
-									}
-								}
-								if (!alreadyDeleted) {
-									deletions[nDeletions] = octTree.structure[j].data;
-									nDeletions++;
-								}
-							}
-							if (octTree.structure[k].data->Collide(octTree.structure[j].data, &collision)) {
-								bool alreadyDeleted = false;
-								for (uint i = 0; i < nDeletions; i++) {
-									if (deletions[i] == octTree.structure[k].data) {
-										alreadyDeleted = true;
-										break;
-									}
-								}
-								if (!alreadyDeleted) {
-									deletions[nDeletions] = octTree.structure[k].data;
-									nDeletions++;
-								}
-							}
-						}
-					}
-				}
-				break;
-			}
-		}
+template<class T>
+void CollisionManager<T>::Update() {
+	for (auto it = context2s.begin(); it < context2s.end(); it++) {
+		(*it)->Update();
 	}
 
-	for (uint i = 0; i < nDeletions; i++)
-		delete deletions[i];
+/*	
+	for (auto it = context3s.begin(); it < context3s.end(); it++) {
+		(*it)->Update();
+	}
+*/
 }
 
-void CollisionManager::Add(CollidableComponent3* in_component) {
-	components.Add(in_component);
+template<class T>
+void CollisionManager<T>::Add(CollisionContext<T, 2>* in_context) {
+	if (activeContext2 == nullptr) {
+		activeContext2 = in_context;
+	}
+
+	context2s.push_back(in_context);
 }
 
-void CollisionManager::Remove(CollidableComponent3* in_component) {
-	components.Remove(in_component);
+/*
+void CollisionManager<T>::Add(CollisionContext3* in_context) {
+	context3s.push_back(in_context);
+}
+*/
+
+template<class T>
+void CollisionManager<T>::Remove(CollisionContext<T, 2>* in_context) {
+	auto position = std::find(context2s.begin(), context2s.end(), in_context);
+	if (position != context2s.end()) {
+		context2s.erase(position);
+	}
+
+	if (activeContext2 == in_context) {
+		activeContext2 = nullptr;
+	}
 }
 
+template<class T>
+bool CollisionManager<T>::Has(CollisionContext<T, 2>* in_context) {
+	return std::find(context2s.begin(), context2s.end(), in_context) != context2s.end();
+}
+
+template<class T>
+void CollisionManager<T>::Make_Active(CollisionContext<T, 2>* in_context) {
+	if (!Has(in_context)) {
+		Add(in_context);
+	}
+	activeContext2 = in_context;
+}
+
+template<class T>
+CollisionContext<T, 2>* CollisionManager<T>::Get_Active2() {
+	return activeContext2;
+}
+
+/*
+void CollisionManager<T>::Remove(CollisionContext3* in_context) {
+	auto position = std::find(context3s.begin(), context3s.end(), in_context);
+	if (position != context3s.end()) {
+		context3s.erase(position);
+	}
+}
+*/
+
+template class CollisionManager<float>;
+template class CollisionManager<double>;

@@ -196,8 +196,13 @@ inline T Lerp(T a, T b, T t, T ta, T tb) {
 }
 
 template<class T>
+inline T Cuberp(T a, T b, T t) {
+	return t * t * (3 - 2 * t);
+}
+
+template<class T>
 inline T Sign(T n) {
-	return (n > 0) ? 1 : ((n < 0) ? -1 : 0);
+	return (n > (T)0) ? (T)1 : ((n < (T)0) ? (T)-1 : (T)0);
 }
 
 template<class C, class T>
@@ -213,6 +218,8 @@ inline T Sum(C& values, uint n) {
 	for (uint i = 0; i < n; i++) s += values[i];
 	return s;
 }
+
+
 
 string Double_To_String(double d, int precision);
 

@@ -162,15 +162,15 @@ uint MeshVertexData::Get_Number_Vertices() const {
 }
 
 uint MeshVertexData::Get_Number_Faces() const {
-	return indices.size() / Get_Data_Type_Size(indexType) / 3;
+	return (uint)indices.size() / Get_Data_Type_Size(indexType) / 3;
 }
 
 uint MeshVertexData::Get_Number_Members() const {
-	return members.size();
+	return (uint)members.size();
 }
 
 void MeshVertexData::Add_Member(ubyte in_id, DataType in_type, ubyte in_depth, const void* in_data) {
-	if (!idToIndex.insert(std::pair<ubyte, ubyte>(in_id, members.size())).second) {
+	if (!idToIndex.insert(std::pair<ubyte, ubyte>(in_id, (ubyte)members.size())).second) {
 		throw InvalidArgumentException("duplicate mesh member id");
 	}
 
@@ -316,7 +316,7 @@ const void* MeshVertexData::Get_Face(uint in_index) const {
 
 void MeshVertexData::Set_Face(uint in_faceIndex, const void* in_indices) {
 	const ubyte* ptr = (const ubyte*)in_indices;
-	for (uint i = 0; i < 3 * Get_Data_Type_Size(indexType); i++) {
+	for (uint i = 0; i < 3u * Get_Data_Type_Size(indexType); i++) {
 		indices[in_faceIndex * 3 * Get_Data_Type_Size(indexType) + i] = ptr[i];
 	}
 }

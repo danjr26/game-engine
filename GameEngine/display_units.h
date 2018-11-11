@@ -67,102 +67,102 @@ using DisplayDistance3 = DisplayDistance<3>;
 */
 
 
-template<uint n>
+template<class T, uint n>
 class DisplayUnits {
 private:
-	Vector<float , n> value;
+	Vector<T, n> value;
 
 private:
-	DisplayUnits(Vector<float, n> in_value) :
+	DisplayUnits(Vector<T, n> in_value) :
 		value(in_value)
 	{}
 
 public:
-	Vector<float, n> Percent() {
-		Vector<float, n> output = value;
+	Vector<T, n> Percent() {
+		Vector<T, n> output = value;
 		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = value[i] * 100.0f;
 		}
 		return output;
 	}
 
-	Vector<float, n> Percent_X(Vector2i in_targetDimensions) {
-		Vector<float, n> output = value;
+	Vector<T, n> Percent_X(Vector2i in_targetDimensions) {
+		Vector<T, n> output = value;
 		output[0] = output[0] * 100.0f;
 		output[1] = output[1] * 100.0f * in_targetDimensions[0] / in_targetDimensions[1];
 		return output;
 	}
 
-	Vector<float, n> Percent_Y(Vector2i in_targetDimensions) {
-		Vector<float, n> output = value;
+	Vector<T, n> Percent_Y(Vector2i in_targetDimensions) {
+		Vector<T, n> output = value;
 		output[0] = output[0] * 100.0f * in_targetDimensions[1] / in_targetDimensions[0];
 		output[1] = output[1] * 100.0f;
 		return output;
 	}
 
-	Vector<float, n> Pixels(Vector2i in_targetDimensions) {
-		Vector<float, n> output = value;
+	Vector<T, n> Pixels(Vector2i in_targetDimensions) {
+		Vector<T, n> output = value;
 		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = output[i] * in_targetDimensions[i];
 		}
 		return output;
 	}
 
-	Vector<float, n> OpenGL_Position() {
-		Vector<float, n> output = value;
+	Vector<T, n> OpenGL_Position() {
+		Vector<T, n> output = value;
 		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = output[i] * 2.0f - 1.0f;
 		}
 		return output;
 	}
 
-	Vector<float, n> OpenGL_Displacement() {
-		Vector<float, n> output = value;
+	Vector<T, n> OpenGL_Displacement() {
+		Vector<T, n> output = value;
 		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = output[i] * 2.0f;
 		}
 		return output;
 	}
 
-	static DisplayUnits Percent(Vector<float, n> in_value) {
-		Vector<float, n> output = in_value;
+	static DisplayUnits Percent(Vector<T, n> in_value) {
+		Vector<T, n> output = in_value;
 		output[0] = output[0] / 100.0f;
 		output[1] = output[1] / 100.0f;
 		return output;
 	}
 
-	static DisplayUnits Percent_X(Vector<float, n> in_value, Vector2i in_targetDimensions) {
-		Vector<float, n> output = in_value;
+	static DisplayUnits Percent_X(Vector<T, n> in_value, Vector2i in_targetDimensions) {
+		Vector<T, n> output = in_value;
 		output[0] = output[0] / 100.0f;
 		output[1] = output[1] / 100.0f / in_targetDimensions[0] * in_targetDimensions[1];
 		return output;
 	}
 
-	static DisplayUnits Percent_Y(Vector<float, n> in_value, Vector2i in_targetDimensions) {
-		Vector<float, n> output = in_value;
+	static DisplayUnits Percent_Y(Vector<T, n> in_value, Vector2i in_targetDimensions) {
+		Vector<T, n> output = in_value;
 		output[0] = output[0] / 100.0f / in_targetDimensions[1] * in_targetDimensions[0];
 		output[1] = output[1] / 100.0f;
 		return output;
 	}
 
-	static DisplayUnits Pixels(Vector<float, n> in_value, Vector2i in_targetDimensions) {
-		Vector<float, n> output = in_value;
+	static DisplayUnits Pixels(Vector<T, n> in_value, Vector2i in_targetDimensions) {
+		Vector<T, n> output = in_value;
 		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = output[i] / in_targetDimensions[i];
 		}
 		return output;
 	}
 
-	static DisplayUnits OpenGL_Position(Vector<float, n> in_value) {
-		Vector<float, n> output = in_value;
+	static DisplayUnits OpenGL_Position(Vector<T, n> in_value) {
+		Vector<T, n> output = in_value;
 		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = (output[i] + 1.0f) / 2.0f;
 		}
 		return output;
 	}
 
-	static DisplayUnits OpenGL_Displacement(Vector<float, n> in_value) {
-		Vector<float, n> output = in_value;
+	static DisplayUnits OpenGL_Displacement(Vector<T, n> in_value) {
+		Vector<T, n> output = in_value;
 		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = output[i] / 2.0f;
 		}
@@ -170,8 +170,11 @@ public:
 	}
 };
 
-using DisplayUnits1 = DisplayUnits<1>;
-using DisplayUnits2 = DisplayUnits<2>;
-using DisplayUnits3 = DisplayUnits<3>;
+using DisplayUnits1f = DisplayUnits<float, 1>;
+using DisplayUnits1d = DisplayUnits<double, 1>;
+using DisplayUnits2f = DisplayUnits<float, 2>;
+using DisplayUnits2d = DisplayUnits<double, 2>;
+using DisplayUnits3f = DisplayUnits<float, 3>;
+using DisplayUnits3d = DisplayUnits<double, 3>;
 
 #endif

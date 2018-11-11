@@ -7,27 +7,32 @@
 #include <thread>
 #include <vector>
 #include <mutex>
+#include <list>
 
 class AsyncTaskManager {
+public:
+	using TaskIterator = typename std::list<AsyncTask*>::iterator;
 private:
 	mutable std::recursive_mutex mutex;
 	const Clock& clock;
 	std::vector<std::thread*> threads;
-	std::vector<AsyncTask*> tasks;
+	std::list<AsyncTask*> tasks;
 	bool terminate;
 
 private:
-	 int Get_Next_Task_Index(bool in_useEpsilon);
+	 TaskIterator Get_Next_Task(bool in_useEpsilon);
 
 public:
-	AsyncTaskManager(const Clock& in_clock, uint in_nTasks = 16, uint in_nThreads = 0);
+	AsyncTaskManager(const Clock& in_clock, uint in_nThreads = 0);
 	~AsyncTaskManager();
-	void Thread_Entry();
+	bool Thread_Entry();
 	void Add(AsyncTask* in_task);
-	void Remove(uint in_index);
-	AsyncTask* Get(uint in_index);
+	void Remove(TaskIterator in_it);
+	AsyncTask* Get(TaskIterator in_it);
 	void Terminate();
 	bool Is_Terminating() const;
+	void Help_Until_Empty();
+	void Help_Until(const std::function<bool()>& in_whenFinished);
 
 	static void Call_Thread_Entry(AsyncTaskManager& in_handler);
 };

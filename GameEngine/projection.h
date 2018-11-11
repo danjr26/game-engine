@@ -4,10 +4,11 @@
 #include "matrix.h"
 #include "box.h"
 
+template<class T>
 class Projection {
 public:
-	Vector3f minima;
-	Vector3f maxima;
+	Vector<T, 3> minima;
+	Vector<T, 3> maxima;
 	enum Type : bool {
 		orthographic = false,
 		perspective = true
@@ -15,13 +16,16 @@ public:
 
 public:
 	Projection();
-	Projection(float in_near, float in_far, float in_horizontalAngle, float in_xToYRatio, Type in_type = Type::perspective);
-	Projection(Vector3f in_minima, Vector3f in_maxima, Type in_type = Type::orthographic);
+	Projection(T in_near, T in_far, T in_horizontalAngle, T in_xToYRatio, Type in_type = Type::perspective);
+	Projection(Vector<T, 3> in_minima, Vector<T, 3> in_maxima, Type in_type = Type::orthographic);
 
-	float Get_View_Angle();
-	void Set_View_Angle(float in_value);
+	T Get_View_Angle();
+	void Set_View_Angle(T in_value);
 
-	Matrix4f Get_Matrix();
+	Matrix<T, 4, 4> Get_Matrix();
 };
+
+using Projectionf = Projection<float>;
+using Projectiond = Projection<double>;
 
 #endif

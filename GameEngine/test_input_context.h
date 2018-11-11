@@ -8,6 +8,8 @@
 #include "keyboard_action_identifier.h"
 #include "keyboard_range_identifier.h"
 #include "mouse_range_identifier.h"
+#include "rectangle_collision_mask.h"
+#include "collision_context.h"
 
 class TestInputContext : public InputContext {
 public:
@@ -40,10 +42,12 @@ public:
 class TestSpriteMover : public PerFrameUpdateableObject {
 private:
 	InputListener input;
-	TransformableObject* object;
+	TransformableObject2f* object;
+	CollisionMask2d* collisionMask;
+	CollisionContext2d* collisionContext;
 
 public:
-	TestSpriteMover(TestInputContext* in_inputContext, TransformableObject* in_object);
+	TestSpriteMover(TestInputContext* in_inputContext, TransformableObject2f* in_object, CollisionMask2d* in_collisionMask);
 	void Update(double in_dt) override;
 };
 

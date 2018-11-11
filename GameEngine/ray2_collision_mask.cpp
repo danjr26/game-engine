@@ -1,68 +1,92 @@
 #include "ray2_collision_mask.h"
 
-Ray2CollisionMask::Ray2CollisionMask(const Ray2d& in_ray, bool in_ignoreTransform) :
-	CollisionMask2(in_ignoreTransform),
+template<class T>
+Ray2CollisionMask<T>::Ray2CollisionMask(const Ray<T, 2>& in_ray, bool in_ignoreTransform) :
+	CollisionMask<T, 2>(in_ignoreTransform),
 	ray(in_ray)
 {}
 
-Ray2d& Ray2CollisionMask::Get_Ray() {
+template<class T>
+Ray<T, 2>& Ray2CollisionMask<T>::Get_Ray() {
 	return ray;
 }
 
-Ray2d Ray2CollisionMask::Get_Transformed_Ray() {
-	Ray2d out = ray;
+template<class T>
+Ray<T, 2> Ray2CollisionMask<T>::Get_Transformed_Ray() {
+	Ray<T, 2> out = ray;
 	if (!ignoreTransform) out.Apply_Transform(transform);
 	return out;
 }
 
-void Ray2CollisionMask::Apply_Transform() {
+template<class T>
+void Ray2CollisionMask<T>::Apply_Transform() {
 	ray.Apply_Transform(transform);
 }
 
-Collision2d Ray2CollisionMask::Accept_Evaluator(CollisionEvaluator2& in_evaluator, CollisionMask2& in_other) {
+template<class T>
+Ray2CollisionMask<T>* Ray2CollisionMask<T>::Clone() const {
+	return new Ray2CollisionMask<T>(*this);
+}
+
+template<class T>
+Collision<T, 2> Ray2CollisionMask<T>::Accept_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, CollisionMask<T, 2>& in_other) {
 	return in_other.Accept_Secondhand_Evaluator(in_evaluator, *this);
 }
 
-Collision2d Ray2CollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedHalfSpace2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> Ray2CollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AxisAlignedHalfSpace2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(in_other, *this);
 }
 
-Collision2d Ray2CollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedLine2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> Ray2CollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AxisAlignedLine2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(in_other, *this);
 }
 
-Collision2d Ray2CollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, AxisAlignedRectangleCollisionMask& in_other) {
+template<class T>
+Collision<T, 2> Ray2CollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AxisAlignedRectangleCollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(in_other, *this);
 }
 
-Collision2d Ray2CollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, CircleCollisionMask& in_other) {
+template<class T>
+Collision<T, 2> Ray2CollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, CircleCollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(in_other, *this);
 }
 
-Collision2d Ray2CollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, HalfSpace2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> Ray2CollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, HalfSpace2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(in_other, *this);
 }
 
-Collision2d Ray2CollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, Line2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> Ray2CollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Line2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(in_other, *this);
 }
 
-Collision2d Ray2CollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, LineSegment2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> Ray2CollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, LineSegment2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(in_other, *this);
 }
 
-Collision2d Ray2CollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, Point2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> Ray2CollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Point2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(in_other, *this);
 }
 
-Collision2d Ray2CollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, Ray2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> Ray2CollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Ray2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(in_other, *this);
 }
 
-Collision2d Ray2CollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, RectangleCollisionMask& in_other) {
+template<class T>
+Collision<T, 2> Ray2CollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, RectangleCollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
 
-Collision2d Ray2CollisionMask::Accept_Secondhand_Evaluator(CollisionEvaluator2& in_evaluator, Triangle2CollisionMask& in_other) {
+template<class T>
+Collision<T, 2> Ray2CollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Triangle2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
+
+template class Ray2CollisionMask<float>;
+template class Ray2CollisionMask<double>;

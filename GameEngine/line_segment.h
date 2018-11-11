@@ -15,9 +15,9 @@ private:
 	{}
 
 public:
-	void Apply_Transform(Transform& in_transform) {
-		point1 = Vector<T, n>(in_transform.Apply_To_Local_Point(Vector<T, 3>(point1)));
-		point2 = Vector<T, n>(in_transform.Apply_To_Local_Point(Vector<T, 3>(point2)));
+	void Apply_Transform(Transform<T, n>& in_transform) {
+		point1 = in_transform.Apply_To_Local_Point(point1);
+		point2 = in_transform.Apply_To_Local_Point(point2);
 	}
 
 	Vector<T, n> Get_Point1() const {

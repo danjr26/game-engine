@@ -1,4 +1,7 @@
 #include "font_face.h"
+#include "rapidxml-1.13/rapidxml.hpp"
+#include <fstream>
+#include <sstream>
 #include "game_engine.h"
 
 FontFace::FontFace(std::string in_filename) {
@@ -33,7 +36,7 @@ FontFaceRasterSet* FontFace::Rasterize(uint in_size) {
 	uint charIndex;
 	FT_BitmapGlyph glyph;
 	FT_Glyph tempGlyph;
-	Vector3i maxDimensions = Vector3i(0, 0, '~' - ' ' + 1);
+	Vector3ui maxDimensions = Vector3ui(0, 0, '~' - ' ' + 1);
 
 	for (uchar c = ' '; c <= '~'; c++) {
 		charIndex = FT_Get_Char_Index(face, c);
@@ -62,17 +65,17 @@ FontFaceRasterSet* FontFace::Rasterize(uint in_size) {
 
 	uchar* bitmap = new uchar[maxDimensions.Component_Product()];
 
-	for (int i = 0; i < maxDimensions.Z(); i++) {
+	for (uint i = 0; i < maxDimensions.Z(); i++) {
 		if (glyphs[i]->bitmap.buffer == nullptr) {
-			for (int x = 0; x < maxDimensions.X(); x++) {	
-				for (int y = 0; y < maxDimensions.Y(); y++) {
+			for (uint x = 0; x < maxDimensions.X(); x++) {	
+				for (uint y = 0; y < maxDimensions.Y(); y++) {
 					bitmap[i * maxDimensions.X() * maxDimensions.Y() + y * maxDimensions.X() + x] = 0;
 				}
 			}
 		}
 		else {
-			for (int x = 0; x < maxDimensions.X(); x++) {
-				for (int y = 0; y < maxDimensions.Y(); y++) {
+			for (uint x = 0; x < maxDimensions.X(); x++) {
+				for (uint y = 0; y < maxDimensions.Y(); y++) {
 					bitmap[i * maxDimensions.X() * maxDimensions.Y() + y * maxDimensions.X() + x] =
 						(x < glyphs[i]->bitmap.width && y < glyphs[i]->bitmap.rows) ? 
 						glyphs[i]->bitmap.buffer[y * glyphs[i]->bitmap.width + x] : 0;
@@ -104,4 +107,45 @@ bool FontFace::Is_Printable(uchar in_char) {
 
 bool FontFace::Is_Printable_Or_EOL(uchar in_char) {
 	return Is_Printable(in_char) || in_char == '\n';
+}
+
+void FontFace::Load_XML_List(const std::string& in_filename) {
+	std::ifstream file(in_filename);
+	if (!file.is_open()) {
+		Log::main(std::string("error: cannot open file '") + in_filename + "'");
+		exit(-1);
+	}
+
+	file.seekg(0, file.end);
+	uint length = (uint)file.tellg();
+	file.seekg(0, file.beg);
+
+	char* buffer = new char[length + 1];
+	file.read(buffer, length);
+	buffer[length] = '\0';
+	file.close();
+
+	rapidxml::xml_document<char> doc;
+	doc.parse<0>(buffer);
+
+	auto masterNode = doc.first_node("FontList");
+	if (!masterNode) {
+		Log::main(std::string("error: invalid font list file '") + in_filename + "'");
+		exit(-1);
+	}
+
+	for (auto node = masterNode->first_node("FontFace"); node; node = node->next_sibling("FontFace")) {
+		auto nameAttribute = node->first_attribute("name");
+		auto fileAttribute = node->first_attribute("file");
+
+		if (!nameAttribute || !fileAttribute) {
+			Log::main(std::string("error: invalid shader list file '") + in_filename + "'");
+			exit(-1);
+		}
+
+		FontFace* fontFace = new FontFace(fileAttribute->value());
+		GE.Assets().Add(nameAttribute->value(), fontFace);
+	}
+
+	delete[] buffer;
 }

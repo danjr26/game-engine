@@ -3,10 +3,13 @@
 
 Camera::Camera() {}
 
-Camera::Camera(Transform in_transform, Projection in_projection) :
-	transform(in_transform),
-	projection(in_projection) 
-{}
+Projectiond Camera::Get_Projection() const {
+	return projection;
+}
+
+void Camera::Set_Projection(const Projectiond& in_projection) {
+	projection = in_projection;
+}
 
 Matrix4f Camera::Get_Projection_Matrix() {
 	return projection.Get_Matrix();

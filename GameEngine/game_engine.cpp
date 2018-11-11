@@ -3,7 +3,8 @@
 GameEngine* GameEngine::instance = nullptr;
 
 GameEngine::GameEngine() :
-hasBegun(false) {
+hasBegun(false),
+asyncTaskManager(clock) {
 	if (instance != nullptr) {
 		throw ProcessFailureException("game engine already created");
 	}
@@ -48,6 +49,14 @@ WindowManager& GameEngine::Windows() {
 	return windowManager;
 }
 
+CollisionManagerd& GameEngine::Collision() {
+	return collisionManager;
+}
+
+AsyncTaskManager& GameEngine::Async() {
+	return asyncTaskManager;
+}
+
 void GameEngine::Begin() {
 	try {
 		if (hasBegun) {
@@ -79,6 +88,7 @@ GameEngine& GameEngine::Instance() {
 
 void GameEngine::Next_Frame() {
 	inputManager.Update();
+	collisionManager.Update();
 	perFrameUpdateManager.Update(frameRateManager.Get_Last_Frame_Time());
 	renderManager.Render_Frame();
 	renderManager.mainWindow->Flip_Buffers();

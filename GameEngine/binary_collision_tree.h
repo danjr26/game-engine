@@ -2,17 +2,19 @@
 #define BINARY_COLLISION_TREE_H
 
 #include <list>
+#include <algorithm>
+#include <mutex>
 #include "collision_mask.h"
 #include "axis_aligned_box.h"
-#include "in_place_collision_evaluator2.h"
+#include "in_place_collision_evaluator.h"
 
-template<uint n>
+template<class T, uint n>
 class BinaryCollisionTree {
 public:
 	const static int maxDepth = 10;
 
 	class Evaluation {
-		friend class BinaryCollisionTree<n>;
+		friend class BinaryCollisionTree<T, n>;
 		friend class Iterator;
 	public:
 		class Iterator {
@@ -20,14 +22,14 @@ public:
 		private:
 			Evaluation* parent;
 			uint depths[n];
-			uint indices[n];
+			uint evals[n];
 
 			Iterator(Evaluation* in_parent) :
 				parent(in_parent) {
 
 				for (uint i = 0; i < n; i++) {
 					depths[i] = 0;
-					indices[i] = 0;
+					evals[i] = 0;
 				}
 			}
 		public:
@@ -38,14 +40,14 @@ public:
 					return false;
 				}
 				else {
-					indices[in_dimension]++;
 					if (Get_Right(in_dimension)) {
-						uint* skipStack = parent->parent->skipStack;
-						uint skipStackSize = 0;
+						evals[in_dimension]++;
+						uint skipStack[maxDepth];
+						uint skipStackSize = 1;
 						skipStack[0] = parent->depth - depths[in_dimension] + 1;
 						while (skipStackSize > 0) {
 							if (Get_Left(in_dimension) && Get_Right(in_dimension) && skipStack[skipStackSize - 1] > 1) {
-								skipStack[skipStackSize] = skipStack[skipStackSize - 1] - 1;
+								skipStack[skipStackSize] = --skipStack[skipStackSize - 1];
 								skipStackSize++;
 							}
 
@@ -54,10 +56,14 @@ public:
 							}
 
 							if (skipStackSize > 0) {
-								indices[in_dimension]++;
+								evals[in_dimension]++;
 							}
 						}
 					}
+					else {
+						evals[in_dimension]++;
+					}
+					
 					depths[in_dimension]++;
 					return true;
 				}
@@ -68,18 +74,18 @@ public:
 					return false;
 				}
 				else {
-					indices[in_dimension]++;
+					evals[in_dimension]++;
 					depths[in_dimension]++;
 					return true;
 				}
 			}
 
 			ubyte Get_Left(uint in_dimension) {
-				return parent->data[in_dimension][indices[in_dimension] * 2 + 0];
+				return parent->data[in_dimension][evals[in_dimension] * 2 + 0];
 			}
 
 			ubyte Get_Right(uint in_dimension) {
-				return parent->data[in_dimension][indices[in_dimension] * 2 + 1];
+				return parent->data[in_dimension][evals[in_dimension] * 2 + 1];
 			}
 
 			uint Get_Depth(uint in_dimension) {
@@ -88,51 +94,232 @@ public:
 		};
 
 	private:
-		BinaryCollisionTree<n>* parent;
+		BinaryCollisionTree<T, n>* parentTree;
+		CollisionMask<T, n>* parentMask;
+		CollisionMask<T, n>* transformedParentMask;
 		ubyte* data[n];
 		uint dataSizes[n];
 		uint depth;
 
 	public:
 		Evaluation() :
-			parent(nullptr),
+			parentTree(nullptr),
+			parentMask(nullptr),
+			transformedParentMask(nullptr),
 			depth(UINT_MAX)
-		{}
+		{
+			for (uint i = 0; i < n; i++) {
+				data[i] = nullptr;
+			}
+		}
+
 		Iterator Get_Iterator() {
 			return Iterator(this);
+		}
+
+		BinaryCollisionTree<T, n>* Get_Parent_Tree() {
+			return parentTree;
+		}
+
+		CollisionMask<T, n>* Get_Parent_Mask() {
+			return parentMask;
+		}
+
+		CollisionMask<T, n>* Get_Transformed_Parent_Mask() {
+			return transformedParentMask;
+		}
+
+		void Transform_Parent_Mask() {
+			if (transformedParentMask != nullptr) {
+				delete transformedParentMask;
+			}
+
+			transformedParentMask = parentMask->Clone();
+			transformedParentMask->Apply_Transform();
+			transformedParentMask->Set_Ignore_Transform(true);
 		}
 	};
 
 	class GroupingScheme {
-		friend class BinaryCollisionTree<n>;
+		friend class BinaryCollisionTree<T, n>;
 	private:
 		struct Grouping {
 			ubyte path[n][maxDepth];
-			std::vector<uint> indices;
+			std::vector<Evaluation*> evals;
 		};
 
-		BinaryCollisionTree<n>* parent;
+	public:
+		class Iterator {
+			friend class GroupingScheme;
+		private:
+			GroupingScheme* parent;
+			typename std::list<Grouping>::iterator it;
+			uint i, j;
+
+			Iterator(GroupingScheme* in_parent) :
+				parent(in_parent),
+				it(in_parent->groupings.begin()),
+				i(0),
+				j(1)
+			{}
+
+		public:
+			Evaluation* Get_First() {
+				return it->evals[i];
+			}
+
+			Evaluation* Get_Second() {
+				return it->evals[j];
+			}
+
+			void operator++(int a) {
+				if (Is_Done()) {
+					throw InvalidArgumentException();
+				}
+
+				j++;
+				if (j >= it->evals.size()) {
+					i++;
+					j = i + 1;
+				}
+				if (i >= it->evals.size() - 1) {
+					it++;
+					i = 0;
+					j = 1;
+				}
+			}
+
+			void operator+=(uint n) {
+				for (uint i = 0; i < n; i++) {
+					if (Is_Done()) break;
+					(*this)++;
+				}
+			}
+
+			bool Is_Done() {
+				return it == parent->groupings.end();
+			}
+		};
+		friend class GroupingScheme::Iterator;
+
+	private:
+
+		BinaryCollisionTree<T, n>* parent;
 		std::list<Grouping> groupings;
 
 	public:
 		uint Get_Number_Groups() const {
 			return groupings.size();
 		}
-		void Get_Unique_Pairs(std::vector<std::pair<uint, uint>>& in_pairs) const {
+
+		Iterator Get_Iterator() {
+			return Iterator(this);
+		}
+
+		void Get_Unique_Pairs(std::vector<std::pair<Evaluation*, Evaluation*>>& in_pairs) const {
 			in_pairs.clear();
 			in_pairs.reserve(groupings.size());
 			for (auto groupIterator = groupings.begin(); groupIterator != groupings.end(); groupIterator++) {
-				for (uint i = 0; i < groupIterator->indices.size(); i++) {
-					for (uint j = i + 1; j < groupIterator->indices.size(); j++) {
-						bool isCopy = false;
-						for (uint k = 0; k < in_pairs.size(); k++) {
-							if (in_pairs[k].first == groupIterator->indices[i] && in_pairs[k].second == groupIterator->indices[j]) {
-								isCopy = true;
-								break;
-							}
+				for (uint i = 0; i < groupIterator->evals.size(); i++) {
+					for (uint j = i + 1; j < groupIterator->evals.size(); j++) {
+						auto newPair = std::pair<Evaluation*, Evaluation*>(groupIterator->evals[i], groupIterator->evals[j]);
+						auto lowerBound = std::lower_bound(in_pairs.begin(), in_pairs.end(), newPair);
+						if (*lowerBound != newPair) {
+							in_pairs.insert(lowerBound, newPair);
 						}
-						if (!isCopy) {
-							in_pairs.push_back(std::pair<uint, uint>(groupIterator->indices[i], groupIterator->indices[j]));
+					}
+				}
+			}
+		}
+	};
+
+	class PairedGroupingScheme {
+		friend class BinaryCollisionTree<T, n>;
+	private:
+		struct Grouping {
+			ubyte path[n][maxDepth];
+			std::vector<Evaluation*> evals1;
+			std::vector<Evaluation*> evals2;
+		};
+
+	public:
+		class Iterator {
+			friend class GroupingScheme;
+		private:
+			GroupingScheme* parent;
+			typename std::list<Grouping>::iterator it;
+			uint i, j;
+
+			Iterator(GroupingScheme* in_parent) :
+				parent(in_parent),
+				it(in_parent->groupings.begin()),
+				i(0),
+				j(0) 
+			{}
+
+		public:
+			Evaluation* Get_First() {
+				return it->evals1[i];
+			}
+
+			Evaluation* Get_Second() {
+				return it->evals2[j];
+			}
+
+			Iterator& operator++(int a) {
+				if (Is_Done()) {
+					throw InvalidArgumentException();
+				}
+
+				j++;
+				if (j >= it->evals2.size()) {
+					i++;
+					j = 0;
+				}
+				if (i >= it->evals1.size()) {
+					it++;
+					i = 0;
+					j = 0;
+				}
+
+				return *this;
+			}
+
+			void operator+=(uint n) {
+				for (uint i = 0; i < n; i++) {
+					if (Is_Done()) break;
+					(*this)++;
+				}
+			}
+
+			bool Is_Done() {
+				return it == parent->groupings.end();
+			}
+		};
+		friend class PairedGroupingScheme::Iterator;
+
+	private:
+
+		BinaryCollisionTree<T, n>* parent;
+		std::list<Grouping> groupings;
+
+	public:
+		uint Get_Number_Groups() const {
+			return groupings.size();
+		}
+
+		Iterator Get_Iterator() {
+			return Iterator(this);
+		}
+
+		void Get_Unique_Pairs(std::vector<std::pair<Evaluation*, Evaluation*>>& in_pairs) const {
+			in_pairs.clear();
+			in_pairs.reserve(groupings.size());
+			for (auto groupIterator = groupings.begin(); groupIterator != groupings.end(); groupIterator++) {
+				for (uint i = 0; i < groupIterator->evals1.size(); i++) {
+					for (uint j = 0; j < groupIterator->evals2.size(); j++) {
+						if (groupIterator->evals1[i] != groupIterator->evals2[j]) {
+							in_pairs.push_back(std::pair(groupIterator->evals1[i], groupIterator->evals2[j]));
 						}
 					}
 				}
@@ -141,11 +328,11 @@ public:
 	};
 
 private:
-	AxisAlignedRectangled box;
+	AxisAlignedBox<T, n> box;
 
 	struct EvaluationStackElement {
 		uint dimension;
-		double value;
+		T value;
 		bool isPositive;
 		uint depth;
 	};
@@ -155,58 +342,51 @@ private:
 		typename Evaluation::Iterator it2;
 	};
 
-	IntersectionStackElement stacks[n][1 << (maxDepth + 1)];
-	uint skipStack[maxDepth];
 	std::list<typename GroupingScheme::Grouping> recycling;
+	std::list<typename PairedGroupingScheme::Grouping> pairRecycling;
 
 	template<typename = std::enable_if_t<n == 2>>
-	using AxisAlignedHalfSpaceCollisionMask = AxisAlignedHalfSpace2CollisionMask;
-
-	template<typename = std::enable_if_t<n == 2>>
-	using InPlaceCollisionEvaluator = InPlaceCollisionEvaluator2;
+	using AxisAlignedHalfSpaceCollisionMask = AxisAlignedHalfSpace2CollisionMask<T>;
+	using InPlaceCollisionEvaluator = InPlaceCollisionEvaluator<T, n>;
 
 public:
-	BinaryCollisionTree(const AxisAlignedBox<double, n>& in_box) :
+	BinaryCollisionTree(const AxisAlignedBox<T, n>& in_box) :
 		box(in_box)
 	{}
 
-	template<class T>
-	void Evaluate(T& in_mask, uint in_depth, Evaluation& out_evaluation) {
+	void Evaluate(CollisionMask<T, n>* in_mask, uint in_depth, Evaluation& out_evaluation) {
 		using StackElement = EvaluationStackElement;
 		if (in_depth > maxDepth) {
 			throw InvalidArgumentException();
 		}
 
-		out_evaluation.parent = this;
+		out_evaluation.parentTree = this;
+		out_evaluation.parentMask = in_mask;
+		out_evaluation.Transform_Parent_Mask();
 
 		for (uint i = 0; i < n; i++) {
 			if (out_evaluation.depth != in_depth) {
 				if (out_evaluation.data[i] != nullptr) {
 					delete[] out_evaluation.data[i];
 				}
-				out_evaluation.data[i] = new ubyte[(1 << (in_depth + 2))];
-			}
+				out_evaluation.data[i] = new ubyte[(1ull << (in_depth + 2))];
+			} 
 			out_evaluation.dataSizes[i] = 0;
 		}
 		out_evaluation.depth = in_depth;
 
-		T transformedMask = in_mask;
-		transformedMask.Apply_Transform();
-		transformedMask.Set_Ignore_Transform(true);
-
-		InPlaceCollisionEvaluator<> evaluator;
+		InPlaceCollisionEvaluator evaluator;
 		evaluator.Return_Point(false);
 
-		StackElement* stacks[3];
+		EvaluationStackElement evaluationStacks[n][1 << (maxDepth + 1)];
 		uint stackSizes[3];
 		for (uint i = 0; i < n; i++) {
-			stacks[i] = (StackElement*)this->stacks[i];
 			stackSizes[i] = 1;
-			stacks[i][0] = { i, box.Get_Center()[i], false, 0 };
+			evaluationStacks[i][0] = { i, box.Get_Center()[i], false, 0 };
 		}
 
-		AxisAlignedHalfSpace<double, n> halfSpace1 = AxisAlignedHalfSpace<double, n>::From_Dimension_Value(0, 0.0, false);
-		AxisAlignedHalfSpace<double, n> halfSpace2 = AxisAlignedHalfSpace<double, n>::From_Dimension_Value(0, 0.0, false);
+		AxisAlignedHalfSpace<T, n> halfSpace1 = AxisAlignedHalfSpace<T, n>::From_Dimension_Value(0, 0.0, false);
+		AxisAlignedHalfSpace<T, n> halfSpace2 = AxisAlignedHalfSpace<T, n>::From_Dimension_Value(0, 0.0, false);
 		AxisAlignedHalfSpaceCollisionMask<> mask1 = AxisAlignedHalfSpaceCollisionMask<>(halfSpace1, true);
 		AxisAlignedHalfSpaceCollisionMask<> mask2 = AxisAlignedHalfSpaceCollisionMask<>(halfSpace2, true);
 
@@ -214,28 +394,28 @@ public:
 			keepGoing = false;
 			for (uint i = 0; i < n; i++) {
 				if (stackSizes[i] == 0) continue;
-				StackElement& back = stacks[i][--stackSizes[i]];
+				StackElement& back = evaluationStacks[i][--stackSizes[i]];
 
-				halfSpace1 = AxisAlignedHalfSpace<double, n>::From_Dimension_Value(
+				halfSpace1 = AxisAlignedHalfSpace<T, n>::From_Dimension_Value(
 					back.dimension, back.value, back.isPositive);
-				halfSpace2 = AxisAlignedHalfSpace<double, n>::From_Dimension_Value(
+				halfSpace2 = AxisAlignedHalfSpace<T, n>::From_Dimension_Value(
 					back.dimension, back.value, !back.isPositive);
 
 				mask1.Get_Half_Space() = halfSpace1;
 				mask2.Get_Half_Space() = halfSpace2;
 
-				bool didCollide1 = evaluator.Evaluate(transformedMask, mask1).didCollide;
-				bool didCollide2 = evaluator.Evaluate(transformedMask, mask2).didCollide;
+				bool didCollide1 = evaluator.Evaluate(*out_evaluation.Get_Transformed_Parent_Mask(), mask1).didCollide;
+				bool didCollide2 = evaluator.Evaluate(*out_evaluation.Get_Transformed_Parent_Mask(), mask2).didCollide;
 
 				out_evaluation.data[i][out_evaluation.dataSizes[i]++] = didCollide1;
 				out_evaluation.data[i][out_evaluation.dataSizes[i]++] = didCollide2;
 
-				double nextOffset = box.Get_Dimensions()[halfSpace1.Get_Dimension()] / (1 << (back.depth + 2));
+				T nextOffset = box.Get_Dimensions()[halfSpace1.Get_Dimension()] / (1 << (back.depth + 2));
 				uint lastDepth = back.depth;
 
 				if (lastDepth < in_depth) {
 					if (didCollide1) {
-						stacks[i][stackSizes[i]++] = {
+						evaluationStacks[i][stackSizes[i]++] = {
 							halfSpace1.Get_Dimension(),
 							halfSpace1.Get_Value() + nextOffset,
 							false,
@@ -244,7 +424,7 @@ public:
 					}
 
 					if (didCollide2) {
-						stacks[i][stackSizes[i]++] = {
+						evaluationStacks[i][stackSizes[i]++] = {
 							halfSpace2.Get_Dimension(),
 							halfSpace2.Get_Value() - nextOffset,
 							false,
@@ -263,6 +443,7 @@ public:
 	bool Intersection(Evaluation& in_evaluation1, Evaluation& in_evaluation2) {
 		using StackElement = IntersectionStackElement;
 
+		IntersectionStackElement intersectionStacks[n][1 << (maxDepth + 1)];
 		uint stackSizes[n];
 		bool didIntersect[n];
 		ubyte* data[2][n];
@@ -271,7 +452,7 @@ public:
 
 		for (uint i = 0; i < n; i++) {
 			stackSizes[i] = 1;
-			stacks[i][0] = { in_evaluation1.Get_Iterator(), in_evaluation2.Get_Iterator() };
+			intersectionStacks[i][0] = { in_evaluation1.Get_Iterator(), in_evaluation2.Get_Iterator() };
 			didIntersect[i] = false;
 			data[0][i] = &in_evaluation1.data[i][0];
 			data[1][i] = &in_evaluation2.data[i][0];
@@ -282,10 +463,10 @@ public:
 			for (uint i = 0; i < n; i++) {
 				if (stackSizes[i] == 0) continue;
 
-				StackElement element = stacks[i][--stackSizes[i]];
+				StackElement element = intersectionStacks[i][--stackSizes[i]];
 
 				if (element.it1.Get_Left(i) && element.it2.Get_Left(i)) {
-					StackElement& newElement = stacks[i][stackSizes[i]++];
+					StackElement& newElement = intersectionStacks[i][stackSizes[i]++];
 					newElement.it1 = element.it1;
 					newElement.it2 = element.it2;
 					if (!newElement.it1.Go_Left(i) || !newElement.it2.Go_Left(i)) {
@@ -296,7 +477,7 @@ public:
 				}
 
 				if (element.it1.Get_Right(i) && element.it2.Get_Right(i)) {
-					StackElement& newElement = stacks[i][stackSizes[i]++];
+					StackElement& newElement = intersectionStacks[i][stackSizes[i]++];
 					newElement.it1 = element.it1;
 					newElement.it2 = element.it2;
 					if (!newElement.it1.Go_Right(i) || !newElement.it2.Go_Right(i)) {
@@ -324,15 +505,20 @@ public:
 	}
 
 	void Group(Evaluation** in_evaluations, uint in_nElements, GroupingScheme& out_groupingScheme) {
+		using Grouping = GroupingScheme::Grouping;
+
 		if (recycling.size() < 1) {
 			recycling.resize(1);
 		}
-		GroupingScheme::Grouping& startingGrouping = recycling.front();
-		startingGrouping.indices.resize(in_nElements);
+
+		Grouping& startingGrouping = recycling.front();
+		startingGrouping.evals.resize(in_nElements);
+
 		uint i = 0;
-		for (auto it = startingGrouping.indices.begin(); it != startingGrouping.indices.end(); it++) {
-			*it = i++;
+		for (auto it = startingGrouping.evals.begin(); it != startingGrouping.evals.end(); it++) {
+			*it = in_evaluations[i++];
 		}
+
 		for (uint i = 0; i < n; i++) {
 			for (uint j = 0; j < maxDepth; j++) {
 				startingGrouping.path[i][j] = 255;
@@ -347,29 +533,29 @@ public:
 			recycling.resize(50);
 		}
 
-		for(uint currentDepth = 0; currentDepth < in_evaluations[0]->depth; currentDepth++) {
+		for(uint currentDepth = 0; currentDepth <= in_evaluations[0]->depth; currentDepth++) {
 			// for each dimension
 			for (uint i = 0; i < n; i++) {
-				uint nGroups = out_groupingScheme.groupings.size();
+				uint nGroups = (uint)out_groupingScheme.groupings.size();
 				auto groupIterator = out_groupingScheme.groupings.begin();
 
 				// for each grouping
 				for (uint j = 0; j < nGroups; j++) {
 					while (recycling.size() < 2) {
-						recycling.push_back(GroupingScheme::Grouping());
+						recycling.push_back(Grouping());
 					}
 
-					GroupingScheme::Grouping& parentGrouping = *groupIterator;
-					GroupingScheme::Grouping& leftGrouping = recycling.front();
-					GroupingScheme::Grouping& rightGrouping = recycling.back();
-					leftGrouping.indices.clear();
-					rightGrouping.indices.clear();
-					leftGrouping.indices.reserve(in_nElements);
-					rightGrouping.indices.reserve(in_nElements);
+					Grouping& parentGrouping = *groupIterator;
+					Grouping& leftGrouping = recycling.front();
+					Grouping& rightGrouping = recycling.back();
+					leftGrouping.evals.clear();
+					rightGrouping.evals.clear();
+					leftGrouping.evals.reserve(in_nElements);
+					rightGrouping.evals.reserve(in_nElements);
 
 					// for each evaluation in that grouping 
-					for (auto indexIterator = parentGrouping.indices.begin(); indexIterator != parentGrouping.indices.end(); indexIterator++) {
-						auto evaluationIterator = in_evaluations[*indexIterator]->Get_Iterator();
+					for (auto indexIterator = parentGrouping.evals.begin(); indexIterator != parentGrouping.evals.end(); indexIterator++) {
+						auto evaluationIterator = (*indexIterator)->Get_Iterator();
 
 						for (uint k = 0; k < currentDepth; k++) {
 							if (!((parentGrouping.path[i][k]) ? evaluationIterator.Go_Right(i) : evaluationIterator.Go_Left(i))) {
@@ -378,15 +564,15 @@ public:
 						}
 
 						if (evaluationIterator.Get_Left(i)) {
-							leftGrouping.indices.push_back(*indexIterator);
+							leftGrouping.evals.push_back(*indexIterator);
 						}
 
 						if (evaluationIterator.Get_Right(i)) {
-							rightGrouping.indices.push_back(*indexIterator);
+							rightGrouping.evals.push_back(*indexIterator);
 						}
 					}
 
-					if (leftGrouping.indices.size() > 1) {
+					if (leftGrouping.evals.size() > 1) {
 						for (uint k = 0; k < n; k++) {
 							for (uint m = 0; m < maxDepth; m++) {
 								leftGrouping.path[k][m] = parentGrouping.path[k][m];
@@ -397,7 +583,7 @@ public:
 						out_groupingScheme.groupings.splice(out_groupingScheme.groupings.end(), recycling, recycling.begin());
 					}
 
-					if (rightGrouping.indices.size() > 1) {
+					if (rightGrouping.evals.size() > 1) {
 						for (uint k = 0; k < n; k++) {
 							for (uint m = 0; m < maxDepth; m++) {
 								rightGrouping.path[k][m] = parentGrouping.path[k][m];
@@ -422,10 +608,147 @@ public:
 		}
 	}
 
+	void Group(Evaluation** in_evaluations1, uint in_nElements1, Evaluation** in_evaluations2, uint in_nElements2, PairedGroupingScheme& out_groupingScheme) {
+		using Grouping = PairedGroupingScheme::Grouping;
+
+		if (pairRecycling.size() < 1) {
+			pairRecycling.resize(1);
+		}
+
+		Grouping& startingGrouping = pairRecycling.front();
+		startingGrouping.evals1.resize(in_nElements1);
+		startingGrouping.evals2.resize(in_nElements2);
+
+		uint i = 0;
+		for (auto it = startingGrouping.evals1.begin(); it != startingGrouping.evals1.end(); it++) {
+			*it = in_evaluations1[i++];
+		}
+
+		i = 0;
+		for (auto it = startingGrouping.evals2.begin(); it != startingGrouping.evals2.end(); it++) {
+			*it = in_evaluations2[i++];
+		}
+
+		for (uint i = 0; i < n; i++) {
+			for (uint j = 0; j < maxDepth; j++) {
+				startingGrouping.path[i][j] = 255;
+			}
+		}
+
+		out_groupingScheme.parent = this;
+		pairRecycling.splice(pairRecycling.end(), out_groupingScheme.groupings);
+		out_groupingScheme.groupings.splice(out_groupingScheme.groupings.begin(), pairRecycling, pairRecycling.begin());
+
+		if (pairRecycling.size() > 100) {
+			pairRecycling.resize(50);
+		}
+
+		for (uint currentDepth = 0; currentDepth < in_evaluations1[0]->depth; currentDepth++) {
+			// for each dimension
+			for (uint i = 0; i < n; i++) {
+				uint nGroups = (uint) out_groupingScheme.groupings.size();
+				auto groupIterator = out_groupingScheme.groupings.begin();
+
+				// for each grouping
+				for (uint j = 0; j < nGroups; j++) {
+					while (pairRecycling.size() < 2) {
+						pairRecycling.push_back(Grouping());
+					}
+
+					Grouping& parentGrouping = *groupIterator;
+
+					Grouping& leftGrouping = pairRecycling.front();
+					leftGrouping.evals1.clear();
+					leftGrouping.evals1.reserve(in_nElements1);
+					leftGrouping.evals2.clear();
+					leftGrouping.evals2.reserve(in_nElements2);
+
+					Grouping& rightGrouping = pairRecycling.back();
+					rightGrouping.evals1.clear();
+					rightGrouping.evals1.reserve(in_nElements1);
+					rightGrouping.evals2.clear();
+					rightGrouping.evals2.reserve(in_nElements2);
+
+					for (auto indexIterator = parentGrouping.evals1.begin(); indexIterator != parentGrouping.evals1.end(); indexIterator++) {
+						auto evaluationIterator = (*indexIterator)->Get_Iterator();
+
+						for (uint k = 0; k < currentDepth; k++) {
+							if (!((parentGrouping.path[i][k]) ? evaluationIterator.Go_Right(i) : evaluationIterator.Go_Left(i))) {
+								throw ProcessFailureException();
+							}
+						}
+
+						if (evaluationIterator.Get_Left(i)) {
+							leftGrouping.evals1.push_back(*indexIterator);
+						}
+
+						if (evaluationIterator.Get_Right(i)) {
+							rightGrouping.evals1.push_back(*indexIterator);
+						}
+					}
+
+					for (auto indexIterator = parentGrouping.evals2.begin(); indexIterator != parentGrouping.evals2.end(); indexIterator++) {
+						auto evaluationIterator = (*indexIterator)->Get_Iterator();
+
+						for (uint k = 0; k < currentDepth; k++) {
+							if (!((parentGrouping.path[i][k]) ? evaluationIterator.Go_Right(i) : evaluationIterator.Go_Left(i))) {
+								throw ProcessFailureException();
+							}
+						}
+
+						if (evaluationIterator.Get_Left(i)) {
+							leftGrouping.evals2.push_back(*indexIterator);
+						}
+
+						if (evaluationIterator.Get_Right(i)) {
+							rightGrouping.evals2.push_back(*indexIterator);
+						}
+					}
+
+					if (leftGrouping.evals1.size() > 1 && leftGrouping.evals2.size() > 1) {
+						for (uint k = 0; k < n; k++) {
+							for (uint m = 0; m < maxDepth; m++) {
+								leftGrouping.path[k][m] = parentGrouping.path[k][m];
+							}
+						}
+						leftGrouping.path[i][currentDepth] = 0;
+
+						out_groupingScheme.groupings.splice(out_groupingScheme.groupings.end(), pairRecycling, pairRecycling.begin());
+					}
+
+					if (rightGrouping.evals1.size() > 1 && leftGrouping.evals2.size() > 1) {
+						for (uint k = 0; k < n; k++) {
+							for (uint m = 0; m < maxDepth; m++) {
+								rightGrouping.path[k][m] = parentGrouping.path[k][m];
+							}
+						}
+						rightGrouping.path[i][currentDepth] = 1;
+
+						out_groupingScheme.groupings.splice(out_groupingScheme.groupings.end(), pairRecycling, --pairRecycling.end());
+					}
+					
+					groupIterator++;
+				}
+				auto begin = out_groupingScheme.groupings.begin();
+				auto end = out_groupingScheme.groupings.begin();
+				std::advance(end, nGroups);
+				pairRecycling.splice(pairRecycling.end(), out_groupingScheme.groupings, begin, end);
+
+				if (out_groupingScheme.groupings.size() == 0) {
+					currentDepth = in_evaluations1[0]->depth;
+					break;
+				}
+			}
+		}
+	}
+
 	friend class Evaluation::Iterator;
 };
 
-using QuadTree = BinaryCollisionTree<2>;
+using QuadTreef = BinaryCollisionTree<float, 2>;
+using QuadTreed = BinaryCollisionTree<double, 2>;
+using OctTreef = BinaryCollisionTree<float, 3>;
+using OctTreed = BinaryCollisionTree<double, 3>;
 
 #endif
 

@@ -52,17 +52,17 @@ bool FilterQuery::Evaluate(const FilteredObject& in_object) const {
 	case any:
 		return true;
 	case fit_one:
-		return in_object.filter & (1 << filters[0]);
+		return in_object.filter & (1ull << filters[0]);
 	case fit_one_of:
 		for (uint i = 0; i < filters.size(); i++) {
-			if (in_object.filter & (1 << filters[i])) {
+			if (in_object.filter & (1ull << filters[i])) {
 				return true;
 			}
 		}
 		return false;
 	case fit_all_of:
 		for (uint i = 0; i < filters.size(); i++) {
-			if (!(in_object.filter & (1 << filters[i]))) {
+			if (!(in_object.filter & (1ull << filters[i]))) {
 				return false;
 			}
 		}

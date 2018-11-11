@@ -10,6 +10,8 @@ typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned int uint;
 typedef unsigned long int ulong;
+typedef unsigned long long ullong;
+typedef signed long long llong;
 typedef long double longd;
 typedef char sbyte;
 typedef unsigned char ubyte;

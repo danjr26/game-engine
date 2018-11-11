@@ -55,12 +55,12 @@ void ShaderProgram::Load_XML_List(std::string in_filename) {
 	uint length = file.tellg();
 	file.seekg(0, file.beg);
 
-	char* buffer = new char[length];
+	char* buffer = new char[length + 1];
 	file.read(buffer, length);
+	buffer[length] = '\0';
 	file.close();
 
 	std::vector<Shader*> shaders;
-	std::vector<ShaderProgram*> shaderPrograms;
 
 	rapidxml::xml_document<char> doc;
 	doc.parse<0>(buffer);

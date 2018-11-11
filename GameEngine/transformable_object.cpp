@@ -1,12 +1,15 @@
 #include "transformable_object.h"
 
-TransformableObject::TransformableObject() 
+template<class T, uint n>
+TransformableObject<T, n>::TransformableObject()
 {}
 
-TransformableObject::TransformableObject(Transform in_transform) :
-	transform(in_transform)
-{}
-
-Transform& TransformableObject::Get_Transform() {
+template<class T, uint n>
+Transform<T, n>& TransformableObject<T, n>::Get_Transform() {
 	return transform;
 }
+
+template class TransformableObject<float, 2>;
+template class TransformableObject<double, 2>;
+template class TransformableObject<float, 3>;
+template class TransformableObject<double, 3>;

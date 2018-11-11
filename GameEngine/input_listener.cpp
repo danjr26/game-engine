@@ -27,7 +27,7 @@ InputEvent InputListener::Pop_Event() {
 }
 
 uint InputListener::Get_Number_Events() {
-	return eventQueue.size();
+	return (uint)eventQueue.size();
 }
 
 void InputListener::Clear_Events() {

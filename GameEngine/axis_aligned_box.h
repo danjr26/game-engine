@@ -27,14 +27,14 @@ public:
 		}
 	}
 
-	void Apply_Transform(Transform& transform) {
+	void Apply_Transform(Transform<T, n>& transform) {
 		if (transform.Get_World_Rotation().Is_Identity()) {
-			for (Transform* t = &transform; t != nullptr; t = t->Get_Parent()) {
-				minima = minima.Compwise(Vector<T, n>(t->Get_Local_Scale()));
-				minima += Vector<T, n>(t->Get_Local_Position());
+			for (Transform<T, n>* t = &transform; t != nullptr; t = t->Get_Parent()) {
+				minima = minima.Compwise(t->Get_Local_Scale());
+				minima += t->Get_Local_Position();
 
-				maxima = maxima.Compwise(Vector<T, n>(t->Get_Local_Scale()));
-				maxima += Vector<T, n>(t->Get_Local_Position());
+				maxima = maxima.Compwise(t->Get_Local_Scale());
+				maxima += t->Get_Local_Position();
 			}
 			return;
 		}
@@ -45,7 +45,7 @@ public:
 		Get_Corners(corners);
 
 		for (uint i = 0; i < nCorners; i++) {
-			corners[i] = Vector<T, n>(transform.Apply_To_Local_Point(Vector3d(corners[i])));
+			corners[i] = transform.Apply_To_Local_Point(corners[i]);
 		}
 
 		(*this) = AxisAlignedBox<T, n>::From_Bounded_Points(nCorners, corners);

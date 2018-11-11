@@ -106,37 +106,16 @@
     <Filter Include="Header Files\framework\input\contexts">
       <UniqueIdentifier>{c475370c-e0c0-425d-a5ff-6ac9b1e306f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\framework\input\contexts">
+      <UniqueIdentifier>{b357ed8f-5800-411d-8693-29f4ed6ea905}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\framework\input\identifiers">
+      <UniqueIdentifier>{91a9bbe3-d4cd-459f-9caa-d5db7ae0d62f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="transform.h">
       <Filter>Header Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="asteroid.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="fx.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="enforcer.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="skybox.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="player_ship.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="swarm_droid.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="shock_droid.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="ship_systems.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="projectiles.h">
-      <Filter>Header Files\objects</Filter>
     </ClInclude>
     <ClInclude Include="random.h">
       <Filter>Header Files\util</Filter>
@@ -147,53 +126,20 @@
     <ClInclude Include="clock.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
-    <ClInclude Include="framework.h">
-      <Filter>Header Files\framework</Filter>
-    </ClInclude>
     <ClInclude Include="shader.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="light.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh_instance.h">
       <Filter>Header Files\render</Filter>
     </ClInclude>
     <ClInclude Include="collision.h">
       <Filter>Header Files\collision</Filter>
     </ClInclude>
-    <ClInclude Include="collision_manager.h">
-      <Filter>Header Files\collision</Filter>
-    </ClInclude>
     <ClInclude Include="custom_array.h">
       <Filter>Header Files\util\array</Filter>
-    </ClInclude>
-    <ClInclude Include="oct_tree.h">
-      <Filter>Header Files\collision</Filter>
-    </ClInclude>
-    <ClInclude Include="render.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="weapons.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="overlay.h">
-      <Filter>Header Files\render</Filter>
     </ClInclude>
     <ClInclude Include="parse.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
     <ClInclude Include="misc.h">
       <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="text.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="particle_system.h">
-      <Filter>Header Files\objects</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>Header Files\render</Filter>
@@ -204,27 +150,6 @@
     <ClInclude Include="triple.h">
       <Filter>Header Files\util\array</Filter>
     </ClInclude>
-    <ClInclude Include="profile.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="scripts.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="resources.h">
-      <Filter>Header Files\framework</Filter>
-    </ClInclude>
-    <ClInclude Include="performance.h">
-      <Filter>Header Files\framework</Filter>
-    </ClInclude>
-    <ClInclude Include="mechanics.h">
-      <Filter>Header Files\framework</Filter>
-    </ClInclude>
-    <ClInclude Include="component.h">
-      <Filter>Header Files\framework</Filter>
-    </ClInclude>
-    <ClInclude Include="error.h">
-      <Filter>Header Files\framework</Filter>
-    </ClInclude>
     <ClInclude Include="stepper.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
@@ -234,38 +159,14 @@
     <ClInclude Include="transition_tracker.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
-    <ClInclude Include="time_request_queue.h">
-      <Filter>Header Files\framework</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_manager.h">
-      <Filter>Header Files\ai</Filter>
-    </ClInclude>
-    <ClInclude Include="entity_manager.h">
-      <Filter>Header Files\ai</Filter>
-    </ClInclude>
-    <ClInclude Include="linear_proj_func.h">
-      <Filter>Header Files\ai</Filter>
-    </ClInclude>
     <ClInclude Include="line_segment.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
     <ClInclude Include="ray.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="geometric_intersections.h">
-      <Filter>Header Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="geometric_figures.h">
-      <Filter>Header Files\geometry</Filter>
-    </ClInclude>
     <ClInclude Include="matrix.h">
       <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="promoted_n_plane.h">
-      <Filter>Header Files\geometry\trash</Filter>
-    </ClInclude>
-    <ClInclude Include="promoted_n_sphere.h">
-      <Filter>Header Files\geometry\trash</Filter>
     </ClInclude>
     <ClInclude Include="line.h">
       <Filter>Header Files\geometry</Filter>
@@ -273,20 +174,8 @@
     <ClInclude Include="triangle.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="promoted_circle.h">
-      <Filter>Header Files\geometry</Filter>
-    </ClInclude>
     <ClInclude Include="log.h">
       <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="n_plane.h">
-      <Filter>Header Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="plane.h">
-      <Filter>Header Files\geometry\trash</Filter>
-    </ClInclude>
-    <ClInclude Include="n_gon.h">
-      <Filter>Header Files\geometry</Filter>
     </ClInclude>
     <ClInclude Include="window.h">
       <Filter>Header Files\render</Filter>
@@ -309,9 +198,6 @@
     <ClInclude Include="packaged_async_task.h">
       <Filter>Header Files\framework\async</Filter>
     </ClInclude>
-    <ClInclude Include="renderer.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="renderable_object.h">
       <Filter>Header Files\render</Filter>
     </ClInclude>
@@ -329,21 +215,6 @@
     </ClInclude>
     <ClInclude Include="framebuffer.h">
       <Filter>Header Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="colors.h">
-      <Filter>Header Files\render\color</Filter>
-    </ClInclude>
-    <ClInclude Include="color_i.h">
-      <Filter>Header Files\render\color</Filter>
-    </ClInclude>
-    <ClInclude Include="color_ia.h">
-      <Filter>Header Files\render\color</Filter>
-    </ClInclude>
-    <ClInclude Include="color_rgb.h">
-      <Filter>Header Files\render\color</Filter>
-    </ClInclude>
-    <ClInclude Include="color_rgba.h">
-      <Filter>Header Files\render\color</Filter>
     </ClInclude>
     <ClInclude Include="transformable_object.h">
       <Filter>Header Files\geometry</Filter>
@@ -366,29 +237,17 @@
     <ClInclude Include="render_manager.h">
       <Filter>Header Files\render</Filter>
     </ClInclude>
-    <ClInclude Include="texture_manager.h">
-      <Filter>Header Files\render\texture</Filter>
-    </ClInclude>
     <ClInclude Include="font_manager.h">
       <Filter>Header Files\render</Filter>
     </ClInclude>
     <ClInclude Include="asset_manager.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
-    <ClInclude Include="texture2.h">
-      <Filter>Header Files\render\texture</Filter>
-    </ClInclude>
-    <ClInclude Include="texture2_instance.h">
-      <Filter>Header Files\render\texture</Filter>
-    </ClInclude>
     <ClInclude Include="font_face.h">
       <Filter>Header Files\render</Filter>
     </ClInclude>
     <ClInclude Include="font_face_raster_set.h">
       <Filter>Header Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="texture_old.h">
-      <Filter>Header Files\render\texture</Filter>
     </ClInclude>
     <ClInclude Include="texture.h">
       <Filter>Header Files\render\texture</Filter>
@@ -498,16 +357,10 @@
     <ClInclude Include="sphere.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="deep_2d_shape.h">
-      <Filter>Header Files\geometry</Filter>
-    </ClInclude>
     <ClInclude Include="circle_collision_mask.h">
       <Filter>Header Files\collision\masks</Filter>
     </ClInclude>
     <ClInclude Include="collision_mask.h">
-      <Filter>Header Files\collision\masks</Filter>
-    </ClInclude>
-    <ClInclude Include="collision_mask_old.h">
       <Filter>Header Files\collision\masks</Filter>
     </ClInclude>
     <ClInclude Include="collision_evaluator.h">
@@ -542,12 +395,6 @@
     </ClInclude>
     <ClInclude Include="triangle2_collision_mask.h">
       <Filter>Header Files\collision\masks</Filter>
-    </ClInclude>
-    <ClInclude Include="in_place_collision_evaluator2.h">
-      <Filter>Header Files\collision\evaluators</Filter>
-    </ClInclude>
-    <ClInclude Include="Header.h">
-      <Filter>Header Files\physics</Filter>
     </ClInclude>
     <ClInclude Include="binary_collision_tree.h">
       <Filter>Header Files\collision</Filter>
@@ -609,130 +456,61 @@
     <ClInclude Include="keyboard_text_input_context.h">
       <Filter>Header Files\framework\input\contexts</Filter>
     </ClInclude>
+    <ClInclude Include="pointer_input_context.h">
+      <Filter>Header Files\framework\input\contexts</Filter>
+    </ClInclude>
+    <ClInclude Include="boolean_or_action_identifier.h">
+      <Filter>Header Files\framework\input\identifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="boolean_and_action_identifier.h">
+      <Filter>Header Files\framework\input\identifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_manager.h">
+      <Filter>Header Files\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_context.h">
+      <Filter>Header Files\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="rigid_body.h">
+      <Filter>Header Files\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="unclamped_rotation.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="in_place_collision_evaluator.h">
+      <Filter>Header Files\collision\evaluators</Filter>
+    </ClInclude>
+    <ClInclude Include="depth_transform.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="deep_transformable_object.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="deep_object.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ai_manager.cpp">
-      <Filter>Source Files\ai</Filter>
-    </ClCompile>
-    <ClCompile Include="light.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="linear_proj_func.cpp">
-      <Filter>Source Files\ai</Filter>
-    </ClCompile>
-    <ClCompile Include="asteroid.cpp">
-      <Filter>Source Files\objects</Filter>
-    </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="clock.cpp">
       <Filter>Source Files\framework</Filter>
     </ClCompile>
-    <ClCompile Include="collision_manager.cpp">
-      <Filter>Source Files\collision</Filter>
-    </ClCompile>
-    <ClCompile Include="defsettings.cpp">
-      <Filter>Source Files\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="component.cpp">
-      <Filter>Source Files\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="error.cpp">
-      <Filter>Source Files\collision</Filter>
-    </ClCompile>
-    <ClCompile Include="entity_manager.cpp">
-      <Filter>Source Files\ai</Filter>
-    </ClCompile>
-    <ClCompile Include="framework.cpp">
-      <Filter>Source Files\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="fx.cpp">
-      <Filter>Source Files\objects</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="mechanics.cpp">
-      <Filter>Source Files\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh_instance.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="misc.cpp">
-      <Filter>Source Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="oct_tree.cpp">
-      <Filter>Source Files\collision</Filter>
-    </ClCompile>
-    <ClCompile Include="overlay.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="parse.cpp">
-      <Filter>Source Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="particle_system.cpp">
-      <Filter>Source Files\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="performance.cpp">
-      <Filter>Source Files\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="player_ship.cpp">
-      <Filter>Source Files\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="projectiles.cpp">
-      <Filter>Source Files\objects</Filter>
     </ClCompile>
     <ClCompile Include="projection.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
-    <ClCompile Include="random.cpp">
-      <Filter>Source Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="render.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="resources.cpp">
-      <Filter>Source Files\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="scripts.cpp">
-      <Filter>Source Files\objects</Filter>
-    </ClCompile>
     <ClCompile Include="shader.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="shock_droid.cpp">
-      <Filter>Source Files\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="skybox.cpp">
-      <Filter>Source Files\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="swarm_droid.cpp">
-      <Filter>Source Files\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="text.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="transform.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
-    <ClCompile Include="weapons.cpp">
-      <Filter>Source Files\objects</Filter>
-    </ClCompile>
     <ClCompile Include="stepper.cpp">
       <Filter>Source Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="progress_tracker.cpp">
-      <Filter>Source Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="transition_tracker.cpp">
-      <Filter>Source Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="time_request_queue.cpp">
-      <Filter>Source Files\framework</Filter>
     </ClCompile>
     <ClCompile Include="log.cpp">
       <Filter>Source Files\util</Filter>
@@ -746,16 +524,10 @@
     <ClCompile Include="async_task.cpp">
       <Filter>Source Files\framework\async</Filter>
     </ClCompile>
-    <ClCompile Include="async_task_handler.cpp">
-      <Filter>Source Files\framework\async</Filter>
-    </ClCompile>
     <ClCompile Include="trackable_async_task.cpp">
       <Filter>Source Files\framework\async</Filter>
     </ClCompile>
     <ClCompile Include="renderable_object.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="render_pass.cpp">
@@ -773,23 +545,11 @@
     <ClCompile Include="sprite.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
-    <ClCompile Include="texture_manager.cpp">
-      <Filter>Source Files\render\texture</Filter>
-    </ClCompile>
     <ClCompile Include="game_engine.cpp">
       <Filter>Source Files\framework</Filter>
     </ClCompile>
-    <ClCompile Include="texture2.cpp">
-      <Filter>Source Files\render\texture</Filter>
-    </ClCompile>
-    <ClCompile Include="texture2_instance.cpp">
-      <Filter>Source Files\render\texture</Filter>
-    </ClCompile>
     <ClCompile Include="font_face.cpp">
       <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="texture_old.cpp">
-      <Filter>Source Files\render\texture</Filter>
     </ClCompile>
     <ClCompile Include="texture.cpp">
       <Filter>Source Files\render\texture</Filter>
@@ -842,12 +602,6 @@
     <ClCompile Include="mouse_state.cpp">
       <Filter>Source Files\framework</Filter>
     </ClCompile>
-    <ClCompile Include="input.cpp">
-      <Filter>Source Files\framework\input</Filter>
-    </ClCompile>
-    <ClCompile Include="input_context.cpp">
-      <Filter>Source Files\framework\input</Filter>
-    </ClCompile>
     <ClCompile Include="input_listener.cpp">
       <Filter>Source Files\framework\input</Filter>
     </ClCompile>
@@ -857,23 +611,11 @@
     <ClCompile Include="raw_input_event.cpp">
       <Filter>Source Files\framework\input</Filter>
     </ClCompile>
-    <ClCompile Include="raw_input_state.cpp">
-      <Filter>Source Files\framework\input</Filter>
-    </ClCompile>
-    <ClCompile Include="test_input_context.cpp">
-      <Filter>Source Files\framework\input</Filter>
-    </ClCompile>
     <ClCompile Include="input_bindings.cpp">
-      <Filter>Source Files\framework\input</Filter>
-    </ClCompile>
-    <ClCompile Include="keyboard_action_identifier.cpp">
       <Filter>Source Files\framework\input</Filter>
     </ClCompile>
     <ClCompile Include="frame_rate_manager.cpp">
       <Filter>Source Files\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="keyboard_state_identifier.cpp">
-      <Filter>Source Files\framework\input</Filter>
     </ClCompile>
     <ClCompile Include="per_frame_update_manager.cpp">
       <Filter>Source Files\framework</Filter>
@@ -881,26 +623,14 @@
     <ClCompile Include="per_frame_updateable_object.cpp">
       <Filter>Source Files\framework</Filter>
     </ClCompile>
-    <ClCompile Include="keyboard_range_identifier.cpp">
-      <Filter>Source Files\framework\input</Filter>
-    </ClCompile>
     <ClCompile Include="mesh_vertex_data.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
     <ClCompile Include="exceptions.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
-    <ClCompile Include="mouse_action_identifier.cpp">
-      <Filter>Source Files\framework\input</Filter>
-    </ClCompile>
-    <ClCompile Include="mouse_range_identifier.cpp">
-      <Filter>Source Files\framework\input</Filter>
-    </ClCompile>
     <ClCompile Include="window_manager.cpp">
       <Filter>Source Files\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="mouse_state_identifier.cpp">
-      <Filter>Source Files\framework\input</Filter>
     </ClCompile>
     <ClCompile Include="window_proc.cpp">
       <Filter>Source Files\framework\input</Filter>
@@ -910,9 +640,6 @@
     </ClCompile>
     <ClCompile Include="mesh_vertex_gpu_pusher.cpp">
       <Filter>Source Files\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="collision_mask_old.cpp">
-      <Filter>Source Files\collision</Filter>
     </ClCompile>
     <ClCompile Include="circle_renderer.cpp">
       <Filter>Source Files\render</Filter>
@@ -953,9 +680,6 @@
     <ClCompile Include="triangle2_collision_mask.cpp">
       <Filter>Source Files\collision\masks</Filter>
     </ClCompile>
-    <ClCompile Include="in_place_collision_evaluator2.cpp">
-      <Filter>Source Files\collision\evaluators</Filter>
-    </ClCompile>
     <ClCompile Include="axis_aligned_half_space2_collision_mask.cpp">
       <Filter>Source Files\collision\masks</Filter>
     </ClCompile>
@@ -963,13 +687,70 @@
       <Filter>Source Files\collision\masks</Filter>
     </ClCompile>
     <ClCompile Include="editable_text.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="input_context.cpp">
+      <Filter>Source Files\framework\input\contexts</Filter>
+    </ClCompile>
+    <ClCompile Include="keyboard_action_identifier.cpp">
+      <Filter>Source Files\framework\input\identifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="keyboard_range_identifier.cpp">
+      <Filter>Source Files\framework\input\identifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="keyboard_state_identifier.cpp">
+      <Filter>Source Files\framework\input\identifiers</Filter>
     </ClCompile>
     <ClCompile Include="text_input_context.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\framework\input\contexts</Filter>
+    </ClCompile>
+    <ClCompile Include="test_input_context.cpp">
+      <Filter>Source Files\framework\input\contexts</Filter>
     </ClCompile>
     <ClCompile Include="keyboard_text_input_context.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\framework\input\contexts</Filter>
+    </ClCompile>
+    <ClCompile Include="mouse_action_identifier.cpp">
+      <Filter>Source Files\framework\input\identifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="mouse_range_identifier.cpp">
+      <Filter>Source Files\framework\input\identifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="mouse_state_identifier.cpp">
+      <Filter>Source Files\framework\input\identifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="raw_input_state.cpp">
+      <Filter>Source Files\framework\input</Filter>
+    </ClCompile>
+    <ClCompile Include="pointer_input_context.cpp">
+      <Filter>Source Files\framework\input</Filter>
+    </ClCompile>
+    <ClCompile Include="collision_manager.cpp">
+      <Filter>Source Files\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="collision_context.cpp">
+      <Filter>Source Files\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="async_task_manager.cpp">
+      <Filter>Source Files\framework\async</Filter>
+    </ClCompile>
+    <ClCompile Include="rotation.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="unclamped_rotation.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="vector.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="in_place_collision_evaluator.cpp">
+      <Filter>Source Files\collision\evaluators</Filter>
+    </ClCompile>
+    <ClCompile Include="depth_transform.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="deep_object.cpp">
+      <Filter>Source Files\geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
