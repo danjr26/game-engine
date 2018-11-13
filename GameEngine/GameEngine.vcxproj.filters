@@ -112,6 +112,12 @@
     <Filter Include="Source Files\framework\input\identifiers">
       <UniqueIdentifier>{91a9bbe3-d4cd-459f-9caa-d5db7ae0d62f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\physics">
+      <UniqueIdentifier>{9183a8f0-0fa4-475f-8af1-f14cc19e0308}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\physics\rigid body">
+      <UniqueIdentifier>{d8fd5e3d-f81e-4f9b-9ba0-dbf27b67973f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="transform.h">
@@ -277,9 +283,6 @@
       <Filter>Header Files\framework</Filter>
     </ClInclude>
     <ClInclude Include="asset.h">
-      <Filter>Header Files\framework</Filter>
-    </ClInclude>
-    <ClInclude Include="id.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
     <ClInclude Include="key.h">
@@ -471,9 +474,6 @@
     <ClInclude Include="collision_context.h">
       <Filter>Header Files\collision</Filter>
     </ClInclude>
-    <ClInclude Include="rigid_body.h">
-      <Filter>Header Files\physics</Filter>
-    </ClInclude>
     <ClInclude Include="unclamped_rotation.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
@@ -488,6 +488,18 @@
     </ClInclude>
     <ClInclude Include="deep_object.h">
       <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_manager.h">
+      <Filter>Header Files\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="rigid_body.h">
+      <Filter>Header Files\physics\rigid body</Filter>
+    </ClInclude>
+    <ClInclude Include="circle_rigid_body.h">
+      <Filter>Header Files\physics\rigid body</Filter>
+    </ClInclude>
+    <ClInclude Include="projection_overlap.h">
+      <Filter>Header Files\collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -751,6 +763,45 @@
     </ClCompile>
     <ClCompile Include="deep_object.cpp">
       <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="rigid_body.cpp">
+      <Filter>Source Files\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="misc.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="axis_aligned_box.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="axis_aligned_half_space.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="axis_aligned_line.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="box.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="half_space.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="line.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="line_segment.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="ray.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="sphere.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="triangle.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="physics_manager.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

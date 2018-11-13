@@ -11,8 +11,8 @@
 #include <gl/wglew.h>
 #include <functional>
 #include <initializer_list>
+#include <random>
 #include "definitions.h"
-using namespace std;
 
 template<class T>
 inline T Clamp(T n, T floor, T ceiling) {
@@ -219,11 +219,27 @@ inline T Sum(C& values, uint n) {
 	return s;
 }
 
+template<class T>
+T Random();
 
+template<> bool Random<bool>();
+template<> uint Random<uint>();
+template<> int Random<int>();
+template<> ullong Random<ullong>();
+template<> llong Random<llong>();
 
-string Double_To_String(double d, int precision);
+template<class T>
+T Random(T high);
 
-void Test_Function(void* arg);
+template<> uint Random<uint>(uint);
+template<> int Random<int>(int);
+template<> ullong Random<ullong>(ullong);
+template<> llong Random<llong>(llong);
+template<> float Random<float>(float);
+template<> double Random<double>(double);
+
+template<class T>
+T Random(T low, T high);
 
 #endif 
 

@@ -11,7 +11,7 @@ uint Window::classIndex = 1;
 Window::Window(Params& in_params) :
 params(in_params) {
 	std::lock_guard<std::mutex> lock(mutex);
-	wstring className = wstring(L"class") + to_wstring(classIndex++);
+	std::wstring className = std::wstring(L"class") + std::to_wstring(classIndex++);
 
 	windowClass.hInstance = params.hInstance;
 	windowClass.lpszClassName = className.c_str();

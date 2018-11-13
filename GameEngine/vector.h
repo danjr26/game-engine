@@ -16,7 +16,8 @@ protected:
 	T members[n];
 
 public:
-	Vector() 
+	Vector() :
+		members{0}
 	{}
 
 	template<typename... Args, typename = std::enable_if_t<sizeof...(Args) == n>>
@@ -221,7 +222,7 @@ public:
 	}
 
 	Vector<T, n> Lerp(T s, const Vector<T, n> v) const {
-		return *this * (1.0 - s) + v * s;
+		return *this * ((T)1 - s) + v * s;
 	}
 
 	Vector<T, n> Compwise(const Vector<T, n>& v) const {
@@ -297,11 +298,11 @@ public:
 		return members;
 	}
 
-	string To_String() {
-		stringstream ss;
+	std::string To_String() {
+		std::stringstream ss;
 		ss << "Vector (" << n << ")\n";
 			for (uint i = 0; i < n; i++) {
-				ss << scientific << setprecision(6) << setw(14) << members[i];
+				ss << std::scientific << std::setprecision(6) << std::setw(14) << members[i];
 			}
 			ss << '\n';
 		return ss.str();

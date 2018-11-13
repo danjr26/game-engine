@@ -16,6 +16,11 @@ public:
 		high(0)
 	{}
 
+	Range(T in_val) :
+		low(in_val),
+		high(in_val)
+	{}
+
 	Range(T in_val1, T in_val2) {
 		Set_Values(in_val1, in_val2);
 	}
@@ -39,6 +44,16 @@ public:
 	T Get_High() const {
 		return high;
 	};
+
+	void Set_Low(T in_value) {
+		low = in_value;
+		high = Max(high, in_value);
+	}
+
+	void Set_High(T in_value) {
+		high = in_value;
+		low = Min(low, in_value);
+	}
 
 	T Get_Span() const {
 		return high - low;

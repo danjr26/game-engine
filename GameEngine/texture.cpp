@@ -183,6 +183,7 @@ GLenum Texture::Determine_Pixel_Format() {
 			return GL_RGBA;
 		}
 	}
+	return GL_RGBA;
 }
 
 GLenum Texture::Determine_Internal_Format() {

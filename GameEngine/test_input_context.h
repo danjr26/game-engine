@@ -10,6 +10,7 @@
 #include "mouse_range_identifier.h"
 #include "rectangle_collision_mask.h"
 #include "collision_context.h"
+#include "rigid_body.h"
 
 class TestInputContext : public InputContext {
 public:
@@ -41,13 +42,11 @@ public:
 
 class TestSpriteMover : public PerFrameUpdateableObject {
 private:
-	InputListener input;
-	TransformableObject2f* object;
-	CollisionMask2d* collisionMask;
-	CollisionContext2d* collisionContext;
+	Sprite* sprite;
+	RigidBody2* rigidBody;
 
 public:
-	TestSpriteMover(TestInputContext* in_inputContext, TransformableObject2f* in_object, CollisionMask2d* in_collisionMask);
+	TestSpriteMover(Sprite* in_sprite, CollisionMask2d& in_mask);
 	void Update(double in_dt) override;
 };
 

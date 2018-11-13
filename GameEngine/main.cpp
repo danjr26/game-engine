@@ -35,13 +35,13 @@ void Test_Render(Window* window) {
 	FontFace* fontFace = GE.Assets().Get<FontFace>("ConsolasFontFace");
 	FontFaceRasterSet* rasterSet = fontFace->Rasterize(24);
 
-	Circled circle1 = Circled::From_Point_Radius(Vector2d(50.0, 50.0), 100.0);
-	CircleRenderer circleRenderer1(DeepCircled(circle1, 0.0), ColorRGBAf(1, 1, 1, 0.5), 10.0, ColorRGBAf(1, 0.5, 0.5, 1.0));
+	Circled circle1 = Circled::From_Point_Radius(Vector2d(0.0, 0.0), 100.0);
+	CircleRenderer circleRenderer1(circle1, ColorRGBAf(1, 1, 1, 0.5), 10.0, ColorRGBAf(1, 0.5, 0.5, 1.0));
 	GE.Render().Add(&circleRenderer1);
 	CircleCollisionMask circleCollider1(circle1);
 
 	Circled circle2 = Circled::From_Point_Radius(Vector2d(450.0, 200.0), 50.0);
-	CircleRenderer circleRenderer2(DeepCircled(circle2, 0.0), ColorRGBAf(1, 1, 1, 0), 2.0, ColorRGBAf(1, 1, 1, 1.0));
+	CircleRenderer circleRenderer2(circle2, ColorRGBAf(1, 1, 1, 0), 2.0, ColorRGBAf(1, 1, 1, 1.0));
 	GE.Render().Add(&circleRenderer2);
 	CircleCollisionMask circleCollider2(circle2);
 
@@ -64,13 +64,13 @@ void Test_Render(Window* window) {
 	CollisionContext2d collisionContext(box, 3);
 	GE.Collision().Make_Active(&collisionContext);
 
-	circleCollider1.Add_Filter(0);
-	circleCollider2.Add_Filter(0);
+	circleCollider1.Add_Filter(CollisionContext2d::user_defined);
+	circleCollider2.Add_Filter(CollisionContext2d::user_defined);
 	collisionContext.Add(&circleCollider1);
 	collisionContext.Add(&circleCollider2);
-	//collisionContext.Set_Partner_Test_Activation(std::pair<ubyte, ubyte>(0, 0), true);
+	//collisionContext.Set_Partner_Test_Activation(std::pair<ubyte, ubyte>(CollisionContext2d::user_defined, CollisionContext2d::user_defined), true);
 
-	TestSpriteMover sm = TestSpriteMover(&ic, &circleRenderer1, &circleCollider1);
+	TestSpriteMover sm = TestSpriteMover(&circleRenderer1, circleCollider1);
 	GE.Per_Frame_Update().Add(&sm);
 
 	QuadTreed quadTree(AxisAlignedRectangled::From_Extrema(Vector2d(0, 0), Vector2d(800, 600)));
@@ -93,7 +93,7 @@ void Test_Render(Window* window) {
 	}
 	double t2 = c.Now();
 	double averageT = (t2 - t1) / n;
-	Log::main(to_string(averageT * 1000000) + " us");
+	Log::main(std::to_string(averageT * 1000000) + " us");
 
 	////////////////////////////
 

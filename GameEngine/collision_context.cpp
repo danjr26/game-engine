@@ -78,6 +78,10 @@ void CollisionContext<T, n>::Update() {
 	}
 }
 
+/*
+template<class T, uint n>
+void CollisionContext<T, n>::Update(CollisionMask<T, n>* in_masks, uint in_nMasks) {}
+*/
 template<class T, uint n>
 uint CollisionContext<T, n>::Get_Total_Partnerings() const {
 	return (uint)partnering.size();
@@ -175,6 +179,8 @@ void CollisionContext<T, n>::Partner_Filtered(std::vector<typename BinaryCollisi
 					Partner_If_Collide_Async(
 						itCopy.Get_First()->Get_Transformed_Parent_Mask(),
 						itCopy.Get_Second()->Get_Transformed_Parent_Mask(),
+						itCopy.Get_First()->Get_Parent_Mask(),
+						itCopy.Get_Second()->Get_Parent_Mask(),
 						partnering,
 						partneringMutex
 					);
@@ -208,6 +214,8 @@ void CollisionContext<T, n>::Partner_Filtered(std::vector<typename BinaryCollisi
 					Partner_If_Collide_Async(
 						itCopy.Get_First()->Get_Transformed_Parent_Mask(),
 						itCopy.Get_Second()->Get_Transformed_Parent_Mask(),
+						itCopy.Get_First()->Get_Parent_Mask(),
+						itCopy.Get_Second()->Get_Parent_Mask(),
 						partnering,
 						partneringMutex
 					);
@@ -243,7 +251,11 @@ void CollisionContext<T, n>::Partner_If_Collide(CollisionMask<T, n>* in_mask1, C
 }
 
 template<class T, uint n>
-void CollisionContext<T, n>::Partner_If_Collide_Async(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, Partnering& in_partnering, std::mutex& in_mutex) {
+void CollisionContext<T, n>::Partner_If_Collide_Async(
+	CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, 
+	CollisionMask<T, n>* in_maskToPartner1, CollisionMask<T, n>* in_maskToPartner2,
+	Partnering& in_partnering, std::mutex& in_mutex) {
+
 	Collision<T, n> collision;
 	InPlaceCollisionEvaluator<T, n> collisionEvaluator;
 
@@ -257,8 +269,8 @@ void CollisionContext<T, n>::Partner_If_Collide_Async(CollisionMask<T, n>* in_ma
 			}
 		}
 
-		in_partnering.insert(Partnering::value_type(in_mask1, { in_mask2, collision }));
-		in_partnering.insert(Partnering::value_type(in_mask2, { in_mask1, collision }));
+		in_partnering.insert(Partnering::value_type(in_maskToPartner1, { in_maskToPartner2, collision }));
+		in_partnering.insert(Partnering::value_type(in_maskToPartner2, { in_maskToPartner1, collision }));
 	}
 }
 

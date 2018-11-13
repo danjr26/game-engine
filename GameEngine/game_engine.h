@@ -15,6 +15,7 @@
 #include "misc.h"
 #include "exceptions.h"
 #include "async_task_manager.h"
+#include "physics_manager.h"
 
 #define GE GameEngine::Instance()
 
@@ -35,6 +36,7 @@ private:
 	WindowManager windowManager;
 	CollisionManagerd collisionManager;
 	AsyncTaskManager asyncTaskManager;
+	PhysicsManager physicsManager;
 
 public:
 	GameEngine();
@@ -50,6 +52,7 @@ public:
 	WindowManager& Windows();
 	CollisionManagerd& Collision();
 	AsyncTaskManager& Async();
+	PhysicsManager& Physics();
 
 	void Begin();
 

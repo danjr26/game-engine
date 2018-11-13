@@ -8,7 +8,7 @@
 #include "renderer.h"
 #include "range.h"
 
-class Text2 : public RenderableObject, public DeepTransformableObject2f {
+class Text2 : public RenderableObject, public DeepTransformableObject2d {
 public:
 	enum OverflowPolicy {
 		overflow,
@@ -22,7 +22,7 @@ private:
 	OverflowPolicy overflowPolicy;
 	std::vector<uint> lineWrap;
 	Vector2f containerDimensions;
-	Transform2f scrollTransform;
+	Transform2d scrollTransform;
 
 	FontFaceRasterSet* rasterSet;
 	TextureInstance bitmapArray;
@@ -49,7 +49,7 @@ public:
 	uint Get_Closest_Char_Index(Vector2f in_point) const;
 	Vector2f Get_Container_Dimensions() const;
 
-	Transform2f& Get_Scroll_Transform();
+	Transform2d& Get_Scroll_Transform();
 	void Set_Scroll_Position(Vector2f in_position);
 	Vector2f Get_Scroll_To_Include_Char(uint in_charIndex) const;
 

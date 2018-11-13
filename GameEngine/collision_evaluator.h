@@ -38,14 +38,20 @@ template<class T>
 class CollisionEvaluator<T, 2> {
 protected:
 	bool returnPoint;
+	bool returnSeparator;
 
 public:
 	CollisionEvaluator() :
-		returnPoint(true) 
+		returnPoint(true),
+		returnSeparator(false)
 	{}
 
 	void Return_Point(bool in_val) {
 		returnPoint = in_val;
+	}
+
+	void Return_Separator(bool in_val) {
+		returnSeparator = in_val;
 	}
 
 	Collision<T, 2> Evaluate(CollisionMask<T, 2>& in_mask1, CollisionMask<T, 2>& in_mask2);

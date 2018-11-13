@@ -11,7 +11,7 @@
 #include "shader_program_instance.h"
 #include "geometric_figures.h"
 
-class Sprite : public RenderableObject, public DeepTransformableObject2f {
+class Sprite : public RenderableObject, public DeepTransformableObject2d {
 protected:
 	MeshVertexData meshVertexData;
 	MeshVertexGPUPusher gpuPusher;

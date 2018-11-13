@@ -57,6 +57,10 @@ AsyncTaskManager& GameEngine::Async() {
 	return asyncTaskManager;
 }
 
+PhysicsManager& GameEngine::Physics() {
+	return physicsManager;
+}
+
 void GameEngine::Begin() {
 	try {
 		if (hasBegun) {
@@ -70,7 +74,7 @@ void GameEngine::Begin() {
 			Next_Frame();
 			frameRateManager.Yield_Until_Next_Frame();
 			if (i % 60 == 0) {
-				Log::main(to_string(frameRateManager.Get_Real_FPS()).substr(0, 4));
+				Log::main(std::to_string(frameRateManager.Get_Real_FPS()).substr(0, 4));
 			}
 		}
 	}
@@ -87,9 +91,11 @@ GameEngine& GameEngine::Instance() {
 }
 
 void GameEngine::Next_Frame() {
+	double dt = frameRateManager.Get_Last_Frame_Time();
 	inputManager.Update();
 	collisionManager.Update();
-	perFrameUpdateManager.Update(frameRateManager.Get_Last_Frame_Time());
+	physicsManager.Update(dt);
+	perFrameUpdateManager.Update(dt);
 	renderManager.Render_Frame();
 	renderManager.mainWindow->Flip_Buffers();
 }

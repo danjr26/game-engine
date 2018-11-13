@@ -3,10 +3,12 @@
 
 #include "vector.h"
 #include "matrix.h"
+#include "unclamped_rotation.h"
 #include "rotation.h"
 
 template<class T, uint n>
 class Transform {
+	friend class Transform;
 	// applies components in this order:
 	// scale, rotation, translation
 private:
@@ -17,8 +19,16 @@ private:
 
 public:
 	Transform();
+	template<class T2>
+	Transform(const Transform<T2, n>& in_other) : 
+		parent(nullptr),
+		translation(in_other.translation),
+		scale(in_other.scale),
+		rotation(in_other.rotation)
+	{}
 
 	Transform<T, n>* Get_Parent();
+	Transform<T, n> const* Get_Const_Parent() const;
 	void Set_Parent(Transform<T, n>* in_parent);
 
 	bool Is_Local_Identity() const;

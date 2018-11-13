@@ -17,6 +17,11 @@ Transform<T, n>* Transform<T, n>::Get_Parent() {
 }
 
 template<class T, uint n>
+Transform<T, n> const* Transform<T, n>::Get_Const_Parent() const {
+	return parent;
+}
+
+template<class T, uint n>
 void Transform<T, n>::Set_Parent(Transform* in_parent) {
 	parent = in_parent;
 }
@@ -209,7 +214,7 @@ Vector<T, n> Transform<T, n>::World_To_Local_Point(const Vector<T, n>& in_point)
 	}
 
 	Vector<T, n> tempPoint = in_point;
-	for (int i = chain.size() - 1; i >= 0; i--) {
+	for (int i = (int)chain.size() - 1; i >= 0; i--) {
 		tempPoint -= chain[i]->translation;
 		tempPoint = chain[i]->rotation.Get_Inverse().Apply_To(tempPoint);
 		tempPoint = tempPoint.Compwise(chain[i]->scale.Component_Inverted());
@@ -236,7 +241,7 @@ Vector<T, n> Transform<T, n>::World_To_Local_Direction(const Vector<T, n>& in_di
 	}
 
 	Vector<T, n> tempDirection = in_direction;
-	for (int i = chain.size() - 1; i >= 0; i--) {
+	for (int i = (int)chain.size() - 1; i >= 0; i--) {
 		tempDirection = chain[i]->rotation.Get_Inverse().Apply_To(tempDirection);
 	}
 	return tempDirection;
@@ -259,7 +264,7 @@ Vector<T, n> Transform<T, n>::World_To_Local_Vector(const Vector<T, n>& in_vecto
 	}
 
 	Vector<T, n> tempVector = in_vector;
-	for (int i = chain.size() - 1; i >= 0; i--) {
+	for (int i = (int)chain.size() - 1; i >= 0; i--) {
 		tempVector = chain[i]->rotation.Get_Inverse().Apply_To(tempVector);
 		tempVector = tempVector.Compwise(chain[i]->scale.Component_Inverted());
 	}
@@ -267,7 +272,7 @@ Vector<T, n> Transform<T, n>::World_To_Local_Vector(const Vector<T, n>& in_vecto
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::Local_To_World_Vector(const Vector<T, n> & in_vector) const {
+Vector<T, n> Transform<T, n>::Local_To_World_Vector(const Vector<T, n>& in_vector) const {
 	Vector<T, n> tempVector = in_vector;
 	for (Transform const* transform = parent; transform != nullptr; transform = transform->parent) {
 		tempVector = tempVector.Compwise(transform->scale);

@@ -88,6 +88,8 @@ public:
 	Collision<T, 2> Evaluate_Typed(Triangle2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) override;
 };
 
+
+
 using InPlaceCollisionEvaluator2f = InPlaceCollisionEvaluator<float, 2>;
 using InPlaceCollisionEvaluator2d = InPlaceCollisionEvaluator<double, 2>;
 using InPlaceCollisionEvaluator3f = InPlaceCollisionEvaluator<float, 3>;

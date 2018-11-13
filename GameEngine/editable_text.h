@@ -8,7 +8,7 @@
 #include "sprite.h"
 #include "stepper.h"
 
-class EditableText : public RenderableObject, public DeepTransformableObject2f, public PerFrameUpdateableObject {
+class EditableText : public RenderableObject, public DeepTransformableObject2d, public PerFrameUpdateableObject {
 private:
 	const float cursorWidth = 1.0f;
 

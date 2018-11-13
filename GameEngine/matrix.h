@@ -330,7 +330,7 @@ public:
 			if (i != iStart) {
 				// switch for row with non-zero leading entry
 				for (uint k = j; k < n; k++) {
-					swap(data[iStart][k], data[i][k]);
+					std::swap(data[iStart][k], data[i][k]);
 				}
 			}
 
@@ -374,12 +374,12 @@ public:
 
 	}
 
-	string To_String() const {
-		stringstream ss;
+	std::string To_String() const {
+		std::stringstream ss;
 		ss << "Matrix (" << m << ", " << n << ")\n";
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < n; j++) {
-				ss << scientific << setprecision(6) << setw(14) << data[i][j];
+				ss << std::scientific << std::setprecision(6) << std::setw(14) << data[i][j];
 			}
 			ss << '\n';
 		}

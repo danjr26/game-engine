@@ -10,50 +10,18 @@ private:
 	int dimension;
 	T value;
 
-	AxisAlignedHalfSpace(int in_dimension, T in_value) :
-		dimension(in_dimension),
-		value(in_value) {
-		
-		if (!Is_Between_Inc(dimension, -(int)n, (int)n - 1)) {
-			throw InvalidArgumentException();
-		}
-	}
+	AxisAlignedHalfSpace(int in_dimension, T in_value);
 
 public:
-	uint Get_Dimension() const {
-		return (dimension < 0) ? -(dimension + 1) : dimension;
-	}
+	uint Get_Dimension() const;
+	T Get_Value() const;
+	bool Is_Positive() const;
+	Vector<T, n> Get_Direction() const;
+	void Apply_Transform(Transform<T, n>& in_transform);
 
-	T Get_Value() const {
-		return value;
-	}
-
-	bool Is_Positive() const {
-		return dimension >= 0;
-	}
-
-	Vector<T, n> Get_Direction() const {
-		Vector<T, n> out;
-		out[Get_Dimension()] = Sign(value);
-		return out;
-	}
-
-	void Apply_Transform(Transform<T, n>& in_transform) {
-		for (Transform<T, n>* t = &in_transform; t != nullptr; t = t->Get_Parent()) {
-			value *= t->Get_Local_Scale()[Get_Dimension()];
-			value += t->Get_Local_Position()[Get_Dimension()];
-		}
-	}
-
-	static AxisAlignedHalfSpace<T, n> From_Dimension_Value(uint in_dimension, T in_value, bool in_isPositive) {
-		return AxisAlignedHalfSpace<T, n>((in_isPositive) ? (int)in_dimension : -(int)(in_dimension + 1), in_value);
-	}
-
-	static AxisAlignedHalfSpace<T, n> From_Inverse(const AxisAlignedHalfSpace& in_inverse) {
-		AxisAlignedHalfSpace<T, n> out = in_inverse;
-		out.dimension = -(out.dimension + 1);
-		return out;
-	}
+public:
+	static AxisAlignedHalfSpace<T, n> From_Dimension_Value(uint in_dimension, T in_value, bool in_isPositive);
+	static AxisAlignedHalfSpace<T, n> From_Inverse(const AxisAlignedHalfSpace& in_inverse);
 };
 
 using AxisAlignedHalfSpace2f = AxisAlignedHalfSpace<float, 2>;
@@ -63,3 +31,5 @@ using AxisAlignedHalfSpace3d = AxisAlignedHalfSpace<double, 3>;
 
 
 #endif
+
+

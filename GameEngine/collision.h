@@ -6,7 +6,10 @@
 template<class T, uint n>
 struct Collision {
 	bool didCollide;
-	Vector<T, n> collisionPoint;
+	union {
+		Vector<T, n> collisionPoint;
+		Vector<T, n> separator;
+	};
 	T collisionTime;
 
 	Collision() :

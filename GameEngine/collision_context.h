@@ -14,6 +14,11 @@
 template<class T, uint n>
 class CollisionContext {
 public:
+	enum Filters {
+		rigid_body,
+		user_defined
+	};
+
 	static const ubyte maxFilters = FilteredObject::maxFilters;
 	struct CollisionPartner {
 		CollisionMask<T, n>* mask;
@@ -49,6 +54,7 @@ public:
 	void Add(CollisionMask<T, n>* in_mask);
 	void Remove(CollisionMask<T, n>* in_mask);
 	void Update();
+	//void Update(CollisionMask<T, n>* in_masks, uint in_nMasks);
 	uint Get_Total_Partnerings() const;
 	std::pair<CollisionPartner*, CollisionPartner*> Get_Partners(CollisionMask<T, n>* in_mask);
 	void Set_Partner_Test_Activation(std::pair<ubyte, ubyte> in_test, bool in_value);
@@ -61,11 +67,18 @@ private:
 
 	void Partner_Filtered(std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations);
 
-	void Partner_Filtered(std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations1, std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations2);
+	void Partner_Filtered(
+		std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations1, 
+		std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations2
+	);
 
 	static void Partner_If_Collide(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, Partnering& in_partnering);
 
-	static void Partner_If_Collide_Async(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, Partnering& in_partnering, std::mutex& in_mutex);
+	static void Partner_If_Collide_Async(
+		CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2,
+		CollisionMask<T, n>* in_maskToPartner1, CollisionMask<T, n>* in_maskToPartner2,
+		Partnering& in_partnering, std::mutex& in_mutex
+	);
 };
 
 using CollisionContext2f = CollisionContext<float, 2>;

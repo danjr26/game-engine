@@ -41,4 +41,5 @@ void main() {
 	} else {
 		color_o = outlineColor;
 	}
+	//color_o = vec4(1);
 }

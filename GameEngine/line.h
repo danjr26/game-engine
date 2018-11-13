@@ -9,40 +9,23 @@ private:
 	Vector<T, n> point;
 	Vector<T, n> direction;
 
-	Line(const Vector<T, n>& in_point, const Vector<T, n> in_direction) :
-		point(in_point),
-		direction(in_direction.Normalized())
-	{}
+private:
+	Line(const Vector<T, n>& in_point, const Vector<T, n> in_direction);
 
 public:
-	void Apply_Transform(Transform<T, n>& in_transform) {
-		point = in_transform.Apply_To_Local_Point(point);
-		direction = in_transform.Apply_To_Local_Direction(direction);
-	}
+	void Apply_Transform(Transform<T, n>& in_transform);
+	Vector<T, n> Get_Point() const;
+	Vector<T, n> Get_Direction() const;
+	T Get_Projection_Coefficient() const;
+	T Get_Projection_Coefficient(const Vector<T, n>& in_point) const;
+	Vector<T, n> Get_Projection(const Vector<T, n>& in_point) const;
 
-	Vector<T, n> Get_Point() const {
-		return point;
-	}
+	T Distance_To(const Vector<T, n>& in_point) const;
+	Vector<T, n> Flip(const Vector<T, n>& in_point) const;
 
-	Vector<T, n> Get_Direction() const {
-		return direction;
-	}
-
-	T Get_Projection_Coefficient(const Vector<T, n>& in_point) {
-		return (in_point - point).Projection_Coeff(direction) + point;
-	}
-
-	Vector<T, n> Get_Projection(const Vector<T, n>& in_point) {
-		return (in_point - point).Projection(direction) + point;
-	}
-
-	static Line<T, n> From_Points(const Vector<T, n>& in_point1, const Vector<T, n>& in_point2) {
-		return Line<T, n>(in_point1, in_point2 - in_point1);
-	}
-
-	static Line<T, n> From_Point_Direction(const Vector<T, n>& in_point, const Vector<T, n>& in_direction) {
-		return Line<T, n>(in_point, in_direction);
-	}
+public:
+	static Line<T, n> From_Points(const Vector<T, n>& in_point1, const Vector<T, n>& in_point2);
+	static Line<T, n> From_Point_Direction(const Vector<T, n>& in_point, const Vector<T, n>& in_direction);
 };
 
 using Line2f = Line<float, 2>;
@@ -51,3 +34,5 @@ using Line3f = Line<float, 3>;
 using Line3d = Line<double, 3>;
 
 #endif
+
+

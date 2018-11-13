@@ -140,7 +140,7 @@ Vector2f Text2::Get_Container_Dimensions() const {
 	return containerDimensions;
 }
 
-Transform2f& Text2::Get_Scroll_Transform() {
+Transform2d& Text2::Get_Scroll_Transform() {
 	return scrollTransform;
 }
 
