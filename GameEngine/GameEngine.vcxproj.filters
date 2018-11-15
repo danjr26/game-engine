@@ -118,6 +118,15 @@
     <Filter Include="Header Files\physics\rigid body">
       <UniqueIdentifier>{d8fd5e3d-f81e-4f9b-9ba0-dbf27b67973f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\physics\force field">
+      <UniqueIdentifier>{ffa8e734-4c60-4d4d-84e0-3b7b470a628e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\physics\force field">
+      <UniqueIdentifier>{6898b4e9-85ee-4bc1-9cf3-fde50fd8e2ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\physics\rigid body">
+      <UniqueIdentifier>{a664d0b7-c1fb-4880-8722-a8fb9cd7f426}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="transform.h">
@@ -501,6 +510,12 @@
     <ClInclude Include="projection_overlap.h">
       <Filter>Header Files\collision</Filter>
     </ClInclude>
+    <ClInclude Include="force_field.h">
+      <Filter>Header Files\physics\force field</Filter>
+    </ClInclude>
+    <ClInclude Include="uniform_force_field.h">
+      <Filter>Header Files\physics\force field</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp">
@@ -764,9 +779,6 @@
     <ClCompile Include="deep_object.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
-    <ClCompile Include="rigid_body.cpp">
-      <Filter>Source Files\physics</Filter>
-    </ClCompile>
     <ClCompile Include="misc.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
@@ -801,7 +813,16 @@
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
     <ClCompile Include="physics_manager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="rigid_body.cpp">
+      <Filter>Source Files\physics\rigid body</Filter>
+    </ClCompile>
+    <ClCompile Include="uniform_force_field.cpp">
+      <Filter>Source Files\physics\force field</Filter>
+    </ClCompile>
+    <ClCompile Include="force_field.cpp">
+      <Filter>Source Files\physics\force field</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

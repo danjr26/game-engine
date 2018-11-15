@@ -16,6 +16,8 @@ class CollisionContext {
 public:
 	enum Filters {
 		rigid_body,
+		rigid_body_unstoppable,
+		force_field,
 		user_defined
 	};
 
@@ -62,18 +64,16 @@ public:
 
 private:
 	void Update_Evaluations();
-
 	void Prepare_Data_Containers();
-
-	void Partner_Filtered(std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations);
-
+	void Partner_Filtered(
+		std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations
+	);
 	void Partner_Filtered(
 		std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations1, 
 		std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations2
 	);
 
 	static void Partner_If_Collide(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, Partnering& in_partnering);
-
 	static void Partner_If_Collide_Async(
 		CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2,
 		CollisionMask<T, n>* in_maskToPartner1, CollisionMask<T, n>* in_maskToPartner2,

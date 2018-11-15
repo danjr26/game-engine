@@ -12,7 +12,7 @@ Circle<T>& CircleCollisionMask<T>::Get_Circle() {
 }
 
 template<class T>
-Circle<T> CircleCollisionMask<T>::Get_Transformed_Circle() {
+Circle<T> CircleCollisionMask<T>::Get_Transformed_Circle() const {
 	Circle<T> out = circle;
 	if (!ignoreTransform) out.Apply_Transform(transform);
 	return out;
@@ -26,6 +26,18 @@ void CircleCollisionMask<T>::Apply_Transform() {
 template<class T>
 CircleCollisionMask<T>* CircleCollisionMask<T>::Clone() const {
 	return new CircleCollisionMask<T>(*this);
+}
+
+template<class T>
+Vector<T, 2> CircleCollisionMask<T>::Get_Closest_Point(const Vector<T, 2>& in_point) const {
+	Circle<T> transformedCircle = Get_Transformed_Circle();
+	return (in_point - transformedCircle.Get_Center()).Normalized() * transformedCircle.Get_Radius();
+}
+
+template<class T>
+Vector<T, 2> CircleCollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+	Circle<T> transformedCircle = Get_Transformed_Circle();
+	return (in_point - transformedCircle.Get_Center()).Normalized();
 }
 
 template<class T>

@@ -12,7 +12,7 @@ Ray<T, 2>& Ray2CollisionMask<T>::Get_Ray() {
 }
 
 template<class T>
-Ray<T, 2> Ray2CollisionMask<T>::Get_Transformed_Ray() {
+Ray<T, 2> Ray2CollisionMask<T>::Get_Transformed_Ray() const {
 	Ray<T, 2> out = ray;
 	if (!ignoreTransform) out.Apply_Transform(transform);
 	return out;
@@ -26,6 +26,19 @@ void Ray2CollisionMask<T>::Apply_Transform() {
 template<class T>
 Ray2CollisionMask<T>* Ray2CollisionMask<T>::Clone() const {
 	return new Ray2CollisionMask<T>(*this);
+}
+
+template<class T>
+Vector<T, 2> Ray2CollisionMask<T>::Get_Closest_Point(const Vector<T, 2>& in_point) const {
+	throw NotImplementedException();
+	return Vector<T, 2>();
+}
+
+template<class T>
+Vector<T, 2> Ray2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+	auto transformedRay = Get_Transformed_Ray();
+	Vector<T, 2> normal = transformedRay.Get_Direction().Orthogonal();
+	return (normal.Dot(in_point) >= normal.Dot(transformedRay.Get_Point())) ? normal : -normal;
 }
 
 template<class T>

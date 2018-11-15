@@ -13,9 +13,11 @@ public:
 	Ray2CollisionMask(const Ray<T, 2>& in_ray, bool in_ignoreTransform = false);
 
 	Ray<T, 2>& Get_Ray();
-	Ray<T, 2> Get_Transformed_Ray();
+	Ray<T, 2> Get_Transformed_Ray() const;
 	void Apply_Transform() override;
 	Ray2CollisionMask* Clone() const override;
+	Vector<T, 2> Get_Closest_Point(const Vector<T, 2>& in_point) const override;
+	Vector<T, 2> Get_Closest_Normal(const Vector<T, 2>& in_point) const override;
 
 	Collision<T, 2> Accept_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, CollisionMask<T, 2>& in_other) override;
 	Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AxisAlignedHalfSpace2CollisionMask<T>& in_other) override;

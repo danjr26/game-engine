@@ -15,7 +15,7 @@ public:
 	uint Get_Dimension() const;
 	T Get_Value() const;
 	Vector<T, n> Get_Direction() const;
-	void Apply_Transform(Transform<T, n>& in_transform);
+	void Apply_Transform(const Transform<T, n>& in_transform);
 
 public:
 	static AxisAlignedLine<T, n> From_Dimension_Value(uint in_dimension, T in_value);

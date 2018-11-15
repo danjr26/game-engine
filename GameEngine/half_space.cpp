@@ -7,9 +7,9 @@ HalfSpace<T, n>::HalfSpace(const Vector<T, n>& in_point, const Vector<T, n>& in_
 	direction(in_direction.Normalized()) {}
 
 template<class T, uint n>
-void HalfSpace<T, n>::Apply_Transform(Transform<T, n>& in_transform) {
-	point = in_transform.Apply_To_Local_Point(point);
-	direction = in_transform.Apply_To_Local_Direction(direction);
+void HalfSpace<T, n>::Apply_Transform(const Transform<T, n>& in_transform) {
+	point = in_transform.Local_To_World_Point(point);
+	direction = in_transform.Local_To_World_Direction(direction);
 }
 
 template<class T, uint n>

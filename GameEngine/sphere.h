@@ -12,7 +12,7 @@ private:
 	Sphere(const Vector<T, n>& in_center, T in_radius);
 
 public:
-	void Apply_Transform(Transform<T, n>& transform);
+	void Apply_Transform(const Transform<T, n>& transform);
 
 	T Get_Radius() const;
 	void Set_Radius(T in_radius);

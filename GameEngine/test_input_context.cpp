@@ -16,11 +16,13 @@ bool TestInputContext::Process_Raw_Event(const RawInputEvent& in_event) {
 
 TestSpriteMover::TestSpriteMover(Sprite* in_sprite, CollisionMask2d& in_mask) :
 	sprite(in_sprite),
-	rigidBody(new RigidBody2(in_mask)) {
+	rigidBody(nullptr) {
 
+	rigidBody = new RigidBody2(in_mask);
 	sprite->Get_Transform().Set_Parent(&rigidBody->Get_Transform());
 	GE.Physics().Add(rigidBody);
-	rigidBody->Set_Linear_Velocity(Vector2d(30, 30));
+	rigidBody->Get_Transform().Set_Local_Position(Vector2d(Random<double>(0, 800), Random<double>(0, 600)));
+	rigidBody->Set_Linear_Velocity((Vector2d(400, 600) - rigidBody->Get_Transform().Get_World_Position()).Normalized() * 80.0);
 }
 
 void TestSpriteMover::Update(double in_dt) {

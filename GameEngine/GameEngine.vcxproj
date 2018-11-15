@@ -195,11 +195,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="font_face_raster_set.h" />
+    <ClInclude Include="force_field.h" />
     <ClInclude Include="framebuffer.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="frame_rate_manager.h" />
     <ClInclude Include="game_engine.h" />
+    <ClInclude Include="uniform_force_field.h" />
     <ClInclude Include="half_space.h" />
     <ClInclude Include="half_space2_collision_mask.h" />
     <ClInclude Include="physics_manager.h" />
@@ -361,6 +363,8 @@
     <ClCompile Include="font_face.cpp" />
     <ClCompile Include="font_face_raster_set.cpp" />
     <ClCompile Include="font_manager.cpp" />
+    <ClCompile Include="force_field.cpp" />
+    <ClCompile Include="uniform_force_field.cpp" />
     <ClCompile Include="framebuffer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>

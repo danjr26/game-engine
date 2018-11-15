@@ -72,6 +72,14 @@ public:
 		Min_Max({ in_val1, in_val2 }, low, high);
 	}
 
+	bool Contains_Inc(T in_val) {
+		return in_val >= low && in_val <= high;
+	}
+
+	bool Contains_Exc(T in_val) {
+		return in_val > low && in_val < high;
+	}
+
 	bool Intersection(const Range& in_other, Range& out_result) {
 		if (low >= in_other.Get_Low()) {
 			if (low <= in_other.Get_High()) {

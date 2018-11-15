@@ -29,8 +29,8 @@ inline Vector<T, n> AxisAlignedLine<T, n>::Get_Direction() const {
 }
 
 template<class T, uint n>
-inline void AxisAlignedLine<T, n>::Apply_Transform(Transform<T, n>& in_transform) {
-	for (Transform<T, n>* t = &in_transform; t != nullptr; t = t->Get_Parent()) {
+inline void AxisAlignedLine<T, n>::Apply_Transform(const Transform<T, n>& in_transform) {
+	for (Transform<T, n> const* t = &in_transform; t != nullptr; t = t->Get_Const_Parent()) {
 		value *= t->Get_Local_Scale()[dimension];
 		value += t->Get_Local_Position()[dimension];
 	}

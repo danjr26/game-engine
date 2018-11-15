@@ -12,7 +12,7 @@ AxisAlignedLine<T, 2>& AxisAlignedLine2CollisionMask<T>::Get_Line() {
 }
 
 template<class T>
-AxisAlignedLine<T, 2> AxisAlignedLine2CollisionMask<T>::Get_Transformed_Line() {
+AxisAlignedLine<T, 2> AxisAlignedLine2CollisionMask<T>::Get_Transformed_Line() const {
 	AxisAlignedLine<T, 2> out = line;
 	if (!ignoreTransform) out.Apply_Transform(transform);
 	return out;
@@ -26,6 +26,19 @@ void AxisAlignedLine2CollisionMask<T>::Apply_Transform() {
 template<class T>
 AxisAlignedLine2CollisionMask<T>* AxisAlignedLine2CollisionMask<T>::Clone() const {
 	return new AxisAlignedLine2CollisionMask<T>(*this);
+}
+
+template<class T>
+Vector<T, 2> AxisAlignedLine2CollisionMask<T>::Get_Closest_Point(const Vector<T, 2>& in_point) const {
+	Vector<T, 2> out = in_point;
+	auto transformedLine = Get_Transformed_Line();
+	out[transformedLine.Get_Dimension()] = transformedLine.Get_Value();
+	return out;
+}
+
+template<class T>
+Vector<T, 2> AxisAlignedLine2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+	return line.Get_Direction().Orthogonal();
 }
 
 template<class T>

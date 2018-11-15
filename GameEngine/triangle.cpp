@@ -7,9 +7,9 @@ inline Triangle<T, n>::Triangle(const Vector<T, n>* in_points) {
 }
 
 template<class T, uint n>
-inline void Triangle<T, n>::Apply_Transform(Transform<T, n>& in_transform) {
+inline void Triangle<T, n>::Apply_Transform(const Transform<T, n>& in_transform) {
 	for (uint i = 0; i < 3; i++) {
-		points[i] = in_transform.Apply_To_Local_Point(points[i]);
+		points[i] = in_transform.Local_To_World_Point(points[i]);
 	}
 }
 

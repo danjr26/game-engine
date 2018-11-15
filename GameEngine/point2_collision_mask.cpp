@@ -14,18 +14,29 @@ Vector<T, 2>& Point2CollisionMask<T>::Get_Point() {
 template<class T>
 Vector<T, 2> Point2CollisionMask<T>::Get_Transformed_Point() const {
 	Vector<T, 2> out = point;
-	if (!ignoreTransform) out = transform.Apply_To_Local_Point(out);
+	if (!ignoreTransform) out = transform.Local_To_World_Point(out);
 	return out;
 }
 
 template<class T>
 void Point2CollisionMask<T>::Apply_Transform() {
-	point = transform.Apply_To_Local_Point(point);
+	point = transform.Local_To_World_Point(point);
 }
 
 template<class T>
 Point2CollisionMask<T>* Point2CollisionMask<T>::Clone() const {
 	return new Point2CollisionMask<T>(*this);
+}
+
+template<class T>
+Vector<T, 2> Point2CollisionMask<T>::Get_Closest_Point(const Vector<T, 2>& in_point) const {
+	throw NotImplementedException();
+	return Vector<T, 2>();
+}
+
+template<class T>
+Vector<T, 2> Point2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+	return in_point - Get_Transformed_Point();
 }
 
 template<class T>

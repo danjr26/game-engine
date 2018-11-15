@@ -12,7 +12,7 @@ AxisAlignedHalfSpace<T, 2>& AxisAlignedHalfSpace2CollisionMask<T>::Get_Half_Spac
 }
 
 template<class T>
-AxisAlignedHalfSpace<T, 2> AxisAlignedHalfSpace2CollisionMask<T>::Get_Transformed_Half_Space() {
+AxisAlignedHalfSpace<T, 2> AxisAlignedHalfSpace2CollisionMask<T>::Get_Transformed_Half_Space() const {
 	if (ignoreTransform) {
 		return halfSpace;
 	}
@@ -31,6 +31,19 @@ void AxisAlignedHalfSpace2CollisionMask<T>::Apply_Transform() {
 template<class T>
 AxisAlignedHalfSpace2CollisionMask<T>* AxisAlignedHalfSpace2CollisionMask<T>::Clone() const {
 	return new AxisAlignedHalfSpace2CollisionMask(*this);
+}
+
+template<class T>
+Vector<T, 2> AxisAlignedHalfSpace2CollisionMask<T>::Get_Closest_Point(const Vector<T, 2>& in_point) const {
+	Vector<T, 2> out = in_point;
+	auto transformedHalfSpace = Get_Transformed_Half_Space();
+	out[transformedHalfSpace.Get_Dimension()] = transformedHalfSpace.Get_Value();
+	return out;
+}
+
+template<class T>
+Vector<T, 2> AxisAlignedHalfSpace2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+	return -halfSpace.Get_Direction();
 }
 
 template<class T>

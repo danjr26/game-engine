@@ -37,10 +37,10 @@ inline void Box<T, n>::Get_Corners(Vector<T, n>* out_corners) {
 }
 
 template<class T, uint n>
-inline void Box<T, n>::Apply_Transform(Transform<T, n>& transform) {
-	origin = transform.Apply_To_Local_Point(origin);
+inline void Box<T, n>::Apply_Transform(const Transform<T, n>& transform) {
+	origin = transform.Local_To_World_Point(origin);
 	for (uint i = 0; i < n; i++) {
-		axes[i] = transform.Apply_To_Local_Vector(axes[i]);
+		axes[i] = transform.Local_To_World_Vector(axes[i]);
 	}
 }
 

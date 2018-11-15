@@ -18,9 +18,9 @@ inline void AxisAlignedBox<T, n>::Get_Corners(Vector<T, n>* out_corners) {
 }
 
 template<class T, uint n>
-inline void AxisAlignedBox<T, n>::Apply_Transform(Transform<T, n>& transform) {
+inline void AxisAlignedBox<T, n>::Apply_Transform(const Transform<T, n>& transform) {
 	if (transform.Get_World_Rotation().Is_Identity()) {
-		for (Transform<T, n>* t = &transform; t != nullptr; t = t->Get_Parent()) {
+		for (Transform<T, n> const* t = &transform; t != nullptr; t = t->Get_Const_Parent()) {
 			minima = minima.Compwise(t->Get_Local_Scale());
 			minima += t->Get_Local_Position();
 
@@ -36,7 +36,7 @@ inline void AxisAlignedBox<T, n>::Apply_Transform(Transform<T, n>& transform) {
 	Get_Corners(corners);
 
 	for (uint i = 0; i < nCorners; i++) {
-		corners[i] = transform.Apply_To_Local_Point(corners[i]);
+		corners[i] = transform.Local_To_World_Point(corners[i]);
 	}
 
 	(*this) = AxisAlignedBox<T, n>::From_Bounded_Points(nCorners, corners);

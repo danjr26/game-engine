@@ -244,13 +244,13 @@ public:
 
 	public:
 		class Iterator {
-			friend class GroupingScheme;
+			friend class PairedGroupingScheme;
 		private:
-			GroupingScheme* parent;
+			PairedGroupingScheme* parent;
 			typename std::list<Grouping>::iterator it;
 			uint i, j;
 
-			Iterator(GroupingScheme* in_parent) :
+			Iterator(PairedGroupingScheme* in_parent) :
 				parent(in_parent),
 				it(in_parent->groupings.begin()),
 				i(0),
@@ -601,7 +601,7 @@ public:
 				recycling.splice(recycling.end(), out_groupingScheme.groupings, begin, end);
 
 				if (out_groupingScheme.groupings.size() == 0) {
-					currentDepth = in_evaluations[0]->depth;
+					currentDepth = in_evaluations[0]->depth + 1;
 					break;
 				}
 			}
@@ -643,7 +643,7 @@ public:
 			pairRecycling.resize(50);
 		}
 
-		for (uint currentDepth = 0; currentDepth < in_evaluations1[0]->depth; currentDepth++) {
+		for (uint currentDepth = 0; currentDepth <= in_evaluations1[0]->depth; currentDepth++) {
 			// for each dimension
 			for (uint i = 0; i < n; i++) {
 				uint nGroups = (uint) out_groupingScheme.groupings.size();
@@ -705,7 +705,7 @@ public:
 						}
 					}
 
-					if (leftGrouping.evals1.size() > 1 && leftGrouping.evals2.size() > 1) {
+					if (leftGrouping.evals1.size() > 0 && leftGrouping.evals2.size() > 0) {
 						for (uint k = 0; k < n; k++) {
 							for (uint m = 0; m < maxDepth; m++) {
 								leftGrouping.path[k][m] = parentGrouping.path[k][m];
@@ -716,7 +716,7 @@ public:
 						out_groupingScheme.groupings.splice(out_groupingScheme.groupings.end(), pairRecycling, pairRecycling.begin());
 					}
 
-					if (rightGrouping.evals1.size() > 1 && leftGrouping.evals2.size() > 1) {
+					if (rightGrouping.evals1.size() > 0 && rightGrouping.evals2.size() > 0) {
 						for (uint k = 0; k < n; k++) {
 							for (uint m = 0; m < maxDepth; m++) {
 								rightGrouping.path[k][m] = parentGrouping.path[k][m];
@@ -735,7 +735,7 @@ public:
 				pairRecycling.splice(pairRecycling.end(), out_groupingScheme.groupings, begin, end);
 
 				if (out_groupingScheme.groupings.size() == 0) {
-					currentDepth = in_evaluations1[0]->depth;
+					currentDepth = in_evaluations1[0]->depth + 1;
 					break;
 				}
 			}

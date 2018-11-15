@@ -7,13 +7,13 @@ inline Sphere<T, n>::Sphere(const Vector<T, n>& in_center, T in_radius) :
 	radius(in_radius) {}
 
 template<class T, uint n>
-inline void Sphere<T, n>::Apply_Transform(Transform<T, n>& transform) {
+inline void Sphere<T, n>::Apply_Transform(const Transform<T, n>& transform) {
 	T scale = 1.0;
-	for (Transform<T, n>* t = &transform; t != nullptr; t = t->Get_Parent()) {
+	for (Transform<T, n>const* t = &transform; t != nullptr; t = t->Get_Const_Parent()) {
 		scale *= t->Get_Local_Scale().Max_Component();
 	}
 	(*this) = Sphere<T, n>::From_Point_Radius(
-		transform.Apply_To_Local_Point(center),
+		transform.Local_To_World_Point(center),
 		radius * scale
 	);
 }

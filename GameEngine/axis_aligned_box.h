@@ -14,7 +14,7 @@ private:
 	AxisAlignedBox(const Vector<T, n>& in_minima, const Vector<T, n>& in_maxima);
 
 public:
-	void Apply_Transform(Transform<T, n>& transform);
+	void Apply_Transform(const Transform<T, n>& transform);
 
 	void Get_Corners(Vector<T, n>* out_corners);
 	Vector<T, n> Get_Center() const;

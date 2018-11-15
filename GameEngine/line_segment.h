@@ -12,7 +12,7 @@ private:
 	LineSegment(Vector<T, n>& in_point1, Vector<T, n>& in_point2);
 
 public:
-	void Apply_Transform(Transform<T, n>& in_transform);
+	void Apply_Transform(const Transform<T, n>& in_transform);
 
 	Vector<T, n> Get_Point1() const;
 	Vector<T, n> Get_Point2() const;

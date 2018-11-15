@@ -62,6 +62,8 @@ public:
 
 	virtual void Apply_Transform() = 0;
 	virtual CollisionMask<T, 2>* Clone() const = 0;
+	virtual Vector<T, 2> Get_Closest_Point(const Vector<T, 2>& in_point) const = 0;
+	virtual Vector<T, 2> Get_Closest_Normal(const Vector<T, 2>& in_point) const = 0;
 
 	virtual Collision<T, 2> Accept_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, CollisionMask<T, 2>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AxisAlignedHalfSpace2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }

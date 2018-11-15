@@ -19,7 +19,7 @@ private:
 
 public:
 	Transform();
-	template<class T2>
+	template<class T2, std::enable_if_t<!std::is_same_v<T, T2>>>
 	Transform(const Transform<T2, n>& in_other) : 
 		parent(nullptr),
 		translation(in_other.translation),
@@ -34,8 +34,8 @@ public:
 	bool Is_Local_Identity() const;
 	bool Is_World_Identity() const;
 
-	Rotation<T, n> Get_Local_Rotation();
-	Rotation<T, n> Get_World_Rotation();
+	Rotation<T, n> Get_Local_Rotation() const;
+	Rotation<T, n> Get_World_Rotation() const;
 	void Set_Local_Rotation(const Rotation<T, n>& in_rotation);
 	void Set_World_Rotation(const Rotation<T, n>& in_rotation);
 	void Rotate_Local(const Rotation<T, n>& in_rotation);
@@ -67,7 +67,6 @@ public:
 	Matrix<T, 4, 4> Get_Local_Inverse_Matrix() const;
 	Matrix<T, 4, 4> Get_World_Inverse_Matrix() const;
 
-private:
 	Vector<T, n> World_To_Local_Point(const Vector<T, n>& in_point) const;
 	Vector<T, n> Local_To_World_Point(const Vector<T, n>& in_point) const;
 	Vector<T, n> World_To_Local_Direction(const Vector<T, n>& in_direction) const;

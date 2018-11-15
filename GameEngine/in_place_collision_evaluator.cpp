@@ -2033,7 +2033,10 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfS
 			);
 		}
 	}
-	else if (Ceq_Switch(halfSpace.Get_Value(), range.Get_Low(), halfSpace.Is_Positive())) {
+	else if (
+		Ceq_Switch(point1[dimension], halfSpace.Get_Value(), halfSpace.Is_Positive()) ||
+		Ceq_Switch(point2[dimension], halfSpace.Get_Value(), halfSpace.Is_Positive())) {
+
 		collision.didCollide = true;
 		if (returnPoint) {
 			collision.collisionPoint = lineSegment.Get_Center();
@@ -2057,7 +2060,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfS
 	T pointValue = point[halfSpace.Get_Dimension()];
 	T halfSpaceValue = halfSpace.Get_Value();
 
-	if (Ceq_Switch(halfSpaceValue, pointValue, halfSpace.Is_Positive())) {
+	if (Ceq_Switch(pointValue, halfSpaceValue, halfSpace.Is_Positive())) {
 		collision.didCollide = true;
 		if (returnPoint) {
 			collision.collisionPoint = point;
@@ -2170,13 +2173,13 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfS
 
 	if (halfSpace1.Get_Dimension() == halfSpace2.Get_Dimension()) {
 		uint dimension = halfSpace1.Get_Dimension();
-		if (Ceq_Switch(halfSpace1.Get_Value(), halfSpace2.Get_Value(), halfSpace1.Is_Positive())) {
+		if (Ceq_Switch(halfSpace2.Get_Value(), halfSpace1.Get_Value(), halfSpace1.Is_Positive())) {
 			collision.didCollide = true;
 			if (returnPoint) {
 				collision.collisionPoint[dimension] = halfSpace2.Get_Value();
 			}
 		}
-		else if (Ceq_Switch(halfSpace2.Get_Value(), halfSpace1.Get_Value(), halfSpace2.Is_Positive())) {
+		else if (Ceq_Switch(halfSpace1.Get_Value(), halfSpace2.Get_Value(), halfSpace2.Is_Positive())) {
 			collision.didCollide = true;
 			if (returnPoint) {
 				collision.collisionPoint[dimension] = halfSpace1.Get_Value();
@@ -2207,7 +2210,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfS
 
 	if (halfSpace.Get_Dimension() == line.Get_Dimension()) {
 		uint dimension = halfSpace.Get_Dimension();
-		if (Ceq_Switch(halfSpace.Get_Value(), line.Get_Value(), halfSpace.Is_Positive())) {
+		if (Ceq_Switch(line.Get_Value(), halfSpace.Get_Value(), halfSpace.Is_Positive())) {
 			collision.didCollide = true;
 			if (returnPoint) {
 				collision.collisionPoint[dimension] = line.Get_Value();
@@ -2265,7 +2268,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfS
 
 	collision = Evaluate_Typed(aaHalfSpaceMask, lineMask);
 
-	if (!collision.didCollide && Ceq_Switch(aaHalfSpace.Get_Value(), halfSpace.Get_Point()[aaHalfSpace.Get_Dimension()], aaHalfSpace.Is_Positive())) {
+	if (!collision.didCollide && Ceq_Switch(halfSpace.Get_Point()[aaHalfSpace.Get_Dimension()], aaHalfSpace.Get_Value(), aaHalfSpace.Is_Positive())) {
 		collision.didCollide = true;
 		if (returnPoint) {
 			collision.collisionPoint = halfSpace.Get_Point();
@@ -2295,7 +2298,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfS
 			collision.collisionPoint += line.Get_Direction() * (halfSpace.Get_Value() - line.Get_Point()[dimension]) / line.Get_Direction()[dimension];
 		}
 	}
-	else if (Ceq_Switch(halfSpace.Get_Value(), line.Get_Point()[dimension], halfSpace.Is_Positive())) {
+	else if (Ceq_Switch(line.Get_Point()[dimension], halfSpace.Get_Value(), halfSpace.Is_Positive())) {
 		collision.didCollide = true;
 		if (returnPoint) {
 			collision.collisionPoint = line.Get_Point();

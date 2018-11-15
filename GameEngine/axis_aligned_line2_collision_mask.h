@@ -13,9 +13,11 @@ public:
 	AxisAlignedLine2CollisionMask(const AxisAlignedLine<T, 2>& in_line, bool in_ignoreTransform = false);
 
 	AxisAlignedLine<T, 2>& Get_Line();
-	AxisAlignedLine<T, 2> Get_Transformed_Line();
+	AxisAlignedLine<T, 2> Get_Transformed_Line() const;
 	void Apply_Transform() override;
 	AxisAlignedLine2CollisionMask<T>* Clone() const override;
+	Vector<T, 2> Get_Closest_Point(const Vector<T, 2>& in_point) const override;
+	Vector<T, 2> Get_Closest_Normal(const Vector<T, 2>& in_point) const override;
 
 	Collision<T, 2> Accept_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, CollisionMask<T, 2>& in_other) override;
 	Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AxisAlignedHalfSpace2CollisionMask<T>& in_other) override;

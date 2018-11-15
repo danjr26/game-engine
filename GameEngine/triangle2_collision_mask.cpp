@@ -12,7 +12,7 @@ Triangle<T, 2>& Triangle2CollisionMask<T>::Get_Triangle() {
 }
 
 template<class T>
-Triangle<T, 2> Triangle2CollisionMask<T>::Get_Transformed_Triangle() {
+Triangle<T, 2> Triangle2CollisionMask<T>::Get_Transformed_Triangle() const {
 	if (ignoreTransform) {
 		return triangle;
 	}
@@ -31,6 +31,37 @@ void Triangle2CollisionMask<T>::Apply_Transform() {
 template<class T>
 Triangle2CollisionMask<T>* Triangle2CollisionMask<T>::Clone() const {
 	return new Triangle2CollisionMask<T>(*this);
+}
+
+template<class T>
+Vector<T, 2> Triangle2CollisionMask<T>::Get_Closest_Point(const Vector<T, 2>& in_point) const {
+	throw NotImplementedException();
+	return Vector<T, 2>();
+}
+
+template<class T>
+Vector<T, 2> Triangle2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+	auto transformedTriangle = Get_Transformed_Triangle();
+
+	Vector<T, 2> corners[3];
+	Vector<T, 2> normals[3];
+	transformedTriangle.Get_Normals(normals);
+	transformedTriangle.Get_Points(corners);
+	Vector<T, 2> cornerNormals[3];
+	Vector<T, 2> cornerTangents[3];
+	bool slice[3];
+	for (uint i = 0; i < 3; i++) {
+		cornerNormals[i] = (normals[i] + normals[(i + 2) % 3]) / 2;
+		cornerTangents[i] = cornerNormals[i].Orthogonal();
+		slice[i] = cornerTangents[i].Dot(in_point) >= cornerTangents[i].Dot(corners[i]);
+	}
+	for (uint i = 0; i < 3; i++) {
+		if (slice[i] && !slice[(i + 1) % 3]) {
+			return normals[i];
+		}
+	}
+	throw ProcessFailureException();
+	return Vector<T, 2>();
 }
 
 template<class T>

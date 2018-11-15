@@ -28,11 +28,13 @@ public:
 	double Get_Angular_Mass() const;
 	double Get_Linear_Kinetic_Energy() const;
 	double Get_Angular_Kinetic_Energy() const;
+	bool Is_Unstoppable() const;
 
 	void Set_Linear_Velocity(const Vector<double, n>& in_velocity);
 	void Set_Angular_Velocity(const URotation<double, n>& in_velocity);
 	void Set_Linear_Mass(double in_mass);
 	void Set_Angular_Mass(double in_mass);
+	void Set_Unstoppable(bool in_value);
 
 	void Apply_Relative_Impulse(const Vector<double, n>& in_impulse, const Vector<double, n>& in_position);
 	void Apply_Local_Impulse(const Vector<double, n>& in_impulse, const Vector<double, n>& in_position);

@@ -40,15 +40,17 @@ void Test_Render(Window* window) {
 	GE.Render().Add(&circleRenderer1);
 	CircleCollisionMask circleCollider1(circle1);
 
-	Circled circle2 = Circled::From_Point_Radius(Vector2d(450.0, 200.0), 50.0);
+	Circled circle2 = Circled::From_Point_Radius(Vector2d(0, 0), 50.0);
 	CircleRenderer circleRenderer2(circle2, ColorRGBAf(1, 1, 1, 0), 2.0, ColorRGBAf(1, 1, 1, 1.0));
 	GE.Render().Add(&circleRenderer2);
 	CircleCollisionMask circleCollider2(circle2);
 
+	CircleRenderer circleRenderer3(circle2, ColorRGBAf(1, 1, 1, 0), 2.0, ColorRGBAf(1, 1, 1, 1.0));
+	GE.Render().Add(&circleRenderer3);
+
+
 	InPlaceCollisionEvaluator2d collEval = InPlaceCollisionEvaluator2d();
 	Collision coll = collEval.Evaluate(circleCollider1, circleCollider2);
-
-	///////////////////////////
 	
 	KeyboardTextInputContext textInput;
 	GE.Input().Add_After(nullptr, &textInput);
@@ -70,8 +72,23 @@ void Test_Render(Window* window) {
 	collisionContext.Add(&circleCollider2);
 	//collisionContext.Set_Partner_Test_Activation(std::pair<ubyte, ubyte>(CollisionContext2d::user_defined, CollisionContext2d::user_defined), true);
 
-	TestSpriteMover sm = TestSpriteMover(&circleRenderer1, circleCollider1);
-	GE.Per_Frame_Update().Add(&sm);
+	TestSpriteMover sm1 = TestSpriteMover(&circleRenderer1, circleCollider1);
+	GE.Per_Frame_Update().Add(&sm1);
+
+	TestSpriteMover sm2 = TestSpriteMover(&circleRenderer2, circleCollider2);
+	GE.Per_Frame_Update().Add(&sm2);
+
+	TestSpriteMover sm3 = TestSpriteMover(&circleRenderer3, circleCollider2);
+	GE.Per_Frame_Update().Add(&sm3);
+
+	AxisAlignedHalfSpace2d aaHalfSpace = AxisAlignedHalfSpace2d::From_Dimension_Value(1, 0, true);
+	AxisAlignedHalfSpace2CollisionMask aaHalfSpaceMask(aaHalfSpace);
+	aaHalfSpaceMask.Get_Transform().Translate_World(Vector2d(0, 600));
+	RigidBody2 aaHalfSpaceBody(aaHalfSpaceMask);
+	aaHalfSpaceBody.Set_Unstoppable(true);
+	aaHalfSpaceBody.Set_Angular_Mass(0.0);
+	aaHalfSpaceBody.Set_Linear_Mass(0.0);
+	GE.Physics().Add(&aaHalfSpaceBody);
 
 	QuadTreed quadTree(AxisAlignedRectangled::From_Extrema(Vector2d(0, 0), Vector2d(800, 600)));
 

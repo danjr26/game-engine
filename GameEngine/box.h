@@ -20,7 +20,7 @@ public:
 	Vector<T, n> Get_Center();
 	void Get_Axes(Vector<T, n>* out_axes);
 	void Get_Corners(Vector<T, n>* out_corners);
-	void Apply_Transform(Transform<T, n>& transform);
+	void Apply_Transform(const Transform<T, n>& transform);
 
 	template<typename = typename std::enable_if_t<n == 2>>
 	T Get_Area() const;

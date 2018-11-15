@@ -1,5 +1,6 @@
 #include "transform.h"
 #include <vector>
+#include "log.h"
 
 template<class T, uint n>
 Transform<T, n>::Transform() :
@@ -40,12 +41,12 @@ bool Transform<T, n>::Is_World_Identity() const {
 }
 
 template<class T, uint n>
-Rotation<T, n> Transform<T, n>::Get_Local_Rotation() {
+Rotation<T, n> Transform<T, n>::Get_Local_Rotation() const {
 	return rotation;
 }
 
 template<class T, uint n>
-Rotation<T, n> Transform<T, n>::Get_World_Rotation() {
+Rotation<T, n> Transform<T, n>::Get_World_Rotation() const {
 	if (parent == nullptr) return rotation;
 	else return parent->Local_To_World_Rotation(rotation);
 }

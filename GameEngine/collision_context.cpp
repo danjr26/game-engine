@@ -44,7 +44,7 @@ void CollisionContext<T, n>::Update() {
 		ubyte filter1 = it->first;
 		ubyte filter2 = it->second;
 
-		if (it->first == it->second) {
+		if (filter1 == filter2) {
 			for (auto jt = evaluations.begin(); jt < evaluations.end(); jt++) {
 				if (jt->Get_Parent_Mask()->Has_Filter(filter1)) {
 					filteredEvaluations1.push_back(&(*jt));
@@ -197,7 +197,7 @@ void CollisionContext<T, n>::Partner_Filtered(std::vector<typename BinaryCollisi
 
 template<class T, uint n>
 void CollisionContext<T, n>::Partner_Filtered(std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations1, std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations2) {
-	if (in_filteredEvaluations1.size() > 1 && in_filteredEvaluations2.size() > 1) {
+	if (in_filteredEvaluations1.size() > 0 && in_filteredEvaluations2.size() > 0) {
 		pairedGroupingSchemes.push_back(BinaryCollisionTree<T, n>::PairedGroupingScheme());
 
 		tree.Group(
@@ -207,7 +207,7 @@ void CollisionContext<T, n>::Partner_Filtered(std::vector<typename BinaryCollisi
 		);
 
 		uint batchSize = 10;
-		for (auto kt = groupingSchemes.back().Get_Iterator(); !kt.Is_Done(); kt += batchSize) {
+		for (auto kt = pairedGroupingSchemes.back().Get_Iterator(); !kt.Is_Done(); kt += batchSize) {
 			auto todo = [this, kt, batchSize]() {
 				auto itCopy = kt;
 				for (uint i = 0; i < batchSize && !itCopy.Is_Done(); i++) {

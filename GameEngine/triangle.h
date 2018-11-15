@@ -11,7 +11,7 @@ private:
 	Triangle(const Vector<T, n>* in_points);
 
 public:
-	void Apply_Transform(Transform<T, n>& in_transform);
+	void Apply_Transform(const Transform<T, n>& in_transform);
 
 	void Get_Points(Vector<T, n>* out_points);
 	void Get_Point_Offsets(Vector<T, n>* out_offsets);

@@ -1,4 +1,5 @@
 #include "line_segment2_collision_mask.h"
+#include "exceptions.h"
 
 template<class T>
 LineSegment2CollisionMask<T>::LineSegment2CollisionMask(const LineSegment<T, 2>& in_lineSegment, bool in_ignoreTransform) :
@@ -12,9 +13,9 @@ LineSegment<T, 2> & LineSegment2CollisionMask<T>::Get_Line_Segment() {
 }
 
 template<class T>
-LineSegment<T, 2> LineSegment2CollisionMask<T>::Get_Transformed_Line_Segment() {
+LineSegment<T, 2> LineSegment2CollisionMask<T>::Get_Transformed_Line_Segment() const {
 	LineSegment<T, 2> out = lineSegment;
-	if (!ignoreTransform) lineSegment.Apply_Transform(transform);
+	if (!ignoreTransform) out.Apply_Transform(transform);
 	return out;
 }
 
@@ -26,6 +27,19 @@ void LineSegment2CollisionMask<T>::Apply_Transform() {
 template<class T>
 LineSegment2CollisionMask<T>* LineSegment2CollisionMask<T>::Clone() const {
 	return new LineSegment2CollisionMask<T>(*this);
+}
+
+template<class T>
+Vector<T, 2> LineSegment2CollisionMask<T>::Get_Closest_Point(const Vector<T, 2>& in_point) const {
+	throw NotImplementedException();
+	return Vector<T, 2>();
+}
+
+template<class T>
+Vector<T, 2> LineSegment2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+	auto transformedLineSegment = Get_Transformed_Line_Segment();
+	Vector<T, 2> normal = transformedLineSegment.Get_Direction().Orthogonal();
+	return (normal.Dot(in_point) >= normal.Dot(transformedLineSegment.Get_Point1())) ? normal : -normal;
 }
 
 template<class T>

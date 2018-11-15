@@ -12,7 +12,7 @@ private:
 	HalfSpace(const Vector<T, n>& in_point, const Vector<T, n>& in_direction);
 
 public:
-	void Apply_Transform(Transform<T, n>& in_transform);
+	void Apply_Transform(const Transform<T, n>& in_transform);
 	Vector<T, n> Get_Point() const;
 	void Set_Point(const Vector<T, n>& in_point);
 	Vector<T, n> Get_Direction() const;

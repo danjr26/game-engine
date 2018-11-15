@@ -17,7 +17,7 @@ public:
 	T Get_Value() const;
 	bool Is_Positive() const;
 	Vector<T, n> Get_Direction() const;
-	void Apply_Transform(Transform<T, n>& in_transform);
+	void Apply_Transform(const Transform<T, n>& in_transform);
 
 public:
 	static AxisAlignedHalfSpace<T, n> From_Dimension_Value(uint in_dimension, T in_value, bool in_isPositive);
