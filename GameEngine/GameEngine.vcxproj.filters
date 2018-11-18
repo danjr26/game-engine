@@ -516,6 +516,9 @@
     <ClInclude Include="uniform_force_field.h">
       <Filter>Header Files\physics\force field</Filter>
     </ClInclude>
+    <ClInclude Include="located_vector.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp">
@@ -823,6 +826,9 @@
     </ClCompile>
     <ClCompile Include="force_field.cpp">
       <Filter>Source Files\physics\force field</Filter>
+    </ClCompile>
+    <ClCompile Include="binary_collision_tree.cpp">
+      <Filter>Source Files\collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

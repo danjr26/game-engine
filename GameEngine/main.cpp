@@ -22,6 +22,7 @@
 #include "binary_collision_tree.h"
 #include "keyboard_text_input_context.h"
 #include "editable_text.h"
+#include "uniform_force_field.h"
 #include <exception>
 #include <set>
 
@@ -72,11 +73,11 @@ void Test_Render(Window* window) {
 	collisionContext.Add(&circleCollider2);
 	//collisionContext.Set_Partner_Test_Activation(std::pair<ubyte, ubyte>(CollisionContext2d::user_defined, CollisionContext2d::user_defined), true);
 
-	TestSpriteMover sm1 = TestSpriteMover(&circleRenderer1, circleCollider1);
-	GE.Per_Frame_Update().Add(&sm1);
+	//TestSpriteMover sm1 = TestSpriteMover(&circleRenderer1, circleCollider1);
+	//GE.Per_Frame_Update().Add(&sm1);
 
-	TestSpriteMover sm2 = TestSpriteMover(&circleRenderer2, circleCollider2);
-	GE.Per_Frame_Update().Add(&sm2);
+	//TestSpriteMover sm2 = TestSpriteMover(&circleRenderer2, circleCollider2);
+	//GE.Per_Frame_Update().Add(&sm2);
 
 	TestSpriteMover sm3 = TestSpriteMover(&circleRenderer3, circleCollider2);
 	GE.Per_Frame_Update().Add(&sm3);
@@ -89,6 +90,9 @@ void Test_Render(Window* window) {
 	aaHalfSpaceBody.Set_Angular_Mass(0.0);
 	aaHalfSpaceBody.Set_Linear_Mass(0.0);
 	GE.Physics().Add(&aaHalfSpaceBody);
+
+	UniformForceField2 gravity(Vector2d(0, 500));
+	GE.Physics().Add(&gravity);
 
 	QuadTreed quadTree(AxisAlignedRectangled::From_Extrema(Vector2d(0, 0), Vector2d(800, 600)));
 

@@ -56,15 +56,19 @@ public:
 	void Add(CollisionMask<T, n>* in_mask);
 	void Remove(CollisionMask<T, n>* in_mask);
 	void Update();
-	//void Update(CollisionMask<T, n>* in_masks, uint in_nMasks);
+	void Update(CollisionMask<T, n>** in_masks, uint in_nMasks);
 	uint Get_Total_Partnerings() const;
-	std::pair<CollisionPartner*, CollisionPartner*> Get_Partners(CollisionMask<T, n>* in_mask);
+	void Get_Partners(CollisionMask<T, n>* in_mask, std::vector<CollisionPartner*>& out_partners);
 	void Set_Partner_Test_Activation(std::pair<ubyte, ubyte> in_test, bool in_value);
 	bool Get_Partner_Test_Activation(std::pair<ubyte, ubyte> in_test);
 
 private:
 	void Update_Evaluations();
+	void Update_Evaluations(CollisionMask<T, n>** in_masks, uint in_nMasks);
+
 	void Prepare_Data_Containers();
+	void Prepare_Data_Containers(CollisionMask<T, n>** in_masks, uint in_nMasks);
+
 	void Partner_Filtered(
 		std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations
 	);

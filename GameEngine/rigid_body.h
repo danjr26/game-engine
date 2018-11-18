@@ -4,6 +4,7 @@
 #include "collision_mask.h"
 #include "vector.h"
 #include "unclamped_rotation.h"
+#include "located_vector.h"
 
 template<uint n>
 class RigidBody : public TransformableObject<double, n> {
@@ -36,9 +37,9 @@ public:
 	void Set_Angular_Mass(double in_mass);
 	void Set_Unstoppable(bool in_value);
 
-	void Apply_Relative_Impulse(const Vector<double, n>& in_impulse, const Vector<double, n>& in_position);
-	void Apply_Local_Impulse(const Vector<double, n>& in_impulse, const Vector<double, n>& in_position);
-	void Apply_World_Impulse(const Vector<double, n>& in_impulse, const Vector<double, n>& in_position);
+	void Apply_Relative_Impulse(const LocatedVector<double, n>& in_impulse);
+	void Apply_Local_Impulse(const LocatedVector<double, n>& in_impulse);
+	void Apply_World_Impulse(const LocatedVector<double, n>& in_impulse);
 
 	void Update(double in_dt);
 };

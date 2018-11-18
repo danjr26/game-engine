@@ -52,7 +52,7 @@ void ShaderProgram::Load_XML_List(std::string in_filename) {
 	}
 
 	file.seekg(0, file.end);
-	uint length = file.tellg();
+	uint length = (uint)file.tellg();
 	file.seekg(0, file.beg);
 
 	char* buffer = new char[length + 1];

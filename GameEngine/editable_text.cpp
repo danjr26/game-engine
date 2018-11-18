@@ -111,7 +111,7 @@ void EditableText::Update_Cursor_Sprite() {
 	Vector2f position = text.Get_Local_Char_Position(cursorPos);
 
 	if (position.X() > 0.0) {
-		position[0] -= cursorSprite.Get_Transform().Get_Local_Scale().X() / 2.0;
+		position[0] -= (float)(cursorSprite.Get_Transform().Get_Local_Scale().X() / 2.0);
 	}
 
 	cursorSprite.Get_Transform().Set_Local_Position(position);

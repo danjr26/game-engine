@@ -7,7 +7,7 @@ RigidBody<n>::RigidBody(const CollisionMask<double, n>& in_collisionMask) :
 	linearVelocity(),
 	angularVelocity(),
 	linearMass(1.0),
-	angularMass(0.4) {
+	angularMass(5000.0) {
 
 	collisionMask->Get_Transform().Set_Parent(&Get_Transform());
 	collisionMask->Add_Filter(CollisionContext2d::rigid_body);
@@ -108,31 +108,31 @@ void RigidBody<n>::Set_Unstoppable(bool in_value) {
 	}
 }
 
-void RigidBody<2>::Apply_Relative_Impulse(const Vector2d& in_impulse, const Vector2d& in_position) {
-	linearVelocity += in_impulse / linearMass;
-	angularVelocity += URotation2d(in_impulse.Magnitude() * sin(in_impulse.Theta(in_position)) / angularMass);
+void RigidBody<2>::Apply_Relative_Impulse(const LocatedVector<double, 2>& in_impulse) {
+	linearVelocity += in_impulse.vector / linearMass;
+	angularVelocity += URotation2d(in_impulse.vector.Magnitude() * sin(in_impulse.vector.Theta(in_impulse.position)) / angularMass);
 }
 
 template<uint n>
-void RigidBody<n>::Apply_Local_Impulse(const Vector<double, n>& in_impulse, const Vector<double, n>& in_position) {
-	Apply_Relative_Impulse(
-		transform.Get_Local_Rotation().Get_Inverse().Apply_To(in_impulse), 
-		transform.Get_Local_Rotation().Get_Inverse().Apply_To(in_position - transform.Get_Local_Position())
-	);
+void RigidBody<n>::Apply_Local_Impulse(const LocatedVector<double, n>& in_impulse) {
+	Apply_Relative_Impulse({
+		transform.Get_Local_Rotation().Get_Inverse().Apply_To(in_impulse.position - transform.Get_Local_Position()),
+		transform.Get_Local_Rotation().Get_Inverse().Apply_To(in_impulse.vector)
+	});
 }
 
 template<uint n>
-void RigidBody<n>::Apply_World_Impulse(const Vector<double, n>& in_impulse, const Vector<double, n>& in_position) {
-	Apply_Relative_Impulse(
-		transform.Get_World_Rotation().Get_Inverse().Apply_To(in_impulse),
-		transform.Get_World_Rotation().Get_Inverse().Apply_To(in_position - transform.Get_World_Position())
-	);
+void RigidBody<n>::Apply_World_Impulse(const LocatedVector<double, n>& in_impulse) {
+	Apply_Relative_Impulse({
+		transform.Get_World_Rotation().Get_Inverse().Apply_To(in_impulse.position - transform.Get_World_Position()),
+		transform.Get_World_Rotation().Get_Inverse().Apply_To(in_impulse.vector)
+	});
 }
 
 template<uint n>
 void RigidBody<n>::Update(double in_dt) {
-	transform.Translate_Local(linearVelocity * in_dt);
-	transform.Rotate_Local(angularVelocity * in_dt);
+	transform.Translate_World(linearVelocity * in_dt);
+	transform.Rotate_World(angularVelocity * in_dt);
 }
 
 template class RigidBody<2>;

@@ -91,9 +91,12 @@ GameEngine& GameEngine::Instance() {
 }
 
 void GameEngine::Next_Frame() {
+	static int count = 0;
+	count++;
 	double dt = frameRateManager.Get_Last_Frame_Time();
 	inputManager.Update();
 	collisionManager.Update();
+	//if(count % 15 == 0) physicsManager.Update(dt * 15);
 	physicsManager.Update(dt);
 	perFrameUpdateManager.Update(dt);
 	renderManager.Render_Frame();

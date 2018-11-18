@@ -11,5 +11,5 @@ float MouseRangeIdentifier::operator()(const RawInputEvent& in_event, const RawI
 	Window* window = GE.Windows().Get(in_event.windowHandle);
 	Vector2i windowDimensions = window->Get_Dimensions();
 	return (in_event.type == RawInputEvent::Type::mouse_move) ? 
-		Lerp<float>(lowValue, highValue, Inv_Lerp<float>(0.0f, windowDimensions.Get((uint)axis), in_event.mouse.position.Get((uint)axis))) : NAN;
+		Lerp<float>(lowValue, highValue, Inv_Lerp<float>(0.0f, (float)windowDimensions.Get((uint)axis), (float)in_event.mouse.position.Get((uint)axis))) : NAN;
 }
