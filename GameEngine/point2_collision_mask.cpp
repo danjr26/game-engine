@@ -35,8 +35,18 @@ Vector<T, 2> Point2CollisionMask<T>::Get_Closest_Point(const Vector<T, 2>& in_po
 }
 
 template<class T>
-Vector<T, 2> Point2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
-	return in_point - Get_Transformed_Point();
+Vector<T, 2> Point2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point, PointNormalPolicy in_policy) const {
+	switch (in_policy) {
+	case PointNormalPolicy::zero:
+		return Vector<T, 2>();
+		break;
+	case PointNormalPolicy::nearest_edge:
+	case PointNormalPolicy::towards_point:
+		return in_point - Get_Transformed_Point();
+		break;
+	default:
+		throw InvalidArgumentException();
+	}
 }
 
 template<class T>

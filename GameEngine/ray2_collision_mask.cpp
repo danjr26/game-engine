@@ -35,10 +35,25 @@ Vector<T, 2> Ray2CollisionMask<T>::Get_Closest_Point(const Vector<T, 2>& in_poin
 }
 
 template<class T>
-Vector<T, 2> Ray2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+Vector<T, 2> Ray2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point, PointNormalPolicy in_policy) const {
 	auto transformedRay = Get_Transformed_Ray();
 	Vector<T, 2> normal = transformedRay.Get_Direction().Orthogonal();
-	return (normal.Dot(in_point) >= normal.Dot(transformedRay.Get_Point())) ? normal : -normal;
+	if ((in_point - transformedRay.Get_Point()).Dot(transformedRay.Get_Direction()) >= 0) {
+		(normal.Dot(in_point) >= normal.Dot(transformedRay.Get_Point())) ? normal : -normal;
+	}
+	switch (in_policy) {
+	case PointNormalPolicy::zero:
+		return Vector<T, 2>();
+		break;
+	case PointNormalPolicy::nearest_edge:
+		return (normal.Dot(in_point) >= normal.Dot(transformedRay.Get_Point())) ? normal : -normal;
+		break;
+	case PointNormalPolicy::towards_point:
+		return (in_point - transformedRay.Get_Point()).Normalized();
+		break;
+	default:
+		throw InvalidArgumentException();
+	}
 }
 
 template<class T>

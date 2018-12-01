@@ -43,7 +43,7 @@ inline T Mean(T a, T b) {
 }
 
 template<class T>
-bool Is_Between_Exc(T a, T b1, T b2) {
+inline bool Is_Between_Exc(T a, T b1, T b2) {
 	if (b1 < b2) {
 		return a > b1 && a < b2;
 	}
@@ -88,6 +88,22 @@ inline T Min(std::initializer_list<T> vList) {
 }
 
 template<class T>
+inline uint Min_Index(std::initializer_list<T> vList) {
+	if (vList.size() == 0) return 0;
+	uint index = 0;
+	T value = *(vList.begin());
+	uint i = 1;
+	for (auto it = vList.begin() + 1; it < vList.end(); it++) {
+		if (*it < value) {
+			value = *it;
+			index = i;
+		}
+		i++;
+	}
+	return i;
+}
+
+template<class T>
 inline T Min(T* vList, uint n) {
 	if (n == 0) return 0;
 	T out = vList[0];
@@ -95,6 +111,20 @@ inline T Min(T* vList, uint n) {
 		if (vList[i] < out) out = vList[i];
 	}
 	return out;
+}
+
+template<class T>
+inline uint Min_Index(T* vList, uint n) {
+	if (n == 0) return 0;
+	uint index = 0;
+	T value = vList[0];
+	for (uint i = 1; i < n; i++) {
+		if (vList[i] < value) {
+			value = vList[i];
+			index = i;
+		}
+	}
+	return index;
 }
 
 template<class T>
@@ -218,6 +248,8 @@ inline T Sum(C& values, uint n) {
 	for (uint i = 0; i < n; i++) s += values[i];
 	return s;
 }
+
+
 
 template<class T>
 T Random();

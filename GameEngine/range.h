@@ -37,6 +37,10 @@ public:
 		Min_Max(in_vals, low, high);
 	}
 
+	bool operator==(const Range<T>& in_other) {
+		return low == in_other.low && high == in_other.high;
+	}
+
 	T Get_Low() const {
 		return low;
 	};

@@ -58,7 +58,7 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 		GE.Input().Process_Raw_Event(inputEvent);
 		return 0;
 	case WM_XBUTTONDOWN:
-		xButton = GET_XBUTTON_WPARAM(in_wParam);
+		xButton = (ubyte)GET_XBUTTON_WPARAM(in_wParam);
 		if (xButton == 1) {
 			inputEvent.windowHandle = in_hwnd;
 			inputEvent.type = RawInputEvent::Type::mouse_down;
@@ -79,7 +79,7 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 		}
 		return DefWindowProc(in_hwnd, in_message, in_wParam, in_lParam);
 	case WM_XBUTTONUP:
-		xButton = GET_XBUTTON_WPARAM(in_wParam);
+		xButton = (ubyte)GET_XBUTTON_WPARAM(in_wParam);
 		if (xButton == 1) {
 			inputEvent.windowHandle = in_hwnd;
 			inputEvent.type = RawInputEvent::Type::mouse_up;
@@ -126,14 +126,14 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 	case WM_KEYDOWN:
 		inputEvent.windowHandle = in_hwnd;
 		inputEvent.type = RawInputEvent::Type::key_down;
-		inputEvent.keyboard.key = Windows_VK_To_Key(in_wParam);
+		inputEvent.keyboard.key = Windows_VK_To_Key((uint)in_wParam);
 		inputEvent.keyboard.repeat = in_lParam & (1 << 30);
 		GE.Input().Process_Raw_Event(inputEvent);
 		return 0;
 	case WM_KEYUP:
 		inputEvent.windowHandle = in_hwnd;
 		inputEvent.type = RawInputEvent::Type::key_up;
-		inputEvent.keyboard.key = Windows_VK_To_Key(in_wParam);
+		inputEvent.keyboard.key = Windows_VK_To_Key((uint)in_wParam);
 		inputEvent.keyboard.repeat = false;
 		GE.Input().Process_Raw_Event(inputEvent);
 		return 0;

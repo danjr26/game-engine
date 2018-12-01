@@ -74,7 +74,8 @@ void GameEngine::Begin() {
 			Next_Frame();
 			frameRateManager.Yield_Until_Next_Frame();
 			if (i % 60 == 0) {
-				Log::main(std::to_string(frameRateManager.Get_Real_FPS()).substr(0, 4));
+				Log::main(std::string("fps: ") + std::to_string(frameRateManager.Get_Real_FPS()).substr(0, 4));
+				Log::main(std::string("min fps: ") + std::to_string(1.0 / frameRateManager.Get_Longest_Frame_Time()).substr(0, 4));
 			}
 		}
 	}
@@ -96,7 +97,6 @@ void GameEngine::Next_Frame() {
 	double dt = frameRateManager.Get_Last_Frame_Time();
 	inputManager.Update();
 	collisionManager.Update();
-	//if(count % 15 == 0) physicsManager.Update(dt * 15);
 	physicsManager.Update(dt);
 	perFrameUpdateManager.Update(dt);
 	renderManager.Render_Frame();

@@ -112,14 +112,14 @@ template<class T>
 inline UnclampedRotation<T, 3>::UnclampedRotation(const Vector<T, 3>& in_from, const Vector<T, 3>& in_to) :
 	axis(in_from.Cross(in_to).Normalized()),
 	angle(in_from.Theta(in_to)) {
-	if (abs(angle - PI) < PI / 10000.0) {
+	if (abs(angle - (T)PI) < (T)PI / 10000.0) {
 		if (abs(in_from.Dot(Vector<T, 3>(0, 1, 0)) > 0.9)) {
 			axis = in_from.Cross(Vector<T, 3>(1, 0, 0)).Normalized();
 		}
 		else {
 			axis = in_from.Cross(Vector<T, 3>(0, 1, 0)).Normalized();
 		}
-		angle = PI;
+		angle = (T)PI;
 	}
 }
 

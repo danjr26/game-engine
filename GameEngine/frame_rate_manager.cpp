@@ -1,4 +1,5 @@
 #include "frame_rate_manager.h"
+#include "misc.h"
 #include <thread>
 
 FrameRateManager::FrameRateManager(double in_fps) :
@@ -55,6 +56,13 @@ double FrameRateManager::Get_Real_FPS() {
 		total += lastFrameTimes[i];
 	}
 	return lastFrameTimes.size() / total;
+}
+
+double FrameRateManager::Get_Longest_Frame_Time() {
+	if (lastFrameTimes.size() == 0) {
+		return 0.0;
+	}
+	return Max(lastFrameTimes);
 }
 
 double FrameRateManager::Get_Last_Frame_Time() {

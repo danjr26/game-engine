@@ -120,9 +120,11 @@ void FontFace::Load_XML_List(const std::string& in_filename) {
 	uint length = (uint)file.tellg();
 	file.seekg(0, file.beg);
 
-	char* buffer = new char[length + 1];
+	char* buffer = new char[length];
+	for (uint i = 0; i < length; i++) {
+		buffer[i] = '\0';
+	}
 	file.read(buffer, length);
-	buffer[length] = '\0';
 	file.close();
 
 	rapidxml::xml_document<char> doc;

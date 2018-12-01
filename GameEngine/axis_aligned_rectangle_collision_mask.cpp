@@ -33,45 +33,87 @@ Vector<T, 2> AxisAlignedRectangleCollisionMask<T>::Get_Closest_Point(const Vecto
 	AxisAlignedRectangle<T> transformedRectangle = Get_Transformed_Rectangle();
 	Vector<T, 2> center = transformedRectangle.Get_Center();
 	Vector<T, 2> offset = in_point - center;
-	Range<T> xRange(transformedRectangle.Get_Minima().X(), transformedRectangle.Get_Maxima().X());
-	Range<T> yRange(transformedRectangle.Get_Minima().Y(), transformedRectangle.Get_Maxima().Y());
+
+	Vector<T, 2> minima = transformedRectangle.Get_Minima();
+	Vector<T, 2> maxima = transformedRectangle.Get_Maxima();
+
+	Range<T> xRange(minima.X(), maxima.X());
+	Range<T> yRange(minima.Y(), maxima.Y());
+
 	if (xRange.Contains_Inc(in_point.X())) {
 		if (yRange.Contains_Inc(in_point.Y())) {
 			return Vector<T, 2>(
-				(offset.X() > 0) ? transformedRectangle.Get_Maxima().X() : transformedRectangle.Get_Minima().X(),
-				(offset.Y() > 0) ? transformedRectangle.Get_Maxima().Y() : transformedRectangle.Get_Minima().Y()
+				(offset.X() > 0) ? maxima.X() : minima.X(),
+				(offset.Y() > 0) ? maxima.Y() : minima.Y()
 			);
 		}
 		else {
 			return Vector<T, 2>(
 				in_point.X(),
-				(offset.Y() > 0) ? transformedRectangle.Get_Maxima().Y() : transformedRectangle.Get_Minima().Y()
+				(offset.Y() > 0) ? maxima.Y() : minima.Y()
 			);
 		}
 	}
 	else {
 		if (yRange.Contains_Inc(in_point.Y())) {
 			return Vector<T, 2>(
-				(offset.X() > 0) ? transformedRectangle.Get_Maxima().X() : transformedRectangle.Get_Minima().X(),
+				(offset.X() > 0) ? maxima.X() : minima.X(),
 				in_point.Y()
 			);
 		}
 		else {
 			return Vector<T, 2>(
-				(offset.X() > 0) ? transformedRectangle.Get_Maxima().X() : transformedRectangle.Get_Minima().X(),
-				(offset.Y() > 0) ? transformedRectangle.Get_Maxima().Y() : transformedRectangle.Get_Minima().Y()
+				(offset.X() > 0) ? maxima.X() : minima.X(),
+				(offset.Y() > 0) ? maxima.Y() : minima.Y()
 			);
 		}
 	}
 }
 
 template<class T>
-Vector<T, 2> AxisAlignedRectangleCollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
-	Vector<T, 2> center = Get_Transformed_Rectangle().Get_Center();
+Vector<T, 2> AxisAlignedRectangleCollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point, PointNormalPolicy in_policy) const {
+	AxisAlignedRectangle<T> transformedRectangle = Get_Transformed_Rectangle();
+	Vector<T, 2> center = transformedRectangle.Get_Center();
 	Vector<T, 2> offset = in_point - center;
-	return (abs(offset.X()) > abs(offset.Y())) ? 
-		Vector<T, 2>(1, 0) * Sign(offset.X()) : 
-		Vector<T, 2>(0, 1) * Sign(offset.Y());
+
+	Vector<T, 2> minima = transformedRectangle.Get_Minima();
+	Vector<T, 2> maxima = transformedRectangle.Get_Maxima();
+
+	Range<T> xRange(minima.X(), maxima.X());
+	Range<T> yRange(minima.Y(), maxima.Y());
+
+	if (xRange.Contains_Inc(in_point.X()) || yRange.Contains_Inc(in_point.Y())) {
+		return (abs(offset.X()) > abs(offset.Y())) ?
+			Vector<T, 2>(1, 0) * Sign(offset.X()) :
+			Vector<T, 2>(0, 1) * Sign(offset.Y());
+	}
+	
+	Vector<T, 2> corners[4];
+	transformedRectangle.Get_Corners(corners);
+
+	switch (in_policy) {
+	case PointNormalPolicy::zero:
+		return Vector<T, 2>();
+		break;
+	case PointNormalPolicy::nearest_edge:
+		return (abs(offset.X()) > abs(offset.Y())) ?
+			Vector<T, 2>(1, 0) * Sign(offset.X()) :
+			Vector<T, 2>(0, 1) * Sign(offset.Y());
+		break;
+	case PointNormalPolicy::towards_point: {
+		uint index = Min_Index({
+			(in_point - corners[0]).Dot_Self(),
+			(in_point - corners[1]).Dot_Self(),
+			(in_point - corners[2]).Dot_Self(),
+			(in_point - corners[3]).Dot_Self()
+		});
+		return (in_point - corners[index]).Normalized();
+	}
+		break;
+	default:
+		throw InvalidArgumentException();
+	}
+	
 }
 
 template<class T>

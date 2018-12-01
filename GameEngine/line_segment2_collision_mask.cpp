@@ -36,10 +36,39 @@ Vector<T, 2> LineSegment2CollisionMask<T>::Get_Closest_Point(const Vector<T, 2>&
 }
 
 template<class T>
-Vector<T, 2> LineSegment2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+Vector<T, 2> LineSegment2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point, PointNormalPolicy in_policy) const {
 	auto transformedLineSegment = Get_Transformed_Line_Segment();
 	Vector<T, 2> normal = transformedLineSegment.Get_Direction().Orthogonal();
-	return (normal.Dot(in_point) >= normal.Dot(transformedLineSegment.Get_Point1())) ? normal : -normal;
+	Vector<T, 2> points[2] = {
+		transformedLineSegment.Get_Point1(),
+		transformedLineSegment.Get_Point2()
+	};
+	Vector<T, 2> direction = transformedLineSegment.Get_Direction();
+
+	if (Is_Between_Inc<T>(
+		(in_point - points[0]).Dot(direction),
+		0, (points[1] - points[0]).Dot(direction)
+	)) {
+		(normal.Dot(in_point) >= normal.Dot(points[0])) ? normal : -normal;
+	}
+	switch (in_policy) {
+	case PointNormalPolicy::zero:
+		return Vector<T, 2>();
+		break;
+	case PointNormalPolicy::nearest_edge:
+		return (normal.Dot(in_point) >= normal.Dot(points[0])) ? normal : -normal;
+		break;
+	case PointNormalPolicy::towards_point: {
+		uint index = Min_Index({
+			(in_point - points[0]).Dot_Self(),
+			(in_point - points[1]).Dot_Self(),
+			});
+		return (in_point - points[index]).Normalized();
+	}
+		break;
+	default:
+		throw InvalidArgumentException();
+	}
 }
 
 template<class T>

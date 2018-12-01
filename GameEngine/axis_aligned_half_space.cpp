@@ -28,7 +28,7 @@ inline bool AxisAlignedHalfSpace<T, n>::Is_Positive() const {
 template<class T, uint n>
 inline Vector<T, n> AxisAlignedHalfSpace<T, n>::Get_Direction() const {
 	Vector<T, n> out;
-	out[Get_Dimension()] = Sign(value);
+	out[Get_Dimension()] = (Is_Positive()) ? (T)1 : (T)-1;
 	return out;
 }
 

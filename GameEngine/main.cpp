@@ -37,7 +37,8 @@ void Test_Render(Window* window) {
 	FontFaceRasterSet* rasterSet = fontFace->Rasterize(24);
 
 	Circled circle1 = Circled::From_Point_Radius(Vector2d(0.0, 0.0), 100.0);
-	CircleRenderer circleRenderer1(circle1, ColorRGBAf(1, 1, 1, 0.5), 10.0, ColorRGBAf(1, 0.5, 0.5, 1.0));
+	//CircleRenderer circleRenderer1(circle1, ColorRGBAf(1, 1, 1, 0.5), 10.0, ColorRGBAf(1, 0.5, 0.5, 1.0));
+	Sprite circleRenderer1(AxisAlignedRectangled::From_Center(Vector2d(0, 0), Vector2d(200, 200)), nullptr);
 	GE.Render().Add(&circleRenderer1);
 	CircleCollisionMask circleCollider1(circle1);
 
@@ -73,14 +74,14 @@ void Test_Render(Window* window) {
 	collisionContext.Add(&circleCollider2);
 	//collisionContext.Set_Partner_Test_Activation(std::pair<ubyte, ubyte>(CollisionContext2d::user_defined, CollisionContext2d::user_defined), true);
 
-	//TestSpriteMover sm1 = TestSpriteMover(&circleRenderer1, circleCollider1);
-	//GE.Per_Frame_Update().Add(&sm1);
+	TestSpriteMover sm1 = TestSpriteMover(&circleRenderer1, circleCollider1);
+	GE.Per_Frame_Update().Add(&sm1);
 
 	//TestSpriteMover sm2 = TestSpriteMover(&circleRenderer2, circleCollider2);
 	//GE.Per_Frame_Update().Add(&sm2);
 
-	TestSpriteMover sm3 = TestSpriteMover(&circleRenderer3, circleCollider2);
-	GE.Per_Frame_Update().Add(&sm3);
+	//TestSpriteMover sm3 = TestSpriteMover(&circleRenderer3, circleCollider2);
+	//GE.Per_Frame_Update().Add(&sm3);
 
 	AxisAlignedHalfSpace2d aaHalfSpace = AxisAlignedHalfSpace2d::From_Dimension_Value(1, 0, true);
 	AxisAlignedHalfSpace2CollisionMask aaHalfSpaceMask(aaHalfSpace);
@@ -104,13 +105,11 @@ void Test_Render(Window* window) {
 
 	Triangle2CollisionMask triangleMask = Triangle2CollisionMask(triangle);
 
-	std::vector<ullong> testVec(10000);
-
 	Clock c;
 	uint n = 10000;
 	double t1 = c.Now();
 	for (uint i = 0; i < n; i++) {
-		std::find(testVec.begin(), testVec.end(), 10);
+		//std::find(testVec.begin(), testVec.end(), 10);
 	}
 	double t2 = c.Now();
 	double averageT = (t2 - t1) / n;

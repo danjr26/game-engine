@@ -298,7 +298,7 @@ public:
 		return members;
 	}
 
-	std::string To_String() {
+	std::string To_String() const {
 		std::stringstream ss;
 		ss << "Vector (" << n << ")\n";
 			for (uint i = 0; i < n; i++) {
@@ -324,7 +324,6 @@ public:
 
 	template<typename = std::enable_if_t<n == 2, void>>
 	void Rotate(T angle) {
-		angle = angle * (T)DEG_TO_RAD;
 		T sine = sin(angle);
 		T cosine = cos(angle);
 		T tempX = members[0] * cosine - members[1] * sine;

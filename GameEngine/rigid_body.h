@@ -5,6 +5,7 @@
 #include "vector.h"
 #include "unclamped_rotation.h"
 #include "located_vector.h"
+#include "range.h"
 
 template<uint n>
 class RigidBody : public TransformableObject<double, n> {
@@ -41,7 +42,12 @@ public:
 	void Apply_Local_Impulse(const LocatedVector<double, n>& in_impulse);
 	void Apply_World_Impulse(const LocatedVector<double, n>& in_impulse);
 
+	Vector<double, n> Impulse_To_Change_Point_Velocity(const Vector<double, n>& in_point, const Vector<double, n>& in_dv);
+
 	void Update(double in_dt);
+	void Update(double in_dt, const Vector<double, n>& in_normal);
+
+	static Vector<double, n> Get_Collision_Normal(RigidBody<n>& in_body1, RigidBody<n>& in_body2, const Collision<double, n>& in_collision);
 };
 
 using RigidBody2 = RigidBody<2>;

@@ -222,7 +222,7 @@ void MeshVertexGPUPusher::Add_Member(uint in_id) {
 		throw InvalidArgumentException("invalid vertex data member id");
 	}
 
-	if (!idToIndex.insert(std::pair<ubyte, ubyte>(in_id, vertexMembers.size())).second) {
+	if (!idToIndex.insert(std::pair<ubyte, ubyte>(in_id, (ubyte)vertexMembers.size())).second) {
 		throw InvalidArgumentException("duplicate mesh member id");
 	}
 
@@ -247,7 +247,7 @@ void MeshVertexGPUPusher::Add_Member(uint in_id) {
 	glEnableVertexAttribArray(newMember.id);
 	glVertexAttribPointer(newMember.id, newMember.depth, newMember.type, GL_FALSE, 0, nullptr);
 
-	idToIndex.insert(std::pair<ubyte, ubyte>(newMember.id, vertexMembers.size()));
+	idToIndex.insert(std::pair<ubyte, ubyte>(newMember.id, (ubyte)vertexMembers.size()));
 	vertexMembers.push_back(newMember);
 
 	glBindVertexArray(0);

@@ -19,6 +19,7 @@ TestSpriteMover::TestSpriteMover(Sprite* in_sprite, CollisionMask2d& in_mask) :
 	rigidBody(nullptr) {
 
 	rigidBody = new RigidBody2(in_mask);
+	rigidBody->Get_Transform().Rotate_Local(Rotation2d(PI / 2));
 	sprite->Get_Transform().Set_Parent(&rigidBody->Get_Transform());
 	GE.Physics().Add(rigidBody);
 	rigidBody->Get_Transform().Set_Local_Position(Vector2d(Random<double>(0, 800), Random<double>(0, 600)));

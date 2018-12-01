@@ -42,7 +42,7 @@ Vector<T, 2> AxisAlignedHalfSpace2CollisionMask<T>::Get_Closest_Point(const Vect
 }
 
 template<class T>
-Vector<T, 2> AxisAlignedHalfSpace2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+Vector<T, 2> AxisAlignedHalfSpace2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point, PointNormalPolicy in_policy) const {
 	return -halfSpace.Get_Direction();
 }
 

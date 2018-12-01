@@ -35,7 +35,7 @@ Vector<T, 2> Line2CollisionMask<T>::Get_Closest_Point(const Vector<T, 2>& in_poi
 }
 
 template<class T>
-Vector<T, 2> Line2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+Vector<T, 2> Line2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point, PointNormalPolicy in_policy) const {
 	auto transformedLine = Get_Transformed_Line();
 	Vector<T, 2> normal = transformedLine.Get_Direction().Orthogonal();
 	return (normal.Dot(in_point) >= normal.Dot(transformedLine.Get_Point())) ? normal : -normal;

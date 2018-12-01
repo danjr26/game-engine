@@ -22,6 +22,7 @@ public:
 	void Reset_Timer();
 	void Yield_Until_Next_Frame();
 	double Get_Real_FPS();
+	double Get_Longest_Frame_Time();
 	double Get_Last_Frame_Time();
 };
 

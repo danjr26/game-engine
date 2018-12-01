@@ -36,7 +36,7 @@ Vector<T, 2> RectangleCollisionMask<T>::Get_Closest_Point(const Vector<T, 2>& in
 }
 
 template<class T>
-Vector<T, 2> RectangleCollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+Vector<T, 2> RectangleCollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point, PointNormalPolicy in_policy) const {
 	auto transformedRectangle = Get_Transformed_Rectangle();
 	Vector<T, 2> corners[4];
 	Vector<T, 2> axes[2];
@@ -69,9 +69,28 @@ Vector<T, 2> RectangleCollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& i
 			return axes[1] * Sign(offsetDot2);
 		}
 		else {
-			return (abs(offsetDot1) > abs(offsetDot2)) ?
-				axes[0] * Sign(offsetDot1) :
-				axes[1] * Sign(offsetDot2);
+			switch (in_policy) {
+			case PointNormalPolicy::zero:
+				return Vector<T, 2>();
+				break;
+			case PointNormalPolicy::nearest_edge:
+				return (abs(offsetDot1) > abs(offsetDot2)) ?
+					axes[0] * Sign(offsetDot1) :
+					axes[1] * Sign(offsetDot2);
+				break;
+			case PointNormalPolicy::towards_point: {
+				uint index = Min_Index({
+					(in_point - corners[0]).Dot_Self(),
+					(in_point - corners[1]).Dot_Self(),
+					(in_point - corners[2]).Dot_Self(),
+					(in_point - corners[3]).Dot_Self()
+					});
+				return (in_point - corners[index]).Normalized();
+			}
+				break;
+			default:
+				throw InvalidArgumentException();
+			}
 		}
 	}
 }

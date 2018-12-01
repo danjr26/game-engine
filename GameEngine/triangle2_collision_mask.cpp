@@ -40,7 +40,7 @@ Vector<T, 2> Triangle2CollisionMask<T>::Get_Closest_Point(const Vector<T, 2>& in
 }
 
 template<class T>
-Vector<T, 2> Triangle2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+Vector<T, 2> Triangle2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point, PointNormalPolicy in_policy) const {
 	auto transformedTriangle = Get_Transformed_Triangle();
 
 	Vector<T, 2> corners[3];
@@ -50,18 +50,63 @@ Vector<T, 2> Triangle2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& i
 	Vector<T, 2> cornerNormals[3];
 	Vector<T, 2> cornerTangents[3];
 	bool slice[3];
+	bool alley[3];
+	bool front[3];
 	for (uint i = 0; i < 3; i++) {
 		cornerNormals[i] = (normals[i] + normals[(i + 2) % 3]) / 2;
 		cornerTangents[i] = cornerNormals[i].Orthogonal();
+
 		slice[i] = cornerTangents[i].Dot(in_point) >= cornerTangents[i].Dot(corners[i]);
-	}
-	for (uint i = 0; i < 3; i++) {
-		if (slice[i] && !slice[(i + 1) % 3]) {
+
+		Vector<T, 2> offset = corners[(i + 1) % 3] - corners[i];
+		alley[i] = Is_Between_Exc(
+			in_point.Dot(offset),
+			corners[i].Dot(offset),
+			corners[(i + 1) % 3].Dot(offset)
+		);
+
+		front[i] = (in_point - corners[i]).Dot(normals[i]) >= 0.0;
+
+		if (front[i] && alley[i]) {
 			return normals[i];
 		}
 	}
-	throw ProcessFailureException();
-	return Vector<T, 2>();
+
+	if (!front[0] && !front[1] && !front[2]) {
+		for (uint i = 0; i < 3; i++) {
+			if (slice[i] && !slice[(i + 1) % 3]) {
+				return normals[i];
+			}
+		}
+		throw ProcessFailureException();
+	}
+
+	switch (in_policy) {
+	case PointNormalPolicy::zero:
+		return Vector<T, 2>();
+		break;
+	case PointNormalPolicy::nearest_edge: {
+		for (uint i = 0; i < 3; i++) {
+			if (slice[i] && !slice[(i + 1) % 3]) {
+				return normals[i];
+			}
+		}
+		throw ProcessFailureException();
+	}
+		break;
+	case PointNormalPolicy::towards_point: {
+		uint index = Min_Index({
+			(in_point - corners[0]).Dot_Self(),
+			(in_point - corners[1]).Dot_Self(),
+			(in_point - corners[2]).Dot_Self()
+		});
+
+		return (in_point - corners[index]).Normalized();
+	}
+		break;
+	default:
+		throw InvalidArgumentException();
+	}
 }
 
 template<class T>

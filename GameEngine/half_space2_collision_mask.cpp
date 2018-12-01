@@ -35,7 +35,7 @@ Vector<T, 2> HalfSpace2CollisionMask<T>::Get_Closest_Point(const Vector<T, 2>& i
 }
 
 template<class T>
-Vector<T, 2> HalfSpace2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+Vector<T, 2> HalfSpace2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point, PointNormalPolicy in_policy) const {
 	return -Get_Transformed_Half_Space().Get_Direction();
 }
 

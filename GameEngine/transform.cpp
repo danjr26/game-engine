@@ -48,7 +48,7 @@ Rotation<T, n> Transform<T, n>::Get_Local_Rotation() const {
 template<class T, uint n>
 Rotation<T, n> Transform<T, n>::Get_World_Rotation() const {
 	if (parent == nullptr) return rotation;
-	else return parent->Local_To_World_Rotation(rotation);
+	else return Local_To_World_Rotation(rotation);
 }
 
 template<class T, uint n>
@@ -59,7 +59,7 @@ void Transform<T, n>::Set_Local_Rotation(const Rotation<T, n>& in_rotation) {
 template<class T, uint n>
 void Transform<T, n>::Set_World_Rotation(const Rotation<T, n>& in_rotation) {
 	if (parent == nullptr) rotation = in_rotation;
-	else rotation = parent->World_To_Local_Rotation(in_rotation);
+	else rotation = World_To_Local_Rotation(in_rotation);
 }
 
 template<class T, uint n>
@@ -70,7 +70,7 @@ void Transform<T, n>::Rotate_Local(const Rotation<T, n>& in_rotation) {
 template<class T, uint n>
 void Transform<T, n>::Rotate_World(const Rotation<T, n>& in_rotation) {
 	if (parent == nullptr) rotation = rotation.Followed_By(in_rotation);
-	else rotation = rotation.Followed_By(parent->World_To_Local_Rotation(in_rotation));
+	else rotation = rotation.Followed_By(World_To_Local_Rotation(in_rotation));
 }
 
 template<class T, uint n>
@@ -86,7 +86,7 @@ void Transform<T, n>::Rotate_World_Around_Local_Point(const Rotation<T, n>& in_r
 	Rotation<T, n> tempRotation =
 		(parent == nullptr) ?
 		in_rotation :
-		parent->World_To_Local_Rotation(in_rotation);
+		World_To_Local_Rotation(in_rotation);
 
 	rotation = rotation.Followed_By(tempRotation);
 	translation = tempRotation.Apply_To(translation - tempPoint) + tempPoint;
@@ -97,7 +97,7 @@ void Transform<T, n>::Rotate_Local_Around_World_Point(const Rotation<T, n>& in_r
 	Vector<T, n> tempPoint =
 		(parent == nullptr) ?
 		in_point :
-		parent->World_To_Local_Point(in_point);
+		World_To_Local_Point(in_point);
 
 	rotation = in_rotation.Followed_By(rotation);
 	translation = in_rotation.Apply_To(translation - tempPoint) + tempPoint;
@@ -108,12 +108,12 @@ void Transform<T, n>::Rotate_World_Around_World_Point(const Rotation<T, n>& in_r
 	Vector<T, n> tempPoint =
 		(parent == nullptr) ?
 		in_point :
-		parent->World_To_Local_Point(in_point);
+		World_To_Local_Point(in_point);
 
 	Rotation<T, n> tempRotation =
 		(parent == nullptr) ?
 		in_rotation :
-		parent->World_To_Local_Rotation(in_rotation);
+		World_To_Local_Rotation(in_rotation);
 		
 	rotation = rotation.Followed_By(tempRotation);
 	translation = tempRotation.Apply_To(translation - tempPoint) + tempPoint;
@@ -159,7 +159,7 @@ void Transform<T, n>::Translate_World(const Vector<T, n>& in_translation) {
 	translation +=
 		(parent == nullptr) ?
 		in_translation :
-		parent->World_To_Local_Vector(in_translation);
+		World_To_Local_Vector(in_translation);
 }
 
 template<class T, uint n>

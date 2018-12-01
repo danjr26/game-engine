@@ -35,7 +35,7 @@ Vector<T, 2> CircleCollisionMask<T>::Get_Closest_Point(const Vector<T, 2>& in_po
 }
 
 template<class T>
-Vector<T, 2> CircleCollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+Vector<T, 2> CircleCollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point, PointNormalPolicy in_policy) const {
 	Circle<T> transformedCircle = Get_Transformed_Circle();
 	return (in_point - transformedCircle.Get_Center()).Normalized();
 }

@@ -43,27 +43,24 @@ protected:
 	void* parent;
 
 public:
-	CollisionMask(bool in_ignoreTransform = false) : 
-		ignoreTransform(in_ignoreTransform),
-		parent(nullptr)
-	{}
+	enum PointNormalPolicy {
+		zero,
+		nearest_edge,
+		towards_point
+	};
 
-	void Set_Ignore_Transform(bool in_value) { 
-		ignoreTransform = in_value;
-	}
+public:
+	CollisionMask(bool in_ignoreTransform = false);
 
-	void Set_Parent(void* in_parent) {
-		parent = in_parent;
-	}
-
-	void* Get_Parent() {
-		return parent;
-	}
-
+	bool Get_Ignore_Transform() const;
+	void Set_Ignore_Transform(bool in_value);
+	void* Get_Parent() const;
+	void Set_Parent(void* in_parent);
+	
 	virtual void Apply_Transform() = 0;
 	virtual CollisionMask<T, 2>* Clone() const = 0;
 	virtual Vector<T, 2> Get_Closest_Point(const Vector<T, 2>& in_point) const = 0;
-	virtual Vector<T, 2> Get_Closest_Normal(const Vector<T, 2>& in_point) const = 0;
+	virtual Vector<T, 2> Get_Closest_Normal(const Vector<T, 2>& in_point, PointNormalPolicy in_policy = towards_point) const = 0;
 
 	virtual Collision<T, 2> Accept_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, CollisionMask<T, 2>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AxisAlignedHalfSpace2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
@@ -91,3 +88,5 @@ using CollisionMask3f = CollisionMask<float, 3>;
 using CollisionMask3d = CollisionMask<double, 3>;
 
 #endif
+
+

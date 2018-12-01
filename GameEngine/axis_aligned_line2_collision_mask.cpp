@@ -37,7 +37,7 @@ Vector<T, 2> AxisAlignedLine2CollisionMask<T>::Get_Closest_Point(const Vector<T,
 }
 
 template<class T>
-Vector<T, 2> AxisAlignedLine2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point) const {
+Vector<T, 2> AxisAlignedLine2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& in_point, PointNormalPolicy in_policy) const {
 	return line.Get_Direction().Orthogonal();
 }
 
