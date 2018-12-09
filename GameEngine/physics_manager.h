@@ -46,7 +46,11 @@ private:
 
 	uint collisionNarrowSteps;
 	uint maxStepRepeat;
-	double slidingEpsilon;
+	
+	// minimum distance to be considered sliding
+	double slidingEpsilon; 
+
+	// maximum velocity to be considered resting
 	double restingEpsilon;
 
 public:

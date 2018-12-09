@@ -35,7 +35,7 @@ URotation<double, n> RigidBody<n>::Get_Angular_Velocity() const {
 }
 
 Vector2d RigidBody<2>::Get_Relative_Point_Velocity(const Vector2d& in_point) {
-	return linearVelocity + in_point.Orthogonal() * angularVelocity.Get_Angle();// *in_point.Magnitude();
+	return linearVelocity + -in_point.Orthogonal() * angularVelocity.Get_Angle();// *in_point.Magnitude();
 }
 
 template<uint n>
@@ -113,7 +113,7 @@ void RigidBody<n>::Set_Unstoppable(bool in_value) {
 void RigidBody<2>::Apply_Relative_Impulse(const LocatedVector<double, 2>& in_impulse) {
 	Vector2d linearAcceleration = in_impulse.vector / linearMass;
 	URotation2d angularAcceleration = URotation2d(
-		in_impulse.vector.Magnitude() * in_impulse.position.Magnitude() * in_impulse.vector.Normalized().Dot(in_impulse.position.Orthogonal().Normalized()) / angularMass);
+		in_impulse.vector.Magnitude() * in_impulse.position.Magnitude() * in_impulse.vector.Normalized().Dot(-in_impulse.position.Orthogonal().Normalized()) / angularMass);
 
 	linearVelocity += linearAcceleration;
 	angularVelocity += angularAcceleration;
@@ -166,7 +166,6 @@ void RigidBody<n>::Update(double in_dt, const Vector<double, n>& in_normal) {
 
 template<uint n>
 Vector<double, n> RigidBody<n>::Get_Collision_Normal(RigidBody<n>& in_body1, RigidBody<n>& in_body2, const Collision<double, n>& in_collision) {
-
 	Vector<double, n> point = in_collision.collisionPoint;
 	Vector<double, n> normal1 = in_body1.Get_Collision_Mask()->Get_Closest_Normal(point, CollisionMask2d::PointNormalPolicy::zero);
 	Vector<double, n> normal2 = in_body2.Get_Collision_Mask()->Get_Closest_Normal(point, CollisionMask2d::PointNormalPolicy::zero);
@@ -189,7 +188,8 @@ Vector<double, n> RigidBody<n>::Get_Collision_Normal(RigidBody<n>& in_body1, Rig
 		}
 	}
 
-	return normal;
+	return ((in_body1.Get_Transform().Get_World_Position() - in_body2.Get_Transform().Get_World_Position()).Dot(in_collision.separator) >= 0) ? 
+		in_collision.separator.Normalized() : -in_collision.separator.Normalized();
 }
 
 template class RigidBody<2>;

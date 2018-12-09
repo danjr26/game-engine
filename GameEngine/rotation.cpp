@@ -87,10 +87,10 @@ Matrix<T, 4, 4> Rotation<T, 2>::Get_Matrix() const {
 template<class T>
 T Rotation<T, 2>::Short_Difference(T angle1, T angle2) {
 	while (angle1 - angle2 > (T)PI) {
-		angle1 -= (T)PI;
+		angle1 -= (T)(2.0 * PI);
 	}
 	while (angle2 - angle1 > (T)PI) {
-		angle2 -= (T)PI;
+		angle2 -= (T)(2.0 * PI);
 	}
 	return angle2 - angle1;
 }
@@ -98,10 +98,10 @@ T Rotation<T, 2>::Short_Difference(T angle1, T angle2) {
 template<class T>
 void Rotation<T, 2>::Clamp() {
 	while (angle > (T)PI) {
-		angle -= (T)PI;
+		angle -= (T)(2.0 * PI);
 	}
 	while (angle < -(T)PI) {
-		angle += (T)PI;
+		angle += (T)(2.0 * PI);
 	}
 }
 

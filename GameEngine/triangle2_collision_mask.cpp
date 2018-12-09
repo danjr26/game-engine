@@ -35,6 +35,14 @@ Triangle2CollisionMask<T>* Triangle2CollisionMask<T>::Clone() const {
 
 template<class T>
 Vector<T, 2> Triangle2CollisionMask<T>::Get_Closest_Point(const Vector<T, 2>& in_point) const {
+	auto transformedTriangle = Get_Transformed_Triangle();
+	
+	Vector<T, 2> corners[3];
+	transformedTriangle.Get_Points(corners);
+
+	bool alley[3];
+	bool front[3];
+
 	throw NotImplementedException();
 	return Vector<T, 2>();
 }

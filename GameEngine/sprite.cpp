@@ -88,10 +88,10 @@ void Sprite::Render() {
 
 		ColorRGBAf tintFloat = color;
 
-		projectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
+		Matrix4f mvpMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
 		shaderProgram->Use();
-		glUniformMatrix4fv(locations[0], 1, GL_TRUE, projectionMatrix.Pointer());
+		glUniformMatrix4fv(locations[0], 1, GL_TRUE, mvpMatrix.Pointer());
 		glUniform4fv(locations[1], 1, tintFloat.Pointer());
 	}
 	else {

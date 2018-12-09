@@ -49,7 +49,7 @@ inline T LineSegment<T, n>::Get_Projection_Coefficient2() const {
 
 template<class T, uint n>
 inline T LineSegment<T, n>::Get_Projection_Coefficient(const Vector<T, n>& in_point) {
-	return (in_point - point1).Projection_Coeff(Get_Direction());
+	return Get_Direction().Dot(in_point);
 }
 
 template<class T, uint n>

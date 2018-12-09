@@ -37,8 +37,8 @@ void Test_Render(Window* window) {
 	FontFaceRasterSet* rasterSet = fontFace->Rasterize(24);
 
 	Circled circle1 = Circled::From_Point_Radius(Vector2d(0.0, 0.0), 100.0);
-	//CircleRenderer circleRenderer1(circle1, ColorRGBAf(1, 1, 1, 0.5), 10.0, ColorRGBAf(1, 0.5, 0.5, 1.0));
-	Sprite circleRenderer1(AxisAlignedRectangled::From_Center(Vector2d(0, 0), Vector2d(200, 200)), nullptr);
+	CircleRenderer circleRenderer1(circle1, ColorRGBAf(1, 1, 1, 0.5), 10.0, ColorRGBAf(1, 0.5, 0.5, 1.0));
+	//Sprite circleRenderer1(AxisAlignedRectangled::From_Center(Vector2d(0, 0), Vector2d(200, 200)), nullptr);
 	GE.Render().Add(&circleRenderer1);
 	CircleCollisionMask circleCollider1(circle1);
 
@@ -73,16 +73,16 @@ void Test_Render(Window* window) {
 	collisionContext.Add(&circleCollider1);
 	collisionContext.Add(&circleCollider2);
 	//collisionContext.Set_Partner_Test_Activation(std::pair<ubyte, ubyte>(CollisionContext2d::user_defined, CollisionContext2d::user_defined), true);
-
+	
 	TestSpriteMover sm1 = TestSpriteMover(&circleRenderer1, circleCollider1);
 	GE.Per_Frame_Update().Add(&sm1);
+	/*
+	TestSpriteMover sm2 = TestSpriteMover(&circleRenderer2, circleCollider2);
+	GE.Per_Frame_Update().Add(&sm2);
 
-	//TestSpriteMover sm2 = TestSpriteMover(&circleRenderer2, circleCollider2);
-	//GE.Per_Frame_Update().Add(&sm2);
-
-	//TestSpriteMover sm3 = TestSpriteMover(&circleRenderer3, circleCollider2);
-	//GE.Per_Frame_Update().Add(&sm3);
-
+	TestSpriteMover sm3 = TestSpriteMover(&circleRenderer3, circleCollider2);
+	GE.Per_Frame_Update().Add(&sm3);
+	*/
 	AxisAlignedHalfSpace2d aaHalfSpace = AxisAlignedHalfSpace2d::From_Dimension_Value(1, 0, true);
 	AxisAlignedHalfSpace2CollisionMask aaHalfSpaceMask(aaHalfSpace);
 	aaHalfSpaceMask.Get_Transform().Translate_World(Vector2d(0, 600));
@@ -97,14 +97,6 @@ void Test_Render(Window* window) {
 
 	QuadTreed quadTree(AxisAlignedRectangled::From_Extrema(Vector2d(0, 0), Vector2d(800, 600)));
 
-	Triangle2d triangle = Triangle2d::From_Points(
-		Vector2d(1.0f, 1.0f),
-		Vector2d(0.0f, 100.0f),
-		Vector2d(100.0f, 0.0f)
-	);
-
-	Triangle2CollisionMask triangleMask = Triangle2CollisionMask(triangle);
-
 	Clock c;
 	uint n = 10000;
 	double t1 = c.Now();
@@ -117,25 +109,31 @@ void Test_Render(Window* window) {
 
 	////////////////////////////
 
-	Vector3f positions[] = {
-		Vector3f(0.0f, 0.0f, 0.0f),
-		Vector3f(0.0f, 100.0f, 0.0f),
-		Vector3f(200.0f, 200.0f, 0.0f),
-		Vector3f(100.0f, 0.0f, 0.0f)
+	Vector2d positions[] = {
+		Vector2d(100.0f, 0.0f),
+		Vector2d(-50.0f, -86.6f),
+		Vector2d(-50.0f, 86.6f)
 	};
 
-	uchar indices[] = {
-		0, 3, 1,
-		2, 1, 3
-	};
+	Triangle2d triangle = Triangle2d::From_Points(positions);
+	Triangle2CollisionMask triangleMask = Triangle2CollisionMask(triangle);
+
+	uchar indices[] = { 0, 1, 2 };
 
 	MeshVertexData meshData(MeshVertexData::DataType::_ubyte);
-	meshData.Add_Vertices(4, {});
-	meshData.Add_Member(MeshVertexData::MemberID::position, MeshVertexData::DataType::_float, 3, positions);
-	meshData.Add_Faces(2, indices);
+	meshData.Add_Vertices(3, {});
+	meshData.Add_Member(MeshVertexData::MemberID::position, MeshVertexData::DataType::_double, 2, positions);
+	meshData.Add_Faces(1, indices);
 
 	DebugMeshVertexDataRenderer meshRenderer(&meshData);
 	GE.Render().Add(&meshRenderer);
+
+	RigidBody2* rigidBody = new RigidBody2(triangleMask);
+	meshRenderer.Get_Transform().Set_Parent(&rigidBody->Get_Transform());
+	rigidBody->Get_Transform().Set_Local_Position(Vector2d(200, 100));
+	rigidBody->Get_Transform().Set_Local_Rotation(PI / 4);
+	rigidBody->Set_Linear_Velocity(Vector2d(50, 0));
+	GE.Physics().Add(rigidBody);
 
 	Vector2i winDim = window->Get_Dimensions();
 

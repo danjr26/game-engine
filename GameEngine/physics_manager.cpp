@@ -7,7 +7,7 @@
 PhysicsManager::PhysicsManager() :
 	collisionContext(AxisAlignedRectangled::From_Extrema(Vector2d(0, 0), Vector2d(800, 600)), 2),
 	collisionNarrowSteps(5),
-	maxStepRepeat(3),
+	maxStepRepeat(10),
 	slidingEpsilon(2.0),
 	restingEpsilon(1.0) {
 
@@ -19,9 +19,12 @@ PhysicsManager::PhysicsManager() :
 void PhysicsManager::Update(double in_dt) {
 	Prepare_Data_Containers(in_dt);
 	//Exclude_Preembedded(in_dt);
+
+	collisionContext.Update();
+
 	Step_All(in_dt);
-	Apply_Force_Fields_To_Rigid_Bodies(in_dt);
 	Apply_Rigid_Bodies_To_Rigid_Bodies(in_dt);
+	Apply_Force_Fields_To_Rigid_Bodies(in_dt);
 	//collisionContext.Update();
 	//Calculate_Force_Field_Effects(in_dt);
 	//Calculate_Rigid_Body_Effects(in_dt);
@@ -124,7 +127,6 @@ void PhysicsManager::Apply_Rigid_Bodies_To_Rigid_Bodies(double in_dt) {
 	collisionContext.Update();
 
 	uint repeatCount = 0;
-
 	while (collisionContext.Get_Total_Partnerings() > 0 && repeatCount < maxStepRepeat) {
 		// find min partners
 		for (auto it = rigidBody2s.begin(); it < rigidBody2s.end(); it++) {
@@ -150,6 +152,24 @@ void PhysicsManager::Apply_Rigid_Bodies_To_Rigid_Bodies(double in_dt) {
 
 				Ranged interval(t, in_dt);
 				Narrow_Collision_Interval(*rigidBody1, *rigidBody2, processed.collision, interval, collisionNarrowSteps);
+
+				if (interval.Get_Low() == t) {
+					InPlaceCollisionEvaluator2d evaluator;
+					evaluator.Return_Point(true);
+					evaluator.Return_Separator(true);
+
+					Transform2d transform1 = rigidBody1->Get_Transform();
+					Transform2d transform2 = rigidBody2->Get_Transform();
+
+					rigidBody1->Update(t - in_dt);
+					rigidBody2->Update(t - in_dt);
+
+					Collision2d collision = evaluator.Evaluate(*rigidBody1->Get_Collision_Mask(), *rigidBody2->Get_Collision_Mask());
+					processed.collision.separator = collision.separator;
+
+					rigidBody1->Get_Transform() = transform1;
+					rigidBody2->Get_Transform() = transform2;
+				}
 
 				if (interval.Get_Low() < minInterval.Get_Low()) {
 					minInterval = interval;
@@ -180,7 +200,7 @@ void PhysicsManager::Apply_Rigid_Bodies_To_Rigid_Bodies(double in_dt) {
 			Vector2d friction;
 
 			Evaluate_Collision(*it->body1, *it->body2, it->collision, impulse.vector, friction);
-			impulse.vector += friction * in_dt * 2.0;
+			impulse.vector += friction;
 
 			Vector2d velocity1 = it->body2->Get_World_Point_Velocity(impulse.position) - it->body1->Get_World_Point_Velocity(impulse.position);
 			for (auto body : { it->body1, it->body2 }) {
@@ -199,13 +219,13 @@ void PhysicsManager::Apply_Rigid_Bodies_To_Rigid_Bodies(double in_dt) {
 
 			if (sign2 != 0.0 && sign1 != sign2) {
 				if (!it->body1->Is_Unstoppable()) {
-					Vector2d v = it->body1->Impulse_To_Change_Point_Velocity(impulse.position, tangentVelocity2 / 2);
-					it->body1->Apply_World_Impulse({ impulse.position, v });
+					Vector2d v = it->body1->Impulse_To_Change_Point_Velocity(impulse.position, tangentVelocity2);
+					//it->body1->Apply_World_Impulse({ impulse.position, v });
 				}
 
 				if (!it->body2->Is_Unstoppable()) {
-					Vector2d v = it->body2->Impulse_To_Change_Point_Velocity(impulse.position, -tangentVelocity2 / 2);
-					it->body2->Apply_World_Impulse({ impulse.position, v });
+					Vector2d v = it->body2->Impulse_To_Change_Point_Velocity(impulse.position, -tangentVelocity2);
+					//it->body2->Apply_World_Impulse({ impulse.position, v });
 				}
 			}
 		}
@@ -213,6 +233,14 @@ void PhysicsManager::Apply_Rigid_Bodies_To_Rigid_Bodies(double in_dt) {
 		// return to end of frame with impulses applied
 		for (auto it = uniqueBodies.begin(); it != uniqueBodies.end(); it++) {
 			it->first->Get_Transform() = it->second;
+		}
+
+		collisionContext.Update();
+		if (collisionContext.Get_Total_Partnerings() > 0) {
+			Log::main("err");
+		}
+
+		for (auto it = uniqueBodies.begin(); it != uniqueBodies.end(); it++) {
 			it->first->Update(in_dt - minInterval.Get_Low());
 		}
 
@@ -245,7 +273,7 @@ void PhysicsManager::Apply_Force_Fields_To_Rigid_Bodies(double in_dt) {
 			for (auto jt = rigidBody2s.begin(); jt < rigidBody2s.end(); jt++) {
 
 				RigidBody2* rigidBody = *jt;
-				if (rigidBody->Is_Unstoppable()) break;
+				if (rigidBody->Is_Unstoppable()) continue;
 
 				LocatedVector2d impulse = forceField->Calculate_Force(*rigidBody);
 				impulse.vector *= in_dt;
@@ -260,10 +288,10 @@ void PhysicsManager::Apply_Force_Fields_To_Rigid_Bodies(double in_dt) {
 				auto kt = std::find_if(rigidBody2s.begin(), rigidBody2s.end(), 
 					[partner](RigidBody2* rigidBody) {return rigidBody->Get_Collision_Mask() == partner->mask; });
 
-				if (kt == rigidBody2s.end()) break;
+				if (kt == rigidBody2s.end()) continue;
 
 				RigidBody2* rigidBody = *kt;
-				if (rigidBody->Is_Unstoppable()) break;
+				if (rigidBody->Is_Unstoppable()) continue;
 
 				LocatedVector2d impulse = forceField->Calculate_Force(*rigidBody);
 				impulse.vector *= in_dt;
@@ -459,8 +487,14 @@ void PhysicsManager::Apply_Effects_To_Rigid_Bodies(double in_dt) {
 void PhysicsManager::Narrow_Collision_Interval(RigidBody2& in_body1, RigidBody2& in_body2, Collision2d& inout_collision, Ranged& inout_range, uint in_nIterations) {
 	// assume current rigid body state is at t = in_range.high
 	Collision2d collision; 
+
 	InPlaceCollisionEvaluator2d collisionEvaluator;
-	double returnT = inout_range.Get_High();
+	collisionEvaluator.Return_Point(true);
+	collisionEvaluator.Return_Separator(true);
+
+	Transform2d transform1 = in_body1.Get_Transform();
+	Transform2d transform2 = in_body2.Get_Transform();
+
 	double t = inout_range.Get_High();
 	double dt = -inout_range.Get_Span() / 2;
 	for (uint i = 0; i < in_nIterations; i++) {
@@ -471,17 +505,15 @@ void PhysicsManager::Narrow_Collision_Interval(RigidBody2& in_body1, RigidBody2&
 		if (collision.didCollide) {
 			inout_range.Set_High(t);
 			dt = -inout_range.Get_Span() / 2;
-			inout_collision = collision;
+			inout_collision.didCollide = collision.didCollide;
+			inout_collision.collisionPoint = collision.collisionPoint;
 		}
 		else {
 			inout_range.Set_Low(t);
 			dt = inout_range.Get_Span() / 2;
+			inout_collision.separator = collision.separator;
 		}
 	}
-
-	// leave it as you found it
-	in_body1.Update(returnT - t);
-	in_body2.Update(returnT - t);
 }
 
 void PhysicsManager::Evaluate_Collision(RigidBody2& in_body1, RigidBody2& in_body2, const Collision2d& in_collision, Vector2d& out_bounce, Vector2d& out_friction) {
@@ -499,9 +531,7 @@ void PhysicsManager::Evaluate_Collision(RigidBody2& in_body1, RigidBody2& in_bod
 	Vector2d radius2 = point - in_body2.Get_Transform().Get_World_Position();
 
 	if (approachVelocity.Dot(normal) >= 0) {
-		out_bounce = Vector2d(0, 0);
-		out_friction = Vector2d(0, 0);
-		return;
+		normal = -normal;
 	}
 
 	double linearFactor1 = (linearMass1 == 0.0) ? 0.0 : 1.0 / linearMass1;
@@ -511,9 +541,11 @@ void PhysicsManager::Evaluate_Collision(RigidBody2& in_body1, RigidBody2& in_bod
 	Vector2d angularFactor = angularFactor1 + angularFactor2;
 
 	double numerator = (1.0 + restitution) * approachVelocity.Dot(normal);
-	double denominator = linearFactor1 + linearFactor2 + angularFactor.Dot(normal);
+	double denominator = linearFactor1 + linearFactor2 + abs(angularFactor.Dot(normal));
 
 	Vector2d impulse = (denominator == 0.0) ? Vector2d(0, 0) : normal * (numerator / denominator);
+
+	Log::main(std::to_string(approachVelocity.Magnitude()));
 
 	Vector2d parallelVelocity = approachVelocity - normal * approachVelocity.Dot(normal);
 	double frictionCoeff = (parallelVelocity.Magnitude() <= slidingEpsilon) ?
@@ -521,6 +553,11 @@ void PhysicsManager::Evaluate_Collision(RigidBody2& in_body1, RigidBody2& in_bod
 		Calculate_Kinetic_Friction_Coefficient(in_body1, in_body2);
 
 	Vector2d friction = parallelVelocity.Normalized() * impulse.Magnitude() * frictionCoeff;
+	Vector2d maxFriction = parallelVelocity / (linearFactor1 + linearFactor2 + abs(angularFactor.Dot(parallelVelocity.Normalized()))) * 0.99;
+
+	if (friction.Dot_Self() > maxFriction.Dot_Self()) {
+		friction = maxFriction;
+	}
 
 	out_bounce = impulse;
 	out_friction = friction;
@@ -556,7 +593,7 @@ void PhysicsManager::Conform_To_Status(RigidBody2& in_body1, RigidBody2& in_body
 }
 
 double PhysicsManager::Calculate_Restitution_Coefficient(RigidBody2& in_body1, RigidBody2& in_body2) {
-	return 0.5;
+	return 0.2;
 }
 
 double PhysicsManager::Calculate_Kinetic_Friction_Coefficient(RigidBody2& in_body1, RigidBody2& in_body2) {

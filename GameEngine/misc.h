@@ -217,7 +217,7 @@ inline T Lerp(T a, T b, T t) {
 
 template<class T>
 inline T Inv_Lerp(T a, T b, T t) {
-	return (a == b) ? 0 : t / (b - a);
+	return (a == b) ? 0 : (t - a) / (b - a);
 }
 
 template<class T>

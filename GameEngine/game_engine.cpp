@@ -97,7 +97,7 @@ void GameEngine::Next_Frame() {
 	double dt = frameRateManager.Get_Last_Frame_Time();
 	inputManager.Update();
 	collisionManager.Update();
-	physicsManager.Update(dt);
+	physicsManager.Update(dt/5);
 	perFrameUpdateManager.Update(dt);
 	renderManager.Render_Frame();
 	renderManager.mainWindow->Flip_Buffers();

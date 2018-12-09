@@ -29,7 +29,7 @@ DebugMeshVertexDataRenderer::DebugMeshVertexDataRenderer(MeshVertexData* in_mesh
 }
 
 double DebugMeshVertexDataRenderer::Z() const {
-	return transform.Get_World_Position().Z();
+	return 0;
 }
 
 bool DebugMeshVertexDataRenderer::Should_Cull() const {

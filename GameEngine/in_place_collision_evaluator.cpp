@@ -3,6 +3,7 @@
 #include "misc.h"
 #include "range.h"
 #include "projection_overlap.h"
+#include "log.h"
 
 template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, AxisAlignedRectangleCollisionMask<T>& in_mask2) {
@@ -874,12 +875,6 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionM
 		LineSegment<T, 2>::From_Points(corners[2], corners[0])
 	};
 
-	T selfProjections[3] = {
-		lineSegments[0].Get_Projection_Coefficient1(),
-		lineSegments[1].Get_Projection_Coefficient1(),
-		lineSegments[2].Get_Projection_Coefficient1()
-	};
-
 	Vector<T, 2> centerProjection;
 	for (uint i = 0; i < 3; i++) {
 		centerProjection = lineSegments[i].Get_Projection(circle.Get_Center());
@@ -887,8 +882,8 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionM
 		if (collision.didCollide &&
 			Is_Between_Inc(
 				lineSegments[i].Get_Projection_Coefficient(centerProjection),
-				selfProjections[i],
-				selfProjections[(i + 1) % 3]
+				lineSegments[i].Get_Projection_Coefficient1(),
+				lineSegments[i].Get_Projection_Coefficient2()
 			)) {
 			return collision;
 		}
@@ -902,25 +897,50 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionM
 	}
 
 	if (!collision.didCollide && returnSeparator) {
-		Vector<T, 2> axes[3];
+		Vector<T, 2> axes[6];
 		triangle.Get_Lazy_Normals(axes);
 
-		Vector<T, 2> normAxes[3] = {
-			axes[0].Normalized(),
-			axes[1].Normalized(),
-			axes[2].Normalized()
-		};
-
 		for (uint i = 0; i < 3; i++) {
-			Range<T> triangleRange(corners[0].Projection_Coeff(axes[i]), corners[3].Projection_Coeff(axes[i]));
+			axes[i + 3] = corners[i] - circle.Get_Center();
+		}
+
+		Vector<T, 2> normAxes[6];
+
+		for (uint i = 0; i < 6; i++) {
+			normAxes[i] = axes[i].Normalized();
+		}
+
+		for (uint i = 0; i < 6; i++) {
+			Range<T> triangleRange({ 
+				corners[0].Dot(normAxes[i]),
+				corners[1].Dot(normAxes[i]),
+				corners[2].Dot(normAxes[i])
+				});
+
 			Range<T> circleRange(
-				(circle.Get_Center() - normAxes[i] * circle.Get_Radius()).Projection_Coeff(axes[i]),
-				(circle.Get_Center() + normAxes[i] * circle.Get_Radius()).Projection_Coeff(axes[i])
+				(circle.Get_Center() - normAxes[i] * circle.Get_Radius() * 0.999).Dot(normAxes[i]),
+				(circle.Get_Center() + normAxes[i] * circle.Get_Radius() * 0.999).Dot(normAxes[i])
 			);
+
 			if (!triangleRange.Intersection(circleRange)) {
-				collision.separator = axes[i];
+				collision.separator = normAxes[i];
 				return collision;
 			}
+		}
+
+		for (uint i = 0; i < 6; i++) {
+			Range<T> triangleRange({
+				corners[0].Dot(normAxes[i]),
+				corners[1].Dot(normAxes[i]),
+				corners[2].Dot(normAxes[i])
+				});
+
+			Range<T> circleRange(
+				(circle.Get_Center() - normAxes[i] * circle.Get_Radius() * 0.999).Dot(normAxes[i]),
+				(circle.Get_Center() + normAxes[i] * circle.Get_Radius() * 0.999).Dot(normAxes[i])
+			);
+
+			Log::main(std::to_string(triangleRange.Get_Low()) + " " + std::to_string(triangleRange.Get_High()) + " " + std::to_string(circleRange.Get_Low()) + " " + std::to_string(circleRange.Get_High()));
 		}
 
 		throw ProcessFailureException();
@@ -2139,7 +2159,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfS
 
 	uint minIndex = 0;
 	uint maxIndex = 0;
-	for (uint i = 1; i < 3; i++) {
+	for (uint i = 0; i < 3; i++) {
 		if (!collision.didCollide && Ceq_Switch(halfSpace.Get_Value(), corners[i][dimension], !halfSpace.Is_Positive())) {
 			collision.didCollide = true;
 			if (!returnPoint) {
