@@ -76,7 +76,8 @@ private:
 	void Calculate_Force_Field_Effects(double in_dt);
 	void Calculate_Rigid_Body_Effects(double in_dt);
 	void Apply_Effects_To_Rigid_Bodies(double in_dt);
-	void Narrow_Collision_Interval(RigidBody2& in_body1, RigidBody2& in_body2, Collision2d& inout_collision, Ranged& inout_range, uint in_nIterations);
+	void Narrow_Collision_Interval(RigidBody2& in_body1, RigidBody2& in_body2, Collision2d& inout_collision, Ranged& inout_range, uint in_nIterations, 
+		Transform2d* out_transform1 = nullptr, Transform2d* out_transform2 = nullptr);
 	void Evaluate_Collision(RigidBody2& in_body1, RigidBody2& in_body2, const Collision2d& in_collision, Vector2d& out_bounce, Vector2d& out_friction);
 
 	RigidBodyUpdateInfo2::RigidBodyEffectInfo::Status Evaluate_Status(RigidBody2& in_body1, RigidBody2& in_body2, const Collision2d& in_collision);

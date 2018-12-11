@@ -76,13 +76,13 @@ void Test_Render(Window* window) {
 	
 	TestSpriteMover sm1 = TestSpriteMover(&circleRenderer1, circleCollider1);
 	GE.Per_Frame_Update().Add(&sm1);
-	/*
+	
 	TestSpriteMover sm2 = TestSpriteMover(&circleRenderer2, circleCollider2);
 	GE.Per_Frame_Update().Add(&sm2);
 
 	TestSpriteMover sm3 = TestSpriteMover(&circleRenderer3, circleCollider2);
 	GE.Per_Frame_Update().Add(&sm3);
-	*/
+	
 	AxisAlignedHalfSpace2d aaHalfSpace = AxisAlignedHalfSpace2d::From_Dimension_Value(1, 0, true);
 	AxisAlignedHalfSpace2CollisionMask aaHalfSpaceMask(aaHalfSpace);
 	aaHalfSpaceMask.Get_Transform().Translate_World(Vector2d(0, 600));
@@ -97,6 +97,7 @@ void Test_Render(Window* window) {
 
 	QuadTreed quadTree(AxisAlignedRectangled::From_Extrema(Vector2d(0, 0), Vector2d(800, 600)));
 
+	/*
 	Clock c;
 	uint n = 10000;
 	double t1 = c.Now();
@@ -107,7 +108,7 @@ void Test_Render(Window* window) {
 	double averageT = (t2 - t1) / n;
 	Log::main(std::to_string(averageT * 1000000) + " us");
 
-	////////////////////////////
+	*/
 
 	Vector2d positions[] = {
 		Vector2d(100.0f, 0.0f),

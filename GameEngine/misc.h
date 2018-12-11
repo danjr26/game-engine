@@ -1,7 +1,7 @@
 #ifndef MISC_H
 #define MISC_H
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -227,7 +227,12 @@ inline T Lerp(T a, T b, T t, T ta, T tb) {
 
 template<class T>
 inline T Cuberp(T a, T b, T t) {
-	return t * t * (3 - 2 * t);
+	return Lerp<T>(a, b, t * t * (3 - 2 * t));
+}
+
+template<class T>
+inline T Cuberp(T a, T b, T t, T power) {
+	return Lerp<T>(a, b, pow(t * t * (3 - 2 * t), power));
 }
 
 template<class T>

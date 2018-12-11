@@ -202,6 +202,7 @@
     <ClInclude Include="frame_rate_manager.h" />
     <ClInclude Include="game_engine.h" />
     <ClInclude Include="located_vector.h" />
+    <ClInclude Include="transitioner.h" />
     <ClInclude Include="uniform_force_field.h" />
     <ClInclude Include="half_space.h" />
     <ClInclude Include="half_space2_collision_mask.h" />

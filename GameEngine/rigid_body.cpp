@@ -171,6 +171,10 @@ Vector<double, n> RigidBody<n>::Get_Collision_Normal(RigidBody<n>& in_body1, Rig
 	Vector<double, n> normal2 = in_body2.Get_Collision_Mask()->Get_Closest_Normal(point, CollisionMask2d::PointNormalPolicy::zero);
 	Vector<double, n> normal;
 
+	if (in_collision.separator.Is_Zero()) {
+		Log::main("err");
+	}
+
 	if (normal1.Is_Zero()) {
 		if (normal2.Is_Zero()) {
 			normal = in_body1.Get_Collision_Mask()->Get_Closest_Normal(point, CollisionMask2d::PointNormalPolicy::nearest_edge);
