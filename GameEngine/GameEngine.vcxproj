@@ -172,6 +172,7 @@
     <ClInclude Include="camera_manager.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="catmull_rom_transitioner.h" />
     <ClInclude Include="circle_collision_mask.h" />
     <ClInclude Include="circle_renderer.h" />
     <ClInclude Include="circle_rigid_body.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="collision_manager.h" />
     <ClInclude Include="collision_mask.h" />
     <ClInclude Include="color.h" />
+    <ClInclude Include="cubic_transitioner.h" />
     <ClInclude Include="debug_mesh_vertex_data_renderer.h" />
     <ClInclude Include="deep_object.h" />
     <ClInclude Include="deep_transformable_object.h" />
@@ -201,6 +203,9 @@
     </ClInclude>
     <ClInclude Include="frame_rate_manager.h" />
     <ClInclude Include="game_engine.h" />
+    <ClInclude Include="hard_transitioner.h" />
+    <ClInclude Include="hermite_transitioner.h" />
+    <ClInclude Include="linear_transitioner.h" />
     <ClInclude Include="located_vector.h" />
     <ClInclude Include="transitioner.h" />
     <ClInclude Include="uniform_force_field.h" />

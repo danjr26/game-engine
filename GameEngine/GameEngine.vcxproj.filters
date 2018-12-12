@@ -127,6 +127,9 @@
     <Filter Include="Source Files\physics\rigid body">
       <UniqueIdentifier>{a664d0b7-c1fb-4880-8722-a8fb9cd7f426}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\util\transition">
+      <UniqueIdentifier>{679c41b9-833b-454f-b637-6fe8d4d0c114}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="transform.h">
@@ -520,7 +523,22 @@
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
     <ClInclude Include="transitioner.h">
-      <Filter>Header Files\util</Filter>
+      <Filter>Header Files\util\transition</Filter>
+    </ClInclude>
+    <ClInclude Include="linear_transitioner.h">
+      <Filter>Header Files\util\transition</Filter>
+    </ClInclude>
+    <ClInclude Include="cubic_transitioner.h">
+      <Filter>Header Files\util\transition</Filter>
+    </ClInclude>
+    <ClInclude Include="hard_transitioner.h">
+      <Filter>Header Files\util\transition</Filter>
+    </ClInclude>
+    <ClInclude Include="hermite_transitioner.h">
+      <Filter>Header Files\util\transition</Filter>
+    </ClInclude>
+    <ClInclude Include="catmull_rom_transitioner.h">
+      <Filter>Header Files\util\transition</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

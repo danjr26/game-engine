@@ -231,11 +231,6 @@ inline T Cuberp(T a, T b, T t) {
 }
 
 template<class T>
-inline T Cuberp(T a, T b, T t, T power) {
-	return Lerp<T>(a, b, pow(t * t * (3 - 2 * t), power));
-}
-
-template<class T>
 inline T Sign(T n) {
 	return (n > (T)0) ? (T)1 : ((n < (T)0) ? (T)-1 : (T)0);
 }

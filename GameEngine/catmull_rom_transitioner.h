@@ -1,0 +1,6 @@
+#ifndef CATMULL_ROM_TRANSITIONER_H
+#define CATMULL_ROM_TRANSITIONER_H
+
+
+
+#endif

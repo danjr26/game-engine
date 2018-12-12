@@ -1,0 +1,6 @@
+#ifndef SPLINE_TRANSITIONER_H
+#define SPLINE_TRANSITIONER_H
+
+
+
+#endif
