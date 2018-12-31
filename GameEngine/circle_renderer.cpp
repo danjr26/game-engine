@@ -20,7 +20,7 @@ void CircleRenderer::Render() {
 		shaderProgram->Get_Uniform_Location("pixelDimensions")
 	};
 
-	Matrix4f modelMatrix = (Matrix4f)transform.Get_World_Matrix();
+	Matrix4f modelMatrix = (Matrix4f)innerTransform.Get_World_Matrix();
 	Matrix4f viewMatrix = (Matrix4f)GE.Cameras().active->Get_View_Matrix();
 	Matrix4f projectionMatrix = (Matrix4f)GE.Cameras().active->Get_Projection_Matrix();
 	Matrix4f mvpMatrix = projectionMatrix * viewMatrix * modelMatrix;
@@ -30,7 +30,7 @@ void CircleRenderer::Render() {
 	glUniform4fv(locations[1], 1, color.Pointer());
 	glUniform4fv(locations[2], 1, outlineColor.Pointer());
 	glUniform1f(locations[3], outlineWidth);
-	glUniform2fv(locations[4], 1, ((Vector2f)Get_Transform().Get_Local_Scale()).Pointer());
+	glUniform2fv(locations[4], 1, ((Vector2f)innerTransform.Get_Local_Scale()).Pointer());
 
 	gpuPusher.Draw();
 }

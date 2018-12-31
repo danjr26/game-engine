@@ -28,3 +28,42 @@ TestSpriteMover::TestSpriteMover(Sprite* in_sprite, CollisionMask2d& in_mask) :
 
 void TestSpriteMover::Update(double in_dt) 
 {}
+
+TestSpriteMover2::TestSpriteMover2(Sprite* in_sprite) :
+	sprite(in_sprite),
+	accum(0.0) {
+	
+	transitioner.keys.resize(3);
+
+	transitioner.Fill_Uniform_Durations(5.0);
+
+	transitioner.keys[0].value.position = Vector2d(0, 0);
+	transitioner.keys[1].value.position = Vector2d(600, 300);
+	transitioner.keys[2].value.position = Vector2d(400, 600);
+
+	transitioner.Fill_Basic_Tangents();
+
+	/*
+	transitioner.keys[0].value.vector.Normalize();
+	transitioner.keys[0].value.vector *= 200.0;
+
+	transitioner.keys[1].value.vector.Normalize();
+	transitioner.keys[1].value.vector *= 200.0;
+
+	transitioner.keys[2].value.vector.Normalize();
+	transitioner.keys[2].value.vector *= 200.0;
+	*/
+	//transitioner.keys[0].value.vector = Vector2d(-1000, 0);
+	//transitioner.keys[2].value.vector = Vector2d(500, 0);
+
+	//transitioner.keys[0].duration = 8.0;
+}
+
+void TestSpriteMover2::Update(double in_dt) {
+	accum += in_dt;
+
+	LocatedVector2d pos = transitioner.Evaluate(accum);
+
+	sprite->Get_Transform().Set_Local_Position(pos.position);
+	sprite->Get_Transform().Set_Local_Rotation(Rotation2d(pos.vector));
+}

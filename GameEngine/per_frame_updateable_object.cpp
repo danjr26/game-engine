@@ -4,7 +4,7 @@
 PerFrameUpdateableObject::PerFrameUpdateableObject() :
 numberToSkip(0),
 skipCount(0) {
-	GE.Per_Frame_Update().Add(this);
+	//GE.Per_Frame_Update().Add(this);
 }
 
 PerFrameUpdateableObject::~PerFrameUpdateableObject() {

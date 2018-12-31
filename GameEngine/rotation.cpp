@@ -15,6 +15,11 @@ Rotation<T, 2>::Rotation(T in_angle) :
 }
 
 template<class T>
+Rotation<T, 2>::Rotation(const Vector<T, 2>& in_vec) :
+	angle(in_vec.Theta(Vector2d(1, 0)))
+{}
+
+template<class T>
 Rotation<T, 2>::Rotation(T in_from, T in_to) {
 	Rotation<T, 2> from(in_from);
 	Rotation<T, 2> to(in_to);

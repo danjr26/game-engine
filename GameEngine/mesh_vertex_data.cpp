@@ -1,5 +1,6 @@
 #include "mesh_vertex_data.h"
 #include "game_engine.h"
+#include <algorithm>
 
 
 
@@ -303,6 +304,165 @@ void MeshVertexData::Add_Faces(uint in_nFaces, const void* in_indices) {
 	uint length = in_nFaces * 3 * Get_Data_Type_Size(indexType);
 	const ubyte* ptr = (const ubyte*)in_indices;
 	indices.insert(indices.end(), ptr, ptr + length);
+}
+
+template<class T>
+void MeshVertexData::Add_Faces_Polygon() {
+	Add_Faces_Polygon<T>(0, nVertices);
+}
+
+template void MeshVertexData::Add_Faces_Polygon<float>();
+template void MeshVertexData::Add_Faces_Polygon<double>();
+
+template<class T>
+void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
+	if (!Has_Member(MemberID::position) || Get_Member_Type(MemberID::position) != To_Data_Type<T>() || in_nVertices < 3) {
+		throw InvalidArgumentException();
+	}
+
+	struct PointData {
+		uint index;
+		PointData* next;
+		PointData* prev;
+		Range<T> yVision;
+	};
+
+	const Vector<T, 2>* values = (const Vector<T, 2>*)this->Get_Member_Pointer(MemberID::position);
+
+	// expand points
+	std::vector<PointData*> pointData;
+	pointData.reserve(in_nVertices);
+	for (uint i = 0; i < in_nVertices; i++) {
+		pointData.push_back(new PointData());
+	}
+
+	// connect points
+	for (uint i = 0; i < in_nVertices; i++) {
+		const Vector<T, 2>& point = values[i];
+		pointData[i]->index = i;
+		pointData[i]->next = pointData[(i == in_nVertices - 1) ? (0) : (i + 1)];
+		pointData[i]->prev = pointData[(i == 0) ? (in_nVertices - 1) : (i - 1)];
+		pointData[i]->yVision = Range<T>(point.Y());
+	}
+
+	// sort points by x value
+	std::sort(pointData.begin(), pointData.end(), 
+		[values](PointData*& p1, PointData*& p2) {
+			return values[p1->index].X() < values[p2->index].X();
+		}
+	);
+
+	// find point visions
+	std::unordered_multimap<PointData*, PointData*> activeEdges;
+	for (uint i = 0; i < pointData.size(); i++) {
+		const Vector<T, 2>& point = values[pointData[i]->index];
+		const Vector<T, 2>& prevPoint = values[pointData[i]->prev->index];
+		const Vector<T, 2>& nextPoint = values[pointData[i]->next->index];
+
+		// delete edges that end at this point
+		auto searchRange = activeEdges.equal_range(pointData[i]);
+		activeEdges.erase(searchRange.first, searchRange.second);
+
+		bool shouldSkip = false;
+
+		// vertically aligned previous point
+		if (point.X() == prevPoint.X()) {
+			pointData[i]->yVision.Expand_To(prevPoint.Y());
+			shouldSkip = true;
+		}
+
+		// vertically aligned next point
+		if (point.X() == nextPoint.X()) {
+			pointData[i]->yVision.Expand_To(nextPoint.Y());
+			shouldSkip = true;
+		}
+
+		// corner - no vision
+		if ((point.X() <= prevPoint.X() && point.X() <= nextPoint.X()) ||
+			(point.X() >= prevPoint.X() && point.X() >= nextPoint.X())) {
+
+			shouldSkip = true;
+		}
+
+		if (shouldSkip) {
+			continue;
+		}
+
+		// restrict to closest edge on either side
+		for (auto it = activeEdges.begin(); it != activeEdges.end(); it++) {
+			const Vector<T, 2>& edgePoint1 = values[it->first->index];
+			const Vector<T, 2>& edgePoint2 = values[it->second->index];
+
+			// vertically aligned point - already dealt with
+			if (point.X() == edgePoint1.X() || point.X() == edgePoint2.X()) {
+				continue;
+			}
+
+			// project onto line
+			T interpolatedY = Lerp(edgePoint1.Y(), edgePoint2.Y(), point.X(), edgePoint1.X(), edgePoint2.X());
+
+			// use this value if it properly restricts downward vision 
+			if (pointData[i]->yVision.Get_Low() == point.Y() ||
+				(interpolatedY < point.Y() && interpolatedY > pointData[i]->yVision.Get_Low())) {
+
+				pointData[i]->yVision.Set_Low(interpolatedY);
+			}
+
+			// use this value if it properly restricts upward vision
+			if (pointData[i]->yVision.Get_High() == point.Y() ||
+				(interpolatedY > point.Y() && interpolatedY < pointData[i]->yVision.Get_High())) {
+
+				pointData[i]->yVision.Set_High(interpolatedY);
+			}
+		}
+
+		// add back edge
+		if (point.X() < prevPoint.X()) {
+			activeEdges.insert(std::pair<PointData*, PointData*>(pointData[i]->prev, pointData[i]));
+		}
+
+		// add forward edge
+		if (point.X() < nextPoint.X()) {
+			activeEdges.insert(std::pair<PointData*, PointData*>(pointData[i]->next, pointData[i]));
+		}
+	}
+
+	// divide into monotone polygons
+	std::unordered_multimap<PointData*, PointData*> newEdges;
+	for (uint i = 0; i < pointData.size(); i++) {
+		const Vector<T, 2>& point = values[pointData[i]->index];
+		const Vector<T, 2>& prevPoint = values[pointData[i]->prev->index];
+		const Vector<T, 2>& nextPoint = values[pointData[i]->next->index];
+
+		// split
+		if (point.X() < prevPoint.X() && point.X() < nextPoint.X() && nextPoint.Y() > prevPoint.Y()) {
+			for (int j = i - 1; j >= 0; j--) {
+				if (values[pointData[j]->index].X() != point.X() && pointData[j]->yVision.Contains_Inc(point.Y())) {
+					newEdges.insert(std::pair<PointData*, PointData*>(pointData[i], pointData[j]));
+					break;
+				}
+			}
+		}
+
+		// merge
+		if (point.X() > prevPoint.X() && point.X() > nextPoint.X() && nextPoint.Y() < prevPoint.Y()) {
+			for (int j = i + 1; j < pointData.size(); j++) {
+				if (values[pointData[j]->index].X() != point.X() && pointData[j]->yVision.Contains_Inc(point.Y())) {
+					newEdges.insert(std::pair<PointData*, PointData*>(pointData[i], pointData[j]));
+					break;
+				}
+			}
+		}
+	}
+
+	for (uint i = 0; i < in_nVertices; i++) {
+		delete pointData[i];
+	}
+}
+
+template<class T>
+void MeshVertexData::Add_Faces_Delaunay() {
+	Add_Faces_Delaunay(0, nVertices);
 }
 
 void MeshVertexData::Remove_Face(uint in_index) {

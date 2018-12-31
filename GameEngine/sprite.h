@@ -13,13 +13,13 @@
 
 class Sprite : public RenderableObject, public DeepTransformableObject2d {
 protected:
+	Transform2d innerTransform;
 	MeshVertexData meshVertexData;
 	MeshVertexGPUPusher gpuPusher;
 	TextureInstance textureInstance;
-	//ShaderProgramInstance shaderInstance;
 	ColorRGBAf color;
 public:
-	Sprite(const AxisAlignedRectangled& in_rectangle, Texture* in_texture, const ColorRGBAf& in_color = ColorRGBAf(1, 1, 1, 1));
+	Sprite(const AxisAlignedRectangled& in_rectangle, Texture* in_texture = nullptr, const ColorRGBAf& in_color = ColorRGBAf(1, 1, 1, 1));
 	~Sprite();
 	void Set_UVs(const Vector2f& in_topLeft, const Vector2f& in_bottomRight);
 	void Set_Color(const ColorRGBAf& in_color);

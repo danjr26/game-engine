@@ -23,6 +23,7 @@ public:
 	Rotation(const Rotation<T2, 2>& in_other) : angle((T)in_other.angle) {}
 	Rotation(T in_angle);
 	Rotation(T in_from, T in_to);
+	Rotation(const Vector<T, 2>& in_vec);
 	Rotation(const Rotation<T, 2>& in_from, const Rotation<T, 2>& in_to);
 	Rotation(const UnclampedRotation<T, 2>& in_rotation);
 

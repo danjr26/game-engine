@@ -12,9 +12,7 @@ struct HermiteTransitioner : Transitioner<LocatedVector<ValT, n>, TimeT> {
 			throw ProcessFailureException();
 		}
 
-		if (in_time < 0) {
-			return keys.front().value;
-		}
+		in_time = Clamp_Floor<TimeT>(in_time, 0);
 
 		TimeT t = 0;
 		for (uint i = 0; i < keys.size() - 1; i++) {
@@ -63,7 +61,7 @@ struct HermiteTransitioner : Transitioner<LocatedVector<ValT, n>, TimeT> {
 		Fill_Basic_Tangents(keys.front().value.position, keys.back().value.position);
 	}
 
-	void Fill_Basic_Tangents(const Vector<ValtT, n>& in_control1, const Vector<ValT, n>& in_control2) {
+	void Fill_Basic_Tangents(const Vector<ValT, n>& in_control1, const Vector<ValT, n>& in_control2) {
 		if (keys.size() == 0) {
 			return;
 		}
@@ -77,7 +75,8 @@ struct HermiteTransitioner : Transitioner<LocatedVector<ValT, n>, TimeT> {
 			const Vector<ValT, n>& v2 = (i == keys.size() - 1) ? in_control2 : keys[i + 1].value.position;
 			TimeT t1 = (i == 0) ? keys[i].duration : keys[i - 1].duration;
 			TimeT t2 = (i == keys.size() - 1) ? keys[i - 1].duration : keys[i].duration;
-			keys[i].value.vector = ((v1 - v0) / (t1) + (v2 - v1) / (t2)) / (TimeT)2;
+			//keys[i].value.vector = ((v1 - v0) + (v2 - v1)) / (TimeT)2;
+			keys[i].value.vector = ((v1 - v0) + (v2 - v1)) / (TimeT)2;
 		}
 	}
 
@@ -86,7 +85,7 @@ struct HermiteTransitioner : Transitioner<LocatedVector<ValT, n>, TimeT> {
 		Fill_Cardinal_Tangents(keys.front().value.position, keys.back().value.position, in_tension);
 	}
 
-	void Fill_Cardinal_Tangents(const Vector<ValtT, n>& in_control1, const Vector<ValT, n>& in_control2, TimeT in_tension = (TimeT)0) {
+	void Fill_Cardinal_Tangents(const Vector<ValT, n>& in_control1, const Vector<ValT, n>& in_control2, TimeT in_tension = (TimeT)0) {
 		if (keys.size() == 0) {
 			return;
 		}
@@ -99,7 +98,9 @@ struct HermiteTransitioner : Transitioner<LocatedVector<ValT, n>, TimeT> {
 			const Vector<ValT, n>& v2 = (i == keys.size() - 1) ? in_control2 : keys[i + 1].value.position;
 			TimeT t1 = (i == 0) ? keys[i].duration : keys[i - 1].duration;
 			TimeT t2 = (i == keys.size() - 1) ? keys[i - 1].duration : keys[i].duration;
+			//keys[i].value.vector = (v1 - v2) / 2 * ((TimeT)1 - in_tension);
 			keys[i].value.vector = (v1 - v2) / (t1 + t2) * ((TimeT)1 - in_tension);
+			//keys[i].value.vector = (v1 * t1 - v2 * t2) / (t1 + t2) / (t1 + t2) * ((TimeT)1 - in_tension);
 		}
 	}
 };

@@ -565,7 +565,7 @@ void PhysicsManager::Evaluate_Collision(RigidBody2& in_body1, RigidBody2& in_bod
 	double numerator = (1.0 + restitution) * approachVelocity.Dot(normal);
 	double denominator = linearFactor1 + linearFactor2 + abs(angularFactor.Dot(normal));
 
-	Vector2d impulse = (denominator == 0.0) ? Vector2d(0, 0) : normal * (-1.0 + (numerator / denominator));
+	Vector2d impulse = (denominator == 0.0) ? Vector2d(0, 0) : normal * (-2.0 + (numerator / denominator));
 
 	Vector2d parallelVelocity = approachVelocity - normal * approachVelocity.Dot(normal);
 	double frictionCoeff = (parallelVelocity.Magnitude() <= slidingEpsilon) ?

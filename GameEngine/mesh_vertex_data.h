@@ -79,6 +79,19 @@ public:
 	void Set_Vertices(uint in_index, uint in_nVertices, std::initializer_list<const void*> in_data);
 
 	void Add_Faces(uint in_nFaces, const void* in_indices);
+
+	template<class T>
+	void Add_Faces_Polygon();
+
+	template<class T>
+	void Add_Faces_Polygon(uint in_index, uint in_nVertices);
+
+	template<class T>
+	void Add_Faces_Delaunay();
+
+	template<class T>
+	void Add_Faces_Delaunay(uint in_index, uint in_nVertices);
+
 	void Remove_Face(uint in_index);
 	const void* Get_Face(uint in_index) const;
 	void Set_Face(uint in_faceIndex, const void* in_indices);

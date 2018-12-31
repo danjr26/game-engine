@@ -11,6 +11,8 @@
 #include "rectangle_collision_mask.h"
 #include "collision_context.h"
 #include "rigid_body.h"
+#include "hermite_transitioner.h"
+#include "catmull_rom_transitioner.h"
 
 class TestInputContext : public InputContext {
 public:
@@ -47,6 +49,17 @@ private:
 
 public:
 	TestSpriteMover(Sprite* in_sprite, CollisionMask2d& in_mask);
+	void Update(double in_dt) override;
+};
+
+class TestSpriteMover2 : public PerFrameUpdateableObject {
+private:
+	Sprite* sprite;
+	double accum;
+	HermiteTransitioner<double, 2> transitioner;
+
+public:
+	TestSpriteMover2(Sprite* in_sprite);
 	void Update(double in_dt) override;
 };
 

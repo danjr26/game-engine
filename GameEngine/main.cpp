@@ -50,6 +50,12 @@ void Test_Render(Window* window) {
 	CircleRenderer circleRenderer3(circle2, ColorRGBAf(1, 1, 1, 0), 2.0, ColorRGBAf(1, 1, 1, 1.0));
 	GE.Render().Add(&circleRenderer3);
 
+	Texture arrow(Texture::Type::_2d, "img/test_arrow.png", 8, Texture::Flags::none);
+
+	//CircleRenderer circleRenderer4(circle2, ColorRGBAf(1, 1, 1, 0), 2.0, ColorRGBAf(1, 1, 1, 1.0));
+	Sprite circleRenderer4(AxisAlignedRectangled::From_Center(Vector2d(0, 0), Vector2d(1000, 1000)), &arrow);
+	circleRenderer4.Set_Color(ColorRGBAf(0.8, 0.4, 0.4, 0.5));
+	GE.Render().Add(&circleRenderer4);
 
 	InPlaceCollisionEvaluator2d collEval = InPlaceCollisionEvaluator2d();
 	Collision coll = collEval.Evaluate(circleCollider1, circleCollider2);
@@ -82,6 +88,9 @@ void Test_Render(Window* window) {
 
 	TestSpriteMover sm3 = TestSpriteMover(&circleRenderer3, circleCollider2);
 	GE.Per_Frame_Update().Add(&sm3);
+
+	TestSpriteMover2 sm4 = TestSpriteMover2(&circleRenderer4);
+	GE.Per_Frame_Update().Add(&sm4);
 	
 	AxisAlignedHalfSpace2d aaHalfSpace = AxisAlignedHalfSpace2d::From_Dimension_Value(1, 0, true);
 	AxisAlignedHalfSpace2CollisionMask aaHalfSpaceMask(aaHalfSpace);
@@ -135,6 +144,19 @@ void Test_Render(Window* window) {
 	rigidBody->Get_Transform().Set_Local_Rotation(PI / 4);
 	rigidBody->Set_Linear_Velocity(Vector2d(50, 0));
 	GE.Physics().Add(rigidBody);
+
+	Vector2d polyPoints[] = {
+		Vector2d(0, 0),
+		Vector2d(100, 0),
+		Vector2d(50, 50),
+		Vector2d(100, 100),
+		Vector2d(0, 100)
+	};
+
+	MeshVertexData poly(MeshVertexData::DataType::_ubyte);
+	poly.Add_Vertices(5, {});
+	poly.Add_Member(MeshVertexData::MemberID::position, MeshVertexData::DataType::_double, 2, polyPoints);
+	poly.Add_Faces_Polygon<double>();
 
 	Vector2i winDim = window->Get_Dimensions();
 

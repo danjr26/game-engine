@@ -8,8 +8,9 @@ Sprite::Sprite(const AxisAlignedRectangled& in_rectangle, Texture* in_texture, c
 	color(in_color),
 	textureInstance(in_texture) {
 
-	transform.Set_Local_Position(in_rectangle.Get_Minima());
-	transform.Scale_Local(in_rectangle.Get_Dimensions());
+	innerTransform.Set_Local_Position(in_rectangle.Get_Minima());
+	innerTransform.Scale_Local(in_rectangle.Get_Dimensions());
+	innerTransform.Set_Parent(&transform);
 
 	Vector3f positions[] = {
 		Vector3f(0.0f, 0.0f, 0.0f),
@@ -74,7 +75,7 @@ void Sprite::Render() {
 
 	ShaderProgram* shaderProgram;
 
-	Matrix4f modelMatrix = transform.Get_World_Matrix();
+	Matrix4f modelMatrix = innerTransform.Get_World_Matrix();
 	Matrix4f viewMatrix = GE.Cameras().active->Get_View_Matrix();
 	Matrix4f projectionMatrix = GE.Cameras().active->Get_Projection_Matrix();
 
