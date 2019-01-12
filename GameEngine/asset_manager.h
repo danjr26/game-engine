@@ -44,7 +44,7 @@ public:
 		std::pair<std::string, T*> pair(name, in_asset);
 		if (!assets.insert(pair).second) {
 			Log::main("error: duplicate asset name");
-			exit(-1);
+			GE.Exit();
 		}
 	}
 

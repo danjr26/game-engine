@@ -1,4 +1,5 @@
 #include "shader.h"
+#include "game_engine.h"
 
 Shader::Shader(Shader::Type in_type, std::string in_filename) :
 type(in_type) {
@@ -7,7 +8,7 @@ type(in_type) {
 
 	if (!file.is_open()) {
 		Log::main(std::string("error: could not open file '") + in_filename + "'");
-		exit(-1);
+		GE.Exit();
 	}
 
 	file.seekg(0, std::ios::end);
@@ -36,7 +37,7 @@ type(in_type) {
 		glGetShaderInfoLog(id, logLength, nullptr, log);
 		Log::main(std::string("\nerror: shader '") + in_filename + "' compilation failed:\n" + log);
 		delete[] log;
-		exit(-1);
+		GE.Exit();
 	}
 
 	delete[] buffer;
@@ -58,6 +59,6 @@ Shader::Type Shader::Parse_Type(const std::string& in_text) {
 	if (in_text == "tess_eval") return Type::tess_eval;
 	if (in_text == "compute") return Type::compute;
 	Log::main(std::string("invalid shader type string literal '") + in_text + "'");
-	exit(-1);
+	GE.Exit();
 }
 

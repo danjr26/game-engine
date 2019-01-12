@@ -8,7 +8,7 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 	ubyte xButton;
 	switch (in_message) {
 	case WM_DESTROY:
-		exit(1);
+		GE.Exit();
 		return 0;
 	case WM_LBUTTONDOWN:
 		inputEvent.windowHandle = in_hwnd;

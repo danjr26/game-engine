@@ -11,6 +11,7 @@ TestInputContext::TestInputContext() :
 }
 
 bool TestInputContext::Process_Raw_Event(const RawInputEvent& in_event) {
+	if (in_event.type == RawInputEvent::Type::key_down && in_event.keyboard.key == Key::escape) GE.Exit();
 	return Auto_Update(in_event);
 }
 

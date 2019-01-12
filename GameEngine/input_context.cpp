@@ -37,8 +37,7 @@ InputEvent InputContext::Auto_Translate_Range(InputBindings::Iterator& in_iter, 
 }
 
 bool InputContext::Auto_Process_Action(InputBindings::Iterator& in_iter) {
-	Distribute_Event(Auto_Translate_Action(in_iter));
-	return true;
+	return Distribute_Event(Auto_Translate_Action(in_iter));
 }
 
 bool InputContext::Auto_Process_State(InputBindings::Iterator& in_iter) {
@@ -58,16 +57,16 @@ bool InputContext::Auto_Process_State(InputBindings::Iterator& in_iter) {
 		newValue = !states[bindings[in_iter]];
 		break;
 	}
-	Distribute_Event(Auto_Translate_State(in_iter, newValue));
+	bool eaten = Distribute_Event(Auto_Translate_State(in_iter, newValue));
 	states[bindings[in_iter]] = newValue;
-	return true;
+	return eaten;
 }
 
 bool InputContext::Auto_Process_Range(InputBindings::Iterator& in_iter) {
 	float newValue = bindings.Evaluate_Range(in_iter);
-	Distribute_Event(Auto_Translate_Range(in_iter, newValue));
+	bool eaten = Distribute_Event(Auto_Translate_Range(in_iter, newValue));
 	ranges[bindings[in_iter]] = newValue;
-	return true;
+	return eaten;
 }
 
 bool InputContext::Auto_Update_Actions(const RawInputEvent& in_event) {
@@ -102,10 +101,11 @@ bool InputContext::Auto_Update(const RawInputEvent& in_event) {
 	);
 }
 
-void InputContext::Distribute_Event(const InputEvent& in_event) {
+bool InputContext::Distribute_Event(const InputEvent& in_event) {
 	for (uint i = 0; i < listeners.size(); i++) {
-		if (listeners[i]->Post_Event(in_event)) break;
+		if (listeners[i]->Post_Event(in_event)) return true;
 	}
+	return false;
 }
 
 bool InputContext::Process_Raw_Event(const RawInputEvent& in_event) {

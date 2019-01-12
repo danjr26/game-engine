@@ -324,7 +324,6 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 		uint index;
 		PointData* next;
 		PointData* prev;
-		Range<T> yVision;
 	};
 
 	const Vector<T, 2>* values = (const Vector<T, 2>*)this->Get_Member_Pointer(MemberID::position);
@@ -342,18 +341,21 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 		pointData[i]->index = i;
 		pointData[i]->next = pointData[(i == in_nVertices - 1) ? (0) : (i + 1)];
 		pointData[i]->prev = pointData[(i == 0) ? (in_nVertices - 1) : (i - 1)];
-		pointData[i]->yVision = Range<T>(point.Y());
 	}
 
+	/*
 	// sort points by x value
-	std::sort(pointData.begin(), pointData.end(), 
+	std::sort(
+		pointData.begin(), 
+		pointData.end(), 
 		[values](PointData*& p1, PointData*& p2) {
 			return values[p1->index].X() < values[p2->index].X();
 		}
 	);
 
-	// find point visions
+	// split into monotone polygons
 	std::unordered_multimap<PointData*, PointData*> activeEdges;
+	std::unordered_multimap<PointData*, PointData*> newEdges;
 	for (uint i = 0; i < pointData.size(); i++) {
 		const Vector<T, 2>& point = values[pointData[i]->index];
 		const Vector<T, 2>& prevPoint = values[pointData[i]->prev->index];
@@ -363,56 +365,50 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 		auto searchRange = activeEdges.equal_range(pointData[i]);
 		activeEdges.erase(searchRange.first, searchRange.second);
 
-		bool shouldSkip = false;
+		const bool isLine = point.X() == prevPoint.X() && point.X() == nextPoint.X();
+		const bool isSplit = !isLine && point.X() <= prevPoint.X() && point.X() <= nextPoint.X() && nextPoint.Y() > prevPoint.Y();
+		const bool isMerge = !isLine && point.X() >= prevPoint.X() && point.X() >= nextPoint.X() && nextPoint.Y() < prevPoint.Y();
 
-		// vertically aligned previous point
-		if (point.X() == prevPoint.X()) {
-			pointData[i]->yVision.Expand_To(prevPoint.Y());
-			shouldSkip = true;
-		}
+		if (isSplit || isMerge) {
+			PointData* anchorPoint = nullptr;
+			std::pair<PointData*, PointData*> lowEdge(nullptr, nullptr);
+			std::pair<PointData*, PointData*> highEdge(nullptr, nullptr);
+			T lowY, highY;
 
-		// vertically aligned next point
-		if (point.X() == nextPoint.X()) {
-			pointData[i]->yVision.Expand_To(nextPoint.Y());
-			shouldSkip = true;
-		}
-
-		// corner - no vision
-		if ((point.X() <= prevPoint.X() && point.X() <= nextPoint.X()) ||
-			(point.X() >= prevPoint.X() && point.X() >= nextPoint.X())) {
-
-			shouldSkip = true;
-		}
-
-		if (shouldSkip) {
-			continue;
-		}
-
-		// restrict to closest edge on either side
-		for (auto it = activeEdges.begin(); it != activeEdges.end(); it++) {
-			const Vector<T, 2>& edgePoint1 = values[it->first->index];
-			const Vector<T, 2>& edgePoint2 = values[it->second->index];
-
-			// vertically aligned point - already dealt with
-			if (point.X() == edgePoint1.X() || point.X() == edgePoint2.X()) {
-				continue;
+			for (auto it = activeEdges.begin(); it != activeEdges.end(); it++) {
+				const Vector<T, 2>& edgePoint1 = values[it->first->index];
+				const Vector<T, 2>& edgePoint2 = values[it->second->index];
+				T interpolatedY = Lerp(edgePoint1.Y(), edgePoint2.Y(), point.X(), edgePoint1.X(), edgePoint2.X());
+				if (lowEdge.first == nullptr || interpolatedY > lowY) {
+					lowY = interpolatedY;
+					lowEdge = *it;
+				}
+				if (highEdge.first == nullptr || interpolatedY < highY) {
+					highY = interpolatedY;
+					highEdge = *it;
+				}
 			}
 
-			// project onto line
-			T interpolatedY = Lerp(edgePoint1.Y(), edgePoint2.Y(), point.X(), edgePoint1.X(), edgePoint2.X());
+			for (int j = (isSplit) ? i - 1 : i + 1; (isSplit) ? (j >= 0) : (j < pointData.size()); j += (isSplit) ? -1 : 1) {
+				const Vector<T, 2>& testPoint = values[pointData[j]->index];
+				const Vector<T, 2>& lowEdgePoint1 = values[lowEdge.first->index];
+				const Vector<T, 2>& lowEdgePoint2 = values[lowEdge.second->index];
+				const Vector<T, 2>& highEdgePoint1 = values[highEdge.first->index];
+				const Vector<T, 2>& highEdgePoint2 = values[highEdge.second->index];
 
-			// use this value if it properly restricts downward vision 
-			if (pointData[i]->yVision.Get_Low() == point.Y() ||
-				(interpolatedY < point.Y() && interpolatedY > pointData[i]->yVision.Get_Low())) {
+				T interpolatedY1 = Lerp(lowEdgePoint1.Y(), lowEdgePoint2.Y(), testPoint.X(), lowEdgePoint1.X(), lowEdgePoint2.X());
+				T interpolatedY2 = Lerp(highEdgePoint1.Y(), highEdgePoint2.Y(), testPoint.X(), highEdgePoint1.X(), highEdgePoint2.X());
 
-				pointData[i]->yVision.Set_Low(interpolatedY);
-			}
+				if (pointData[j] == lowEdge.first || pointData[j] == lowEdge.second || 
+					pointData[j] == highEdge.first || pointData[j] == highEdge.second || 
+					Is_Between_Inc<T>(testPoint.Y(), interpolatedY1, interpolatedY2)) {
 
-			// use this value if it properly restricts upward vision
-			if (pointData[i]->yVision.Get_High() == point.Y() ||
-				(interpolatedY > point.Y() && interpolatedY < pointData[i]->yVision.Get_High())) {
-
-				pointData[i]->yVision.Set_High(interpolatedY);
+					for (int k = i; values[pointData[k]->index].X() == point.X(); k = pointData[k]->next->index) {
+						newEdges.insert(std::pair<PointData*, PointData*>(pointData[k], pointData[j]));
+						newEdges.insert(std::pair<PointData*, PointData*>(pointData[j], pointData[k]));
+					}
+					break;
+				}
 			}
 		}
 
@@ -427,34 +423,92 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 		}
 	}
 
-	// divide into monotone polygons
-	std::unordered_multimap<PointData*, PointData*> newEdges;
-	for (uint i = 0; i < pointData.size(); i++) {
-		const Vector<T, 2>& point = values[pointData[i]->index];
-		const Vector<T, 2>& prevPoint = values[pointData[i]->prev->index];
-		const Vector<T, 2>& nextPoint = values[pointData[i]->next->index];
+	// triangulate monotone polygons
+	std::vector<std::pair<PointData*, PointData*>> edgesLeft;
+	edgesLeft.push_back(std::pair<PointData*, PointData*>(pointData[0], pointData[0]->next));
+	while (!edgesLeft.empty()) {
+		const Vector<T, 2>& point1 = values[edgesLeft.back().first->index];
+		const Vector<T, 2>& point2 = values[edgesLeft.back().second->index];
+		auto search = newEdges.equal_range(edgesLeft.back().second);
+		
+	}
+	*/
 
-		// split
-		if (point.X() < prevPoint.X() && point.X() < nextPoint.X() && nextPoint.Y() > prevPoint.Y()) {
-			for (int j = i - 1; j >= 0; j--) {
-				if (values[pointData[j]->index].X() != point.X() && pointData[j]->yVision.Contains_Inc(point.Y())) {
-					newEdges.insert(std::pair<PointData*, PointData*>(pointData[i], pointData[j]));
-					break;
-				}
+	auto addEar = [this](PointData* earNode) {
+		union {
+			uchar bytes[3];
+			ushort shorts[3];
+			uint ints[3];
+		} indices;
+
+		switch (indexType) {
+		case DataType::_byte:
+		case DataType::_ubyte:
+			indices.bytes[0] = earNode->prev->index;
+			indices.bytes[1] = earNode->index;
+			indices.bytes[2] = earNode->next->index;
+			break;
+		case DataType::_short:
+		case DataType::_ushort:
+			indices.shorts[0] = earNode->prev->index;
+			indices.shorts[1] = earNode->index;
+			indices.shorts[2] = earNode->next->index;
+			break;
+		case DataType::_int:
+		case DataType::_uint:
+			indices.ints[0] = earNode->prev->index;
+			indices.ints[1] = earNode->index;
+			indices.ints[2] = earNode->next->index;
+			break;
+		default:
+			throw InvalidArgumentException();
+		}
+
+		Add_Faces(1, &indices);
+		earNode->prev->next = earNode->next;
+		earNode->next->prev = earNode->prev;
+	};
+
+	PointData* currentNode = pointData[0];
+	PointData* repeatNode = pointData[0];
+	bool isRepeating = false;
+	for (; currentNode->next->next->next != currentNode; currentNode = currentNode->next) {
+		const Vector<T, 2>& thisPoint = values[currentNode->index];
+		const Vector<T, 2>& nextPoint = values[currentNode->next->index];
+		const Vector<T, 2>& prevPoint = values[currentNode->prev->index];
+		
+		if (currentNode == repeatNode) {
+			isRepeating = true;
+		}
+
+		if ((thisPoint - prevPoint).Orthogonal().Dot(nextPoint - thisPoint) > 0 ||
+			!(isRepeating || (thisPoint - prevPoint).Dot(nextPoint - thisPoint) <= 0)) {
+			
+			continue;
+		}
+
+		bool isEar = true;
+		for (PointData* testNode = currentNode->next->next; testNode != currentNode->prev; testNode = testNode->next) {
+			const Vector<T, 2>& testPoint = values[testNode->index];
+			if ((thisPoint - prevPoint).Orthogonal().Dot(testPoint - prevPoint) <= 0 &&
+				(nextPoint - thisPoint).Orthogonal().Dot(testPoint - thisPoint) <= 0 &&
+				(prevPoint - nextPoint).Orthogonal().Dot(testPoint - nextPoint) <= 0) {
+
+				isEar = false;
+				break;
 			}
 		}
 
-		// merge
-		if (point.X() > prevPoint.X() && point.X() > nextPoint.X() && nextPoint.Y() < prevPoint.Y()) {
-			for (int j = i + 1; j < pointData.size(); j++) {
-				if (values[pointData[j]->index].X() != point.X() && pointData[j]->yVision.Contains_Inc(point.Y())) {
-					newEdges.insert(std::pair<PointData*, PointData*>(pointData[i], pointData[j]));
-					break;
-				}
-			}
+		if (isEar) {
+			addEar(currentNode);
+			repeatNode = currentNode->prev;
+			isRepeating = false;
 		}
 	}
 
+	addEar(currentNode);
+
+	// clean up
 	for (uint i = 0; i < in_nVertices; i++) {
 		delete pointData[i];
 	}

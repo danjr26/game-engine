@@ -33,7 +33,7 @@ protected:
 
 	bool Auto_Update(const RawInputEvent& in_event);
 
-	virtual void Distribute_Event(const InputEvent& in_event);
+	virtual bool Distribute_Event(const InputEvent& in_event);
 
 public:
 	virtual bool Process_Raw_Event(const RawInputEvent& in_event);

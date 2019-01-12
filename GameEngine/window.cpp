@@ -95,6 +95,7 @@ Window::~Window() {
 	std::lock_guard<std::mutex> lock(mutex);
 	GE.Windows().Remove(this);
 	DestroyWindow(hWindow);
+	Set_Fullscreen(false);
 }
 
 void Window::Flip_Buffers() {
@@ -220,7 +221,7 @@ void Window::Set_Fullscreen(bool in_value) {
 		deviceMode.dmPelsWidth = params.dimensions.X();
 		deviceMode.dmPelsHeight = params.dimensions.Y();
 		deviceMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFIXEDOUTPUT;
-		deviceMode.dmDisplayFixedOutput = DMDFO_STRETCH;
+		deviceMode.dmDisplayFixedOutput = DMDFO_CENTER;
 
 		ChangeDisplaySettingsEx(NULL, &deviceMode, NULL, CDS_FULLSCREEN | CDS_RESET, NULL);
 	}

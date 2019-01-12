@@ -53,7 +53,7 @@ void Test_Render(Window* window) {
 	Texture arrow(Texture::Type::_2d, "img/test_arrow.png", 8, Texture::Flags::none);
 
 	//CircleRenderer circleRenderer4(circle2, ColorRGBAf(1, 1, 1, 0), 2.0, ColorRGBAf(1, 1, 1, 1.0));
-	Sprite circleRenderer4(AxisAlignedRectangled::From_Center(Vector2d(0, 0), Vector2d(1000, 1000)), &arrow);
+	Sprite circleRenderer4(AxisAlignedRectangled::From_Center(Vector2d(0, 0), Vector2d(100, 100)), &arrow);
 	circleRenderer4.Set_Color(ColorRGBAf(0.8, 0.4, 0.4, 0.5));
 	GE.Render().Add(&circleRenderer4);
 
@@ -66,6 +66,7 @@ void Test_Render(Window* window) {
 	EditableText eText = EditableText(&textInput, rasterSet);
 	eText.Get_Transform().Translate_Local(Vector2d(200, 0));
 	GE.Render().Add(&eText);
+	GE.Per_Frame_Update().Add(&eText);
 
 	TestInputContext ic;
 	GE.Input().Add_After(nullptr, &ic);
@@ -147,7 +148,7 @@ void Test_Render(Window* window) {
 
 	Vector2d polyPoints[] = {
 		Vector2d(0, 0),
-		Vector2d(100, 0),
+		Vector2d(100, 50),
 		Vector2d(50, 50),
 		Vector2d(100, 100),
 		Vector2d(0, 100)
@@ -157,6 +158,9 @@ void Test_Render(Window* window) {
 	poly.Add_Vertices(5, {});
 	poly.Add_Member(MeshVertexData::MemberID::position, MeshVertexData::DataType::_double, 2, polyPoints);
 	poly.Add_Faces_Polygon<double>();
+
+	DebugMeshVertexDataRenderer polyRenderer(&poly);
+	GE.Render().Add(&polyRenderer);
 
 	Vector2i winDim = window->Get_Dimensions();
 
@@ -208,8 +212,10 @@ int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nA
 	Window::Params params =
 		Window::Params(in_hInst)
 		.Name(L"Test")
-		.Dimensions(Vector2i(800, 600))
-		.Fullscreen(false)
+		.Dimensions(Vector2i(900, 650))
+		.Fullscreen(true)
+		.Title_Bar(false)
+		.Border(false)
 		.Always_Front(false);
 
 	Window window(params);

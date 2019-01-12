@@ -48,7 +48,7 @@ void ShaderProgram::Load_XML_List(std::string in_filename) {
 	std::ifstream file(in_filename);
 	if (!file.is_open()) {
 		Log::main(std::string("error: cannot open file '") + in_filename + "'");
-		exit(-1);
+		GE.Exit();
 	}
 
 	file.seekg(0, file.end);
@@ -70,7 +70,7 @@ void ShaderProgram::Load_XML_List(std::string in_filename) {
 	auto masterNode = doc.first_node("ShaderList");
 	if (!masterNode) {
 		Log::main(std::string("error: invalid shader list file '") + in_filename + "'");
-		exit(-1);
+		GE.Exit();
 	}
 	
 	for (auto node = masterNode->first_node("ShaderProgram"); node; node = node->next_sibling("ShaderProgram")) {
@@ -78,7 +78,7 @@ void ShaderProgram::Load_XML_List(std::string in_filename) {
 
 		if (!nameAttribute) {
 			Log::main(std::string("error: invalid shader list file '") + in_filename + "'");
-			exit(-1);
+			GE.Exit();
 		}
 
 		std::vector<Shader> myShaders;
@@ -88,7 +88,7 @@ void ShaderProgram::Load_XML_List(std::string in_filename) {
 
 			if (!typeAttribute || !fileAttribute) {
 				Log::main(std::string("error: invalid shader list file '") + in_filename + "'");
-				exit(-1);
+				GE.Exit();
 			}
 
 			Shader* shader = new Shader(Shader::Parse_Type(typeAttribute->value()), fileAttribute->value());

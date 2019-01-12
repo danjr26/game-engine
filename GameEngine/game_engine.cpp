@@ -87,6 +87,11 @@ void GameEngine::Begin() {
 	}
 }
 
+void GameEngine::Exit() {
+	delete this;
+	exit(0);
+}
+
 GameEngine& GameEngine::Instance() {
 	return *instance;
 }

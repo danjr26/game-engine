@@ -55,6 +55,7 @@ public:
 	PhysicsManager& Physics();
 
 	void Begin();
+	void Exit();
 
 	static GameEngine& Instance();
 

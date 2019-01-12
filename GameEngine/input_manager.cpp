@@ -43,7 +43,7 @@ void InputManager::Update() {
 		TranslateMessage(&message);
 		DispatchMessage(&message);
 		if (message.message == WM_QUIT) {
-			exit(1);
+			GE.Exit();
 		}
 	}
 }
