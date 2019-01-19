@@ -24,6 +24,8 @@ class Line2CollisionMask;
 template<class T>
 class LineSegment2CollisionMask;
 template<class T>
+class Mesh2CollisionMask;
+template<class T>
 class Point2CollisionMask;
 template<class T>
 class Ray2CollisionMask;
@@ -70,6 +72,7 @@ public:
 	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, HalfSpace2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Line2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, LineSegment2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Mesh2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Point2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Ray2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, RectangleCollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }

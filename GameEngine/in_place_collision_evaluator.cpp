@@ -402,6 +402,11 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedRecta
 }
 
 template<class T>
+Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) {
+	return Collision<T, 2>();
+}
+
+template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
@@ -735,6 +740,11 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionM
 }
 
 template<class T>
+Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) {
+	return Collision<T, 2>();
+}
+
+template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
@@ -1037,6 +1047,11 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2Collis
 }
 
 template<class T>
+Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) {
+	return Collision<T, 2>();
+}
+
+template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
@@ -1196,6 +1211,11 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(LineSegment2Coll
 	}
 
 	return collision;
+}
+
+template<class T>
+Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) {
+	return Collision<T, 2>();
 }
 
 template<class T>
@@ -1365,6 +1385,31 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(LineSegment2Coll
 	}
 
 	return collision;
+}
+
+template<class T>
+Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Mesh2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) {
+	return Collision<T, 2>();
+}
+
+template<class T>
+Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Mesh2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) {
+	return Collision<T, 2>();
+}
+
+template<class T>
+Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Mesh2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) {
+	return Collision<T, 2>();
+}
+
+template<class T>
+Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Mesh2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) {
+	return Collision<T, 2>();
+}
+
+template<class T>
+Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Mesh2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) {
+	return Collision<T, 2>();
 }
 
 template<class T>
@@ -1907,6 +1952,11 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMa
 }
 
 template<class T>
+Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) {
+	return Collision<T, 2>();
+}
+
+template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
@@ -2068,6 +2118,11 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfS
 	}
 
 	return collision;
+}
+
+template<class T>
+Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) {
+	return Collision<T, 2>();
 }
 
 template<class T>

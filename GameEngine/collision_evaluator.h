@@ -21,6 +21,8 @@ class Line2CollisionMask;
 template<class T>
 class LineSegment2CollisionMask;
 template<class T>
+class Mesh2CollisionMask;
+template<class T>
 class Point2CollisionMask;
 template<class T>
 class Ray2CollisionMask;
@@ -63,6 +65,7 @@ public:
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, HalfSpace2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
@@ -75,6 +78,7 @@ public:
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedLine2CollisionMask<T>& in_mask1, HalfSpace2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedLine2CollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedLine2CollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedLine2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedLine2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedLine2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedLine2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
@@ -85,6 +89,7 @@ public:
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, HalfSpace2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
@@ -94,6 +99,7 @@ public:
 	virtual Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, HalfSpace2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
@@ -102,6 +108,7 @@ public:
 	virtual Collision<T, 2> Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, HalfSpace2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
@@ -109,16 +116,24 @@ public:
 
 	virtual Collision<T, 2> Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(Line2CollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(Line2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 
 	virtual Collision<T, 2> Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
+
+	virtual Collision<T, 2> Evaluate_Typed(Mesh2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> Evaluate_Typed(Mesh2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> Evaluate_Typed(Mesh2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> Evaluate_Typed(Mesh2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> Evaluate_Typed(Mesh2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 
 	virtual Collision<T, 2> Evaluate_Typed(Point2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }
 	virtual Collision<T, 2> Evaluate_Typed(Point2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) { throw NotImplementedException(); return Collision<T, 2>(); }

@@ -1,21 +1,21 @@
-#ifndef HALF_SPACE2_COLLISION_MASK_H
-#define HALF_SPACE2_COLLISION_MASK_H
+#ifndef MESH2_COLLISION_MASK_H
+#define MESH2_COLLISION_MASK_H
 
 #include "collision_mask.h"
-#include "half_space.h"
+#include "mesh_vertex_data.h"
 
 template<class T>
-class HalfSpace2CollisionMask : public CollisionMask<T, 2> {
+class Mesh2CollisionMask : public CollisionMask<T, 2> {
 private:
-	HalfSpace<T, 2> halfSpace;
+	MeshVertexData mesh;
 
 public:
-	HalfSpace2CollisionMask(const HalfSpace<T, 2>& in_halfSpace, bool in_ignoreTransform = false);
+	Mesh2CollisionMask(const MeshVertexData& in_mesh, bool in_ignoreTransform = false);
 
-	HalfSpace<T, 2>& Get_Half_Space();
-	HalfSpace<T, 2> Get_Transformed_Half_Space() const;
+	MeshVertexData& Get_Mesh();
+	MeshVertexData Get_Transformed_Mesh() const;
 	void Apply_Transform() override;
-	HalfSpace2CollisionMask* Clone() const override;
+	Mesh2CollisionMask<T>* Clone() const override;
 	Vector<T, 2> Get_Closest_Point(const Vector<T, 2>& in_point) const override;
 	Vector<T, 2>  Get_Closest_Normal(const Vector<T, 2>& in_point, PointNormalPolicy in_policy = towards_point) const override;
 
@@ -35,3 +35,4 @@ public:
 };
 
 #endif
+

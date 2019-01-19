@@ -207,6 +207,7 @@
     <ClInclude Include="hermite_transitioner.h" />
     <ClInclude Include="linear_transitioner.h" />
     <ClInclude Include="located_vector.h" />
+    <ClInclude Include="mesh2_collision_mask.h" />
     <ClInclude Include="transitioner.h" />
     <ClInclude Include="uniform_force_field.h" />
     <ClInclude Include="half_space.h" />
@@ -372,6 +373,7 @@
     <ClCompile Include="font_face_raster_set.cpp" />
     <ClCompile Include="font_manager.cpp" />
     <ClCompile Include="force_field.cpp" />
+    <ClCompile Include="mesh2_collision_mask.cpp" />
     <ClCompile Include="uniform_force_field.cpp" />
     <ClCompile Include="framebuffer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

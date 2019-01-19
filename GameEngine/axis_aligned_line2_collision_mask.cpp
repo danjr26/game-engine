@@ -82,6 +82,11 @@ Collision<T, 2> AxisAlignedLine2CollisionMask<T>::Accept_Secondhand_Evaluator(Co
 }
 
 template<class T>
+Collision<T, 2> AxisAlignedLine2CollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Mesh2CollisionMask<T>& in_other) {
+	return in_evaluator.Evaluate_Typed(*this, in_other);
+}
+
+template<class T>
 Collision<T, 2> AxisAlignedLine2CollisionMask<T>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Point2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
