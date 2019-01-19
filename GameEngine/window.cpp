@@ -24,7 +24,7 @@ params(in_params) {
 	windowClass.lpszMenuName =	nullptr;
 	windowClass.cbClsExtra = 0;
 	windowClass.cbWndExtra = 0;
-	windowClass.hbrBackground = (HBRUSH)COLOR_BACKGROUND;
+	windowClass.hbrBackground = (HBRUSH)COLOR_WINDOW;
 
 	if (!RegisterClassEx(&windowClass)) {
 		throw ProcessFailureException(std::string("failed to create window class with error message:\n") + Get_Windows_Error_Message());
@@ -41,7 +41,7 @@ params(in_params) {
 		windowClass.lpszClassName,
 		params.name.c_str(),
 		(params.fullscreen) ? 
-			WS_POPUP | (params.style & WS_VISIBLE) | (params.style & WS_MINIMIZE) : 
+			WS_POPUP :// | (params.style & WS_VISIBLE) | (params.style & WS_MINIMIZE) : 
 			params.style,
 		params.position.X(),       
 		params.position.Y(),       
@@ -87,6 +87,8 @@ params(in_params) {
 	wglMakeCurrent(hDeviceContext, hGLRenderContext);
 
 	glewInit();
+
+	ShowWindow(hWindow, SW_SHOW);
 
 	GE.Windows().Add(this);
 }
@@ -221,7 +223,7 @@ void Window::Set_Fullscreen(bool in_value) {
 		deviceMode.dmPelsWidth = params.dimensions.X();
 		deviceMode.dmPelsHeight = params.dimensions.Y();
 		deviceMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFIXEDOUTPUT;
-		deviceMode.dmDisplayFixedOutput = DMDFO_CENTER;
+		deviceMode.dmDisplayFixedOutput = DMDFO_DEFAULT;
 
 		ChangeDisplaySettingsEx(NULL, &deviceMode, NULL, CDS_FULLSCREEN | CDS_RESET, NULL);
 	}

@@ -53,6 +53,7 @@ public:
 	CollisionManagerd& Collision();
 	AsyncTaskManager& Async();
 	PhysicsManager& Physics();
+    Clock& Time();
 
 	void Begin();
 	void Exit();

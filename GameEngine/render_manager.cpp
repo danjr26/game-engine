@@ -1,4 +1,7 @@
 #include "render_manager.h"
+#include "clock.h"
+#include "log.h"
+#include "game_engine.h"
 
 RenderManager::RenderManager() :
 	passes(),
@@ -29,13 +32,15 @@ void RenderManager::Render_Pass(RenderPass* in_pass) {
 	RenderableObject* object = nullptr;
 
 	for (uint i = 0; i < renderables.size(); i++) {
+
 		object = (in_pass->Get_Sort_Order() == RenderPass::front_to_back) ?
 			renderables[renderables.size() - i - 1].object :
 			renderables[i].object;
-			
+
 		if (object->Is_Enabled() && in_pass->Get_Query().Evaluate(*object) && !object->Should_Cull()) {
 			object->Render();
 		}
+
 	}
 
 	renderPassArg = in_pass->End();
@@ -46,6 +51,8 @@ bool RenderManager::Z_Sorter(const RenderableWithZ& in_chunk1, const RenderableW
 }
 
 void RenderManager::Render_Frame() {
+	static uint c = 0;
+	//Log::main(std::string("frame ") + std::to_string(c++));
 	renderPassArg = nullptr;
 
 	for (uint i = 0; i < passes.size(); i++) {

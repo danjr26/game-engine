@@ -10,6 +10,7 @@ class FrameRateManager {
 private:
 	Clock clock;
 	Stepper timestepper;
+	uint nBackedUp;
 	double lastFrame;
 
 	uint nTrackedFrames;
@@ -17,8 +18,10 @@ private:
 
 public:
 	FrameRateManager(double in_fps = 60.0);
-	void Set(double in_fps);
-	double Get();
+	void Set_FPS(double in_fps);
+	double Get_FPS();
+	void Set_Dt(double in_dt);
+	double Get_Dt();
 	void Reset_Timer();
 	void Yield_Until_Next_Frame();
 	double Get_Real_FPS();

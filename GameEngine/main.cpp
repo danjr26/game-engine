@@ -59,7 +59,7 @@ void Test_Render(Window* window) {
 
 	InPlaceCollisionEvaluator2d collEval = InPlaceCollisionEvaluator2d();
 	Collision coll = collEval.Evaluate(circleCollider1, circleCollider2);
-	
+
 	KeyboardTextInputContext textInput;
 	GE.Input().Add_After(nullptr, &textInput);
 
@@ -80,10 +80,10 @@ void Test_Render(Window* window) {
 	collisionContext.Add(&circleCollider1);
 	collisionContext.Add(&circleCollider2);
 	//collisionContext.Set_Partner_Test_Activation(std::pair<ubyte, ubyte>(CollisionContext2d::user_defined, CollisionContext2d::user_defined), true);
-	
+
 	TestSpriteMover sm1 = TestSpriteMover(&circleRenderer1, circleCollider1);
 	GE.Per_Frame_Update().Add(&sm1);
-	
+
 	TestSpriteMover sm2 = TestSpriteMover(&circleRenderer2, circleCollider2);
 	GE.Per_Frame_Update().Add(&sm2);
 
@@ -92,7 +92,7 @@ void Test_Render(Window* window) {
 
 	TestSpriteMover2 sm4 = TestSpriteMover2(&circleRenderer4);
 	GE.Per_Frame_Update().Add(&sm4);
-	
+
 	AxisAlignedHalfSpace2d aaHalfSpace = AxisAlignedHalfSpace2d::From_Dimension_Value(1, 0, true);
 	AxisAlignedHalfSpace2CollisionMask aaHalfSpaceMask(aaHalfSpace);
 	aaHalfSpaceMask.Get_Transform().Translate_World(Vector2d(0, 600));
@@ -174,7 +174,7 @@ void Test_Render(Window* window) {
 	Camera camera1;
 	camera1.Set_Projection(Projectiond(Vector3d(0, window->Get_Dimensions().Y(), 0), Vector3d(window->Get_Dimensions().X(), 0, -1)));
 
-	RenderPass testPass = 
+	RenderPass testPass =
 		RenderPass(&fb, &camera1)
 		.Clear_Color(ColorRGBAf(0.3f, 0.3f, 0.3f, 1.0f))
 		.Sort_Order(RenderPass::SortOrder::back_to_front);
@@ -182,9 +182,9 @@ void Test_Render(Window* window) {
 	GE.Render().passes.push_back(&testPass);
 
 	Sprite rect2 = Sprite(AxisAlignedRectangled::From_Extrema(
-			DisplayUnits2d::Percent(Vector2d(0.0, 0.0)).OpenGL_Position(),
-			DisplayUnits2d::Percent(Vector2d(100.0, 100.0)).OpenGL_Position()
-		), &fbColor
+		DisplayUnits2d::Percent(Vector2d(0.0, 0.0)).OpenGL_Position(),
+		DisplayUnits2d::Percent(Vector2d(100.0, 100.0)).OpenGL_Position()
+	), &fbColor
 	);
 
 	rect2.Texture_Instance().Settings().Set_Magnify_Filter(TextureSettings::FilterMode::bilinear);
@@ -212,13 +212,33 @@ int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nA
 	Window::Params params =
 		Window::Params(in_hInst)
 		.Name(L"Test")
-		.Dimensions(Vector2i(900, 650))
+		.Dimensions(Vector2i(1600, 900))
 		.Fullscreen(true)
 		.Title_Bar(false)
 		.Border(false)
 		.Always_Front(false);
 
 	Window window(params);
+
+	wglSwapIntervalEXT(1);
+	/*
+	for (uint i = 0; i < 2; i++) {
+		Log::main(std::to_string(GE.Time().Now()));
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		window.Flip_Buffers();
+	}
+	glFinish();
+	for (uint i = 0; i < 2; i++) {
+		Log::main(std::to_string(GE.Time().Now()));
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		window.Flip_Buffers();
+	}
+	glFinish();
+	*/
+	Log::main(std::to_string(GE.Time().Now()));
+
+	Log::main((const char*)glewGetErrorString(glGetError()));
+
 	GE.Render().mainTarget = &window;
 	GE.Render().mainWindow = &window;
 

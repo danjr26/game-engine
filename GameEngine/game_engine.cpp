@@ -61,6 +61,10 @@ PhysicsManager& GameEngine::Physics() {
 	return physicsManager;
 }
 
+Clock& GameEngine::Time() {
+    return clock;
+}
+
 void GameEngine::Begin() {
 	try {
 		if (hasBegun) {
@@ -99,7 +103,7 @@ GameEngine& GameEngine::Instance() {
 void GameEngine::Next_Frame() {
 	static int count = 0;
 	count++;
-	double dt = frameRateManager.Get_Last_Frame_Time();
+	double dt = frameRateManager.Get_Dt();
 	inputManager.Update();
 	collisionManager.Update();
 	physicsManager.Update(dt);

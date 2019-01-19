@@ -1,4 +1,5 @@
 #include "render_pass.h"
+#include "game_engine.h"
 
 void RenderPass::OnBegin(void* in_params) 
 {}
@@ -30,7 +31,6 @@ RenderPass& RenderPass::Sort_Order(SortOrder in_order) {
 
 void RenderPass::Begin(void* in_params) {
 	OnBegin(in_params);
-
 	target->Draw_To_This();
 	camera->Use();
 
@@ -48,7 +48,10 @@ void RenderPass::Begin(void* in_params) {
 	if (clearBits & GL_STENCIL_BUFFER_BIT) {
 		glClearStencil(clearStencil);
 	}
+	glFinish();
+	//Log::main(std::string("before glClear(): ") + std::to_string(GE.Time().Now()));
 	glClear(clearBits);
+	//Log::main(std::string("after glClear(): ") + std::to_string(GE.Time().Now()));
 }
 
 void* RenderPass::End() {

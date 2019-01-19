@@ -1,22 +1,32 @@
 #include "frame_rate_manager.h"
 #include "misc.h"
+#include "log.h"
 #include <thread>
 
 FrameRateManager::FrameRateManager(double in_fps) :
 	timestepper(1.0 / in_fps),
-	nTrackedFrames(60) {
+	nTrackedFrames(60),
+	nBackedUp(0) {
 
 	lastFrameTimes.reserve(nTrackedFrames);
 
 	lastFrame = clock.Now();
 }
 
-void FrameRateManager::Set(double in_fps) {
+void FrameRateManager::Set_FPS(double in_fps) {
 	timestepper.step = 1.0 / in_fps;
 }
 
-double FrameRateManager::Get() {
+double FrameRateManager::Get_FPS() {
 	return 1.0 / timestepper.step;
+}
+
+void FrameRateManager::Set_Dt(double in_dt) {
+	timestepper.step = in_dt;
+}
+
+double FrameRateManager::Get_Dt() {
+	return timestepper.step;
 }
 
 void FrameRateManager::Reset_Timer() {
@@ -25,15 +35,17 @@ void FrameRateManager::Reset_Timer() {
 
 void FrameRateManager::Yield_Until_Next_Frame() {
 	double now = clock.Now();
-	double thisFrameTime = timestepper.Step_Total(now - lastFrame);
-	while (thisFrameTime == 0.0) {
+	uint nFrames = timestepper.Step_Number(now - lastFrame) + nBackedUp;
+
+	while (nFrames == 0) {
 		now = clock.Now();
 		std::this_thread::sleep_for(std::chrono::microseconds(100));
-		thisFrameTime = timestepper.Step_Total(clock.Now() - now);
+		nFrames = timestepper.Step_Number(clock.Now() - now);
 	}
+	nBackedUp = nFrames - 1;
 
 	now = clock.Now();
-	thisFrameTime = now - lastFrame;
+	double thisFrameTime = now - lastFrame;
 	lastFrame = now;
 
 	if (lastFrameTimes.size() < nTrackedFrames) {

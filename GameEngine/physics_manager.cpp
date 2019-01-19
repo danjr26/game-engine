@@ -613,7 +613,7 @@ void PhysicsManager::Conform_To_Status(RigidBody2& in_body1, RigidBody2& in_body
 }
 
 double PhysicsManager::Calculate_Restitution_Coefficient(RigidBody2& in_body1, RigidBody2& in_body2) {
-	return 0.1;
+	return 0.4;
 }
 
 double PhysicsManager::Calculate_Kinetic_Friction_Coefficient(RigidBody2& in_body1, RigidBody2& in_body2) {
