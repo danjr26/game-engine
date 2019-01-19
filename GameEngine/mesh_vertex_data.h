@@ -9,6 +9,7 @@
 #include <map>
 #include "vector.h"
 #include "color.h"
+#include "transform.h"
 
 class MeshVertexData {
 public:
@@ -54,6 +55,15 @@ protected:
 
 public:
 	MeshVertexData(DataType in_indexType);
+
+	template<class T, uint n>
+	void Apply_Transform_Points(const Transform<T, n>& in_transform, ubyte in_id);
+
+	template<class T, uint n>
+	void Apply_Transform_Directions(const Transform<T, n>& in_transform, ubyte in_id);
+
+	template<class T, uint n>
+	void Apply_Transform_Vectors(const Transform<T, n>& in_transform, ubyte in_id);
 
 	uint Get_Number_Vertices() const;
 	uint Get_Number_Faces() const;

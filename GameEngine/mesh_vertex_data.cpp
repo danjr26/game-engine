@@ -158,6 +158,52 @@ MeshVertexData::MeshVertexData(DataType in_indexType) :
 	nVertices(0)
 {}
 
+template<class T, uint n>
+void MeshVertexData::Apply_Transform_Points(const Transform<T, n>& in_transform, ubyte in_member) {
+	Member& member = members[in_member];
+	if (member.type != To_Data_Type<T>() || member.depth != n) {
+		throw InvalidArgumentException();
+	}
+
+	Vector<T, n>* data = (Vector<T, n>*)member.data.data();
+	for (uint i = 0; i < member.data.size() / member.Get_Vertex_Size(); i++) {
+		data[i] = in_transform.Local_To_World_Point(data[i]);
+	}
+}
+
+template<class T, uint n>
+void MeshVertexData::Apply_Transform_Directions(const Transform<T, n>& in_transform, ubyte in_member) {
+	Member& member = members[in_member];
+	if (member.type != To_Data_Type<T>() || member.depth != n) {
+		throw InvalidArgumentException();
+	}
+
+	Vector<T, n>* data = (Vector<T, n>*)member.data.data();
+	for (uint i = 0; i < member.data.size() / member.Get_Vertex_Size(); i++) {
+		data[i] = in_transform.Local_To_World_Direction(data[i]);
+	}
+}
+
+template<class T, uint n>
+void MeshVertexData::Apply_Transform_Vectors(const Transform<T, n>& in_transform, ubyte in_member) {
+	Member& member = members[in_member];
+	if (member.type != To_Data_Type<T>() || member.depth != n) {
+		throw InvalidArgumentException();
+	}
+
+	Vector<T, n>* data = (Vector<T, n>*)member.data.data();
+	for (uint i = 0; i < member.data.size() / member.Get_Vertex_Size(); i++) {
+		data[i] = in_transform.Local_To_World_Vector(data[i]);
+	}
+}
+
+template void MeshVertexData::Apply_Transform_Points<float, 2>(const Transform2f& in_transform, ubyte in_member);
+template void MeshVertexData::Apply_Transform_Points<double, 2>(const Transform2d& in_transform, ubyte in_member);
+template void MeshVertexData::Apply_Transform_Directions<float, 2>(const Transform2f& in_transform, ubyte in_member);
+template void MeshVertexData::Apply_Transform_Directions<double, 2>(const Transform2d& in_transform, ubyte in_member);
+template void MeshVertexData::Apply_Transform_Vectors<float, 2>(const Transform2f& in_transform, ubyte in_member);
+template void MeshVertexData::Apply_Transform_Vectors<double, 2>(const Transform2d& in_transform, ubyte in_member);
+
 uint MeshVertexData::Get_Number_Vertices() const {
 	return nVertices;
 }
