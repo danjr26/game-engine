@@ -543,6 +543,9 @@
     <ClInclude Include="mesh2_collision_mask.h">
       <Filter>Header Files\collision\masks</Filter>
     </ClInclude>
+    <ClInclude Include="basic_collision_mask.h">
+      <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp">

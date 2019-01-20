@@ -3,6 +3,7 @@
 
 #include "collision_mask.h"
 #include "axis_aligned_half_space.h"
+#include "basic_collision_mask.h"
 
 template<class T>
 class AxisAlignedHalfSpace2CollisionMask : public CollisionMask<T, 2> {

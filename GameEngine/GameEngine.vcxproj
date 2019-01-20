@@ -163,6 +163,7 @@
     <ClInclude Include="axis_aligned_line.h" />
     <ClInclude Include="axis_aligned_line2_collision_mask.h" />
     <ClInclude Include="axis_aligned_rectangle_collision_mask.h" />
+    <ClInclude Include="basic_collision_mask.h" />
     <ClInclude Include="binary_collision_tree.h" />
     <ClInclude Include="bit_manipulation.h" />
     <ClInclude Include="blend.h" />

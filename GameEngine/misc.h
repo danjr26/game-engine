@@ -12,7 +12,22 @@
 #include <functional>
 #include <initializer_list>
 #include <random>
+#include <memory>
 #include "definitions.h"
+
+template<class T>
+struct NeuterableDeleter {
+	bool neuter;
+
+	NeuterableDeleter() : neuter(false) {};
+
+	void operator()(T* in_toDelete) const {
+		if (!neuter) delete in_toDelete;
+	}
+};
+
+template<class T>
+using neuterable_ptr = std::unique_ptr<T, NeuterableDeleter<T>>;
 
 template<class T>
 inline T Clamp(T n, T floor, T ceiling) {

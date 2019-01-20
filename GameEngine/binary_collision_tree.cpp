@@ -119,7 +119,7 @@ void BinaryCollisionTree<T, n>::Evaluation::Transform_Parent_Mask() {
 }
 
 template<class T, uint n>
-BinaryCollisionTree<T, n>::GroupingScheme::Iterator::Iterator(GroupingScheme * in_parent) :
+BinaryCollisionTree<T, n>::GroupingScheme::Iterator::Iterator(GroupingScheme* in_parent) :
 	parent(in_parent),
 	it(in_parent->groupings.begin()),
 	i(0),
