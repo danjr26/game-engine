@@ -7,6 +7,7 @@
 #include <initializer_list>
 #include <variant>
 #include <map>
+#include <unordered_map>
 #include "vector.h"
 #include "color.h"
 #include "transform.h"
@@ -36,21 +37,20 @@ public:
 
 protected:
 	struct Member {
-		ubyte id;
 		DataType type;
 		ubyte depth;
 		std::vector<ubyte> data;
 
-		Member(ubyte in_id, DataType in_type, ubyte in_depth, uint in_nVertices, const void* in_data);
-		Member(ubyte in_id, DataType in_type, ubyte in_depth, uint in_nVertices);
+		Member();
+		Member(DataType in_type, ubyte in_depth, uint in_nVertices, const void* in_data);
+		Member(DataType in_type, ubyte in_depth, uint in_nVertices);
 
 		ubyte Get_Vertex_Size() const;
 	};
 
-	std::vector<Member> members;
+	std::unordered_map<ubyte, Member> members;
 	std::vector<ubyte> indices;
 	DataType indexType;
-	std::map<ubyte, ubyte> idToIndex;
 	uint nVertices;
 
 public:
@@ -69,13 +69,12 @@ public:
 	uint Get_Number_Faces() const;
 	uint Get_Number_Members() const;
 
+	void Get_Member_IDs(std::vector<ubyte>& out_ids);
 	void Add_Member(ubyte in_id, DataType in_type, ubyte in_depth, const void* in_data);
 	void Remove_Member(ubyte in_member);
 	void Set_Member_Value(ubyte in_member, uint in_index, const void* in_value);
 	void Set_Member_Values(ubyte in_member, uint in_index, uint in_nValues, const void* in_values);
 	bool Has_Member(ubyte in_id) const;
-	ubyte Get_Member_Index_By_ID(ubyte in_id) const;
-	ubyte Get_Member_ID(ubyte in_member) const;
 	DataType Get_Member_Type(ubyte in_member) const;
 	ubyte Get_Member_Depth(ubyte in_member) const;
 

@@ -130,6 +130,15 @@
     <Filter Include="Header Files\util\transition">
       <UniqueIdentifier>{679c41b9-833b-454f-b637-6fe8d4d0c114}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\render\text">
+      <UniqueIdentifier>{d31e8768-4d8f-4267-9977-5f322d750453}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\render\shader">
+      <UniqueIdentifier>{f6a72257-0a10-4dce-abe9-e9a47bc233a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\render\camera">
+      <UniqueIdentifier>{f636407f-a3cb-4513-abf4-49bcaad85716}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="transform.h">
@@ -144,9 +153,6 @@
     <ClInclude Include="clock.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
-    <ClInclude Include="shader.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="collision.h">
       <Filter>Header Files\collision</Filter>
     </ClInclude>
@@ -158,12 +164,6 @@
     </ClInclude>
     <ClInclude Include="misc.h">
       <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="projection.h">
-      <Filter>Header Files\render</Filter>
     </ClInclude>
     <ClInclude Include="triple.h">
       <Filter>Header Files\util\array</Filter>
@@ -228,9 +228,6 @@
     <ClInclude Include="blend.h">
       <Filter>Header Files\render</Filter>
     </ClInclude>
-    <ClInclude Include="shader_program.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="framebuffer.h">
       <Filter>Header Files\render</Filter>
     </ClInclude>
@@ -255,17 +252,8 @@
     <ClInclude Include="render_manager.h">
       <Filter>Header Files\render</Filter>
     </ClInclude>
-    <ClInclude Include="font_manager.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="asset_manager.h">
       <Filter>Header Files\framework</Filter>
-    </ClInclude>
-    <ClInclude Include="font_face.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="font_face_raster_set.h">
-      <Filter>Header Files\render</Filter>
     </ClInclude>
     <ClInclude Include="texture.h">
       <Filter>Header Files\render\texture</Filter>
@@ -276,13 +264,7 @@
     <ClInclude Include="texture_instance.h">
       <Filter>Header Files\render\texture</Filter>
     </ClInclude>
-    <ClInclude Include="text2.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="display_units.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="camera_manager.h">
       <Filter>Header Files\render</Filter>
     </ClInclude>
     <ClInclude Include="filtered_object.h">
@@ -359,9 +341,6 @@
     </ClInclude>
     <ClInclude Include="circle_renderer.h">
       <Filter>Header Files\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="shader_program_instance.h">
-      <Filter>Header Files\render</Filter>
     </ClInclude>
     <ClInclude Include="axis_aligned_box.h">
       <Filter>Header Files\geometry</Filter>
@@ -548,6 +527,36 @@
     </ClInclude>
     <ClInclude Include="collision_basis_wrapper.h">
       <Filter>Header Files\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="font_face.h">
+      <Filter>Header Files\render\text</Filter>
+    </ClInclude>
+    <ClInclude Include="font_face_raster_set.h">
+      <Filter>Header Files\render\text</Filter>
+    </ClInclude>
+    <ClInclude Include="font_manager.h">
+      <Filter>Header Files\render\text</Filter>
+    </ClInclude>
+    <ClInclude Include="text2.h">
+      <Filter>Header Files\render\text</Filter>
+    </ClInclude>
+    <ClInclude Include="shader_program_instance.h">
+      <Filter>Header Files\render\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>Header Files\render\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="shader_program.h">
+      <Filter>Header Files\render\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="projection.h">
+      <Filter>Header Files\render\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="camera_manager.h">
+      <Filter>Header Files\render\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Header Files\render\camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

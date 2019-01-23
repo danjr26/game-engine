@@ -18,14 +18,13 @@ public:
 		UseCase useCase;
 		uint nVerticesToReserve;
 		uint nFacesToReserve;
-		ulong memberIndicesToIgnore;
+		ulong membersToIgnore;
 
 		ExtraParams();
 	};
 
 private:
 	struct Member {
-		uint id;
 		DataType type;
 		ubyte depth;
 		GLuint bufferID;
@@ -37,7 +36,7 @@ private:
 
 	GLuint vertexArrayID;
 
-	std::vector<Member> vertexMembers;
+	std::unordered_map<uint, Member> vertexMembers;
 	GLuint indexBufferID;
 
 	uint reservedVertices;
@@ -48,7 +47,6 @@ private:
 
 	UseCase useCase;
 
-	std::map<ubyte, ubyte> idToIndex;
 public:
 	MeshVertexGPUPusher();
 	~MeshVertexGPUPusher();

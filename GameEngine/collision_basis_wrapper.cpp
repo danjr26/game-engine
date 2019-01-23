@@ -263,7 +263,7 @@ template<class T>
 void CollisionBasisWrapper<MeshVertexData, T>::Apply_Transform(
 	const Transform<T, 2>& in_transform) {
 
-	basis.Apply_Transform_Points(in_transform, basis.Get_Member_Index_By_ID(MeshVertexData::position));
+	basis.Apply_Transform_Points(in_transform, MeshVertexData::position);
 }
 
 template<class T>
