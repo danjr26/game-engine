@@ -17,8 +17,8 @@ public:
 	Vector<T, n> Get_Point() const;
 	Vector<T, n> Get_Direction() const;
 	T Get_Projection_Coefficient() const;
-	T Get_Projection_Coefficient(const Vector<T, n>& in_point);
-	Vector<T, n> Get_Projection(const Vector<T, n>& in_point);
+	T Get_Projection_Coefficient(const Vector<T, n>& in_point) const;
+	Vector<T, n> Get_Projection(const Vector<T, n>& in_point) const;
 
 public:
 	static Ray<T, n> From_Point_Direction(const Vector<T, n>& in_point, const Vector<T, n>& in_direction);

@@ -2,6 +2,7 @@
 #define IN_PLACE_COLLISION_EVALUATOR2_H
 
 #include "collision_evaluator.h"
+/*
 #include "axis_aligned_half_space2_collision_mask.h"
 #include "axis_aligned_line2_collision_mask.h"
 #include "axis_aligned_rectangle_collision_mask.h"
@@ -14,6 +15,7 @@
 #include "ray2_collision_mask.h"
 #include "rectangle_collision_mask.h"
 #include "triangle2_collision_mask.h"
+*/
 
 template<class T, uint n>
 class InPlaceCollisionEvaluator

@@ -16,14 +16,14 @@ private:
 public:
 	void Apply_Transform(const Transform<T, n>& transform);
 
-	void Get_Corners(Vector<T, n>* out_corners);
+	void Get_Corners(Vector<T, n>* out_corners) const;
 	Vector<T, n> Get_Center() const;
 	Vector<T, n> Get_Dimensions() const;
 	Vector<T, n> Get_Minima() const;
 	void Set_Minima(const Vector<T, n>& in_minima);
 	Vector<T, n> Get_Maxima() const;
 	void Set_Maxima(const Vector<T, n>& in_maxima);
-	Range<T> Get_Range(uint dimension);
+	Range<T> Get_Range(uint dimension) const;
 
 	template<typename = typename std::enable_if_t<n == 2>>
 	T Get_Area() const;

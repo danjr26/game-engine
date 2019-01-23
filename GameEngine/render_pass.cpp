@@ -48,7 +48,7 @@ void RenderPass::Begin(void* in_params) {
 	if (clearBits & GL_STENCIL_BUFFER_BIT) {
 		glClearStencil(clearStencil);
 	}
-	glFinish();
+	//glFinish();
 	//Log::main(std::string("before glClear(): ") + std::to_string(GE.Time().Now()));
 	glClear(clearBits);
 	//Log::main(std::string("after glClear(): ") + std::to_string(GE.Time().Now()));

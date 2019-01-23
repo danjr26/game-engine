@@ -77,10 +77,6 @@ void GameEngine::Begin() {
 		for (uint i = 0; true; i++) {
 			Next_Frame();
 			frameRateManager.Yield_Until_Next_Frame();
-			if (i % 60 == 0) {
-				Log::main(std::string("fps: ") + std::to_string(frameRateManager.Get_Real_FPS()).substr(0, 4));
-				Log::main(std::string("min fps: ") + std::to_string(1.0 / frameRateManager.Get_Longest_Frame_Time()).substr(0, 4));
-			}
 		}
 	}
 	catch (const std::exception& e) {
@@ -101,13 +97,38 @@ GameEngine& GameEngine::Instance() {
 }
 
 void GameEngine::Next_Frame() {
-	static int count = 0;
-	count++;
+	static uint cCount = 0;
+	static uint rCount = 0;
+	static double t = 0.0;
+
+	cCount++;
+	double now = GE.Time().Now();
+	if (now - t >= 1.0) {
+		Log::main(std::string("cSPF (ms): ") + std::to_string((now - t) / cCount * 1000.0));
+		Log::main(std::string("rSPF (ms): ") + std::to_string((now - t) / rCount * 1000.0));
+		t = now;
+		cCount = 0;
+		rCount = 0;
+	}
+
 	double dt = frameRateManager.Get_Dt();
+	double t1 = GE.Time().Now();
 	inputManager.Update();
 	collisionManager.Update();
 	physicsManager.Update(dt);
 	perFrameUpdateManager.Update(dt);
-	renderManager.Render_Frame();
-	renderManager.mainWindow->Flip_Buffers();
+	double t2 = GE.Time().Now();
+	if (!frameRateManager.Is_Lean_Frame()) {
+		//glFinish();
+		rCount++;
+		renderManager.mainWindow->Flip_Buffers();
+		renderManager.Render_Frame();
+	}
+	else {
+		Log::main("Lean Frame");
+	}
+	double t3 = GE.Time().Now();
+
+	//Log::main(std::string("Calc: ") + std::to_string((t2 - t1) * 1000.0));
+	//Log::main(std::string("Rend: ") + std::to_string((t3 - t2) * 1000.0));
 }

@@ -177,6 +177,7 @@
     <ClInclude Include="circle_collision_mask.h" />
     <ClInclude Include="circle_renderer.h" />
     <ClInclude Include="circle_rigid_body.h" />
+    <ClInclude Include="collision_basis_wrapper.h" />
     <ClInclude Include="collision_context.h" />
     <ClInclude Include="collision_evaluator.h" />
     <ClInclude Include="collision_manager.h" />
@@ -341,10 +342,17 @@
     <ClCompile Include="async_task_manager.cpp" />
     <ClCompile Include="axis_aligned_box.cpp" />
     <ClCompile Include="axis_aligned_half_space.cpp" />
-    <ClCompile Include="axis_aligned_half_space2_collision_mask.cpp" />
+    <ClCompile Include="axis_aligned_half_space2_collision_mask.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="axis_aligned_line.cpp" />
-    <ClCompile Include="axis_aligned_line2_collision_mask.cpp" />
-    <ClCompile Include="axis_aligned_rectangle_collision_mask.cpp" />
+    <ClCompile Include="axis_aligned_line2_collision_mask.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="axis_aligned_rectangle_collision_mask.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="basic_collision_mask.cpp" />
     <ClCompile Include="binary_collision_tree.cpp" />
     <ClCompile Include="box.cpp" />
     <ClCompile Include="camera.cpp">
@@ -353,11 +361,14 @@
     <ClCompile Include="camera_manager.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="circle_collision_mask.cpp" />
+    <ClCompile Include="circle_collision_mask.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="circle_renderer.cpp" />
     <ClCompile Include="clock.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="collision_basis_wrapper.cpp" />
     <ClCompile Include="collision_context.cpp" />
     <ClCompile Include="collision_evaluator.cpp" />
     <ClCompile Include="collision_manager.cpp" />
@@ -374,7 +385,9 @@
     <ClCompile Include="font_face_raster_set.cpp" />
     <ClCompile Include="font_manager.cpp" />
     <ClCompile Include="force_field.cpp" />
-    <ClCompile Include="mesh2_collision_mask.cpp" />
+    <ClCompile Include="mesh2_collision_mask.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="uniform_force_field.cpp" />
     <ClCompile Include="framebuffer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -382,7 +395,9 @@
     <ClCompile Include="frame_rate_manager.cpp" />
     <ClCompile Include="game_engine.cpp" />
     <ClCompile Include="half_space.cpp" />
-    <ClCompile Include="half_space2_collision_mask.cpp" />
+    <ClCompile Include="half_space2_collision_mask.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="input_bindings.cpp" />
     <ClCompile Include="input_context.cpp" />
     <ClCompile Include="input_listener.cpp" />
@@ -395,9 +410,13 @@
     <ClCompile Include="keyboard_state_identifier.cpp" />
     <ClCompile Include="keyboard_text_input_context.cpp" />
     <ClCompile Include="line.cpp" />
-    <ClCompile Include="line2_collision_mask.cpp" />
+    <ClCompile Include="line2_collision_mask.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="line_segment.cpp" />
-    <ClCompile Include="line_segment2_collision_mask.cpp" />
+    <ClCompile Include="line_segment2_collision_mask.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="log.cpp" />
     <ClCompile Include="main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -412,7 +431,9 @@
     <ClCompile Include="per_frame_updateable_object.cpp" />
     <ClCompile Include="per_frame_update_manager.cpp" />
     <ClCompile Include="physics_manager.cpp" />
-    <ClCompile Include="point2_collision_mask.cpp" />
+    <ClCompile Include="point2_collision_mask.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="pointer_input_context.cpp" />
     <ClCompile Include="projection.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -420,8 +441,12 @@
     <ClCompile Include="raw_input_event.cpp" />
     <ClCompile Include="raw_input_state.cpp" />
     <ClCompile Include="ray.cpp" />
-    <ClCompile Include="ray2_collision_mask.cpp" />
-    <ClCompile Include="rectangle_collision_mask.cpp" />
+    <ClCompile Include="ray2_collision_mask.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="rectangle_collision_mask.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="renderable_object.cpp" />
     <ClCompile Include="render_manager.cpp" />
     <ClCompile Include="render_pass.cpp" />
@@ -450,7 +475,9 @@
     </ClCompile>
     <ClCompile Include="transformable_object.cpp" />
     <ClCompile Include="triangle.cpp" />
-    <ClCompile Include="triangle2_collision_mask.cpp" />
+    <ClCompile Include="triangle2_collision_mask.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="unclamped_rotation.cpp" />
     <ClCompile Include="vector.cpp" />
     <ClCompile Include="window.cpp" />

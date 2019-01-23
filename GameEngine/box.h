@@ -16,10 +16,10 @@ private:
 	Box(const Vector<T, n>& in_origin, const Vector<T, n>* in_axes);
 
 public:
-	Vector<T, n> Get_Origin();
-	Vector<T, n> Get_Center();
-	void Get_Axes(Vector<T, n>* out_axes);
-	void Get_Corners(Vector<T, n>* out_corners);
+	Vector<T, n> Get_Origin() const;
+	Vector<T, n> Get_Center() const;
+	void Get_Axes(Vector<T, n>* out_axes) const;
+	void Get_Corners(Vector<T, n>* out_corners) const;
 	void Apply_Transform(const Transform<T, n>& transform);
 
 	template<typename = typename std::enable_if_t<n == 2>>

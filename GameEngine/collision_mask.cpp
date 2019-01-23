@@ -25,6 +25,5 @@ void* CollisionMask<T, 2>::Get_Parent() const {
 	return parent;
 }
 
-
 template class CollisionMask<float, 2>;
 template class CollisionMask<double, 2>;

@@ -28,12 +28,12 @@ inline T Ray<T, n>::Get_Projection_Coefficient() const {
 }
 
 template<class T, uint n>
-inline T Ray<T, n>::Get_Projection_Coefficient(const Vector<T, n>& in_point) {
+inline T Ray<T, n>::Get_Projection_Coefficient(const Vector<T, n>& in_point) const {
 	return (in_point - point).Projection_Coeff(direction);
 }
 
 template<class T, uint n>
-inline Vector<T, n> Ray<T, n>::Get_Projection(const Vector<T, n>& in_point) {
+inline Vector<T, n> Ray<T, n>::Get_Projection(const Vector<T, n>& in_point) const {
 	return (in_point - point).Projection(direction) + point;
 }
 

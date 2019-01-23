@@ -15,7 +15,6 @@
 #include "font_face.h"
 #include "text2.h"
 #include "test_input_context.h"
-#include "circle_collision_mask.h"
 #include "in_place_collision_evaluator.h"
 #include "circle_renderer.h"
 #include "debug_mesh_vertex_data_renderer.h"
@@ -23,6 +22,7 @@
 #include "keyboard_text_input_context.h"
 #include "editable_text.h"
 #include "uniform_force_field.h"
+#include "basic_collision_mask.h"
 #include <exception>
 #include <set>
 
@@ -40,12 +40,12 @@ void Test_Render(Window* window) {
 	CircleRenderer circleRenderer1(circle1, ColorRGBAf(1, 1, 1, 0.5), 10.0, ColorRGBAf(1, 0.5, 0.5, 1.0));
 	//Sprite circleRenderer1(AxisAlignedRectangled::From_Center(Vector2d(0, 0), Vector2d(200, 200)), nullptr);
 	GE.Render().Add(&circleRenderer1);
-	CircleCollisionMask circleCollider1(circle1);
+	CircleCollisionMask<double> circleCollider1(circle1);
 
 	Circled circle2 = Circled::From_Point_Radius(Vector2d(0, 0), 50.0);
 	CircleRenderer circleRenderer2(circle2, ColorRGBAf(1, 1, 1, 0), 2.0, ColorRGBAf(1, 1, 1, 1.0));
 	GE.Render().Add(&circleRenderer2);
-	CircleCollisionMask circleCollider2(circle2);
+	CircleCollisionMask<double> circleCollider2(circle2);
 
 	CircleRenderer circleRenderer3(circle2, ColorRGBAf(1, 1, 1, 0), 2.0, ColorRGBAf(1, 1, 1, 1.0));
 	GE.Render().Add(&circleRenderer3);
@@ -94,7 +94,7 @@ void Test_Render(Window* window) {
 	GE.Per_Frame_Update().Add(&sm4);
 
 	AxisAlignedHalfSpace2d aaHalfSpace = AxisAlignedHalfSpace2d::From_Dimension_Value(1, 0, true);
-	AxisAlignedHalfSpace2CollisionMask aaHalfSpaceMask(aaHalfSpace);
+	AxisAlignedHalfSpace2CollisionMask<double> aaHalfSpaceMask(aaHalfSpace);
 	aaHalfSpaceMask.Get_Transform().Translate_World(Vector2d(0, 600));
 	RigidBody2 aaHalfSpaceBody(aaHalfSpaceMask);
 	aaHalfSpaceBody.Set_Unstoppable(true);
@@ -127,7 +127,7 @@ void Test_Render(Window* window) {
 	};
 
 	Triangle2d triangle = Triangle2d::From_Points(positions);
-	Triangle2CollisionMask triangleMask = Triangle2CollisionMask(triangle);
+	Triangle2CollisionMask<double> triangleMask = Triangle2CollisionMask<double>(triangle);
 
 	uchar indices[] = { 0, 1, 2 };
 
@@ -214,27 +214,14 @@ int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nA
 		.Name(L"Test")
 		.Dimensions(Vector2i(1600, 900))
 		.Fullscreen(true)
-		.Title_Bar(false)
-		.Border(false)
+		//.Title_Bar(false)
+		//.Border(false)
 		.Always_Front(false);
 
 	Window window(params);
 
-	wglSwapIntervalEXT(1);
-	/*
-	for (uint i = 0; i < 2; i++) {
-		Log::main(std::to_string(GE.Time().Now()));
-		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		window.Flip_Buffers();
-	}
-	glFinish();
-	for (uint i = 0; i < 2; i++) {
-		Log::main(std::to_string(GE.Time().Now()));
-		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		window.Flip_Buffers();
-	}
-	glFinish();
-	*/
+	wglSwapIntervalEXT(0);
+
 	Log::main(std::to_string(GE.Time().Now()));
 
 	Log::main((const char*)glewGetErrorString(glGetError()));

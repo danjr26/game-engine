@@ -7,7 +7,7 @@ inline AxisAlignedBox<T, n>::AxisAlignedBox(const Vector<T, n>& in_minima, const
 	maxima(in_maxima) {}
 
 template<class T, uint n>
-inline void AxisAlignedBox<T, n>::Get_Corners(Vector<T, n>* out_corners) {
+inline void AxisAlignedBox<T, n>::Get_Corners(Vector<T, n>* out_corners) const {
 	const uint nCorners = 1 << n;
 
 	for (uint i = 0; i < nCorners; i++) {
@@ -73,7 +73,7 @@ inline void AxisAlignedBox<T, n>::Set_Maxima(const Vector<T, n>& in_maxima) {
 }
 
 template<class T, uint n>
-inline Range<T> AxisAlignedBox<T, n>::Get_Range(uint dimension) {
+inline Range<T> AxisAlignedBox<T, n>::Get_Range(uint dimension) const {
 	if (dimension >= n) {
 		throw InvalidArgumentException();
 	}

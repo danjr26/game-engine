@@ -8,11 +8,12 @@
 #include "keyboard_action_identifier.h"
 #include "keyboard_range_identifier.h"
 #include "mouse_range_identifier.h"
-#include "rectangle_collision_mask.h"
+//#include "rectangle_collision_mask.h"
 #include "collision_context.h"
 #include "rigid_body.h"
 #include "hermite_transitioner.h"
 #include "catmull_rom_transitioner.h"
+#include "basic_collision_mask.h"
 
 class TestInputContext : public InputContext {
 public:

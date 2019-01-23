@@ -13,13 +13,13 @@ private:
 public:
 	void Apply_Transform(const Transform<T, n>& in_transform);
 
-	void Get_Points(Vector<T, n>* out_points);
-	void Get_Point_Offsets(Vector<T, n>* out_offsets);
+	void Get_Points(Vector<T, n>* out_points) const;
+	void Get_Point_Offsets(Vector<T, n>* out_offsets) const;
 
 	template<typename = typename std::enable_if_t<n == 2, void>>
-	void Get_Lazy_Normals(Vector<T, n>* out_lazyNormals);
+	void Get_Lazy_Normals(Vector<T, n>* out_lazyNormals) const;
 	template<typename = typename std::enable_if_t<n == 2, void>>
-	void Get_Normals(Vector<T, n>* out_Normals);
+	void Get_Normals(Vector<T, n>* out_Normals) const;
 	template<typename = typename std::enable_if_t<n = 3, void>>
 	Vector<T, n> Get_Lazy_Normal() const;
 	template<typename = typename std::enable_if_t<n = 3, void>>

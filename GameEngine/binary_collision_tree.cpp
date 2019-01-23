@@ -1,4 +1,5 @@
 #include "binary_collision_tree.h"
+#include "basic_collision_mask.h"
 
 template<class T, uint n>
 BinaryCollisionTree<T, n>::Evaluation::Iterator::Iterator(Evaluation * in_parent) :
@@ -332,8 +333,8 @@ void BinaryCollisionTree<T, n>::Evaluate(CollisionMask<T, n>* in_mask, uint in_d
 			halfSpace2 = AxisAlignedHalfSpace<T, n>::From_Dimension_Value(
 				back.dimension, back.value, !back.isPositive);
 
-			mask1.Get_Half_Space() = halfSpace1;
-			mask2.Get_Half_Space() = halfSpace2;
+			mask1.Get_Basis() = halfSpace1;
+			mask2.Get_Basis() = halfSpace2;
 
 			bool didCollide1 = evaluator.Evaluate(*out_evaluation.Get_Transformed_Parent_Mask(), mask1).didCollide;
 			bool didCollide2 = evaluator.Evaluate(*out_evaluation.Get_Transformed_Parent_Mask(), mask2).didCollide;

@@ -11,6 +11,7 @@ private:
 	Clock clock;
 	Stepper timestepper;
 	uint nBackedUp;
+	uint maxBackedUp;
 	double lastFrame;
 
 	uint nTrackedFrames;
@@ -19,11 +20,12 @@ private:
 public:
 	FrameRateManager(double in_fps = 60.0);
 	void Set_FPS(double in_fps);
-	double Get_FPS();
+	double Get_FPS() const;
 	void Set_Dt(double in_dt);
-	double Get_Dt();
+	double Get_Dt() const;
 	void Reset_Timer();
 	void Yield_Until_Next_Frame();
+	bool Is_Lean_Frame() const;
 	double Get_Real_FPS();
 	double Get_Longest_Frame_Time();
 	double Get_Last_Frame_Time();

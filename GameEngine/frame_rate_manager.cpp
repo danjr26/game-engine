@@ -6,7 +6,8 @@
 FrameRateManager::FrameRateManager(double in_fps) :
 	timestepper(1.0 / in_fps),
 	nTrackedFrames(60),
-	nBackedUp(0) {
+	nBackedUp(0),
+	maxBackedUp(6) {
 
 	lastFrameTimes.reserve(nTrackedFrames);
 
@@ -17,7 +18,7 @@ void FrameRateManager::Set_FPS(double in_fps) {
 	timestepper.step = 1.0 / in_fps;
 }
 
-double FrameRateManager::Get_FPS() {
+double FrameRateManager::Get_FPS() const {
 	return 1.0 / timestepper.step;
 }
 
@@ -25,7 +26,7 @@ void FrameRateManager::Set_Dt(double in_dt) {
 	timestepper.step = in_dt;
 }
 
-double FrameRateManager::Get_Dt() {
+double FrameRateManager::Get_Dt() const {
 	return timestepper.step;
 }
 
@@ -57,6 +58,10 @@ void FrameRateManager::Yield_Until_Next_Frame() {
 		}
 		lastFrameTimes[lastFrameTimes.size() - 1] = thisFrameTime;
 	}
+}
+
+bool FrameRateManager::Is_Lean_Frame() const {
+	return nBackedUp >= maxBackedUp;
 }
 
 double FrameRateManager::Get_Real_FPS() {

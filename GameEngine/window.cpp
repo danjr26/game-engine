@@ -41,7 +41,7 @@ params(in_params) {
 		windowClass.lpszClassName,
 		params.name.c_str(),
 		(params.fullscreen) ? 
-			WS_POPUP :// | (params.style & WS_VISIBLE) | (params.style & WS_MINIMIZE) : 
+			WS_POPUP | (params.style & WS_VISIBLE) | (params.style & WS_MINIMIZE) : 
 			params.style,
 		params.position.X(),       
 		params.position.Y(),       

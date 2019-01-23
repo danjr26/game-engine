@@ -4,13 +4,17 @@
 #include "range.h"
 #include "projection_overlap.h"
 #include "log.h"
+#include "basic_collision_mask.h"
 
 template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, AxisAlignedRectangleCollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedBox<T, 2> rectangle1 = in_mask1.Get_Transformed_Rectangle();
-	AxisAlignedBox<T, 2> rectangle2 = in_mask2.Get_Transformed_Rectangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedBox<T, 2> const& rectangle1 = *basis1;
+	AxisAlignedBox<T, 2> const& rectangle2 = *basis2;
 
 	Range<T> xRange1 = Range<T>(rectangle1.Get_Minima().X(), rectangle1.Get_Maxima().X());
 	Range<T> yRange1 = Range<T>(rectangle1.Get_Minima().Y(), rectangle1.Get_Maxima().Y());
@@ -39,8 +43,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, CircleCollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision, testCollision;
 
-	AxisAlignedBox<T, 2> rectangle = in_mask1.Get_Transformed_Rectangle();
-	Circle<T> circle = in_mask2.Get_Transformed_Circle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedBox<T, 2> const& rectangle = *basis1;
+	Circle<T> const& circle = *basis2;
 
 	Vector<T, 2> corners[4];
 	rectangle.Get_Corners(corners);
@@ -70,7 +77,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedRecta
 
 		if (returnPoint) {
 			collision.collisionPoint[0] += Sign(rectCenter.X() - collision.collisionPoint.X()) *
-				Min<T>(circle.Get_Radius(), xRectangleMask.Get_Rectangle().Get_Dimensions().X() / 2);
+				Min<T>(circle.Get_Radius(), xRectangleMask.Get_Basis().Get_Dimensions().X() / 2);
 		}
 
 		return collision;
@@ -81,7 +88,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedRecta
 
 		if (returnPoint) {
 			collision.collisionPoint[1] += Sign(rectCenter.Y() - collision.collisionPoint.Y()) *
-				Min<T>(circle.Get_Radius(), yRectangleMask.Get_Rectangle().Get_Dimensions().Y() / 2);
+				Min<T>(circle.Get_Radius(), yRectangleMask.Get_Basis().Get_Dimensions().Y() / 2);
 		}
 
 		return collision;
@@ -128,8 +135,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, HalfSpace2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedBox<T, 2> rectangle = in_mask1.Get_Transformed_Rectangle();
-	HalfSpace<T, 2> halfSpace = in_mask2.Get_Transformed_Half_Space();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedBox<T, 2> const& rectangle = *basis1;
+	HalfSpace<T, 2> const& halfSpace = *basis2;
 
 	Vector<T, 2> corners[4];
 	rectangle.Get_Corners(corners);
@@ -155,8 +165,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedBox<T, 2> rectangle = in_mask1.Get_Transformed_Rectangle();
-	Line<T, 2> line = in_mask2.Get_Transformed_Line();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedBox<T, 2> const& rectangle = *basis1;
+	Line<T, 2> const& line = *basis2;
 
 	Vector<T, 2> center = rectangle.Get_Center();
 	Vector<T, 2> minima = rectangle.Get_Minima();
@@ -272,8 +285,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedBox<T, 2> rectangle = in_mask1.Get_Transformed_Rectangle();
-	LineSegment<T, 2> lineSegment = in_mask2.Get_Transformed_Line_Segment();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedBox<T, 2> const& rectangle = *basis1;
+	LineSegment<T, 2> const& lineSegment = *basis2;
 
 	Vector<T, 2> center = rectangle.Get_Center();
 	Vector<T, 2> minima = rectangle.Get_Minima();
@@ -410,8 +426,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedBox<T, 2> rectangle = in_mask1.Get_Transformed_Rectangle();
-	Vector<T, 2> point = in_mask2.Get_Transformed_Point();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedBox<T, 2> const& rectangle = *basis1;
+	Vector<T, 2> const& point = *basis2;
 
 	bool xColl = Is_Between_Inc<T>(point.X(), rectangle.Get_Minima().X(), rectangle.Get_Maxima().X());
 	bool yColl = Is_Between_Inc<T>(point.Y(), rectangle.Get_Minima().Y(), rectangle.Get_Maxima().Y());
@@ -433,8 +452,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedBox<T, 2> rectangle = in_mask1.Get_Transformed_Rectangle();
-	Ray<T, 2> ray = in_mask2.Get_Transformed_Ray();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedBox<T, 2> const& rectangle = *basis1;
+	Ray<T, 2> const& ray = *basis2;
 
 	Vector<T, 2> center = rectangle.Get_Center();
 	Vector<T, 2> minima = rectangle.Get_Minima();
@@ -564,8 +586,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedBox<T, 2> aaRectangle = in_mask1.Get_Transformed_Rectangle();
-	Box<T, 2> rectangle = in_mask2.Get_Transformed_Rectangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedBox<T, 2> const& aaRectangle = *basis1;
+	Box<T, 2> const& rectangle = *basis2;
 
 	AxisAlignedRectangleCollisionMask<T> aaRectangleMask = AxisAlignedRectangleCollisionMask<T>(aaRectangle, true);
 	RectangleCollisionMask<T> rectangleMask = RectangleCollisionMask<T>(rectangle, true);
@@ -605,8 +630,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedBox<T, 2> rectangle = in_mask1.Get_Transformed_Rectangle();
-	Triangle<T, 2> triangle = in_mask2.Get_Transformed_Triangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedBox<T, 2> const& rectangle = *basis1;
+	Triangle<T, 2> const& triangle = *basis2;
 
 	AxisAlignedRectangleCollisionMask<T> aaRectangleMask = AxisAlignedRectangleCollisionMask<T>(rectangle, true);
 	Triangle2CollisionMask<T> triangleMask = Triangle2CollisionMask<T>(triangle, true);
@@ -646,8 +674,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionMask<T>& in_mask1, CircleCollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Circle<T> circle1 = in_mask1.Get_Transformed_Circle();
-	Circle<T> circle2 = in_mask2.Get_Transformed_Circle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Circle<T> const& circle1 = *basis1;
+	Circle<T> const& circle2 = *basis2;
 
 	const T radii = circle1.Get_Radius() + circle2.Get_Radius();
 	const T radiiSquared = radii * radii;
@@ -670,8 +701,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionMask<T>& in_mask1, HalfSpace2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Circle<T> circle = in_mask1.Get_Transformed_Circle();
-	HalfSpace<T, 2> halfSpace = in_mask2.Get_Transformed_Half_Space();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Circle<T> const& circle = *basis1;
+	HalfSpace<T, 2> const& halfSpace = *basis2;
 
 	T circleProjectionCoefficient = halfSpace.Get_Direction().Dot(circle.Get_Center());
 	T halfSpaceProjectionCoefficient = halfSpace.Get_Projection_Coefficient();
@@ -695,8 +729,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Circle<T> circle = in_mask1.Get_Transformed_Circle();
-	Line<T, 2> line = in_mask2.Get_Transformed_Line();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Circle<T> const& circle = *basis1;
+	Line<T, 2> const& line = *basis2;
 
 	Point2CollisionMask<T> pointMask = Point2CollisionMask<T>(line.Get_Projection(circle.Get_Center()), true);
 	CircleCollisionMask<T> circleMask = CircleCollisionMask<T>(circle, true);
@@ -710,8 +747,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Circle<T> circle = in_mask1.Get_Transformed_Circle();
-	LineSegment<T, 2> lineSegment = in_mask2.Get_Transformed_Line_Segment();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Circle<T> const& circle = *basis1;
+	LineSegment<T, 2> const& lineSegment = *basis2;
 
 	CircleCollisionMask<T> circleMask = CircleCollisionMask<T>(circle, true);
 
@@ -748,8 +788,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Circle<T> circle = in_mask1.Get_Transformed_Circle();
-	Vector<T, 2> point = in_mask2.Get_Transformed_Point();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Circle<T> const& circle = *basis1;
+	Vector<T, 2> const& point = *basis2;
 
 	if ((point - circle.Get_Center()).Dot_Self() <= circle.Get_Radius() * circle.Get_Radius()) {
 		collision.didCollide = true;
@@ -769,8 +812,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Circle<T> circle = in_mask1.Get_Transformed_Circle();
-	Ray<T, 2> ray = in_mask2.Get_Transformed_Ray();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Circle<T> const& circle = *basis1;
+	Ray<T, 2> const& ray = *basis2;
 
 	Ray2CollisionMask<T> rayMask = Ray2CollisionMask<T>(ray, true);
 
@@ -794,8 +840,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Circle<T> circle = in_mask1.Get_Transformed_Circle();
-	Box<T, 2> rectangle = in_mask2.Get_Transformed_Rectangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Circle<T> const& circle = *basis1;
+	Box<T, 2> const& rectangle = *basis2;
 
 	Vector<T, 2> center = rectangle.Get_Center();
 	CircleCollisionMask<T> circleMask = CircleCollisionMask<T>(circle, true);
@@ -871,8 +920,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Circle<T> circle = in_mask1.Get_Transformed_Circle();
-	Triangle<T, 2> triangle = in_mask2.Get_Transformed_Triangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Circle<T> const& circle = *basis1;
+	Triangle<T, 2> const& triangle = *basis2;
 
 	CircleCollisionMask<T> circleMask = CircleCollisionMask<T>(circle, true);
 
@@ -928,8 +980,8 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionM
 				});
 
 			Range<T> circleRange(
-				(circle.Get_Center() - normAxes[i] * circle.Get_Radius() * 0.999).Dot(normAxes[i]),
-				(circle.Get_Center() + normAxes[i] * circle.Get_Radius() * 0.999).Dot(normAxes[i])
+				(circle.Get_Center() - normAxes[i] * circle.Get_Radius() * (T)0.999).Dot(normAxes[i]),
+				(circle.Get_Center() + normAxes[i] * circle.Get_Radius() * (T)0.999).Dot(normAxes[i])
 			);
 
 			if (!triangleRange.Intersection(circleRange)) {
@@ -946,8 +998,8 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionM
 				});
 
 			Range<T> circleRange(
-				(circle.Get_Center() - normAxes[i] * circle.Get_Radius() * 0.999).Dot(normAxes[i]),
-				(circle.Get_Center() + normAxes[i] * circle.Get_Radius() * 0.999).Dot(normAxes[i])
+				(circle.Get_Center() - normAxes[i] * circle.Get_Radius() * (T)0.999).Dot(normAxes[i]),
+				(circle.Get_Center() + normAxes[i] * circle.Get_Radius() * (T)0.999).Dot(normAxes[i])
 			);
 
 			Log::main(std::to_string(triangleRange.Get_Low()) + " " + std::to_string(triangleRange.Get_High()) + " " + std::to_string(circleRange.Get_Low()) + " " + std::to_string(circleRange.Get_High()));
@@ -963,8 +1015,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, HalfSpace2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	HalfSpace<T, 2> halfSpace1 = in_mask1.Get_Transformed_Half_Space();
-	HalfSpace<T, 2> halfSpace2 = in_mask2.Get_Transformed_Half_Space();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	HalfSpace<T, 2> const& halfSpace1 = *basis1;;
+	HalfSpace<T, 2> const& halfSpace2 = *basis1;;
 
 	Line<T, 2> line1 = Line<T, 2>::From_Point_Direction(halfSpace1.Get_Point(), halfSpace1.Get_Direction().Orthogonal());
 	Line<T, 2> line2 = Line<T, 2>::From_Point_Direction(halfSpace2.Get_Point(), halfSpace2.Get_Direction().Orthogonal());
@@ -997,9 +1052,12 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	HalfSpace<T, 2> halfSpace = in_mask1.Get_Transformed_Half_Space();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
 
-	Line<T, 2> line1 = in_mask2.Get_Transformed_Line();
+	HalfSpace<T, 2> const& halfSpace = *basis1;
+
+	Line<T, 2> const& line1 = *basis2;
 	Line<T, 2> line2 = Line<T, 2>::From_Point_Direction(halfSpace.Get_Point(), halfSpace.Get_Direction().Orthogonal());
 
 	Line2CollisionMask<T> lineMask1 = Line2CollisionMask<T>(line1, true);
@@ -1023,8 +1081,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	HalfSpace<T, 2> halfSpace = in_mask1.Get_Transformed_Half_Space();
-	LineSegment<T, 2> lineSegment = in_mask2.Get_Transformed_Line_Segment();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	HalfSpace<T, 2> const& halfSpace = *basis1;
+	LineSegment<T, 2> const& lineSegment = *basis2;
 
 	HalfSpace2CollisionMask<T> halfSpaceMask = HalfSpace2CollisionMask<T>(halfSpace, true);
 	Line2CollisionMask<T> lineMask = Line2CollisionMask<T>(
@@ -1055,8 +1116,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	HalfSpace<T, 2> halfSpace = in_mask1.Get_Transformed_Half_Space();
-	Vector<T, 2> point = in_mask2.Get_Transformed_Point();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	HalfSpace<T, 2> const& halfSpace = *basis1;
+	Vector<T, 2> const& point = *basis2;
 
 	if (halfSpace.Get_Projection_Coefficient() <= halfSpace.Get_Direction().Dot(point)) {
 		collision.didCollide = true;
@@ -1076,8 +1140,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	HalfSpace<T, 2> halfSpace = in_mask1.Get_Transformed_Half_Space();
-	Ray<T, 2> ray = in_mask2.Get_Transformed_Ray();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	HalfSpace<T, 2> const& halfSpace = *basis1;
+	Ray<T, 2> const& ray = *basis2;
 
 	HalfSpace2CollisionMask<T> halfSpaceMask = HalfSpace2CollisionMask<T>(halfSpace, true);
 	Line2CollisionMask<T> lineMask = Line2CollisionMask<T>(
@@ -1103,8 +1170,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	HalfSpace halfSpace = in_mask1.Get_Transformed_Half_Space();
-	Box<T, 2> rectangle = in_mask2.Get_Transformed_Rectangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	HalfSpace<T, 2> const& halfSpace = *basis1;
+	Box<T, 2> const& rectangle = *basis2;
 
 	Vector<T, 2> center = rectangle.Get_Center();
 
@@ -1130,8 +1200,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	HalfSpace halfSpace = in_mask1.Get_Transformed_Half_Space();
-	Triangle<T, 2> triangle = in_mask2.Get_Transformed_Triangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	HalfSpace<T, 2> const& halfSpace = *basis1;
+	Triangle<T, 2> const& triangle = *basis2;
 
 	Vector<T, 2> corners[4];
 	triangle.Get_Points(corners);
@@ -1163,8 +1236,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	LineSegment<T, 2> lineSegment1 = in_mask1.Get_Transformed_Line_Segment();
-	LineSegment<T, 2> lineSegment2 = in_mask2.Get_Transformed_Line_Segment();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	LineSegment<T, 2> const& lineSegment1 = *basis1;
+	LineSegment<T, 2> const& lineSegment2 = *basis2;
 
 	bool thisReturnPoint = returnPoint;
 	returnPoint = true;
@@ -1222,8 +1298,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	LineSegment<T, 2> lineSegment = in_mask1.Get_Transformed_Line_Segment();
-	Vector<T, 2> point = in_mask2.Get_Transformed_Point();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	LineSegment<T, 2> const& lineSegment = *basis1;
+	Vector<T, 2> const& point = *basis2;
 
 	Line<T, 2> line = Line<T, 2>::From_Point_Direction(lineSegment.Get_Point1(), lineSegment.Get_Offset());
 
@@ -1244,8 +1323,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	LineSegment<T, 2> lineSegment = in_mask1.Get_Transformed_Line_Segment();
-	Ray<T, 2> ray = in_mask2.Get_Transformed_Ray();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	LineSegment<T, 2> const& lineSegment = *basis1;
+	Ray<T, 2> const& ray = *basis2;
 
 	bool thisReturnPoint = returnPoint;
 	returnPoint = true;
@@ -1286,8 +1368,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	LineSegment<T, 2> lineSegment = in_mask1.Get_Transformed_Line_Segment();
-	Box<T, 2> rectangle = in_mask2.Get_Transformed_Rectangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	LineSegment<T, 2> const& lineSegment = *basis1;
+	Box<T, 2> const& rectangle = *basis2;
 
 	RectangleCollisionMask<T> rectangleMask = RectangleCollisionMask<T>(rectangle, true);
 
@@ -1335,8 +1420,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	LineSegment<T, 2> lineSegment = in_mask1.Get_Transformed_Line_Segment();
-	Triangle<T, 2> triangle = in_mask2.Get_Transformed_Triangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	LineSegment<T, 2> const& lineSegment = *basis1;
+	Triangle<T, 2> const& triangle = *basis2;
 
 	Vector<T, 2> corners[3];
 	triangle.Get_Points(corners);
@@ -1416,8 +1504,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Point2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Vector<T, 2> point1 = in_mask1.Get_Transformed_Point();
-	Vector<T, 2> point2 = in_mask1.Get_Transformed_Point();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Vector<T, 2> const& point1 = *basis1;
+	Vector<T, 2> const& point2 = *basis2;
 
 	if (point1 == point2) {
 		collision.didCollide = true;
@@ -1437,8 +1528,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Point2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Vector<T, 2> point = in_mask1.Get_Transformed_Point();
-	Ray<T, 2> ray = in_mask2.Get_Transformed_Ray();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Vector<T, 2> const& point = *basis1;
+	Ray<T, 2> const& ray = *basis2;
 
 	Collision<T, 2> testCollision = Evaluate_Typed(
 		Line2CollisionMask<T>(Line<T, 2>::From_Point_Direction(ray.Get_Point(), ray.Get_Direction()), true),
@@ -1465,8 +1559,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Point2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Box<T, 2> rectangle = in_mask2.Get_Transformed_Rectangle();
-	Vector<T, 2> point = in_mask1.Get_Transformed_Point();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Box<T, 2> const& rectangle = *basis2;
+	Vector<T, 2> const& point = *basis1;
 
 	Vector<T, 2> origin = rectangle.Get_Origin();
 	Vector<T, 2> axes[2];
@@ -1504,8 +1601,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Point2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Triangle<T, 2> triangle = in_mask2.Get_Transformed_Triangle();
-	Vector<T, 2> point = in_mask1.Get_Transformed_Point();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Triangle<T, 2> const& triangle = *basis2;
+	Vector<T, 2> const& point = *basis1;
 
 	Vector<T, 2> points[3];
 	triangle.Get_Points(points);
@@ -1536,8 +1636,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Ray2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Ray<T, 2> ray1 = in_mask1.Get_Transformed_Ray();
-	Ray<T, 2> ray2 = in_mask2.Get_Transformed_Ray();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Ray<T, 2> const& ray1 = *basis1;
+	Ray<T, 2> const& ray2 = *basis2;
 
 	bool thisReturnPoint = returnPoint;
 	returnPoint = true;
@@ -1565,8 +1668,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Ray2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Ray<T, 2> ray = in_mask1.Get_Transformed_Ray();
-	Box<T, 2> rectangle = in_mask2.Get_Transformed_Rectangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Ray<T, 2> const& ray = *basis1;
+	Box<T, 2> const& rectangle = *basis2;
 
 	Vector<T, 2> corners[4];
 	rectangle.Get_Corners(corners);
@@ -1632,8 +1738,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Ray2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Ray<T, 2> ray = in_mask1.Get_Transformed_Ray();
-	Triangle triangle = in_mask2.Get_Transformed_Triangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Ray<T, 2> const& ray = *basis1;
+	Triangle<T, 2> const& triangle = *basis2;
 
 	Vector<T, 2> corners[3];
 	triangle.Get_Points(corners);
@@ -1696,8 +1805,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(RectangleCollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Box<T, 2> rectangle1 = in_mask1.Get_Transformed_Rectangle();
-	Box<T, 2> rectangle2 = in_mask2.Get_Transformed_Rectangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Box<T, 2> const& rectangle1 = *basis1;
+	Box<T, 2> const& rectangle2 = *basis2;
 
 	Vector<T, 2> corners[2][4];
 	Vector<T, 2> projectees[2][2];
@@ -1774,8 +1886,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(RectangleCollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Box<T, 2> rectangle = in_mask1.Get_Transformed_Rectangle();
-	Triangle<T, 2> triangle = in_mask2.Get_Transformed_Triangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Box<T, 2> const& rectangle = *basis1;
+	Triangle<T, 2> const& triangle = *basis2;
 
 	RectangleCollisionMask<T> rectangleMask = RectangleCollisionMask<T>(rectangle, true);
 	Triangle2CollisionMask<T> triangleMask = Triangle2CollisionMask<T>(triangle, true);
@@ -1819,8 +1934,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Triangle2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Triangle<T, 2> triangle1 = in_mask1.Get_Transformed_Triangle();
-	Triangle<T, 2> triangle2 = in_mask2.Get_Transformed_Triangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Triangle<T, 2> const& triangle1 = *basis1;
+	Triangle<T, 2> const& triangle2 = *basis2;
 
 	Vector<T, 2> corners[2][3];
 	Vector<T, 2> projectees[2][3];
@@ -1894,8 +2012,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Line<T, 2> line1 = in_mask1.Get_Transformed_Line();
-	Line<T, 2> line2 = in_mask2.Get_Transformed_Line();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Line<T, 2> const& line1 = *basis1;
+	Line<T, 2> const& line2 = *basis2;
 
 	Matrix<T, 2, 3> matrix;
 	matrix.Column(0, line1.Get_Direction());
@@ -1921,10 +2042,13 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Line<T, 2> line = in_mask1.Get_Transformed_Line();
-	LineSegment<T, 2> lineSegment = in_mask2.Get_Transformed_Line_Segment();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
 
-	Line2CollisionMask lineMask(line, true);
+	Line<T, 2> const& line = *basis1;
+	LineSegment<T, 2> const& lineSegment = *basis2;
+
+	Line2CollisionMask<T> lineMask(line, true);
 
 	bool thisReturnPoint = returnPoint;
 	returnPoint = true;
@@ -1960,8 +2084,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Line<T, 2> line = in_mask1.Get_Transformed_Line();
-	Vector<T, 2> point = in_mask2.Get_Transformed_Point();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Line<T, 2> const& line = *basis1;
+	Vector<T, 2> const& point = *basis2;
 
 	Vector<T, 2> pointOffset = point - line.Get_Point();
 	Vector<T, 2> direction = line.Get_Direction();
@@ -1984,8 +2111,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Line<T, 2> line = in_mask1.Get_Transformed_Line();
-	Ray<T, 2> ray = in_mask2.Get_Transformed_Ray();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Line<T, 2> const& line = *basis1;
+	Ray<T, 2> const& ray = *basis2;
 
 	Line2CollisionMask<T> lineMask(line, true);
 
@@ -2012,8 +2142,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Line<T, 2> line = in_mask1.Get_Transformed_Line();
-	Box<T, 2> rectangle = in_mask2.Get_Transformed_Rectangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Line<T, 2> const& line = *basis1;
+	Box<T, 2> const& rectangle = *basis2;
 
 	RectangleCollisionMask<T> rectangleMask = RectangleCollisionMask<T>(rectangle, true);
 
@@ -2040,8 +2173,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	Line<T, 2> line = in_mask1.Get_Transformed_Line();
-	Triangle<T, 2> triangle = in_mask2.Get_Transformed_Triangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Line<T, 2> const& line = *basis1;
+	Triangle<T, 2> const& triangle = *basis2;
 
 	Vector<T, 2> corners[3];
 	triangle.Get_Points(corners);
@@ -2075,8 +2211,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedHalfSpace<T, 2> halfSpace = in_mask1.Get_Transformed_Half_Space();
-	LineSegment<T, 2> lineSegment = in_mask2.Get_Transformed_Line_Segment();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedHalfSpace<T, 2> const& halfSpace = *basis1;
+	LineSegment<T, 2> const& lineSegment = *basis2;
 
 	uint dimension = halfSpace.Get_Dimension();
 	uint otherDimension = (dimension == 0) ? 1 : 0;
@@ -2129,8 +2268,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedHalfSpace<T, 2> halfSpace = in_mask1.Get_Transformed_Half_Space();
-	Vector<T, 2> point = in_mask2.Get_Transformed_Point();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedHalfSpace<T, 2> const& halfSpace = *basis1;
+	Vector<T, 2> const& point = *basis2;
 
 	T pointValue = point[halfSpace.Get_Dimension()];
 	T halfSpaceValue = halfSpace.Get_Value();
@@ -2153,8 +2295,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedHalfSpace<T, 2> halfSpace = in_mask1.Get_Transformed_Half_Space();
-	Ray<T, 2> ray = in_mask2.Get_Transformed_Ray();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedHalfSpace<T, 2> const& halfSpace = *basis1;
+	Ray<T, 2> const& ray = *basis2;
 
 	AxisAlignedHalfSpace2CollisionMask<T> halfSpaceMask = AxisAlignedHalfSpace2CollisionMask<T>(halfSpace, true);
 	Line2CollisionMask<T> lineMask = Line2CollisionMask<T>(Line<T, 2>::From_Point_Direction(ray.Get_Point(), ray.Get_Direction()), true);
@@ -2180,12 +2325,16 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfS
 
 template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) {
-	Box<T, 2> rectangle = in_mask2.Get_Transformed_Rectangle();
+
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Box<T, 2> const& rectangle = *basis2;
 
 	Vector<T, 2> corners[4];
 	rectangle.Get_Corners(corners);
 
-	uint dimension = in_mask1.Get_Half_Space().Get_Dimension();
+	uint dimension = in_mask1.Get_Basis().Get_Dimension();
 
 	uint minIndex = 0;
 	uint maxIndex = 0;
@@ -2204,8 +2353,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedHalfSpace<T, 2> halfSpace = in_mask1.Get_Transformed_Half_Space();
-	Triangle<T, 2> triangle = in_mask2.Get_Transformed_Triangle();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedHalfSpace<T, 2> const& halfSpace = *basis1;;
+	Triangle<T, 2> const& triangle = *basis2;
 
 	Vector<T, 2> corners[3];
 	triangle.Get_Points(corners);
@@ -2243,8 +2395,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, AxisAlignedHalfSpace2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedHalfSpace<T, 2> halfSpace1 = in_mask1.Get_Transformed_Half_Space();
-	AxisAlignedHalfSpace<T, 2> halfSpace2 = in_mask2.Get_Transformed_Half_Space();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedHalfSpace<T, 2> const& halfSpace1 = *basis1;
+	AxisAlignedHalfSpace<T, 2> const& halfSpace2 = *basis2;
 
 	if (halfSpace1.Get_Dimension() == halfSpace2.Get_Dimension()) {
 		uint dimension = halfSpace1.Get_Dimension();
@@ -2280,8 +2435,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, AxisAlignedLine2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedHalfSpace<T, 2> halfSpace = in_mask1.Get_Transformed_Half_Space();
-	AxisAlignedLine<T, 2> line = in_mask2.Get_Transformed_Line();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedHalfSpace<T, 2> const& halfSpace = *basis1;
+	AxisAlignedLine<T, 2> const& line = *basis2;
 
 	if (halfSpace.Get_Dimension() == line.Get_Dimension()) {
 		uint dimension = halfSpace.Get_Dimension();
@@ -2309,7 +2467,11 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfS
 
 template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, AxisAlignedRectangleCollisionMask<T>& in_mask2) {
-	AxisAlignedBox<T, 2> rectangle = in_mask2.Get_Transformed_Rectangle();
+
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedBox<T, 2> const& rectangle = *basis2;
 
 	return Evaluate_Typed(
 		in_mask1,
@@ -2319,9 +2481,13 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfS
 
 template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, CircleCollisionMask<T>& in_mask2) {
-	Circle<T> circle = in_mask2.Get_Transformed_Circle();
 
-	uint dimension = in_mask1.Get_Half_Space().Get_Dimension();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	Circle<T> const& circle = *basis2;
+
+	uint dimension = in_mask1.Get_Basis().Get_Dimension();
 
 	return Evaluate_Typed(
 		in_mask1,
@@ -2333,8 +2499,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, HalfSpace2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedHalfSpace<T, 2> aaHalfSpace = in_mask1.Get_Transformed_Half_Space();
-	HalfSpace<T, 2> halfSpace = in_mask2.Get_Transformed_Half_Space();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedHalfSpace<T, 2> const& aaHalfSpace = *basis1;
+	HalfSpace<T, 2> const& halfSpace = *basis2;
 
 	Line<T, 2> line = Line<T, 2>::From_Point_Direction(halfSpace.Get_Point(), halfSpace.Get_Direction().Orthogonal());
 
@@ -2361,8 +2530,11 @@ template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) {
 	Collision<T, 2> collision;
 
-	AxisAlignedHalfSpace<T, 2> halfSpace = in_mask1.Get_Transformed_Half_Space();
-	Line<T, 2> line = in_mask2.Get_Transformed_Line();
+	auto basis1 = in_mask1.Get_Transformed_Basis();
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	AxisAlignedHalfSpace<T, 2> const& halfSpace = *basis1;
+	Line<T, 2> const& line = *basis2;
 
 	uint dimension = halfSpace.Get_Dimension();
 

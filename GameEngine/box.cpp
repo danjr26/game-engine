@@ -8,24 +8,24 @@ inline Box<T, n>::Box(const Vector<T, n>& in_origin, const Vector<T, n>* in_axes
 }
 
 template<class T, uint n>
-inline Vector<T, n> Box<T, n>::Get_Origin() {
+inline Vector<T, n> Box<T, n>::Get_Origin() const {
 	return origin;
 }
 
 template<class T, uint n>
-inline Vector<T, n> Box<T, n>::Get_Center() {
+inline Vector<T, n> Box<T, n>::Get_Center() const {
 	Vector<T, n> out = origin;
 	for (uint i = 0; i < n; i++) out += axes[i] / 2.0;
 	return out;
 }
 
 template<class T, uint n>
-inline void Box<T, n>::Get_Axes(Vector<T, n>* out_axes) {
+inline void Box<T, n>::Get_Axes(Vector<T, n>* out_axes) const {
 	for (uint i = 0; i < n; i++) out_axes[i] = axes[i];
 }
 
 template<class T, uint n>
-inline void Box<T, n>::Get_Corners(Vector<T, n>* out_corners) {
+inline void Box<T, n>::Get_Corners(Vector<T, n>* out_corners) const {
 	const uint nCorners = 1 << n;
 
 	for (uint i = 0; i < nCorners; i++) {

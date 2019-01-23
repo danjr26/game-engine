@@ -14,12 +14,12 @@ inline void Triangle<T, n>::Apply_Transform(const Transform<T, n>& in_transform)
 }
 
 template<class T, uint n>
-inline void Triangle<T, n>::Get_Points(Vector<T, n>* out_points) {
+inline void Triangle<T, n>::Get_Points(Vector<T, n>* out_points) const {
 	memcpy(out_points, points, sizeof(Vector<T, n>) * 3);
 }
 
 template<class T, uint n>
-inline void Triangle<T, n>::Get_Point_Offsets(Vector<T, n>* out_offsets) {
+inline void Triangle<T, n>::Get_Point_Offsets(Vector<T, n>* out_offsets) const {
 	for (uint i = 0; i < 3; i++) {
 		out_offsets[i] = points[(i + 1) % 3];
 		out_offsets[i] -= points[i];
@@ -85,16 +85,16 @@ Vector<T, n> Triangle<T, n>::Random_Point_Inside() const {
 
 template<class T, uint n>
 template<typename>
-inline void Triangle<T, n>::Get_Lazy_Normals(Vector<T, n>* out_lazyNormals) {
+inline void Triangle<T, n>::Get_Lazy_Normals(Vector<T, n>* out_lazyNormals) const {
 	for (uint i = 0; i < 3; i++) out_lazyNormals[i] = (points[i] - points[(i + 1) % 3]).Orthogonal();
 }
 
-template void Triangle<float, 2>::Get_Lazy_Normals(Vector2f*);
-template void Triangle<double, 2>::Get_Lazy_Normals(Vector2d*);
+template void Triangle<float, 2>::Get_Lazy_Normals(Vector2f*) const;
+template void Triangle<double, 2>::Get_Lazy_Normals(Vector2d*) const;
 
 template<class T, uint n>
 template<typename>
-inline void Triangle<T, n>::Get_Normals(Vector<T, n>* out_Normals) {
+inline void Triangle<T, n>::Get_Normals(Vector<T, n>* out_Normals) const {
 	for (uint i = 0; i < 3; i++) out_Normals[i] = (points[i] - points[(i + 1) % 3]).Orthogonal().Normalized();
 }
 
@@ -110,8 +110,8 @@ Vector<T, n> Triangle<T, n>::Get_Normal() const {
 	return (points[1] - points[0]).Cross(points[2] - points[0]).Normalized();
 }
 
-template void Triangle<float, 2>::Get_Normals(Vector2f*);
-template void Triangle<double, 2>::Get_Normals(Vector2d*);
+template void Triangle<float, 2>::Get_Normals(Vector2f*) const;
+template void Triangle<double, 2>::Get_Normals(Vector2d*) const;
 
 template<class T, uint n>
 template<typename>

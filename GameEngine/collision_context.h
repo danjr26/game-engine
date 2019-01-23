@@ -6,7 +6,7 @@
 #include <map>
 #include <unordered_map>
 #include <mutex>
-#include "collision_mask.h"
+#include "basic_collision_mask.h"
 #include "binary_collision_tree.h"
 #include "in_place_collision_evaluator.h"
 #include "packaged_async_task.h"

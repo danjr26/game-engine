@@ -21,8 +21,8 @@ public:
 	Vector<T, n> Get_Direction() const;
 	T Get_Projection_Coefficient1() const;
 	T Get_Projection_Coefficient2() const;
-	T Get_Projection_Coefficient(const Vector<T, n>& in_point);
-	Vector<T, n> Get_Projection(const Vector<T, n>& in_point);
+	T Get_Projection_Coefficient(const Vector<T, n>& in_point) const;
+	Vector<T, n> Get_Projection(const Vector<T, n>& in_point) const;
 	T Get_Length();
 
 	Vector<T, n> Random_Point() const;

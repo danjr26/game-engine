@@ -546,6 +546,9 @@
     <ClInclude Include="basic_collision_mask.h">
       <Filter>Header Files\collision\masks</Filter>
     </ClInclude>
+    <ClInclude Include="collision_basis_wrapper.h">
+      <Filter>Header Files\collision</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp">
@@ -859,6 +862,12 @@
     </ClCompile>
     <ClCompile Include="mesh2_collision_mask.cpp">
       <Filter>Source Files\collision\masks</Filter>
+    </ClCompile>
+    <ClCompile Include="basic_collision_mask.cpp">
+      <Filter>Source Files\collision\masks</Filter>
+    </ClCompile>
+    <ClCompile Include="collision_basis_wrapper.cpp">
+      <Filter>Source Files\collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

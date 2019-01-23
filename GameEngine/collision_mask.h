@@ -5,34 +5,51 @@
 #include "filtered_object.h"
 #include "disableable_object.h"
 #include "collision.h"
-#include "collision_evaluator.h"
 #include "transformable_object.h"
 #include <tuple>
 
+#include "axis_aligned_half_space.h"
+#include "axis_aligned_line.h"
+#include "axis_aligned_box.h"
+#include "sphere.h"
+#include "half_space.h"
+#include "mesh_vertex_data.h"
+#include "line.h"
+#include "line_segment.h"
+#include "ray.h"
+#include "box.h"
+#include "triangle.h"
+
+template<class Basis, class T, uint n>
+class BasicCollisionMask;
+
 template<class T>
-class AxisAlignedHalfSpace2CollisionMask;
+using AxisAlignedHalfSpace2CollisionMask = BasicCollisionMask<AxisAlignedHalfSpace<T, 2>, T, 2>;
 template<class T>
-class AxisAlignedLine2CollisionMask;
+using AxisAlignedLine2CollisionMask = BasicCollisionMask<AxisAlignedLine<T, 2>, T, 2>;
 template<class T>
-class AxisAlignedRectangleCollisionMask;
+using AxisAlignedRectangleCollisionMask = BasicCollisionMask<AxisAlignedBox<T, 2>, T, 2>;
 template<class T>
-class CircleCollisionMask;
+using CircleCollisionMask = BasicCollisionMask<Sphere<T, 2>, T, 2>;
 template<class T>
-class HalfSpace2CollisionMask;
+using HalfSpace2CollisionMask = BasicCollisionMask<HalfSpace<T, 2>, T, 2>;
 template<class T>
-class Line2CollisionMask;
+using Line2CollisionMask = BasicCollisionMask<Line<T, 2>, T, 2>;
 template<class T>
-class LineSegment2CollisionMask;
+using LineSegment2CollisionMask = BasicCollisionMask<LineSegment<T, 2>, T, 2>;
 template<class T>
-class Mesh2CollisionMask;
+using Mesh2CollisionMask = BasicCollisionMask<MeshVertexData, T, 2>;
 template<class T>
-class Point2CollisionMask;
+using Point2CollisionMask = BasicCollisionMask<Vector<T, 2>, T, 2>;
 template<class T>
-class Ray2CollisionMask;
+using Ray2CollisionMask = BasicCollisionMask<Ray<T, 2>, T, 2>;
 template<class T>
-class RectangleCollisionMask;
+using RectangleCollisionMask = BasicCollisionMask<Box<T, 2>, T, 2>;
 template<class T>
-class Triangle2CollisionMask;
+using Triangle2CollisionMask = BasicCollisionMask<Triangle<T, 2>, T, 2>;
+
+template<class T, uint n>
+class CollisionEvaluator;
 
 template<class T, uint n>
 class CollisionMask
