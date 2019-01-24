@@ -33,7 +33,18 @@ public:
 		_double = GL_DOUBLE
 	};
 
+	enum FaceMode : GLenum {
+		points = GL_POINTS,
+		line_strip = GL_LINE_STRIP,
+		lines = GL_LINES,
+		triangle_strip = GL_TRIANGLE_STRIP,
+		triangle_fan = GL_TRIANGLE_FAN,
+		triangles = GL_TRIANGLES
+	};
+
 	static ubyte Get_Data_Type_Size(DataType in_type);
+	static ubyte Get_Face_Mode_Rank(FaceMode in_faceMode);
+	static ubyte Get_Face_Mode_Base(FaceMode in_faceMode);
 
 protected:
 	struct Member {
@@ -51,10 +62,11 @@ protected:
 	std::unordered_map<ubyte, Member> members;
 	std::vector<ubyte> indices;
 	DataType indexType;
+	FaceMode faceMode;
 	uint nVertices;
 
 public:
-	MeshVertexData(DataType in_indexType);
+	MeshVertexData(DataType in_indexType = DataType::_uint, FaceMode in_faceMode = FaceMode::triangles);
 
 	template<class T, uint n>
 	void Apply_Transform_Points(const Transform<T, n>& in_transform, ubyte in_id);
@@ -67,7 +79,10 @@ public:
 
 	uint Get_Number_Vertices() const;
 	uint Get_Number_Faces() const;
+	uint Get_Number_Face_Elements() const;
 	uint Get_Number_Members() const;
+
+	bool Is_Valid_Number_Elements(uint in_nElements) const;
 
 	void Get_Member_IDs(std::vector<ubyte>& out_ids);
 	void Add_Member(ubyte in_id, DataType in_type, ubyte in_depth, const void* in_data);
@@ -78,16 +93,15 @@ public:
 	DataType Get_Member_Type(ubyte in_member) const;
 	ubyte Get_Member_Depth(ubyte in_member) const;
 
-	void Reserve_Total(uint in_nVertices, uint in_nFaces);
-	void Reserve_Additional(uint in_nVertices, uint in_nFaces);
+	void Reserve_Total_Vertices(uint in_nVertices);
+	void Reserve_Total_Faces(uint in_nFaces);
+	void Reserve_Total_Face_Elements(uint in_nElements);
 
 	void Add_Vertices(uint in_nVertices, std::initializer_list<const void*> in_data);
 	void Add_Vertices(uint in_nVertices, const std::vector<const void*>& in_data);
 	void Remove_Vertex(uint in_index);
 	void Set_Vertex(uint in_index, std::initializer_list<const void*> in_data);
 	void Set_Vertices(uint in_index, uint in_nVertices, std::initializer_list<const void*> in_data);
-
-	void Add_Faces(uint in_nFaces, const void* in_indices);
 
 	template<class T>
 	void Add_Faces_Polygon();
@@ -101,15 +115,28 @@ public:
 	template<class T>
 	void Add_Faces_Delaunay(uint in_index, uint in_nVertices);
 
+	void Add_Faces(uint in_nFaces, const void* in_indices);
+	void Add_Face_Elements(uint in_nElements, const void* in_indices);
 	void Remove_Face(uint in_index);
+	void Remove_Face_Element(uint in_index);
 	const void* Get_Face(uint in_index) const;
+	const void* Get_Face_Element(uint in_index) const;
 	void Set_Face(uint in_faceIndex, const void* in_indices);
+	void Set_Face_Element(uint in_faceElement, const void* in_index);
 	void Set_Faces(uint in_faceIndex, uint in_nFaces, const void* in_indices);
+	void Set_Face_Elements(uint in_faceElement, uint in_nFaceElements, const void* in_indices);
+	void Set_Face_Mode(FaceMode in_faceMode);
 	DataType Get_Face_Type() const;
-	ubyte Get_Face_Size() const;
+	FaceMode Get_Face_Mode() const;
+	ubyte Get_Face_Element_Size() const;
 
 	const void* Get_Member_Pointer(ubyte in_member) const;
 	const void* Get_Face_Pointer() const;
+
+	uint Element_To_Face_Index(uint in_elementIndex) const;
+	uint Face_To_Element_Index(uint in_faceIndex) const;
+	uint Face_To_Element_Count(uint in_faceIndex, uint in_nFaces) const;
+	uint Element_To_Face_Count(uint in_elementIndex, uint in_nElements) const;
 
 protected:
 	template<class T> inline DataType To_Data_Type();
