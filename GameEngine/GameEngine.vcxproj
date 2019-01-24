@@ -210,6 +210,7 @@
     <ClInclude Include="linear_transitioner.h" />
     <ClInclude Include="located_vector.h" />
     <ClInclude Include="mesh2_collision_mask.h" />
+    <ClInclude Include="particle_system.h" />
     <ClInclude Include="transitioner.h" />
     <ClInclude Include="uniform_force_field.h" />
     <ClInclude Include="half_space.h" />
@@ -388,6 +389,7 @@
     <ClCompile Include="mesh2_collision_mask.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="particle_system.cpp" />
     <ClCompile Include="uniform_force_field.cpp" />
     <ClCompile Include="framebuffer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

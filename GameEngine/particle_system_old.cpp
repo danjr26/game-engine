@@ -1,4 +1,7 @@
 #include "particle_system.h"
+#include "particle_system.h"
+#include "particle_system.h"
+#include "particle_system.h"
 #include "framework.h"
 
 ParticleSystemManager* ParticleSystemManager::active = nullptr;
@@ -446,6 +449,8 @@ face		(face) {
 ParticleSystem::~ParticleSystem() {
 	ParticleSystemManager::active->Remove(this);
 }
+
+
 
 void ParticleSystem::Update(double t) 
 {}

@@ -67,9 +67,6 @@
     <Filter Include="Source Files\framework\async">
       <UniqueIdentifier>{f8325c7c-1594-46c5-8833-c9ea23beaa36}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\render\color">
-      <UniqueIdentifier>{0816dbe1-e05d-4340-b44f-bb814be4af79}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\render\texture">
       <UniqueIdentifier>{3b9a6c4d-5034-48ba-86b9-e3b09837dd07}</UniqueIdentifier>
     </Filter>
@@ -139,6 +136,27 @@
     <Filter Include="Header Files\render\camera">
       <UniqueIdentifier>{f636407f-a3cb-4513-abf4-49bcaad85716}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\render\shader">
+      <UniqueIdentifier>{0acce2ac-2d13-43e9-9a9f-2887795e363f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\render\camera">
+      <UniqueIdentifier>{2b171f6e-bcf6-4578-b54d-fab28be0af9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\render\text">
+      <UniqueIdentifier>{185ac69d-a165-4671-ba63-f3f1310badb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\render\target">
+      <UniqueIdentifier>{ba0cadff-f72a-40f2-8e7b-2beb4175a5d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\render\target">
+      <UniqueIdentifier>{d19ca3f2-1cbf-4956-96ae-4b1866353b45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\render\renderable">
+      <UniqueIdentifier>{81be86b6-e825-4c31-9528-e0dc0a3576ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\render\renderable">
+      <UniqueIdentifier>{52cb7446-38cf-49b7-85d6-8464a8addfbd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="transform.h">
@@ -195,9 +213,6 @@
     <ClInclude Include="log.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
-    <ClInclude Include="window.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="bit_manipulation.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
@@ -216,19 +231,10 @@
     <ClInclude Include="packaged_async_task.h">
       <Filter>Header Files\framework\async</Filter>
     </ClInclude>
-    <ClInclude Include="renderable_object.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="render_pass.h">
       <Filter>Header Files\render</Filter>
     </ClInclude>
-    <ClInclude Include="render_target.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="blend.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="framebuffer.h">
       <Filter>Header Files\render</Filter>
     </ClInclude>
     <ClInclude Include="transformable_object.h">
@@ -236,9 +242,6 @@
     </ClInclude>
     <ClInclude Include="matrix4.h">
       <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="color.h">
-      <Filter>Header Files\render\color</Filter>
     </ClInclude>
     <ClInclude Include="box.h">
       <Filter>Header Files\geometry</Filter>
@@ -330,17 +333,11 @@
     <ClInclude Include="window_proc.h">
       <Filter>Header Files\framework\input</Filter>
     </ClInclude>
-    <ClInclude Include="debug_mesh_vertex_data_renderer.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="rotation.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
     <ClInclude Include="mesh_vertex_gpu_pusher.h">
       <Filter>Header Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="circle_renderer.h">
-      <Filter>Header Files\objects</Filter>
     </ClInclude>
     <ClInclude Include="axis_aligned_box.h">
       <Filter>Header Files\geometry</Filter>
@@ -558,22 +555,37 @@
     <ClInclude Include="camera.h">
       <Filter>Header Files\render\camera</Filter>
     </ClInclude>
+    <ClInclude Include="color.h">
+      <Filter>Header Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="render_target.h">
+      <Filter>Header Files\render\target</Filter>
+    </ClInclude>
+    <ClInclude Include="window.h">
+      <Filter>Header Files\render\target</Filter>
+    </ClInclude>
+    <ClInclude Include="framebuffer.h">
+      <Filter>Header Files\render\target</Filter>
+    </ClInclude>
+    <ClInclude Include="circle_renderer.h">
+      <Filter>Header Files\render\renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="renderable_object.h">
+      <Filter>Header Files\render\renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="debug_mesh_vertex_data_renderer.h">
+      <Filter>Header Files\render\renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_system.h">
+      <Filter>Header Files\render\renderable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="camera.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="clock.cpp">
       <Filter>Source Files\framework</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="projection.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="shader.cpp">
-      <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="transform.cpp">
       <Filter>Source Files\geometry</Filter>
@@ -584,9 +596,6 @@
     <ClCompile Include="log.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
-    <ClCompile Include="window.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="windows_error.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
@@ -596,16 +605,7 @@
     <ClCompile Include="trackable_async_task.cpp">
       <Filter>Source Files\framework\async</Filter>
     </ClCompile>
-    <ClCompile Include="renderable_object.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="render_pass.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="shader_program.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="framebuffer.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="transformable_object.cpp">
@@ -617,14 +617,8 @@
     <ClCompile Include="game_engine.cpp">
       <Filter>Source Files\framework</Filter>
     </ClCompile>
-    <ClCompile Include="font_face.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="texture.cpp">
       <Filter>Source Files\render\texture</Filter>
-    </ClCompile>
-    <ClCompile Include="font_manager.cpp">
-      <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="texture_settings.cpp">
       <Filter>Source Files\render\texture</Filter>
@@ -632,26 +626,14 @@
     <ClCompile Include="texture_instance.cpp">
       <Filter>Source Files\render\texture</Filter>
     </ClCompile>
-    <ClCompile Include="camera_manager.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="render_manager.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="filtered_object.cpp">
       <Filter>Source Files\framework</Filter>
     </ClCompile>
-    <ClCompile Include="render_target.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="filter_query.cpp">
       <Filter>Source Files\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="text2.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="font_face_raster_set.cpp">
-      <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="disableable_object.cpp">
       <Filter>Source Files\framework</Filter>
@@ -709,12 +691,6 @@
     </ClCompile>
     <ClCompile Include="mesh_vertex_gpu_pusher.cpp">
       <Filter>Source Files\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="circle_renderer.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="shader_program_instance.cpp">
-      <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="collision_evaluator.cpp">
       <Filter>Source Files\collision\evaluators</Filter>
@@ -877,6 +853,54 @@
     </ClCompile>
     <ClCompile Include="collision_basis_wrapper.cpp">
       <Filter>Source Files\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files\render\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="camera_manager.cpp">
+      <Filter>Source Files\render\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="text2.cpp">
+      <Filter>Source Files\render\text</Filter>
+    </ClCompile>
+    <ClCompile Include="font_face.cpp">
+      <Filter>Source Files\render\text</Filter>
+    </ClCompile>
+    <ClCompile Include="font_face_raster_set.cpp">
+      <Filter>Source Files\render\text</Filter>
+    </ClCompile>
+    <ClCompile Include="font_manager.cpp">
+      <Filter>Source Files\render\text</Filter>
+    </ClCompile>
+    <ClCompile Include="projection.cpp">
+      <Filter>Source Files\render\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>Source Files\render\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="shader_program.cpp">
+      <Filter>Source Files\render\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="shader_program_instance.cpp">
+      <Filter>Source Files\render\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="window.cpp">
+      <Filter>Source Files\render\target</Filter>
+    </ClCompile>
+    <ClCompile Include="render_target.cpp">
+      <Filter>Source Files\render\target</Filter>
+    </ClCompile>
+    <ClCompile Include="framebuffer.cpp">
+      <Filter>Source Files\render\target</Filter>
+    </ClCompile>
+    <ClCompile Include="renderable_object.cpp">
+      <Filter>Source Files\render\renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="circle_renderer.cpp">
+      <Filter>Source Files\render\renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_system.cpp">
+      <Filter>Source Files\render\renderable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

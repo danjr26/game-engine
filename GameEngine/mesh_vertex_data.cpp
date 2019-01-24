@@ -306,14 +306,14 @@ void MeshVertexData::Remove_Member(ubyte in_member) {
 
 void MeshVertexData::Set_Member_Value(ubyte in_member, uint in_index, const void* in_value) {
 	Member& member = members[in_member];
-	for (uint i = 0; i < member.depth; i++) {
-		member.data[in_index * member.Get_Vertex_Size() + i] = ((const char*)in_value)[i];
-	}
+	uint size = member.Get_Vertex_Size();
+	memcpy(member.data[in_index * size], in_value, size);
 }
 
 void MeshVertexData::Set_Member_Values(ubyte in_member, uint in_index, uint in_nValues, const void* in_values) {
 	Member& member = members[in_member];
-	memcpy(&member.data[in_index * member.Get_Vertex_Size()], in_values, in_nValues * member.Get_Vertex_Size());
+	uint size = member.Get_Vertex_Size();
+	memcpy(member.data[in_index * size], in_values, in_nValues * size);
 }
 
 bool MeshVertexData::Has_Member(ubyte in_id) const {
