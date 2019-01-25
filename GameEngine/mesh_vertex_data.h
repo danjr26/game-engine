@@ -97,11 +97,10 @@ public:
 	void Reserve_Total_Faces(uint in_nFaces);
 	void Reserve_Total_Face_Elements(uint in_nElements);
 
-	void Add_Vertices(uint in_nVertices, std::initializer_list<const void*> in_data);
-	void Add_Vertices(uint in_nVertices, const std::vector<const void*>& in_data);
+	void Add_Vertices(uint in_nVertices, const std::unordered_map<ubyte, const void*>& in_data);
 	void Remove_Vertex(uint in_index);
-	void Set_Vertex(uint in_index, std::initializer_list<const void*> in_data);
-	void Set_Vertices(uint in_index, uint in_nVertices, std::initializer_list<const void*> in_data);
+	void Set_Vertex(uint in_index, std::unordered_map<ubyte, const void*> in_data);
+	void Set_Vertices(uint in_index, uint in_nVertices, std::unordered_map<ubyte, const void*> in_data);
 
 	template<class T>
 	void Add_Faces_Polygon();

@@ -32,7 +32,7 @@ params(in_params) {
 
 	RECT rect = { 0, 0, params.dimensions.X(), params.dimensions.Y() };
 	
-	if (!AdjustWindowRectEx((LPRECT)&rect, params.style, false, params.exStyle)) {
+	if (/*!params.fullscreen && */!AdjustWindowRectEx((LPRECT)&rect, params.style, false, params.exStyle)) {
 		throw ProcessFailureException(std::string("failed to create window with error message:\n") + Get_Windows_Error_Message());
 	}
 

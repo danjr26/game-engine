@@ -11,4 +11,3 @@ void main() {
 	gl_Position = mvpMatrix * vec4(position_v, 1.0);
 	uv_f = uv_v;
 }
-

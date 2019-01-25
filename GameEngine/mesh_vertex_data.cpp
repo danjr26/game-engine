@@ -307,13 +307,13 @@ void MeshVertexData::Remove_Member(ubyte in_member) {
 void MeshVertexData::Set_Member_Value(ubyte in_member, uint in_index, const void* in_value) {
 	Member& member = members[in_member];
 	uint size = member.Get_Vertex_Size();
-	memcpy(member.data[in_index * size], in_value, size);
+	memcpy(&member.data[in_index * size], in_value, size);
 }
 
 void MeshVertexData::Set_Member_Values(ubyte in_member, uint in_index, uint in_nValues, const void* in_values) {
 	Member& member = members[in_member];
 	uint size = member.Get_Vertex_Size();
-	memcpy(member.data[in_index * size], in_values, in_nValues * size);
+	memcpy(&member.data[in_index * size], in_values, in_nValues * size);
 }
 
 bool MeshVertexData::Has_Member(ubyte in_id) const {
@@ -329,8 +329,9 @@ ubyte MeshVertexData::Get_Member_Depth(ubyte in_member) const {
 }
 
 void MeshVertexData::Reserve_Total_Vertices(uint in_nVertices) {
-	for (uint i = 0; i < members.size(); i++) {
-		members[i].data.reserve(in_nVertices * members[i].Get_Vertex_Size());
+	for (auto it = members.begin(); it != members.end(); it++) {
+		Member& member = it->second;
+		member.data.reserve(in_nVertices * member.Get_Vertex_Size());
 	}
 }
 
@@ -342,27 +343,17 @@ void MeshVertexData::Reserve_Total_Face_Elements(uint in_nElements) {
 	indices.reserve(in_nElements * Get_Data_Type_Size(indexType));
 }
 
-void MeshVertexData::Add_Vertices(uint in_nVertices, std::initializer_list<const void*> in_data) {
-	if (in_data.size() != members.size()) {
-		throw InvalidArgumentException("vertex data of wrong dimension");
-	}
-	for (uint i = 0; i < members.size(); i++) {
-		const ubyte* ptr = (const ubyte*) *(in_data.begin() + i);
-		if(ptr == nullptr) members[i].data.resize(members[i].data.size() + in_nVertices * members[i].Get_Vertex_Size());
-		else members[i].data.insert(members[i].data.end(), ptr, ptr + in_nVertices * members[i].Get_Vertex_Size());
-	}
-
-	nVertices += in_nVertices;
-}
-
-void MeshVertexData::Add_Vertices(uint in_nVertices, const std::vector<const void*>& in_data) {
-	if (in_data.size() != members.size()) {
-		throw InvalidArgumentException("vertex data of wrong dimension");
-	}
-	for (uint i = 0; i < members.size(); i++) {
-		const ubyte* ptr = (const ubyte*) *(in_data.begin() + i);
-		if (ptr == nullptr) members[i].data.resize(members[i].data.size() + in_nVertices * members[i].Get_Vertex_Size());
-		else members[i].data.insert(members[i].data.end(), ptr, ptr + in_nVertices * members[i].Get_Vertex_Size());
+void MeshVertexData::Add_Vertices(uint in_nVertices, const std::unordered_map<ubyte, const void*>& in_data) {
+	for (auto it = members.begin(); it != members.end(); it++) {
+		Member& member = it->second;
+		auto search = in_data.find(it->first);
+		if (search == in_data.end() || search->second == nullptr) {
+			member.data.resize(member.data.size() + in_nVertices * member.Get_Vertex_Size());
+		}
+		else {
+			const ubyte* ptr = (const ubyte*)search->second;
+			member.data.insert(member.data.end(), ptr, ptr + in_nVertices * member.Get_Vertex_Size());
+		}
 	}
 
 	nVertices += in_nVertices;
@@ -373,30 +364,29 @@ void MeshVertexData::Remove_Vertex(uint in_index) {
 		throw InvalidArgumentException("invalid index");
 	}
 
-	for (uint i = 0; i < members.size(); i++) {
-		auto begin = members[i].data.begin() + (in_index * members[i].Get_Vertex_Size());
-		auto end = begin + members[i].Get_Vertex_Size();
-		members[i].data.erase(begin, end);
+	for (auto it = members.begin(); it != members.end(); it++) {
+		Member& member = it->second;
+		member.data.erase(member.data.begin() + (in_index * member.Get_Vertex_Size()));
 	}
 
 	nVertices--;
 }
 
-void MeshVertexData::Set_Vertex(uint in_index, std::initializer_list<const void*> in_data) {
-	if (in_data.size() != members.size()) {
-		throw InvalidArgumentException("vertex data of wrong dimension");
-	}
-	for (uint i = 0; i < members.size(); i++) {
-		Set_Member_Value(i, in_index, *(in_data.begin() + i));
+void MeshVertexData::Set_Vertex(uint in_index, std::unordered_map<ubyte, const void*> in_data) {
+	for (auto it = members.begin(); it != members.end(); it++) {
+		auto search = in_data.find(it->first);
+		if (search == in_data.end() || search->second == nullptr) {
+			Set_Member_Value(it->first, in_index, search->second);
+		}
 	}
 }
 
-void MeshVertexData::Set_Vertices(uint in_index, uint in_nVertices, std::initializer_list<const void*> in_data) {
-	if (in_data.size() != members.size()) {
-		throw InvalidArgumentException("vertex data of wrong dimension");
-	}
-	for (uint i = 0; i < members.size(); i++) {
-		Set_Member_Values(i, in_index, in_nVertices, *(in_data.begin() + i));
+void MeshVertexData::Set_Vertices(uint in_index, uint in_nVertices, std::unordered_map<ubyte, const void*> in_data) {
+	for (auto it = members.begin(); it != members.end(); it++) {
+		auto search = in_data.find(it->first);
+		if (search == in_data.end() || search->second == nullptr) {
+			Set_Member_Values(it->first, in_index, in_nVertices, search->second);
+		}
 	}
 }
 

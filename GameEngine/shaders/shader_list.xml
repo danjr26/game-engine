@@ -15,4 +15,9 @@
 		<Shader type="vertex" file="shaders/ellipse_v.glsl"/>
 		<Shader type="fragment" file="shaders/ellipse_f.glsl"/>
 	</ShaderProgram>
+	<ShaderProgram name="Particle2Shader">
+		<Shader type="vertex" file="shaders/particle2_v.glsl"/>
+		<Shader type="geometry" file="shaders/particle2_g.glsl"/>
+		<Shader type="fragment" file="shaders/particle2_f.glsl"/>
+	</ShaderProgram>
 </ShaderList>
