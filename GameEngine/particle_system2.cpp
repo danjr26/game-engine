@@ -14,15 +14,19 @@ ParticleSystem2::ParticleSystem2(Texture* in_texture) :
 	vertexData.Add_Member(MemberID::angle, MeshVertexData::DataType::_float, 1, nullptr);
 	vertexData.Add_Member(MemberID::age, MeshVertexData::DataType::_float, 1, nullptr);
 
-	Vector3f position(0, 0, 0);
+	Vector3f position(200, 200, 0);
+	Vector2f uv1(0.0, 0.0);
+	Vector2f uv2(1.0, 1.0);
 	ColorRGBAf color(0.5, 0.5, 0.8, 0.8);
 	Vector2f dimensions(100, 100);
-	float angle = 0.0f;
+	float angle = PI / 4.0f;
 	uint index = 0;
 
 	std::unordered_map<ubyte, const void*> vertices;
 	vertices[MemberID::position] = &position;
 	vertices[MemberID::color] = &color;
+	vertices[MemberID::uv1] = &uv1;
+	vertices[MemberID::uv2] = &uv2;
 	vertices[MemberID::dimensions] = &dimensions;
 	vertices[MemberID::angle] = &angle;
 
@@ -65,6 +69,9 @@ void ParticleSystem2::Render() {
 		shaderProgram->Get_Uniform_Location("colorTexture")
 	};
 
+	if (textureInstance.Get_Texture() != nullptr) {
+		textureInstance.Use();
+	}
 	shaderProgram->Use();
 
 	glUniformMatrix4fv(locations[0], 1, GL_TRUE, modelMatrix.Pointer());
@@ -72,10 +79,11 @@ void ParticleSystem2::Render() {
 	glUniformMatrix4fv(locations[2], 1, GL_TRUE, projectionMatrix.Pointer());
 	glUniform1i(locations[3], 0);
 
-	glDisable(GL_CULL_FACE);
-
 	gpuPusher.Draw();
 
+	if (textureInstance.Get_Texture() != nullptr) {
+		textureInstance.Use_None();
+	}
 	shaderProgram->Use_None();
 }
 

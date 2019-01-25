@@ -30,9 +30,13 @@ params(in_params) {
 		throw ProcessFailureException(std::string("failed to create window class with error message:\n") + Get_Windows_Error_Message());
 	}
 
+	DWORD style = (params.fullscreen) ?
+		WS_POPUP | (params.style & WS_VISIBLE) | (params.style & WS_MINIMIZE) :
+		params.style;
+
 	RECT rect = { 0, 0, params.dimensions.X(), params.dimensions.Y() };
 	
-	if (/*!params.fullscreen && */!AdjustWindowRectEx((LPRECT)&rect, params.style, false, params.exStyle)) {
+	if (/*!params.fullscreen && */!AdjustWindowRectEx((LPRECT)&rect, style, false, params.exStyle)) {
 		throw ProcessFailureException(std::string("failed to create window with error message:\n") + Get_Windows_Error_Message());
 	}
 
@@ -40,9 +44,7 @@ params(in_params) {
 		params.exStyle,                   
 		windowClass.lpszClassName,
 		params.name.c_str(),
-		(params.fullscreen) ? 
-			WS_POPUP | (params.style & WS_VISIBLE) | (params.style & WS_MINIMIZE) : 
-			params.style,
+		style,
 		params.position.X(),       
 		params.position.Y(),       
 		rect.right - rect.left,                
@@ -87,8 +89,6 @@ params(in_params) {
 	wglMakeCurrent(hDeviceContext, hGLRenderContext);
 
 	glewInit();
-
-	ShowWindow(hWindow, SW_SHOW);
 
 	GE.Windows().Add(this);
 }
@@ -225,7 +225,7 @@ void Window::Set_Fullscreen(bool in_value) {
 		deviceMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFIXEDOUTPUT;
 		deviceMode.dmDisplayFixedOutput = DMDFO_DEFAULT;
 
-		ChangeDisplaySettingsEx(NULL, &deviceMode, NULL, CDS_FULLSCREEN | CDS_RESET, NULL);
+		ChangeDisplaySettingsEx(NULL, &deviceMode, NULL, CDS_FULLSCREEN, NULL);
 	}
 	else {
 		ChangeDisplaySettingsEx(NULL, NULL, NULL, 0, NULL);
@@ -234,12 +234,18 @@ void Window::Set_Fullscreen(bool in_value) {
 
 void Window::Set_Topmost(bool in_value) {}
 
+void Window::Set_Visible(bool in_value) {
+	std::lock_guard<std::mutex> lock(mutex);
+	ShowWindow(hWindow, (in_value) ? SW_SHOW : SW_HIDE);
+}
+
 HWND Window::Get_Handle() {
 	std::lock_guard<std::mutex> lock(mutex);
 	return hWindow;
 }
 
 void Window::Set_Name(const std::wstring& in_name) {
+	std::lock_guard<std::mutex> lock(mutex);
 	SetWindowText(hWindow, in_name.c_str());
 }
 

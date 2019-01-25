@@ -276,5 +276,5 @@ void MeshVertexGPUPusher::Draw_Raw() {
 void MeshVertexGPUPusher::Draw_Raw(uint in_elementIndex, uint in_nElements) {
 	glBindVertexArray(vertexArrayID);
 	glDrawArrays(data->Get_Face_Mode(), in_elementIndex, in_nElements);
-	glBindVertexArray(vertexArrayID);
+	glBindVertexArray(0);
 }

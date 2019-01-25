@@ -38,9 +38,9 @@ TestSpriteMover2::TestSpriteMover2(Sprite* in_sprite) :
 
 	transitioner.Fill_Uniform_Durations(5.0);
 
-	transitioner.keys[0].value.position = Vector2d(0, 0);
+	transitioner.keys[0].value.position = Vector2d(300, 0);
 	transitioner.keys[1].value.position = Vector2d(600, 300);
-	transitioner.keys[2].value.position = Vector2d(400, 600);
+	transitioner.keys[2].value.position = Vector2d(300, 600);
 
 	transitioner.Fill_Basic_Tangents();
 

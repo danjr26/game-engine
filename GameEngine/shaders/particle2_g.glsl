@@ -28,23 +28,22 @@ void main() {
 
 	color_f = color_g[0];
 
-
-	uv_f = uv1_g[0];
+	uv_f = vec2(uv2_g[0].x, uv2_g[0].y);
 	gl_Position = projectionMatrix * vec4(position3 + vec3(rotationMatrix * vec2(dimensions_g[0].x, dimensions_g[0].y), 0.0), 1.0);
 	//gl_Position = vec4(-100.0, -100.0, 0.0, 1.0);
 	EmitVertex();
 
-	uv_f = vec2(uv1_g[0].x, uv2_g[0].y);
+	uv_f = vec2(uv2_g[0].x, uv1_g[0].y);
 	gl_Position = projectionMatrix * vec4(position3 + vec3(rotationMatrix * vec2(dimensions_g[0].x, -dimensions_g[0].y), 0.0), 1.0);
 	//gl_Position = vec4(-100.0, 100.0, 0.0, 1.0);
 	EmitVertex();
 
-	uv_f = vec2(uv2_g[0].x, uv2_g[0].y);
+	uv_f = vec2(uv1_g[0].x, uv2_g[0].y);
 	gl_Position = projectionMatrix * vec4(position3 + vec3(rotationMatrix * vec2(-dimensions_g[0].x, dimensions_g[0].y), 0.0), 1.0);
 	//gl_Position = vec4(100.0, -100.0, 0.0, 1.0);
 	EmitVertex();
 
-	uv_f = uv2_g[0];
+	uv_f = vec2(uv1_g[0].x, uv1_g[0].y);
 	gl_Position = projectionMatrix * vec4(position3 + vec3(rotationMatrix * vec2(-dimensions_g[0].x, -dimensions_g[0].y), 0.0), 1.0);
 	//gl_Position = vec4(100.0, 100.0, 0.0, 1.0);
 	EmitVertex();

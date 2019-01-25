@@ -163,7 +163,7 @@ void Test_Render(Window* window) {
 	DebugMeshVertexDataRenderer polyRenderer(&poly);
 	GE.Render().Add(&polyRenderer);
 
-	ParticleSystem2 particleSystem(nullptr);
+	ParticleSystem2 particleSystem(&arrow);
 	GE.Render().Add(&particleSystem);
 
 	Vector2i winDim = window->Get_Dimensions();
@@ -207,6 +207,8 @@ void Test_Render(Window* window) {
 
 	GE.Render().passes.push_back(&testPass2);
 
+	window->Set_Visible(true);
+
 	GE.Begin();
 }
 
@@ -216,11 +218,12 @@ int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nA
 	Window::Params params =
 		Window::Params(in_hInst)
 		.Name(L"Test")
-		.Dimensions(Vector2i(1600, 900))
+		.Dimensions(Vector2i(1601, 900))
 		.Fullscreen(true)
 		//.Title_Bar(false)
 		//.Border(false)
-		.Always_Front(false);
+		.Always_Front(false)
+		.Visible(false);
 
 	Window window(params);
 
