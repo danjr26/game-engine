@@ -23,7 +23,7 @@
 #include "editable_text.h"
 #include "uniform_force_field.h"
 #include "basic_collision_mask.h"
-#include "particle_system2.h"
+#include "particle_system2_specifiers.h"
 #include <exception>
 #include <set>
 
@@ -164,8 +164,10 @@ void Test_Render(Window* window) {
 	DebugMeshVertexDataRenderer polyRenderer(&poly);
 	GE.Render().Add(&polyRenderer);
 
-	ParticleSystem2 particleSystem(&spark, nullptr);
+	TestParticleSpecifier specifier;
+	ParticleSystem2 particleSystem(&spark, &specifier);
 	GE.Render().Add(&particleSystem);
+	GE.Per_Frame_Update().Add(&particleSystem);
 
 	ParticleSystem2::Accessor accessor;
 	particleSystem.Access(particleSystem.Add(1), accessor);

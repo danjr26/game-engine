@@ -97,6 +97,7 @@ GameEngine& GameEngine::Instance() {
 }
 
 void GameEngine::Next_Frame() {
+	static uint count = 0;
 	static uint cCount = 0;
 	static uint rCount = 0;
 	static double t = 0.0;
@@ -104,8 +105,10 @@ void GameEngine::Next_Frame() {
 	cCount++;
 	double now = GE.Time().Now();
 	if (now - t >= 1.0) {
-		Log::main(std::string("cSPF (ms): ") + std::to_string((now - t) / cCount * 1000.0));
-		Log::main(std::string("rSPF (ms): ") + std::to_string((now - t) / rCount * 1000.0));
+		count++;
+		Log::main(std::string("second ") + std::to_string(count) + ":");
+		Log::main(std::string(" cSPF (ms): ") + std::to_string((now - t) / cCount * 1000.0));
+		Log::main(std::string(" rSPF (ms): ") + std::to_string((now - t) / rCount * 1000.0));
 		t = now;
 		cCount = 0;
 		rCount = 0;
@@ -124,9 +127,7 @@ void GameEngine::Next_Frame() {
 		renderManager.mainWindow->Flip_Buffers();
 		renderManager.Render_Frame();
 	}
-	else {
-		Log::main("Lean Frame");
-	}
+
 	double t3 = GE.Time().Now();
 
 	//Log::main(std::string("Calc: ") + std::to_string((t2 - t1) * 1000.0));

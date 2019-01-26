@@ -41,6 +41,9 @@ ParticleSystem2::ParticleSystem2(Texture* in_texture, Specifier* in_specifier) :
 	MeshVertexGPUPusher::ExtraParams params;
 	params.membersToIgnore = (1ul << age) | (1ul << linear_velocity) | (1ul << angular_velocity);
 	gpuPusher.Initialize(&vertexData, params);
+
+	textureInstance.Settings().Set_Magnify_Filter(TextureSettings::FilterMode::trilinear);
+	textureInstance.Settings().Set_Minify_Filter(TextureSettings::FilterMode::trilinear);
 }
 
 ParticleSystem2::~ParticleSystem2()
@@ -48,7 +51,9 @@ ParticleSystem2::~ParticleSystem2()
 
 uint ParticleSystem2::Add(uint in_nParticles) {
 	uint out = vertexData.Get_Number_Vertices();
-	vertexData.Add_Vertices(in_nParticles, {});
+	if (in_nParticles > 0) {
+		vertexData.Add_Vertices(in_nParticles, {});
+	}
 	return out;
 }
 
@@ -106,6 +111,7 @@ void ParticleSystem2::Render() {
 		textureInstance.Use();
 	}
 	shaderProgram->Use();
+	glDepthMask	(0);
 
 	glUniformMatrix4fv(locations[0], 1, GL_TRUE, modelMatrix.Pointer());
 	glUniformMatrix4fv(locations[1], 1, GL_TRUE, viewMatrix.Pointer());
@@ -122,5 +128,6 @@ void ParticleSystem2::Render() {
 		textureInstance.Use_None();
 	}
 	shaderProgram->Use_None();
+	glDepthMask	(1);
 }
 

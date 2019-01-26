@@ -579,6 +579,9 @@
     <ClInclude Include="particle_system2.h">
       <Filter>Header Files\render\renderable</Filter>
     </ClInclude>
+    <ClInclude Include="particle_system2_specifiers.h">
+      <Filter>Header Files\render\renderable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clock.cpp">
@@ -901,6 +904,9 @@
     </ClCompile>
     <ClCompile Include="particle_system2.cpp">
       <Filter>Source Files\render\renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_system2_specifiers.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
