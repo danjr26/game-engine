@@ -390,6 +390,23 @@ void MeshVertexData::Set_Vertices(uint in_index, uint in_nVertices, std::unorder
 	}
 }
 
+void MeshVertexData::Swap_Vertices(uint in_index1, uint in_index2) {
+	if (in_index1 == in_index2) return;
+	if (in_index1 >= nVertices || in_index2 >= nVertices) {
+		throw InvalidArgumentException("invalid index");
+	}
+
+	for (auto it = members.begin(); it != members.end(); it++) {
+		Member& member = it->second;
+		uint size = member.Get_Vertex_Size();
+		std::swap_ranges(
+			member.data.begin() + in_index1 * size,
+			member.data.begin() + (in_index1 + 1) * size,
+			member.data.begin() + in_index2 * size
+			);
+	}
+}
+
 void MeshVertexData::Add_Faces(uint in_nFaces, const void* in_indices) {
 	Add_Face_Elements(Face_To_Element_Count(Get_Number_Faces(), in_nFaces), in_indices);
 }

@@ -51,7 +51,8 @@ void Test_Render(Window* window) {
 	CircleRenderer circleRenderer3(circle2, ColorRGBAf(1, 1, 1, 0), 2.0, ColorRGBAf(1, 1, 1, 1.0));
 	GE.Render().Add(&circleRenderer3);
 
-	Texture arrow(Texture::Type::_2d, "img/test_arrow.png", 8, Texture::Flags::none);
+	Texture arrow(Texture::Type::_2d, "img/test_arrow.png", 8, Texture::Flags::mipmaps);
+	Texture spark(Texture::Type::_2d, "img/spark.png", 8, Texture::Flags::mipmaps);
 
 	//CircleRenderer circleRenderer4(circle2, ColorRGBAf(1, 1, 1, 0), 2.0, ColorRGBAf(1, 1, 1, 1.0));
 	Sprite circleRenderer4(AxisAlignedRectangled::From_Center(Vector2d(0, 0), Vector2d(100, 100)), &arrow);
@@ -163,8 +164,17 @@ void Test_Render(Window* window) {
 	DebugMeshVertexDataRenderer polyRenderer(&poly);
 	GE.Render().Add(&polyRenderer);
 
-	ParticleSystem2 particleSystem(&arrow);
+	ParticleSystem2 particleSystem(&spark, nullptr);
 	GE.Render().Add(&particleSystem);
+
+	ParticleSystem2::Accessor accessor;
+	particleSystem.Access(particleSystem.Add(1), accessor);
+	accessor.uv1[0] = Vector2f(0.0, 0.0);
+	accessor.uv2[0] = Vector2f(1.0, 1.0);
+	accessor.color[0] = ColorRGBAf(1.0, 1.0, 1.0, 1.0);
+	accessor.dimensions[0] = Vector2f(20, 20);
+	accessor.position[0] = Vector3f(210, 210, 0);
+	accessor.angle[0] = 0.0f;
 
 	Vector2i winDim = window->Get_Dimensions();
 

@@ -101,6 +101,7 @@ public:
 	void Remove_Vertex(uint in_index);
 	void Set_Vertex(uint in_index, std::unordered_map<ubyte, const void*> in_data);
 	void Set_Vertices(uint in_index, uint in_nVertices, std::unordered_map<ubyte, const void*> in_data);
+	void Swap_Vertices(uint in_index1, uint in_index2);
 
 	template<class T>
 	void Add_Faces_Polygon();

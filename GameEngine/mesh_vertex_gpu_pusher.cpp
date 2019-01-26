@@ -249,7 +249,7 @@ void MeshVertexGPUPusher::Push_Face_Elements(uint in_start, uint in_length) {
 		GL_ELEMENT_ARRAY_BUFFER,
 		in_start * faceElementSize,
 		in_length * faceElementSize,
-		data->Get_Member_Pointer(indexBufferID)
+		data->Get_Face_Pointer()
 	);
 	glBindVertexArray(0);
 }
@@ -270,7 +270,7 @@ void MeshVertexGPUPusher::Draw(uint in_elementIndex, uint in_nElements) {
 }
 
 void MeshVertexGPUPusher::Draw_Raw() {
-	Draw_Raw(0, usedFaceElements);
+	Draw_Raw(0, usedVertices);
 }
 
 void MeshVertexGPUPusher::Draw_Raw(uint in_elementIndex, uint in_nElements) {
