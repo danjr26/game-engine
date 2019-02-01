@@ -10,7 +10,7 @@ Projection<T>::Projection() :
 template<class T>
 Projection<T>::Projection(T in_near, T in_far, T in_horizontalAngle, T in_xToYRatio, Type in_type) :
 type(in_type) {
-	maxima[0] = tanf(in_horizontalAngle) * in_near;
+	maxima[0] = tan(in_horizontalAngle) * in_near;
 	maxima[1] = maxima[0] / in_xToYRatio;
 	maxima[2] = in_far;
 	minima[0] = -maxima[0];
@@ -27,12 +27,12 @@ Projection<T>::Projection(Vector<T, 3> in_minima, Vector<T, 3> in_maxima, Type i
 
 template<class T>
 T Projection<T>::Get_View_Angle() {
-	return atanf(maxima[0] / minima[2]);
+	return atan(maxima[0] / minima[2]);
 }
 
 template<class T>
 void Projection<T>::Set_View_Angle(T in_value) {
-	maxima[0] = tanf(in_value) * minima[2];
+	maxima[0] = tan(in_value) * minima[2];
 	minima[0] = -maxima[0];
 }
 

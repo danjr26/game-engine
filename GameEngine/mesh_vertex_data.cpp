@@ -316,6 +316,38 @@ void MeshVertexData::Set_Member_Values(ubyte in_member, uint in_index, uint in_n
 	memcpy(&member.data[in_index * size], in_values, in_nValues * size);
 }
 
+void MeshVertexData::Get_Member_Value(ubyte in_member, uint in_index, void* out_value) {
+	Member& member = members[in_member];
+	uint size = member.Get_Vertex_Size();
+	memcpy(out_value, &member.data[in_index * size], size);
+}
+
+void MeshVertexData::Expand_Member(ubyte in_member, void* out_values) {
+	Member& member = members[in_member];
+	uint size = member.Get_Vertex_Size();
+	ubyte* outPtr = (ubyte*)out_values;
+	for (uint i = 0; i < Get_Number_Face_Elements(); i++) {
+		uint index = 0;
+		switch (indexType) {
+		case DataType::_byte:
+		case DataType::_ubyte:
+			index = ((ubyte*)indices.data())[i];
+			break;
+		case DataType::_short:
+		case DataType::_ushort:
+			index = ((ushort*)indices.data())[i];
+			break;
+		case DataType::_int:
+		case DataType::_uint:
+			index = ((uint*)indices.data())[i];
+			break;
+		default:
+			throw InvalidArgumentException();
+		}
+		memcpy(&outPtr[i * size], &member.data[index * size], size);
+	}
+}
+
 bool MeshVertexData::Has_Member(ubyte in_id) const {
 	return members.find(in_id) != members.end();
 }
@@ -366,7 +398,10 @@ void MeshVertexData::Remove_Vertex(uint in_index) {
 
 	for (auto it = members.begin(); it != members.end(); it++) {
 		Member& member = it->second;
-		member.data.erase(member.data.begin() + (in_index * member.Get_Vertex_Size()));
+		member.data.erase(
+			member.data.begin() + in_index * member.Get_Vertex_Size(), 
+			member.data.begin() + (in_index + 1) * member.Get_Vertex_Size()
+		);
 	}
 
 	nVertices--;

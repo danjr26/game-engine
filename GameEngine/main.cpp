@@ -24,6 +24,7 @@
 #include "uniform_force_field.h"
 #include "basic_collision_mask.h"
 #include "particle_system2_specifiers.h"
+#include "mesh_sphere_tree.h"
 #include <exception>
 #include <set>
 
@@ -169,15 +170,6 @@ void Test_Render(Window* window) {
 	GE.Render().Add(&particleSystem);
 	GE.Per_Frame_Update().Add(&particleSystem);
 
-	ParticleSystem2::Accessor accessor;
-	particleSystem.Access(particleSystem.Add(1), accessor);
-	accessor.uv1[0] = Vector2f(0.0, 0.0);
-	accessor.uv2[0] = Vector2f(1.0, 1.0);
-	accessor.color[0] = ColorRGBAf(1.0, 1.0, 1.0, 1.0);
-	accessor.dimensions[0] = Vector2f(20, 20);
-	accessor.position[0] = Vector3f(210, 210, 0);
-	accessor.angle[0] = 0.0f;
-
 	Vector2i winDim = window->Get_Dimensions();
 
 	Texture fbColor = Texture(Texture::Type::_2d, Vector3i(winDim, 1), ColorRGBAc(255, 255, 255, 255), 4, 16, Texture::Flags::hdr);
@@ -191,7 +183,7 @@ void Test_Render(Window* window) {
 	camera1.Set_Projection(Projectiond(Vector3d(0, window->Get_Dimensions().Y(), 0), Vector3d(window->Get_Dimensions().X(), 0, -1)));
 
 	RenderPass testPass =
-		RenderPass(&fb, &camera1)
+		RenderPass(window, &camera1)
 		.Clear_Color(ColorRGBAf(0.3f, 0.3f, 0.3f, 1.0f))
 		.Sort_Order(RenderPass::SortOrder::back_to_front);
 
@@ -214,10 +206,10 @@ void Test_Render(Window* window) {
 
 	RenderPass testPass2 =
 		RenderPass(window, &camera2)
-		.Filter(FilterQuery::Fits(0))
-		.Clear_Color(ColorRGBAf(0.3f, 0.3f, 0.3f, 1.0f));
+		.Filter(FilterQuery::Fits(0));
+		//.Clear_Color(ColorRGBAf(0.3f, 0.3f, 0.3f, 1.0f));
 
-	GE.Render().passes.push_back(&testPass2);
+	//GE.Render().passes.push_back(&testPass2);
 
 	window->Set_Visible(true);
 
@@ -230,15 +222,15 @@ int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nA
 	Window::Params params =
 		Window::Params(in_hInst)
 		.Name(L"Test")
-		.Dimensions(Vector2i(1601, 900))
-		.Fullscreen(true)
+		.Dimensions(Vector2i(800, 600))
+		.Fullscreen(false)
 		//.Title_Bar(false)
 		//.Border(false)
 		.Always_Front(false)
 		.Visible(false);
 
 	Window window(params);
-
+		
 	wglSwapIntervalEXT(0);
 
 	Log::main(std::to_string(GE.Time().Now()));

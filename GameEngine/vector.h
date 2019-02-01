@@ -75,6 +75,14 @@ public:
 		members[n - 1] = in_addMember;
 	}
 
+	bool operator<(const Vector<T, n>& v) const {
+		for (uint i = 0; i < n; i++) {
+			if (members[i] < v.members[i]) return true;
+			if (members[i] > v.members[i]) return false;
+		}
+		return false;
+	}
+
 	bool operator==(const Vector<T, n>& v) const {
 		for (int i = 0; i < n; i++) {
 			if (members[i] != v.members[i]) {

@@ -45,6 +45,7 @@ public:
 		highest_first
 
 	};
+
 	enum MemberID : ubyte {
 		position = MeshVertexData::MemberID::position,
 		color = MeshVertexData::MemberID::color,
@@ -67,9 +68,13 @@ public:
 	ParticleSystem2(Texture* in_texture, Specifier* in_specifier);
 	~ParticleSystem2();
 
+	uint Count() const;
+
 	uint Add(uint in_nParticles);
 	void Remove(uint in_index);
 	void Access(uint in_index, Accessor& out_accessor);
+
+	void Reserve(uint in_nParticles);
 
 	void Sort(SortOrder in_order);
 

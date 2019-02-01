@@ -3,9 +3,11 @@
 
 #include "particle_system2.h"
 #include "stepper.h"
+#include "cubic_transitioner.h"
 
 class TestParticleSpecifier : public ParticleSystem2::Specifier {
 	using Accessor = ParticleSystem2::Accessor;
+	CubicTransitioner<ColorRGBAf> colorTransition;
 	Stepper generateStepper;
 	uint nGenerated;
 

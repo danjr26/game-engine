@@ -13,4 +13,7 @@ layout (location = 1) out vec4 normal_o;
 void main() {
 	color_o = texture(colorTexture, uv_f) * color;
 	normal_o = vec4(normal_f, 1.0);
+	if(length(color_o.rgb) > length(vec3(1.0))) {
+		color_o = vec4(0.0, 0.0, 0.0, 1.0);
+	}
 }

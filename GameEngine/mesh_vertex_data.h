@@ -70,10 +70,8 @@ public:
 
 	template<class T, uint n>
 	void Apply_Transform_Points(const Transform<T, n>& in_transform, ubyte in_id);
-
 	template<class T, uint n>
 	void Apply_Transform_Directions(const Transform<T, n>& in_transform, ubyte in_id);
-
 	template<class T, uint n>
 	void Apply_Transform_Vectors(const Transform<T, n>& in_transform, ubyte in_id);
 
@@ -89,6 +87,8 @@ public:
 	void Remove_Member(ubyte in_member);
 	void Set_Member_Value(ubyte in_member, uint in_index, const void* in_value);
 	void Set_Member_Values(ubyte in_member, uint in_index, uint in_nValues, const void* in_values);
+	void Get_Member_Value(ubyte in_member, uint in_index, void* out_value);
+	void Expand_Member(ubyte in_member, void* out_values);
 	bool Has_Member(ubyte in_id) const;
 	DataType Get_Member_Type(ubyte in_member) const;
 	ubyte Get_Member_Depth(ubyte in_member) const;
@@ -105,13 +105,10 @@ public:
 
 	template<class T>
 	void Add_Faces_Polygon();
-
 	template<class T>
 	void Add_Faces_Polygon(uint in_index, uint in_nVertices);
-
 	template<class T>
 	void Add_Faces_Delaunay();
-
 	template<class T>
 	void Add_Faces_Delaunay(uint in_index, uint in_nVertices);
 
@@ -138,16 +135,15 @@ public:
 	uint Face_To_Element_Count(uint in_faceIndex, uint in_nFaces) const;
 	uint Element_To_Face_Count(uint in_elementIndex, uint in_nElements) const;
 
-protected:
-	template<class T> inline DataType To_Data_Type();
-	template<> inline DataType To_Data_Type<ubyte>() { return DataType::_ubyte; }
-	template<> inline DataType To_Data_Type<char>() { return DataType::_byte; }
-	template<> inline DataType To_Data_Type<ushort>() { return DataType::_ushort; }
-	template<> inline DataType To_Data_Type<short>() { return DataType::_short; }
-	template<> inline DataType To_Data_Type<uint>() { return DataType::_uint; }
-	template<> inline DataType To_Data_Type<int>() { return DataType::_int; }
-	template<> inline DataType To_Data_Type<float>() { return DataType::_float; }
-	template<> inline DataType To_Data_Type<double>() { return DataType::_double; }
+	template<class T> inline static DataType To_Data_Type();
+	template<> inline static DataType To_Data_Type<ubyte>() { return DataType::_ubyte; }
+	template<> inline static DataType To_Data_Type<char>() { return DataType::_byte; }
+	template<> inline static DataType To_Data_Type<ushort>() { return DataType::_ushort; }
+	template<> inline static DataType To_Data_Type<short>() { return DataType::_short; }
+	template<> inline static DataType To_Data_Type<uint>() { return DataType::_uint; }
+	template<> inline static DataType To_Data_Type<int>() { return DataType::_int; }
+	template<> inline static DataType To_Data_Type<float>() { return DataType::_float; }
+	template<> inline static DataType To_Data_Type<double>() { return DataType::_double; }
 };
 
 

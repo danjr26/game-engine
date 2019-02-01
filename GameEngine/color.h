@@ -34,7 +34,17 @@ public:
 	}
 
 	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
+	T& R() {
+		return members[0];
+	}
+
+	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
 	T G() const {
+		return members[1];
+	}
+
+	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
+	T& G() {
 		return members[1];
 	}
 
@@ -43,8 +53,18 @@ public:
 		return members[2];
 	}
 
+	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
+	T& B() {
+		return members[2];
+	}
+
 	template<typename = typename std::enable_if<n == 4, void>::type>
 	T A() const {
+		return members[3];
+	}
+
+	template<typename = typename std::enable_if<n == 4, void>::type>
+	T& A() {
 		return members[3];
 	}
 

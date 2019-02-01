@@ -19,27 +19,9 @@ ParticleSystem2::ParticleSystem2(Texture* in_texture, Specifier* in_specifier) :
 	vertexData.Add_Member(linear_velocity, dataType, 3, nullptr);
 	vertexData.Add_Member(angular_velocity, dataType, 1, nullptr);
 
-	Vector3f position(200, 200, 0);
-	Vector2f uv1(0.0, 0.0);
-	Vector2f uv2(1.0, 1.0);
-	ColorRGBAf color(0.2, 0.5, 0.8, 1.0);
-	Vector2f dimensions(20, 20);
-	float angle = PI / 4.0f;
-	uint index = 0;
-
-	std::unordered_map<ubyte, const void*> vertices;
-	vertices[MemberID::position] = &position;
-	vertices[MemberID::color] = &color;
-	vertices[MemberID::uv1] = &uv1;
-	vertices[MemberID::uv2] = &uv2;
-	vertices[MemberID::dimensions] = &dimensions;
-	vertices[MemberID::angle] = &angle;
-
-	vertexData.Reserve_Total_Vertices(1);
-	vertexData.Add_Vertices(1, vertices);
-
 	MeshVertexGPUPusher::ExtraParams params;
 	params.membersToIgnore = (1ul << age) | (1ul << linear_velocity) | (1ul << angular_velocity);
+	params.useCase = MeshVertexGPUPusher::UseCase::changes_often;
 	gpuPusher.Initialize(&vertexData, params);
 
 	textureInstance.Settings().Set_Magnify_Filter(TextureSettings::FilterMode::trilinear);
@@ -48,6 +30,10 @@ ParticleSystem2::ParticleSystem2(Texture* in_texture, Specifier* in_specifier) :
 
 ParticleSystem2::~ParticleSystem2()
 {}
+
+uint ParticleSystem2::Count() const {
+	return vertexData.Get_Number_Vertices();
+}
 
 uint ParticleSystem2::Add(uint in_nParticles) {
 	uint out = vertexData.Get_Number_Vertices();
@@ -72,6 +58,10 @@ void ParticleSystem2::Access(uint in_index, Accessor& out_accessor) {
 	out_accessor.age = ((age_t*)vertexData.Get_Member_Pointer(age)) + in_index;
 	out_accessor.linearVelocity = ((linear_velocity_t*)vertexData.Get_Member_Pointer(linear_velocity)) + in_index;
 	out_accessor.angularVelocity = ((angular_velocity_t*)vertexData.Get_Member_Pointer(angular_velocity)) + in_index;
+}
+
+void ParticleSystem2::Reserve(uint in_nParticles) {
+	gpuPusher.Reserve_Total_Vertices(in_nParticles);
 }
 
 void ParticleSystem2::Update(double in_dt) {
@@ -111,7 +101,8 @@ void ParticleSystem2::Render() {
 		textureInstance.Use();
 	}
 	shaderProgram->Use();
-	glDepthMask	(0);
+	glDepthMask(0);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 	glUniformMatrix4fv(locations[0], 1, GL_TRUE, modelMatrix.Pointer());
 	glUniformMatrix4fv(locations[1], 1, GL_TRUE, viewMatrix.Pointer());
@@ -128,6 +119,8 @@ void ParticleSystem2::Render() {
 		textureInstance.Use_None();
 	}
 	shaderProgram->Use_None();
-	glDepthMask	(1);
+	glDepthMask(1);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 }
 

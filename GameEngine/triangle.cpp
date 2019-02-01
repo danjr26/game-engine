@@ -7,6 +7,10 @@ inline Triangle<T, n>::Triangle(const Vector<T, n>* in_points) {
 }
 
 template<class T, uint n>
+Triangle<T, n>::Triangle() 
+{}
+
+template<class T, uint n>
 inline void Triangle<T, n>::Apply_Transform(const Transform<T, n>& in_transform) {
 	for (uint i = 0; i < 3; i++) {
 		points[i] = in_transform.Local_To_World_Point(points[i]);
@@ -27,6 +31,16 @@ inline void Triangle<T, n>::Get_Point_Offsets(Vector<T, n>* out_offsets) const {
 }
 
 template<class T, uint n>
+T Triangle<T, n>::Get_Angle(uint in_index) const {
+	return (points[(in_index + 1) % 3] - points[in_index]).Theta(points[(in_index + 2) % 3] - points[in_index]);
+}
+
+template<class T, uint n>
+T Triangle<T, n>::Get_Side_Length(uint in_index) const {
+	return Get_Point_Offset(in_index).Magnitude();
+}
+
+template<class T, uint n>
 Vector<T, n>& Triangle<T, n>::operator[](uint in_index) {
 	return points[in_index];
 }
@@ -37,9 +51,41 @@ inline Vector<T, n> Triangle<T, n>::Get_Point(uint in_index) const {
 }
 
 template<class T, uint n>
+Vector<T, n> Triangle<T, n>::Get_Point_Offset(uint in_index) const {
+	return points[(in_index + 1) % 3] - points[in_index];
+}
+
+template<class T, uint n>
 inline T Triangle<T, n>::Get_Perimeter() const {
 	T out = 0;
 	for (uint i = 0; i < 3; i++) out += (points[(i + 1) % 3] - points[i]).Magnitude();
+	return out;
+}
+
+template<class T, uint n>
+T Triangle<T, n>::Get_Circumradius() const {
+	T a = Get_Side_Length(0);
+	T b = Get_Side_Length(1);
+	T c = Get_Side_Length(2);
+
+	return (a * b * c) / sqrt((a + b + c) * (b + c - a) * (a + c - b) * (a + b - c));
+}
+
+template<class T, uint n>
+Vector<T, n> Triangle<T, n>::Get_Circumcenter() const {
+	Vector<T, n> out;
+
+	T total = 0;
+	T radius = Get_Circumradius();
+	for (uint i = 0; i < 3; i++) {
+		T cosAngle = cos(Get_Angle(i));
+		T trilinear = radius * cosAngle;
+		T barycentric = trilinear * Get_Side_Length(i);
+		out += barycentric * points[i];
+		total += barycentric;
+	}
+	out /= total;
+
 	return out;
 }
 

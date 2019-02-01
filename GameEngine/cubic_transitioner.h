@@ -20,7 +20,7 @@ struct CubicTransitioner : Transitioner<ValT, TimeT> {
 			if (t >= in_time) {
 				TimeT interT = (in_time - (t - keys[i].duration)) / (keys[i].duration);
 				interT = interT * interT * (3 - 2 * interT);
-				return keys[i].value * ((TimeT)1 - interT) + keys[i + 1].value * interT;
+				return (ValT)(keys[i].value * ((TimeT)1 - interT) + keys[i + 1].value * interT);
 			}
 		}
 

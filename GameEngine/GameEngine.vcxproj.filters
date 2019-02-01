@@ -582,6 +582,9 @@
     <ClInclude Include="particle_system2_specifiers.h">
       <Filter>Header Files\render\renderable</Filter>
     </ClInclude>
+    <ClInclude Include="mesh_sphere_tree.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clock.cpp">
@@ -906,7 +909,10 @@
       <Filter>Source Files\render\renderable</Filter>
     </ClCompile>
     <ClCompile Include="particle_system2_specifiers.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\render\renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_sphere_tree.cpp">
+      <Filter>Source Files\geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

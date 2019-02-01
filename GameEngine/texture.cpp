@@ -22,6 +22,7 @@ Texture::Texture(Type in_type, std::string in_filename, ubyte in_nBitsPerChannel
 				x * nChannels +
 				c] = image(x, y, z, c);
 	}
+
 	Finish_Setup();
 }
 
@@ -154,10 +155,13 @@ void Texture::Load_To_OpenGL() {
 	switch (Determine_Span()) {
 	case 1:
 		glTexImage1D(target, 0, internalFormat, dimensions.X(), 0, pixelFormat, GL_UNSIGNED_BYTE, data);
+		break;
 	case 2:
 		glTexImage2D(target, 0, internalFormat, dimensions.X(), dimensions.Y(), 0, pixelFormat, GL_UNSIGNED_BYTE, data);
+		break;
 	case 3:
 		glTexImage3D(target, 0, internalFormat, dimensions.X(), dimensions.Y(), dimensions.Z(), 0, pixelFormat, GL_UNSIGNED_BYTE, data);
+		break;
 	}
 
 	if (flags & Flags::mipmaps) {

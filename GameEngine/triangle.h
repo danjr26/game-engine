@@ -11,10 +11,15 @@ private:
 	Triangle(const Vector<T, n>* in_points);
 
 public:
+	Triangle();
+
 	void Apply_Transform(const Transform<T, n>& in_transform);
 
 	void Get_Points(Vector<T, n>* out_points) const;
 	void Get_Point_Offsets(Vector<T, n>* out_offsets) const;
+
+	T Get_Angle(uint in_index) const;
+	T Get_Side_Length(uint in_index) const;
 
 	template<typename = typename std::enable_if_t<n == 2, void>>
 	void Get_Lazy_Normals(Vector<T, n>* out_lazyNormals) const;
@@ -27,12 +32,16 @@ public:
 
 	Vector<T, n>& operator[](uint in_index);
 	Vector<T, n> Get_Point(uint in_index) const;
+	Vector<T, n> Get_Point_Offset(uint in_index) const;
 
 	template<typename = typename std::enable_if_t<n == 2, void>>
 	T Get_Area() const;
 	template<typename = typename std::enable_if_t<n == 3, void>, typename = void>
 	T Get_Area() const;
 	T Get_Perimeter() const;
+
+	T Get_Circumradius() const;
+	Vector<T, n> Get_Circumcenter() const;
 
 	Vector<T, n> Random_Point_Boundary() const;
 	template<typename = typename std::enable_if_t<n == 2, void>>

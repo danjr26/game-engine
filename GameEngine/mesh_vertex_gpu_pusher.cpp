@@ -92,10 +92,12 @@ void MeshVertexGPUPusher::Reserve_Total_Vertices(uint in_nVertices) {
 	if (in_nVertices > reservedVertices) {
 		for (auto it = members.begin(); it != members.end(); it++) {
 			glCreateBuffers(1, &newBufferID);
-			glBindBuffer(GL_COPY_WRITE_BUFFER, newBufferID);
-			glBufferData(GL_COPY_WRITE_BUFFER, in_nVertices * it->second.Get_Vertex_Size(), nullptr, (GLuint)useCase);
-			glBindBuffer(GL_COPY_READ_BUFFER, it->second.bufferID);
-			glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, usedVertices * it->second.Get_Vertex_Size());
+			if (reservedVertices != 0) {
+				glBindBuffer(GL_COPY_WRITE_BUFFER, newBufferID);
+				glBufferData(GL_COPY_WRITE_BUFFER, in_nVertices * it->second.Get_Vertex_Size(), nullptr, (GLuint)useCase);
+				glBindBuffer(GL_COPY_READ_BUFFER, it->second.bufferID);
+				glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, usedVertices * it->second.Get_Vertex_Size());
+			}
 			glDeleteBuffers(1, &it->second.bufferID);
 			it->second.bufferID = newBufferID;
 			glBindBuffer(GL_ARRAY_BUFFER, newBufferID);
@@ -121,10 +123,12 @@ void MeshVertexGPUPusher::Reserve_Total_Face_Elements(uint in_nElements) {
 	GLuint newBufferID = 0;
 	if (in_nElements > reservedFaceElements) {
 		glCreateBuffers(1, &newBufferID);
-		glBindBuffer(GL_COPY_WRITE_BUFFER, newBufferID);
-		glBufferData(GL_COPY_WRITE_BUFFER, in_nElements * faceElementSize, nullptr, (GLuint)useCase);
-		glBindBuffer(GL_COPY_READ_BUFFER, indexBufferID);
-		glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, usedFaceElements * faceElementSize);
+		if (reservedFaceElements != 0) {
+			glBindBuffer(GL_COPY_WRITE_BUFFER, newBufferID);
+			glBufferData(GL_COPY_WRITE_BUFFER, in_nElements * faceElementSize, nullptr, (GLuint)useCase);
+			glBindBuffer(GL_COPY_READ_BUFFER, indexBufferID);
+			glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, usedFaceElements * faceElementSize);
+		}
 		glDeleteBuffers(1, &indexBufferID);
 		indexBufferID = newBufferID;
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newBufferID);
