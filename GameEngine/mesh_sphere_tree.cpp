@@ -171,6 +171,20 @@ void MeshSphereTree<T, n>::Build_Tree() {
 		}
 	}
 
+	nodeStack.push_back(rootNode);
+	while (!nodeStack.empty()) {
+		Node* node = nodeStack.back();
+		nodeStack.pop_back();
+
+		if (node->triangles.size() != 1) {
+			node->triangles.clear();
+			node->triangles.shrink_to_fit();
+			for (uint i = 0; i < 2; i++) {
+				nodeStack.push_back(node->children[i]);
+			}
+		}
+	}
+
 	delete[] triangles;
 	delete[] means;
 }
