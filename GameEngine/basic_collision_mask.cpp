@@ -75,17 +75,17 @@ Collision<T, 2> BasicCollisionMask<Basis, T, 2>::Accept_Evaluator(CollisionEvalu
 }
 
 template<class Basis, class T>
-Collision<T, 2> BasicCollisionMask<Basis, T, 2>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AxisAlignedHalfSpace2CollisionMask<T>& in_other) {
+Collision<T, 2> BasicCollisionMask<Basis, T, 2>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AAHalfSpace2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
 
 template<class Basis, class T>
-Collision<T, 2> BasicCollisionMask<Basis, T, 2>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AxisAlignedLine2CollisionMask<T>& in_other) {
+Collision<T, 2> BasicCollisionMask<Basis, T, 2>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AALine2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
 
 template<class Basis, class T>
-Collision<T, 2> BasicCollisionMask<Basis, T, 2>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AxisAlignedRectangleCollisionMask<T>& in_other) {
+Collision<T, 2> BasicCollisionMask<Basis, T, 2>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AARectangleCollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
 
@@ -110,7 +110,7 @@ Collision<T, 2> BasicCollisionMask<Basis, T, 2>::Accept_Secondhand_Evaluator(Col
 }
 
 template<class Basis, class T>
-Collision<T, 2> BasicCollisionMask<Basis, T, 2>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Mesh2CollisionMask<T>& in_other) {
+Collision<T, 2> BasicCollisionMask<Basis, T, 2>::Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, MST2CollisionMask<T>& in_other) {
 	return in_evaluator.Evaluate_Typed(*this, in_other);
 }
 

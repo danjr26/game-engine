@@ -158,6 +158,21 @@ MeshVertexData::MeshVertexData(DataType in_indexType, FaceMode in_faceMode) :
 	faceMode(in_faceMode)
 {}
 
+MeshVertexData::MeshVertexData(const MeshVertexData& in_other) {
+	*this = in_other;
+}
+
+MeshVertexData::~MeshVertexData() 
+{}
+
+void MeshVertexData::operator=(const MeshVertexData& in_other) {
+	members = in_other.members;
+	indices = in_other.indices;
+	indexType = in_other.indexType;
+	faceMode = in_other.faceMode;
+	nVertices = in_other.nVertices;
+}
+
 template<class T, uint n>
 void MeshVertexData::Apply_Transform_Points(const Transform<T, n>& in_transform, ubyte in_member) {
 	Member& member = members[in_member];
@@ -316,8 +331,8 @@ void MeshVertexData::Set_Member_Values(ubyte in_member, uint in_index, uint in_n
 	memcpy(&member.data[in_index * size], in_values, in_nValues * size);
 }
 
-void MeshVertexData::Get_Member_Value(ubyte in_member, uint in_index, void* out_value) {
-	Member& member = members[in_member];
+void MeshVertexData::Get_Member_Value(ubyte in_member, uint in_index, void* out_value) const {
+	const Member& member = members.at(in_member);
 	uint size = member.Get_Vertex_Size();
 	memcpy(out_value, &member.data[in_index * size], size);
 }
@@ -327,23 +342,7 @@ void MeshVertexData::Expand_Member(ubyte in_member, void* out_values) {
 	uint size = member.Get_Vertex_Size();
 	ubyte* outPtr = (ubyte*)out_values;
 	for (uint i = 0; i < Get_Number_Face_Elements(); i++) {
-		uint index = 0;
-		switch (indexType) {
-		case DataType::_byte:
-		case DataType::_ubyte:
-			index = ((ubyte*)indices.data())[i];
-			break;
-		case DataType::_short:
-		case DataType::_ushort:
-			index = ((ushort*)indices.data())[i];
-			break;
-		case DataType::_int:
-		case DataType::_uint:
-			index = ((uint*)indices.data())[i];
-			break;
-		default:
-			throw InvalidArgumentException();
-		}
+		uint index = Get_Standard_Face_Element(i);
 		memcpy(&outPtr[i * size], &member.data[index * size], size);
 	}
 }
@@ -695,6 +694,33 @@ const void* MeshVertexData::Get_Face(uint in_index) const {
 const void* MeshVertexData::Get_Face_Element(uint in_index) const {
 	uint size = Get_Data_Type_Size(indexType);
 	return indices.data() + in_index * size;
+}
+
+uint MeshVertexData::Get_Standard_Face_Element(uint in_index) const {
+	uint index = 0;
+	switch (indexType) {
+	case DataType::_byte:
+		index = ((byte*)indices.data())[in_index];
+		break;
+	case DataType::_ubyte:
+		index = ((ubyte*)indices.data())[in_index];
+		break;
+	case DataType::_short:
+		index = ((short*)indices.data())[in_index];
+		break;
+	case DataType::_ushort:
+		index = ((ushort*)indices.data())[in_index];
+		break;
+	case DataType::_int:
+		index = ((int*)indices.data())[in_index];
+		break;
+	case DataType::_uint:
+		index = ((uint*)indices.data())[in_index];
+		break;
+	default:
+		throw InvalidArgumentException();
+	}
+	return index;
 }
 
 void MeshVertexData::Set_Face(uint in_faceIndex, const void* in_indices) {

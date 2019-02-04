@@ -4,6 +4,7 @@
 #include "mesh_sphere_tree.h"
 #include "mesh_vertex_data.h"
 #include "sphere.h"
+#include "transform.h"
 #include <vector>
 
 template<class T, uint n>
@@ -17,17 +18,48 @@ private:
 		Node* children[2];
 	};
 
+	struct MiniNode {
+		Sphere<T, n> sphere;
+		union {
+			MiniNode* children[2];
+			uint triangle;
+		};
+		bool isLeaf;
+	};
+
+public:
+	class Iterator {
+		friend class MeshSphereTree;
+	private:
+		const MeshSphereTree<T, n>& tree;
+		const Node* node;
+
+	public:
+		Iterator(const MeshSphereTree<T, n>& in_tree);
+
+		void Go_Left();
+		void Go_Right();
+		Iterator Go_Both();
+
+		Sphere<T, n> Get_Sphere() const;
+		Triangle<T, n> Get_Triangle() const;
+		bool Is_Leaf() const;
+	};
+
 private:
-	MeshVertexData* meshData;
+	MeshVertexData meshData;
 	Node* rootNode;
 
 public:
-	MeshSphereTree();
-	MeshSphereTree(MeshVertexData& in_meshData);
-	MeshSphereTree(MeshSphereTree& in_other);
+	explicit MeshSphereTree(const MeshVertexData& in_meshData);
+	MeshSphereTree(const MeshSphereTree<T, n>& in_other);
 	~MeshSphereTree();
 
-	void Build_Around(MeshVertexData& in_meshData);
+	void operator=(const MeshSphereTree& in_other);
+
+	void Apply_Transform(const Transform<T, n>& in_transform);
+
+	Iterator Get_Iterator() const;
 
 private:
 	void Build_Tree();

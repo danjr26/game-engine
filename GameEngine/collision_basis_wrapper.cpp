@@ -260,14 +260,14 @@ Vector<T, 2> CollisionBasisWrapper<Line<T, 2>, T>::Get_Closest_Normal(
 }
 
 template<class T>
-void CollisionBasisWrapper<MeshVertexData, T>::Apply_Transform(
+void CollisionBasisWrapper<MeshSphereTree<T, 2>, T>::Apply_Transform(
 	const Transform<T, 2>& in_transform) {
 
-	basis.Apply_Transform_Points(in_transform, MeshVertexData::position);
+	basis.Apply_Transform(in_transform);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<MeshVertexData, T>::Get_Closest_Point(
+Vector<T, 2> CollisionBasisWrapper<MeshSphereTree<T, 2>, T>::Get_Closest_Point(
 	const basis_t& in_basis, const Vector<T, 2>& in_point) {
 
 	throw NotImplementedException();
@@ -275,7 +275,7 @@ Vector<T, 2> CollisionBasisWrapper<MeshVertexData, T>::Get_Closest_Point(
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<MeshVertexData, T>::Get_Closest_Normal(
+Vector<T, 2> CollisionBasisWrapper<MeshSphereTree<T, 2>, T>::Get_Closest_Normal(
 	const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
 
 	throw NotImplementedException();

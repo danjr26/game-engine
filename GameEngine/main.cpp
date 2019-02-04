@@ -97,7 +97,7 @@ void Test_Render(Window* window) {
 	GE.Per_Frame_Update().Add(&sm4);
 
 	AxisAlignedHalfSpace2d aaHalfSpace = AxisAlignedHalfSpace2d::From_Dimension_Value(1, 0, true);
-	AxisAlignedHalfSpace2CollisionMask<double> aaHalfSpaceMask(aaHalfSpace);
+	AAHalfSpace2CollisionMask<double> aaHalfSpaceMask(aaHalfSpace);
 	aaHalfSpaceMask.Get_Transform().Translate_World(Vector2d(0, 600));
 	RigidBody2 aaHalfSpaceBody(aaHalfSpaceMask);
 	aaHalfSpaceBody.Set_Unstoppable(true);

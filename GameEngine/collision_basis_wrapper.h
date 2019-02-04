@@ -107,8 +107,8 @@ struct CollisionBasisWrapper<Line<T, 2>, T> {
 };
 
 template<class T>
-struct CollisionBasisWrapper<MeshVertexData, T> {
-	using basis_t = MeshVertexData;
+struct CollisionBasisWrapper<MeshSphereTree<T, 2>, T> {
+	using basis_t = MeshSphereTree<T, 2>;
 	using pnp_t = typename CollisionMask<T, 2>::PointNormalPolicy;
 
 	basis_t basis;

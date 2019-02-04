@@ -152,7 +152,7 @@ private:
 	std::list<typename PairedGroupingScheme::Grouping> pairRecycling;
 
 	template<typename = std::enable_if_t<n == 2>>
-	using AxisAlignedHalfSpaceCollisionMask = AxisAlignedHalfSpace2CollisionMask<T>;
+	using AxisAlignedHalfSpaceCollisionMask = AAHalfSpace2CollisionMask<T>;
 	using InPlaceCollisionEvaluator = InPlaceCollisionEvaluator<T, n>;
 
 public:

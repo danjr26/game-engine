@@ -67,6 +67,10 @@ protected:
 
 public:
 	MeshVertexData(DataType in_indexType = DataType::_uint, FaceMode in_faceMode = FaceMode::triangles);
+	MeshVertexData(const MeshVertexData& in_other);
+	~MeshVertexData();
+
+	void operator=(const MeshVertexData& in_other);
 
 	template<class T, uint n>
 	void Apply_Transform_Points(const Transform<T, n>& in_transform, ubyte in_id);
@@ -87,7 +91,7 @@ public:
 	void Remove_Member(ubyte in_member);
 	void Set_Member_Value(ubyte in_member, uint in_index, const void* in_value);
 	void Set_Member_Values(ubyte in_member, uint in_index, uint in_nValues, const void* in_values);
-	void Get_Member_Value(ubyte in_member, uint in_index, void* out_value);
+	void Get_Member_Value(ubyte in_member, uint in_index, void* out_value) const;
 	void Expand_Member(ubyte in_member, void* out_values);
 	bool Has_Member(ubyte in_id) const;
 	DataType Get_Member_Type(ubyte in_member) const;
@@ -118,6 +122,7 @@ public:
 	void Remove_Face_Element(uint in_index);
 	const void* Get_Face(uint in_index) const;
 	const void* Get_Face_Element(uint in_index) const;
+	uint Get_Standard_Face_Element(uint in_index) const;
 	void Set_Face(uint in_faceIndex, const void* in_indices);
 	void Set_Face_Element(uint in_faceElement, const void* in_index);
 	void Set_Faces(uint in_faceIndex, uint in_nFaces, const void* in_indices);

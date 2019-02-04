@@ -24,35 +24,35 @@ class InPlaceCollisionEvaluator
 template<class T>
 class InPlaceCollisionEvaluator<T, 2> : public CollisionEvaluator<T, 2> {	
 public:
-	Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, AxisAlignedHalfSpace2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, AxisAlignedLine2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, AxisAlignedRectangleCollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, CircleCollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, HalfSpace2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedHalfSpace2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AAHalfSpace2CollisionMask<T>& in_mask1, AAHalfSpace2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AAHalfSpace2CollisionMask<T>& in_mask1, AALine2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AAHalfSpace2CollisionMask<T>& in_mask1, AARectangleCollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AAHalfSpace2CollisionMask<T>& in_mask1, CircleCollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AAHalfSpace2CollisionMask<T>& in_mask1, HalfSpace2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AAHalfSpace2CollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AAHalfSpace2CollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AAHalfSpace2CollisionMask<T>& in_mask1, MST2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AAHalfSpace2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AAHalfSpace2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AAHalfSpace2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AAHalfSpace2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) override;
 
-	Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, AxisAlignedRectangleCollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, CircleCollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, HalfSpace2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(AxisAlignedRectangleCollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AARectangleCollisionMask<T>& in_mask1, AARectangleCollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AARectangleCollisionMask<T>& in_mask1, CircleCollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AARectangleCollisionMask<T>& in_mask1, HalfSpace2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AARectangleCollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AARectangleCollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AARectangleCollisionMask<T>& in_mask1, MST2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AARectangleCollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AARectangleCollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AARectangleCollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(AARectangleCollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) override;
 
 	Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, CircleCollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, HalfSpace2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, MST2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(CircleCollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) override;
@@ -61,7 +61,7 @@ public:
 	Collision<T, 2> Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, HalfSpace2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, MST2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(HalfSpace2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) override;
@@ -69,24 +69,24 @@ public:
 
 	Collision<T, 2> Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Line2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(Line2CollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(Line2CollisionMask<T>& in_mask1, MST2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(Line2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(Line2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) override;
 
 	Collision<T, 2> Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, LineSegment2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, MST2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(LineSegment2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) override;
 
-	Collision<T, 2> Evaluate_Typed(Mesh2CollisionMask<T>& in_mask1, Mesh2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(Mesh2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(Mesh2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(Mesh2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) override;
-	Collision<T, 2> Evaluate_Typed(Mesh2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(MST2CollisionMask<T>& in_mask1, MST2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(MST2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(MST2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(MST2CollisionMask<T>& in_mask1, RectangleCollisionMask<T>& in_mask2) override;
+	Collision<T, 2> Evaluate_Typed(MST2CollisionMask<T>& in_mask1, Triangle2CollisionMask<T>& in_mask2) override;
 
 	Collision<T, 2> Evaluate_Typed(Point2CollisionMask<T>& in_mask1, Point2CollisionMask<T>& in_mask2) override;
 	Collision<T, 2> Evaluate_Typed(Point2CollisionMask<T>& in_mask1, Ray2CollisionMask<T>& in_mask2) override;

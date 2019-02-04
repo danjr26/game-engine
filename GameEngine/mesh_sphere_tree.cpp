@@ -2,23 +2,38 @@
 #include "game_engine.h"
 
 template<class T, uint n>
-MeshSphereTree<T, n>::MeshSphereTree() :
-	meshData(nullptr),
-	rootNode(nullptr)
-{}
-
-template<class T, uint n>
-MeshSphereTree<T, n>::MeshSphereTree(MeshVertexData& in_meshData) :
-	meshData(nullptr),
+MeshSphereTree<T, n>::MeshSphereTree(const MeshVertexData& in_meshData) :
+	meshData(in_meshData),
 	rootNode(nullptr) {
 	
-	Build_Around(in_meshData);
+	if (in_meshData.Get_Member_Depth(MeshVertexData::MemberID::position) != n ||
+		in_meshData.Get_Member_Type(MeshVertexData::MemberID::position) != MeshVertexData::To_Data_Type<T>() ||
+		in_meshData.Get_Face_Mode() != MeshVertexData::FaceMode::triangles) {
+
+		throw InvalidArgumentException();
+	}
+
+	Build_Tree();
 }
 
 template<class T, uint n>
-MeshSphereTree<T, n>::MeshSphereTree(MeshSphereTree& in_other) :
-	meshData(nullptr),
+MeshSphereTree<T, n>::MeshSphereTree(const MeshSphereTree<T, n>& in_other) :
+	meshData(in_other.meshData),
 	rootNode(nullptr) {
+
+	*this = in_other;
+}
+
+template<class T, uint n>
+MeshSphereTree<T, n>::~MeshSphereTree() {
+	Destroy_Tree();
+}
+
+template<class T, uint n>
+void MeshSphereTree<T, n>::operator=(const MeshSphereTree& in_other) {
+	Destroy_Tree();
+
+	meshData = in_other.meshData;
 
 	Node* otherNode = in_other.rootNode;
 	if (otherNode == nullptr) return;
@@ -62,36 +77,27 @@ MeshSphereTree<T, n>::MeshSphereTree(MeshSphereTree& in_other) :
 }
 
 template<class T, uint n>
-MeshSphereTree<T, n>::~MeshSphereTree() {
-	Destroy_Tree();
+void MeshSphereTree<T, n>::Apply_Transform(const Transform<T, n>& in_transform) {
+	meshData.Apply_Transform_Points(in_transform, MeshVertexData::MemberID::position);
 }
 
 template<class T, uint n>
-void MeshSphereTree<T, n>::Build_Around(MeshVertexData& in_meshData) {
-	if (in_meshData.Get_Member_Depth(MeshVertexData::MemberID::position) != n ||
-		in_meshData.Get_Member_Type(MeshVertexData::MemberID::position) != MeshVertexData::To_Data_Type<T>() ||
-		in_meshData.Get_Face_Mode() != MeshVertexData::FaceMode::triangles) {
-
-		throw InvalidArgumentException();
-	}
-
-	meshData = &in_meshData;
-
-	Build_Tree();
+typename MeshSphereTree<T, n>::Iterator MeshSphereTree<T, n>::Get_Iterator() const {
+	return Iterator(*this);
 }
 
 template<class T, uint n>
 void MeshSphereTree<T, n>::Build_Tree() {
-	if (meshData == nullptr || meshData->Get_Number_Faces() == 0) {
+	if (meshData.Get_Number_Faces() == 0) {
 		throw InvalidArgumentException();
 	}
 
 	Destroy_Tree();
 
-	uint nFaces = meshData->Get_Number_Faces();
+	uint nFaces = meshData.Get_Number_Faces();
 
 	Triangle<T, n>* triangles = new Triangle<T, n>[nFaces];
-	meshData->Expand_Member(MeshVertexData::MemberID::position, triangles);
+	meshData.Expand_Member(MeshVertexData::MemberID::position, triangles);
 
 	Vector<T, n>* means = new Vector<T, n>[nFaces];
 	for (uint i = 0; i < nFaces; i++) {
@@ -195,7 +201,82 @@ void MeshSphereTree<T, n>::Destroy_Tree() {
 		return;
 	}
 
+	std::vector<Node*> nodeStack;
+	nodeStack.push_back(rootNode);
+	while (!nodeStack.empty()) {
+		Node* node = nodeStack.back();
+		nodeStack.pop_back();
 
+		for (uint i = 0; i < 2; i++) {
+			if (node->children[i] != nullptr) {
+				nodeStack.push_back(node->children[i]);
+			}
+		}
+		
+		delete node;
+	}
+
+	rootNode = nullptr;
+}
+
+template<class T, uint n>
+MeshSphereTree<T, n>::Iterator::Iterator(const MeshSphereTree<T, n>& in_tree) :
+	tree(in_tree),
+	node(in_tree.rootNode) 
+{}
+
+template<class T, uint n>
+void MeshSphereTree<T, n>::Iterator::Go_Left() {
+	if (Is_Leaf()) {
+		throw InvalidArgumentException();
+	}
+
+	node = node->children[0];
+}
+
+template<class T, uint n>
+inline void MeshSphereTree<T, n>::Iterator::Go_Right() {
+	if (Is_Leaf()) {
+		throw InvalidArgumentException();
+	}
+
+	node = node->children[1];
+}
+
+template<class T, uint n>
+typename MeshSphereTree<T, n>::Iterator MeshSphereTree<T, n>::Iterator::Go_Both() {
+	Iterator other = *this;
+	this->Go_Left();
+	other.Go_Right();
+	return other;
+}
+
+template<class T, uint n>
+Sphere<T, n> MeshSphereTree<T, n>::Iterator::Get_Sphere() const {
+	return node->sphere;
+}
+
+template<class T, uint n>
+Triangle<T, n> MeshSphereTree<T, n>::Iterator::Get_Triangle() const {
+	if (!Is_Leaf()) {
+		throw InvalidArgumentException();
+	}
+
+	uint faceElementIndex = tree.meshData.Face_To_Element_Index(node->triangles[0]);
+	uint vertexIndex = tree.meshData.Get_Standard_Face_Element(faceElementIndex);
+
+	Triangle<T, n> out;
+
+	for (uint i = 0; i < 3; i++) {
+		tree.meshData.Get_Member_Value(MeshVertexData::MemberID::position, vertexIndex++, &out[i]);
+	}
+
+	return out;
+}
+
+template<class T, uint n>
+bool MeshSphereTree<T, n>::Iterator::Is_Leaf() const {
+	return node->children[0] == nullptr && node->children[0] == nullptr;
 }
 
 template class MeshSphereTree<float, 2>;

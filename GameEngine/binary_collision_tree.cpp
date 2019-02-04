@@ -2,7 +2,7 @@
 #include "basic_collision_mask.h"
 
 template<class T, uint n>
-BinaryCollisionTree<T, n>::Evaluation::Iterator::Iterator(Evaluation * in_parent) :
+BinaryCollisionTree<T, n>::Evaluation::Iterator::Iterator(Evaluation* in_parent) :
 	parent(in_parent) {
 
 	for (uint i = 0; i < n; i++) {
