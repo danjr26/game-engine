@@ -16,6 +16,52 @@ MeshSphereTree<T, n>::MeshSphereTree(MeshVertexData& in_meshData) :
 }
 
 template<class T, uint n>
+MeshSphereTree<T, n>::MeshSphereTree(MeshSphereTree& in_other) :
+	meshData(nullptr),
+	rootNode(nullptr) {
+
+	Node* otherNode = in_other.rootNode;
+	if (otherNode == nullptr) return;
+
+	Node* myNode = new Node;
+	myNode->sphere = otherNode->sphere;
+	myNode->triangles = otherNode->triangles;
+
+	for (bool keepGoing = true; keepGoing;) {
+		if (otherNode->children[0] == nullptr && otherNode->children[1] == nullptr) {
+			if (myNode->parent == nullptr) {
+				keepGoing = false;
+			}
+			else {
+				myNode = myNode->parent;
+				otherNode = otherNode->parent;
+			}
+		}
+		else if (myNode->children[0] == nullptr) {
+			myNode->children[0] = new Node;
+			myNode = myNode->children[0];
+			otherNode = otherNode->children[0];
+			myNode->sphere = otherNode->sphere;
+			myNode->triangles = otherNode->triangles;
+		}
+		else if (myNode->children[1] == nullptr) {
+			myNode->children[1] = new Node;
+			myNode = myNode->children[1];
+			otherNode = otherNode->children[1];
+			myNode->sphere = otherNode->sphere;
+			myNode->triangles = otherNode->triangles;
+		}
+		else if (myNode->parent == nullptr) {
+			keepGoing = false;
+		}
+		else {
+			myNode = myNode->parent;
+			otherNode = otherNode->parent;
+		}
+	}
+}
+
+template<class T, uint n>
 MeshSphereTree<T, n>::~MeshSphereTree() {
 	Destroy_Tree();
 }
@@ -55,26 +101,38 @@ void MeshSphereTree<T, n>::Build_Tree() {
 		means[i] /= (T)3;
 	}
 
-	Node* rootNode = new Node;
+	rootNode = new Node;
 	rootNode->triangles.reserve(nFaces);
 	for (uint i = 0; i < nFaces; i++) {
 		rootNode->triangles.push_back(i);
 	}
 
-	Node* node = rootNode;
-	while (node->children[0] == nullptr || node->children[1] == nullptr || node->parent != nullptr) {
+	std::vector<Node*> nodeStack;
+	nodeStack.push_back(rootNode);
+	while (!nodeStack.empty()) {
+		Node* node = nodeStack.back();
+		nodeStack.pop_back();
+
 		if (node->triangles.size() == 1) {
-			rootNode->sphere = Sphere<T, n>::From_Bounded_Triangle(triangles[node->triangles[0]]);
-			node = node->parent;
+			node->sphere = Sphere<T, n>::From_Bounded_Triangle(triangles[node->triangles[0]]);
 		}
 		else {
+			std::vector<Vector<T, n>> boundedPoints;
+			boundedPoints.reserve(node->triangles.size() * 3);
+			for (auto it = node->triangles.begin(); it != node->triangles.end(); it++) {
+				for (uint i = 0; i < 3; i++) {
+					boundedPoints.push_back(triangles[*it][i]);
+				}
+			}
+			node->sphere = Sphere<T, n>::From_Bounded_Points(boundedPoints.data(), boundedPoints.size());
+
 			Range<T> extremes[n];
 			for (uint i = 0; i < n; i++) {
 				extremes[i] = Range<T>(triangles[node->triangles[0]][0][i]);
 			}
 			for (uint i = 0; i < n; i++) {
-				for (uint j = 0; j < nFaces; j++) {
-					extremes[i].Expand_To(means[node->triangles[j][i]);
+				for (uint j = 0; j < node->triangles.size(); j++) {
+					extremes[i].Expand_To(means[node->triangles[j]][i]);
 				}
 			}
 			uint dimension = 0;
@@ -90,10 +148,25 @@ void MeshSphereTree<T, n>::Build_Tree() {
 			for (uint i = 0; i < 2; i++) {
 				node->children[i] = new Node;
 				node->children[i]->parent = node;
+				nodeStack.push_back(node->children[i]);
 			}
 
 			for (auto it = node->triangles.begin(); it != node->triangles.end(); it++) {
+				if (means[*it][dimension] < midValue) {
+					node->children[0]->triangles.push_back(*it);
+				}
+				else {
+					node->children[1]->triangles.push_back(*it);
+				}
+			}
 
+			if (node->children[0]->triangles.empty()) {
+				node->children[0]->triangles.push_back(node->children[1]->triangles.back());
+				node->children[1]->triangles.pop_back();
+			}
+			else if (node->children[1]->triangles.empty()) {
+				node->children[1]->triangles.push_back(node->children[0]->triangles.back());
+				node->children[0]->triangles.pop_back();
 			}
 		}
 	}

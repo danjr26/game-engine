@@ -165,6 +165,8 @@ void Test_Render(Window* window) {
 	DebugMeshVertexDataRenderer polyRenderer(&poly);
 	GE.Render().Add(&polyRenderer);
 
+	MeshSphereTree<double, 2> polySphereTree(poly);
+
 	TestParticleSpecifier specifier;
 	ParticleSystem2 particleSystem(&spark, &specifier);
 	GE.Render().Add(&particleSystem);
