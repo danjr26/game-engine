@@ -26,14 +26,20 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AARectangleColli
 	bool xColl = xRange1.Intersection(xRange2, xCollRange);
 	bool yColl = yRange2.Intersection(yRange2, yCollRange);
 
-	collision.didCollide = xColl && yColl;
+	collision.did = xColl && yColl;
 
-	if (collision.didCollide && returnPoint) {
-		collision.collisionPoint = Vector<T, 2>(xCollRange.Get_Mean(), yCollRange.Get_Mean());
+	if (collision.did && returnPoint) {
+		collision.point = Vector<T, 2>(xCollRange.Get_Mean(), yCollRange.Get_Mean());
 	}
 
-	if (!collision.didCollide && returnSeparator) {
-		collision.separator = (yColl) ? Vector<T, 2>(1, 0) : Vector<T, 2>(0, 1);
+	if (!collision.did && returnSeparator) {
+		if (yColl) {
+			collision.separator = (xRange1.Get_High() < xRange2.Get_High()) ? Vector<T, 2>(1, 0) : Vector<T, 2>(-1, 0);
+		}
+		else {
+			collision.separator = (yRange1.Get_High() < yRange2.Get_High()) ? Vector<T, 2>(0, 1) : Vector<T, 2>(0, -1);
+		}
+		collision.owner = &in_mask1;
 	}
 
 	return collision;
@@ -41,7 +47,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AARectangleColli
 
 template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AARectangleCollisionMask<T>& in_mask1, CircleCollisionMask<T>& in_mask2) {
-	Collision<T, 2> collision, testCollision;
+	Collision<T, 2> collision;
 
 	auto basis1 = in_mask1.Get_Transformed_Basis();
 	auto basis2 = in_mask2.Get_Transformed_Basis();
@@ -72,44 +78,40 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AARectangleColli
 	Point2CollisionMask<T> pointMask = Point2CollisionMask<T>(circle.Get_Center(), true);
 	CircleCollisionMask<T> transformedCircleMask = CircleCollisionMask<T>(circle, true);
 
-	if ((testCollision = Evaluate_Typed(xRectangleMask, pointMask)).didCollide) {
-		collision = testCollision;
-
+	collision = Evaluate_Typed(xRectangleMask, pointMask);
+	if (collision.did) {
 		if (returnPoint) {
-			collision.collisionPoint[0] += Sign(rectCenter.X() - collision.collisionPoint.X()) *
+			collision.point[0] += Sign(rectCenter.X() - collision.point.X()) *
 				Min<T>(circle.Get_Radius(), xRectangleMask.Get_Basis().Get_Dimensions().X() / 2);
 		}
 
 		return collision;
 	}
 
-	if ((testCollision = Evaluate_Typed(yRectangleMask, pointMask)).didCollide) {
-		collision = testCollision;
 
+	collision = Evaluate_Typed(yRectangleMask, pointMask);
+	if (collision.did) {
 		if (returnPoint) {
-			collision.collisionPoint[1] += Sign(rectCenter.Y() - collision.collisionPoint.Y()) *
+			collision.point[1] += Sign(rectCenter.Y() - collision.point.Y()) *
 				Min<T>(circle.Get_Radius(), yRectangleMask.Get_Basis().Get_Dimensions().Y() / 2);
 		}
 
 		return collision;
 	}
 
-	if (!collision.didCollide) {
-		for (uint i = 0; i < 4; i++) {
-			pointMask = Point2CollisionMask<T>(corners[i], true);
-			if ((testCollision = Evaluate_Typed(transformedCircleMask, pointMask)).didCollide) {
-				collision = testCollision;
-				break;
-			}
-		}
+	for (uint i = 0; i < 4; i++) {
+		collision = Evaluate_Typed(transformedCircleMask, Point2CollisionMask<T>(corners[i], true));
+		if (collision.did) break;
 	}
 
-	if (!collision.didCollide && returnSeparator ) {
-		if (Is_Between_Inc(circle.Get_Center().X(), rectangle.Get_Minima().X(), rectangle.Get_Maxima().X())) {
-			collision.separator = Vector<T, 2>(0, 1);
+	if (!collision.did && returnSeparator) {
+		if (Between_Inc(circle.Get_Center().X(), rectangle.Get_Minima().X(), rectangle.Get_Maxima().X())) {
+			collision.separator = (rectangle.Get_Maxima().Y() < circle.Get_Center().Y()) ? Vector<T, 2>(0, 1) : Vector<T, 2>(0, -1);
+			collision.owner = &in_mask1;
 		}
-		else if (Is_Between_Inc(circle.Get_Center().Y(), rectangle.Get_Minima().Y(), rectangle.Get_Maxima().Y())) {
-			collision.separator = Vector<T, 2>(1, 0);
+		else if (Between_Inc(circle.Get_Center().Y(), rectangle.Get_Minima().Y(), rectangle.Get_Maxima().Y())) {
+			collision.separator = (rectangle.Get_Maxima().X() < circle.Get_Center().X()) ? Vector<T, 2>(1, 0) : Vector<T, 2>(-1, 0);
+			collision.owner = &in_mask1;
 		}
 		else {
 			T cornerDistances[4];
@@ -117,14 +119,9 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AARectangleColli
 				cornerDistances[i] = (circle.Get_Center() - corners[i]).Dot_Self();
 			}
 
-			uint closest = 0;
-			for (uint i = 1; i < 4; i++) {
-				if (cornerDistances[i] < cornerDistances[closest]) {
-					closest = i;
-				}
-			}
-
-			collision.separator = (circle.Get_Center() - corners[closest]);
+			uint index = Min_Index(cornerDistances, 4);
+			collision.separator = (circle.Get_Center() - corners[index]);
+			collision.owner = &in_mask1;
 		}
 	}
 
@@ -144,18 +141,15 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AARectangleColli
 	Vector<T, 2> corners[4];
 	rectangle.Get_Corners(corners);
 
-	Collision<T, 2> testCollision;
 	HalfSpace2CollisionMask<T> transformedHalfSpaceMask = HalfSpace2CollisionMask<T>(halfSpace, true);
 	for (uint i = 0; i < 4; i++) {
-		Point2CollisionMask<T> pointMask = Point2CollisionMask<T>(corners[i], true);
-		if ((testCollision = Evaluate_Typed(transformedHalfSpaceMask, pointMask)).didCollide) {
-			collision = testCollision;
-			break;
-		}
+		collision = Evaluate_Typed(transformedHalfSpaceMask, Point2CollisionMask<T>(corners[i], true));
+		if (collision.did) break;
 	}
 
-	if (!collision.didCollide && returnSeparator) {
-		collision.separator = halfSpace.Get_Direction();
+	if (!collision.did && returnSeparator) {
+		collision.separator = -halfSpace.Get_Direction();
+		collision.owner = &in_mask2;
 	}
 
 	return collision;
@@ -176,106 +170,67 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AARectangleColli
 	Vector<T, 2> maxima = rectangle.Get_Maxima();
 	Vector<T, 2> point = line.Get_Point();
 	Vector<T, 2> direction = line.Get_Direction();
-	Vector2i sign = Vector2i(Sign(direction.X()), Sign(direction.Y()));
 
 	if (direction.Is_Zero()) {
-		if (Evaluate_Typed(
-			AARectangleCollisionMask<T>(rectangle, true),
-			Point2CollisionMask<T>(point, true)
-		).didCollide) {
-			collision.didCollide = true;
+		AARectangleCollisionMask<T> newRectangleMask(rectangle, true);
+		Point2CollisionMask<T> newPointMask(point, true);
+		collision = Evaluate_Typed(newRectangleMask, newPointMask);
+
+		if (collision.owner == &newRectangleMask) collision.owner = &in_mask1;
+		if (collision.owner == &newPointMask) collision.owner = &in_mask2;
+
+		return collision;
+	}
+
+	if (direction.X() == 0 || direction.Y() == 0) {
+		uint i1 = (direction.X() == 0) ? 0 : 1;
+		uint i2 = (i1 == 1) ? 0 : 1;
+
+		if (Between_Inc(point[i2], minima[i2], maxima[i2])) {
+			collision.did = true;
 			if (returnPoint) {
-				collision.collisionPoint = point;
+				collision.point[i1] = Clamp(point[i1], minima[i1], maxima[i1]);
+				collision.point[i2] = point[i2];
 			}
+		}
+		else if (returnSeparator) {
+			collision.separator[i1] = 0;
+			collision.separator[i2] = (point[i2] < minima[i2]) ? 1 : -1;
+			collision.owner = &in_mask2;
 		}
 
 		return collision;
 	}
 
-	if (direction.X() == 0.0) {
-		if (Is_Between_Inc<T>(point.Y(), minima.Y(), maxima.Y())) {
-			collision.didCollide = true;
+	Collision<T, 2> collisions[2];
+	T ts[2];
+
+	for (uint i1 = 0; i1 < 2; i1++) {
+		uint i2 = (i1 == 1) ? 0 : 1;
+
+		ts[i1] = (point[i1] < center[i1]) ? minima[i1] : maxima[i1];
+		ts[i1] = (ts[i1] - point[i1]) / direction[i1];
+
+		if (Between_Inc(point[i2] + direction[i2] * ts[i1], minima[i2], maxima[i2])) {
+			collisions[i1].did = true;
 			if (returnPoint) {
-				collision.collisionPoint = (point.Y() < minima.Y()) ? Vector<T, 2>(point.X(), minima.Y()) : (point.Y() > maxima.Y()) ? Vector<T, 2>(point.X(), maxima.Y()) : point;
+				collisions[i1].point = point + direction * ts[i1];
 			}
-		}
-		return collision;
+ 		}
 	}
 
-	if (direction.Y() == 0.0) { 
-		if (Is_Between_Inc<T>(point.X(), minima.X(), maxima.X())) {
-			collision.didCollide = true;
-			if (returnPoint) {
-				collision.collisionPoint = (point.X() < minima.X()) ? Vector<T, 2>(minima.X(), point.Y()) : (point.X() > maxima.X()) ? Vector<T, 2>(maxima.X(), point.Y()) : point;
-			}
-		}
-		return collision;
-	}
-
-	Collision<T, 2> xCollision, yCollision;
-	T xT, yT;
-
-	if (point.X() < center.X()) {
-		T tAtX1 = (minima.X() - point.X()) / direction.X();
-		if (Is_Between_Inc<T>(point.Y() + direction.Y() * tAtX1, minima.Y(), maxima.Y())) {
-			if (returnPoint) {
-				xCollision.collisionPoint = point + direction * tAtX1;
-			}
-			xCollision.didCollide = true;
-			xT = tAtX1;
-		}
-	}
-	else {
-		T tAtX2 = (maxima.X() - point.X()) / direction.X();
-		if (Is_Between_Inc<T>(point.Y() + direction.Y() * tAtX2, minima.Y(), maxima.Y())) {
-			if (returnPoint) {
-				xCollision.collisionPoint = point + direction * tAtX2;
-			}
-			xCollision.didCollide = true;
-			xT = tAtX2;
+	T minT = std::numeric_limits<T>::infinity();
+	for (uint i = 0; i < 2; i++) {
+		if (collisions[i].did && ((minT < 0 && ts[i] >= 0) || abs(ts[i]) < minT)) {
+			collision = collisions[i];
+			minT = abs(ts[i]);
 		}
 	}
 
-	if (point.Y() < center.Y()) {
-		T tAtY1 = (minima.Y() - point.Y()) / direction.Y();
-		if (Is_Between_Inc<T>(point.X() + direction.X() * tAtY1, minima.X(), maxima.X())) {
-			if (returnPoint) {
-				yCollision.collisionPoint = point + direction * tAtY1;
-			}
-			yCollision.didCollide = true;
-			yT = tAtY1;
-		}
-	}
-	else {
-		T tAtY2 = (maxima.Y() - point.Y()) / direction.Y();
-		if (Is_Between_Inc<T>(point.X() + direction.X() * tAtY2, minima.X(), maxima.X())) {
-			if (returnPoint) {
-				yCollision.collisionPoint = point + direction * tAtY2;
-			}
-			yCollision.didCollide = true;
-			yT = tAtY2;
-		}
-	}
-
-	if (xCollision.didCollide && yCollision.didCollide) {
-		if (xT >= 0) {
-			if (yT >= 0) {
-				collision = (xT < yT) ? xCollision : yCollision;
-			}
-			else {
-				collision = yCollision;
-			}
-		}
-		else if (yT > 0) {
-			collision = yCollision;
-		}
-	}
-	else {
-		collision = (xCollision.didCollide) ? xCollision : yCollision;
-	}
-
-	if (!collision.didCollide && returnSeparator) {
-		collision.separator = direction.Orthogonal();
+	if (!collision.did && returnSeparator) {
+		Vector<T, 2> ortho = direction.Orthogonal();
+		collision.separator = ortho * ((ortho.Dot(center - point) < 0) ? -1 : 1);
+		collision.owner = &in_mask2;
 	}
 
 	return collision;
@@ -291,126 +246,45 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AARectangleColli
 	AxisAlignedBox<T, 2> const& rectangle = *basis1;
 	LineSegment<T, 2> const& lineSegment = *basis2;
 
-	Vector<T, 2> center = rectangle.Get_Center();
+	Vector<T, 2> points[2] = {
+		lineSegment.Get_Point1(),
+		lineSegment.Get_Point2()
+	};
+
 	Vector<T, 2> minima = rectangle.Get_Minima();
 	Vector<T, 2> maxima = rectangle.Get_Maxima();
-	Vector<T, 2> point1 = lineSegment.Get_Point1();
-	Vector<T, 2> point2 = lineSegment.Get_Point2();
-	Vector<T, 2> direction = lineSegment.Get_Direction();
-	Vector2i sign = Vector2i(Sign(direction.X()), Sign(direction.Y()));
 
-	if (direction.Is_Zero()) {
-		if (Evaluate_Typed(
-			AARectangleCollisionMask<T>(rectangle, true),
-			Point2CollisionMask<T>(point1, true)
-		).didCollide) {
+	Line2CollisionMask<T> newLineMask(Line<T, 2>::From_Point_Direction(lineSegment.Get_Point1(), lineSegment.Get_Direction()), true);
 
-			collision.didCollide = true;
-			if (returnPoint) {
-				collision.collisionPoint = point1;
-			}
-		}
+	collision = Evaluate_Typed(in_mask1, newLineMask);
 
-		return collision;
-	}
+	if (collision.did) {
+		if (!Between_Inc(
+			lineSegment.Get_Projection_Coefficient(collision.point),
+			lineSegment.Get_Projection_Coefficient1(),
+			lineSegment.Get_Projection_Coefficient2())) {
 
-	if (direction.X() == 0.0) {
-		if (Is_Between_Inc(point1.X(), minima.X(), maxima.X())) {
-			if (sign.Y() != -Sign(minima.Y() - point1.Y()) && sign.Y() != Sign(minima.Y() - point2.Y())) {
-				collision.didCollide = true;
-				if (returnPoint) {
-					collision.collisionPoint = Vector<T, 2>(point1.X(), minima.Y());
+			collision.did = false;
+			if (returnSeparator) {
+				for (uint i1 = 0; i1 < 2; i1++) {
+					uint i2 = (i1 == 1) ? 0 : 1;
+					if (points[0][i1] > maxima[i1] && points[1][i1] > maxima[i1]) {
+						collision.separator[i1] = 0;
+						collision.separator[i2] = 1;
+					}
+					else if (points[0][i1] < minima[i1] && points[1][i1] < minima[i1]) {
+						collision.separator[i1] = 0;
+						collision.separator[i2] = -1;
+					}
 				}
-			}
-			else if (sign.Y() != -Sign(maxima.Y() - point1.Y()) && sign.Y() != Sign(maxima.Y() - point2.Y())) {
-				collision.didCollide = true;
-				if (returnPoint) {
-					collision.collisionPoint = Vector<T, 2>(point1.X(), maxima.Y());
-				}
+
+				collision.owner = &in_mask1;
 			}
 		}
-		return collision;
-	}
-
-	if (direction.Y() == 0.0) {
-		if (Is_Between_Inc(point1.Y(), minima.Y(), maxima.Y())) {
-			if (sign.X() != -Sign(minima.X() - point1.X()) && sign.X() != Sign(minima.X() - point2.X())) {
-				collision.didCollide = true;
-				if (returnPoint) {
-					collision.collisionPoint = Vector<T, 2>(minima.X(), point1.Y());
-				}
-			}
-			else if (sign.X() != -Sign(maxima.X() - point1.X()) && sign.X() != Sign(maxima.X() - point2.X())) {
-				collision.didCollide = true;
-				if (returnPoint) {
-					collision.collisionPoint = Vector<T, 2>(maxima.X(), point1.Y());
-				}
-			}
-		}
-		return collision;
-	}
-
-	Collision<T, 2> xCollision, yCollision;
-	T xT, yT;
-	T endT = (point2.X() - point1.X()) / direction.X();
-
-	T tAtX1 = (minima.X() - point1.X()) / direction.X();
-	if (Is_Between_Inc<T>(tAtX1, 0.0, endT) && Is_Between_Inc<T>(point1.Y() + direction.Y() * tAtX1, minima.Y(), maxima.Y())) {
-		if (returnPoint) {
-			xCollision.collisionPoint = point1 + direction * tAtX1;
-		}
-		xCollision.didCollide = true;
-		xT = tAtX1;
-	}
-
-	T tAtX2 = (maxima.X() - point1.X()) / direction.X();
-	if (Is_Between_Inc<T>(tAtX2, 0.0, endT) && Is_Between_Inc<T>(point1.Y() + direction.Y() * tAtX2, minima.Y(), maxima.Y())) {
-		if (returnPoint) {
-			xCollision.collisionPoint = point1 + direction * tAtX2;
-		}
-		xCollision.didCollide = true;
-		xT = tAtX2;
-	}
-
-	T tAtY1 = (minima.Y() - point1.Y()) / direction.Y();
-	if (Is_Between_Inc<T>(tAtY1, 0.0, endT) && Is_Between_Inc<T>(point1.X() + direction.X() * tAtY1, minima.X(), maxima.X())) {
-		if (returnPoint) {
-			yCollision.collisionPoint = point1 + direction * tAtY1;
-		}
-		yCollision.didCollide = true;
-		yT = tAtY1;
-	}
-
-	T tAtY2 = (maxima.Y() - point1.Y()) / direction.Y();
-	if (Is_Between_Inc<T>(tAtY2, 0.0, endT) && Is_Between_Inc<T>(point1.X() + direction.X() * tAtY2, minima.X(), maxima.X())) {
-		if (returnPoint) {
-			yCollision.collisionPoint = point1 + direction * tAtY2;
-		}
-		yCollision.didCollide = true;
-		yT = tAtY2;
-	}
-
-	if (xCollision.didCollide && yCollision.didCollide) {
-		collision = (xT < yT) ? xCollision : yCollision;
 	}
 	else {
-		collision = (xCollision.didCollide) ? xCollision : yCollision;
-	}
-
-	if (!collision.didCollide && returnSeparator) {
-		if (Is_Between_Inc<T>(point1.Y() + direction.Y() * tAtX1, minima.Y(), maxima.Y()) ||
-			Is_Between_Inc<T>(point1.Y() + direction.Y() * tAtX2, minima.Y(), maxima.Y())) {
-
-			collision.separator = Vector<T, 2>(1, 0);
-		}
-		else if (
-			Is_Between_Inc<T>(point1.X() + direction.X() * tAtY1, minima.X(), maxima.X()) ||
-			Is_Between_Inc<T>(point1.X() + direction.X() * tAtY2, minima.X(), maxima.X())) {
-
-			collision.separator = Vector<T, 2>(0, 1);
-		}
-		else {
-			collision.separator = direction.Orthogonal();
+		if (returnSeparator) {
+			if (collision.owner == &newLineMask) collision.owner = &in_mask2;
 		}
 	}
 
@@ -419,7 +293,35 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AARectangleColli
 
 template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AARectangleCollisionMask<T>& in_mask1, MST2CollisionMask<T>& in_mask2) {
-	return Collision<T, 2>();
+	using iter_t = typename MeshSphereTree<T, 2>::Iterator;
+
+	Collision<T, 2> collision;
+
+	auto basis2 = in_mask2.Get_Transformed_Basis();
+
+	MeshSphereTree<T, 2> const& tree = *basis2;
+
+	std::vector<iter_t> itStack;
+	itStack.push_back(iter_t(tree));
+	while (!collision.did && !itStack.empty()) {
+		iter_t it = itStack.back();
+		itStack.pop_back();
+
+		if (Evaluate_Typed(in_mask1, CircleCollisionMask<T>(it.Get_Sphere(), true)).did) {
+			if (it.Is_Leaf()) {
+				collision = Evaluate_Typed(in_mask1, Triangle2CollisionMask<T>(it.Get_Triangle(), true));
+			}
+			else {
+				itStack.push_back(it.Go_Both());
+				itStack.push_back(it);
+			}
+		}
+	}
+
+	collision.separator = Vector<T, 2>();
+	collision.owner = nullptr;
+
+	return collision;
 }
 
 template<class T>
@@ -432,19 +334,28 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AARectangleColli
 	AxisAlignedBox<T, 2> const& rectangle = *basis1;
 	Vector<T, 2> const& point = *basis2;
 
-	bool xColl = Is_Between_Inc<T>(point.X(), rectangle.Get_Minima().X(), rectangle.Get_Maxima().X());
-	bool yColl = Is_Between_Inc<T>(point.Y(), rectangle.Get_Minima().Y(), rectangle.Get_Maxima().Y());
+	Vector<T, 2> minima = rectangle.Get_Minima();
+	Vector<T, 2> maxima = rectangle.Get_Maxima();
 
-	collision.didCollide = xColl && yColl;
+	bool xColl = Between_Inc(point.X(), minima.X(), maxima.X());
+	bool yColl = Between_Inc(point.Y(), minima.Y(), maxima.Y());
 
-	if (collision.didCollide && returnPoint) {
-		collision.collisionPoint = point;
+	collision.did = xColl && yColl;
+
+	if (collision.did && returnPoint) {
+		collision.point = point;
 	}
 
-	if (!collision.didCollide && returnSeparator) {
-		collision.separator = (yColl) ? Vector<T, 2>(1, 0) : Vector<T, 2>(0, 1);
-	}
+	if (!collision.did && returnSeparator) {
+		if (point.X() > maxima.X()) collision.separator = Vector<T, 2>(1, 0);
+		else if (point.X() < minima.X()) collision.separator = Vector<T, 2>(-1, 0);
+		else if (point.Y() > maxima.Y()) collision.separator = Vector<T, 2>(0, 1);
+		else if (point.Y() < minima.Y()) collision.separator = Vector<T, 2>(0, -1);
+		else throw ProcessFailureException();
 
+		collision.owner = &in_mask1;
+	}
+	
 	return collision;
 }
 
@@ -458,124 +369,39 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AARectangleColli
 	AxisAlignedBox<T, 2> const& rectangle = *basis1;
 	Ray<T, 2> const& ray = *basis2;
 
-	Vector<T, 2> center = rectangle.Get_Center();
-	Vector<T, 2> minima = rectangle.Get_Minima();
-	Vector<T, 2> maxima = rectangle.Get_Maxima();
 	Vector<T, 2> point = ray.Get_Point();
 	Vector<T, 2> direction = ray.Get_Direction();
-	Vector2i sign = Vector2i(Sign(direction.X()), Sign(direction.Y()));
 
-	if (direction.Is_Zero()) {
-		if (Evaluate_Typed(
-			AARectangleCollisionMask<T>(rectangle, true),
-			Point2CollisionMask<T>(point, true)
-		).didCollide) {
+	Vector<T, 2> minima = rectangle.Get_Minima();
+	Vector<T, 2> maxima = rectangle.Get_Maxima();
 
-			collision.didCollide = true;
-			if (returnPoint) {
-				collision.collisionPoint = point;
-			}
-		}
+	Line2CollisionMask<T> newRayMask(Line<T, 2>::From_Point_Direction(point, direction), true);
 
-		return collision;
-	}
+	collision = Evaluate_Typed(in_mask1, newRayMask);
 
-	if (direction.X() == 0.0) {
-		if (Is_Between_Inc(point.X(), minima.X(), maxima.X())) {
-			if (sign.Y() == Sign(minima.Y() - point.Y())) {
-				collision.didCollide = true;
-				if (returnPoint) {
-					collision.collisionPoint = Vector<T, 2>(0.0, minima.Y());
+	if (collision.did) {
+		if (ray.Get_Projection_Coefficient(collision.point) < ray.Get_Projection_Coefficient()) {
+			collision.did = false;
+			if (returnSeparator) {
+				for (uint i1 = 0; i1 < 2; i1++) {
+					uint i2 = (i1 == 1) ? 0 : 1;
+					if (point[i1] > maxima[i1]) {
+						collision.separator[i1] = 0;
+						collision.separator[i2] = 1;
+					}
+					else if (point[i1] < minima[i1]) {
+						collision.separator[i1] = 0;
+						collision.separator[i2] = -1;
+					}
 				}
-			}
-			else if (sign.Y() == Sign(maxima.Y() - point.Y())) {
-				collision.didCollide = true;
-				if (returnPoint) {
-					collision.collisionPoint = Vector<T, 2>(0.0, maxima.Y());
-				}
+
+				collision.owner = &in_mask1;
 			}
 		}
-		return collision;
-	}
-
-	if (direction.Y() == 0.0) {
-		if (Is_Between_Inc(point.Y(), minima.Y(), maxima.Y())) {
-			if (sign.X() == Sign(minima.X() - point.X())) {
-				collision.didCollide = true;
-				if (returnPoint) {
-					collision.collisionPoint = Vector<T, 2>(minima.X(), 0.0);
-				}
-			}
-			else if (sign.X() == Sign(maxima.X() - point.X())) {
-				collision.didCollide = true;
-				if (returnPoint) {
-					collision.collisionPoint = Vector<T, 2>(maxima.X(), 0.0);
-				}
-			}
-		}
-		return collision;
-	}
-
-	Collision<T, 2> xCollision, yCollision;
-	T xT, yT;
-
-	T tAtX1 = (minima.X() - point.X()) / direction.X();
-	if (tAtX1 >= 0 && Is_Between_Inc<T>(point.Y() + direction.Y() * tAtX1, minima.Y(), maxima.Y())) {
-		if (returnPoint) {
-			xCollision.collisionPoint = point + direction * tAtX1;
-		}
-		xCollision.didCollide = true;
-		xT = tAtX1;
-	}
-
-	T tAtX2 = (maxima.X() - point.X()) / direction.X();
-	if (tAtX2 >= 0 && Is_Between_Inc<T>(point.Y() + direction.Y() * tAtX2, minima.Y(), maxima.Y())) {
-		if (returnPoint) {
-			xCollision.collisionPoint = point + direction * tAtX2;
-		}
-		xCollision.didCollide = true;
-		xT = tAtX2;
-	}
-
-	T tAtY1 = (minima.Y() - point.Y()) / direction.Y();
-	if (tAtY1 >= 0 && Is_Between_Inc<T>(point.X() + direction.X() * tAtY1, minima.X(), maxima.X())) {
-		if (returnPoint) {
-			yCollision.collisionPoint = point + direction * tAtY1;
-		}
-		yCollision.didCollide = true;
-		yT = tAtY1;
-	}
-
-	T tAtY2 = (maxima.Y() - point.Y()) / direction.Y();
-	if (tAtY2 >= 0 && Is_Between_Inc<T>(point.X() + direction.X() * tAtY2, minima.X(), maxima.X())) {
-		if (returnPoint) {
-			yCollision.collisionPoint = point + direction * tAtY2;
-		}
-		yCollision.didCollide = true;
-		yT = tAtY2;
-	}
-
-	if (xCollision.didCollide && yCollision.didCollide) {
-		collision = (xT < yT) ? xCollision : yCollision;
 	}
 	else {
-		collision = (xCollision.didCollide) ? xCollision : yCollision;
-	}
-
-	if (!collision.didCollide && returnSeparator) {
-		if (Is_Between_Inc<T>(point.Y() + direction.Y() * tAtX1, minima.Y(), maxima.Y()) ||
-			Is_Between_Inc<T>(point.Y() + direction.Y() * tAtX2, minima.Y(), maxima.Y())) {
-
-			collision.separator = Vector<T, 2>(1, 0);
-		}
-		else if (
-			Is_Between_Inc<T>(point.X() + direction.X() * tAtY1, minima.X(), maxima.X()) ||
-			Is_Between_Inc<T>(point.X() + direction.X() * tAtY2, minima.X(), maxima.X())) {
-
-			collision.separator = Vector<T, 2>(0, 1);
-		}
-		else {
-			collision.separator = direction.Orthogonal();
+		if (returnSeparator) {
+			if (collision.owner == &newRayMask) collision.owner = &in_mask2;
 		}
 	}
 
@@ -600,14 +426,14 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AARectangleColli
 
 	for (uint i = 0; i < 4; i++) {
 		collision = Evaluate_Typed(aaRectangleMask, LineSegment2CollisionMask<T>(LineSegment<T, 2>::From_Points(corners[i], corners[(i + 1) % 3]), true));
-		if (collision.didCollide) {
+		if (collision.did) {
 			return collision;
 		}
 	}
 
 	collision = Evaluate_Typed(Point2CollisionMask<T>(aaRectangle.Get_Center(), true), rectangleMask);
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		Vector<T, 2> aaCorners[4];
 		aaRectangle.Get_Corners(aaCorners);
 
@@ -644,14 +470,14 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AARectangleColli
 
 	for (uint i = 0; i < 3; i++) {
 		collision = Evaluate_Typed(aaRectangleMask, LineSegment2CollisionMask<T>(LineSegment<T, 2>::From_Points(corners[i], corners[(i + 1) % 3]), true));
-		if (collision.didCollide) {
+		if (collision.did) {
 			return collision;
 		}
 	}
 
 	collision = Evaluate_Typed(Point2CollisionMask<T>(rectangle.Get_Center(), true), triangleMask);
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		Vector<T, 2> aaCorners[4];
 		rectangle.Get_Corners(aaCorners);
 
@@ -685,12 +511,13 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionM
 	const Vector<T, 2> offset = circle2.Get_Center() - circle1.Get_Center();
 	const T offsetDistanceSquared = offset.Dot_Self();
 
-	collision.didCollide = offsetDistanceSquared <= radiiSquared;
-	if (collision.didCollide) {
-		collision.collisionPoint = circle1.Get_Center() + offset / 2.0;
+	collision.did = offsetDistanceSquared <= radiiSquared;
+	if (collision.did) {
+		collision.point = circle1.Get_Center() + offset / 2.0;
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
+		collision.owner = &in_mask1;
 		collision.separator = offset;
 	}
 
@@ -712,13 +539,13 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionM
 	T radius = circle.Get_Radius();
 
 	if (halfSpaceProjectionCoefficient < circleProjectionCoefficient + radius) {
-		collision.didCollide = true;
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint = halfSpace.Get_Direction() * (Max<T>(circleProjectionCoefficient - radius, halfSpaceProjectionCoefficient) + circleProjectionCoefficient + radius) / 2.0;
+			collision.point = halfSpace.Get_Direction() * (Max<T>(circleProjectionCoefficient - radius, halfSpaceProjectionCoefficient) + circleProjectionCoefficient + radius) / 2.0;
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = halfSpace.Get_Direction();
 	}
 
@@ -761,7 +588,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionM
 	Point2CollisionMask<T> pointMask2 = Point2CollisionMask<T>(lineSegment.Get_Point1(), true);
 	Point2CollisionMask<T> pointMask3 = Point2CollisionMask<T>(lineSegment.Get_Point2(), true);
 	
-	if (Is_Between_Inc<T>(
+	if (Between_Inc<T>(
 		lineSegment.Get_Projection_Coefficient(projectionPoint),
 		lineSegment.Get_Projection_Coefficient1(),
 		lineSegment.Get_Projection_Coefficient2())) {
@@ -771,7 +598,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionM
 	else {
 		collision = Evaluate_Typed(circleMask, pointMask2);
 
-		if (!collision.didCollide) {
+		if (!collision.did) {
 			collision = Evaluate_Typed(circleMask, pointMask3);
 		}
 	}
@@ -795,13 +622,13 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionM
 	Vector<T, 2> const& point = *basis2;
 
 	if ((point - circle.Get_Center()).Dot_Self() <= circle.Get_Radius() * circle.Get_Radius()) {
-		collision.didCollide = true;
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint = point;
+			collision.point = point;
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = point - circle.Get_Center();
 	}
 
@@ -829,7 +656,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionM
 		collision = Evaluate_Typed(pointMask1, rayMask);
 	}
 
-	if (!collision.didCollide) {
+	if (!collision.did) {
 		collision = Evaluate_Typed(pointMask2, rayMask);
 	}
 	
@@ -871,28 +698,28 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionM
 
 	Collision<T, 2> testCollision;
 	for (uint i = 0; i < 2; i++) {
-		if ((testCollision = Evaluate_Typed(pointMask, rectangleMasks[i])).didCollide) {
+		if ((testCollision = Evaluate_Typed(pointMask, rectangleMasks[i])).did) {
 			collision = testCollision;
 			if (returnPoint) {
-				collision.collisionPoint[i] += newAxes[i][i].Normalized()[i] *
-					Sign((center - collision.collisionPoint).Dot(newAxes[i][i])) *
+				collision.point[i] += newAxes[i][i].Normalized()[i] *
+					Sign((center - collision.point).Dot(newAxes[i][i])) *
 					Min<T>(circle.Get_Radius(), newAxes[i][i].Magnitude() / (T)2);
 			}
 			return collision;
 		}
 	}
 
-	if (!collision.didCollide) {
+	if (!collision.did) {
 		for (uint i = 0; i < 4; i++) {
 			pointMask = Point2CollisionMask<T>(corners[i]);
-			if ((testCollision = Evaluate_Typed(circleMask, pointMask)).didCollide) {
+			if ((testCollision = Evaluate_Typed(circleMask, pointMask)).did) {
 				collision = testCollision;
 				break;
 			}
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		Vector<T, 2> normAxes[2] = {
 			axes[0].Normalized(),
 			axes[1].Normalized()
@@ -941,24 +768,25 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionM
 	for (uint i = 0; i < 3; i++) {
 		centerProjection = lineSegments[i].Get_Projection(circle.Get_Center());
 		collision = Evaluate_Typed(circleMask, Point2CollisionMask<T>(centerProjection, true));
-		if (collision.didCollide &&
-			Is_Between_Inc(
+		if (collision.did &&
+			Between_Inc(
 				lineSegments[i].Get_Projection_Coefficient(centerProjection),
 				lineSegments[i].Get_Projection_Coefficient1(),
 				lineSegments[i].Get_Projection_Coefficient2()
 			)) {
+
 			return collision;
 		}
 	}
 
 	for (uint i = 0; i < 3; i++) {
 		collision = Evaluate_Typed(circleMask, Point2CollisionMask<T>(corners[i], true));
-		if (collision.didCollide) {
+		if (collision.did) {
 			return collision;
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		Vector<T, 2> axes[6];
 		triangle.Get_Lazy_Normals(axes);
 
@@ -985,24 +813,10 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(CircleCollisionM
 			);
 
 			if (!triangleRange.Intersection(circleRange)) {
+				collision.owner = (i <= 2) ? (void*)&in_mask2 : (void*)&in_mask1;
 				collision.separator = normAxes[i];
 				return collision;
 			}
-		}
-
-		for (uint i = 0; i < 6; i++) {
-			Range<T> triangleRange({
-				corners[0].Dot(normAxes[i]),
-				corners[1].Dot(normAxes[i]),
-				corners[2].Dot(normAxes[i])
-				});
-
-			Range<T> circleRange(
-				(circle.Get_Center() - normAxes[i] * circle.Get_Radius() * (T)0.999).Dot(normAxes[i]),
-				(circle.Get_Center() + normAxes[i] * circle.Get_Radius() * (T)0.999).Dot(normAxes[i])
-			);
-
-			Log::main(std::to_string(triangleRange.Get_Low()) + " " + std::to_string(triangleRange.Get_High()) + " " + std::to_string(circleRange.Get_Low()) + " " + std::to_string(circleRange.Get_High()));
 		}
 
 		throw ProcessFailureException();
@@ -1029,19 +843,19 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2Collis
 
 	Collision<T, 2> testCollision = Evaluate_Typed(lineMask1, lineMask2);
 
-	if (testCollision.didCollide) {
+	if (testCollision.did) {
 		collision = testCollision;
 	}
 	else if (halfSpace1.Get_Direction().Dot(halfSpace2.Get_Direction()) >= 0.0) {
-		collision.didCollide = true;
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint =
+			collision.point =
 				(halfSpace1.Get_Direction().Dot(halfSpace1.Get_Point()) >= halfSpace1.Get_Direction().Dot(halfSpace2.Get_Point())) ?
 				halfSpace1.Get_Point() : halfSpace2.Get_Point();
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = halfSpace1.Get_Direction();
 	}
 
@@ -1066,11 +880,11 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2Collis
 
 	collision = Evaluate_Typed(lineMask1, lineMask2);
 
-	if (!collision.didCollide) {
+	if (!collision.did) {
 		collision = Evaluate_Typed(in_mask1, Point2CollisionMask<T>(line1.Get_Point()));
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = halfSpace.Get_Direction();
 	}
 
@@ -1093,14 +907,14 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2Collis
 	LineSegment2CollisionMask<T> lineSegmentMask = LineSegment2CollisionMask<T>(lineSegment, true);
 
 	Collision testCollision = Evaluate_Typed(lineMask, lineSegmentMask);
-	if (testCollision.didCollide) {
+	if (testCollision.did) {
 		collision = testCollision;
 	}
 	else {
 		collision = Evaluate_Typed(halfSpaceMask, Point2CollisionMask<T>(lineSegment.Get_Point1(), true));
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = halfSpace.Get_Direction();
 	}
 
@@ -1123,13 +937,13 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2Collis
 	Vector<T, 2> const& point = *basis2;
 
 	if (halfSpace.Get_Projection_Coefficient() <= halfSpace.Get_Direction().Dot(point)) {
-		collision.didCollide = true;
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint = point;
+			collision.point = point;
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = halfSpace.Get_Direction();
 	}
 
@@ -1152,14 +966,14 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2Collis
 	Ray2CollisionMask<T> rayMask = Ray2CollisionMask<T>(ray, true);
 
 	Collision testCollision = Evaluate_Typed(lineMask, rayMask);
-	if (testCollision.didCollide) {
+	if (testCollision.did) {
 		collision = testCollision;
 	}
 	else {
 		collision = Evaluate_Typed(halfSpaceMask, Point2CollisionMask<T>(ray.Get_Point(), true));
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = halfSpace.Get_Direction();
 	}
 
@@ -1185,11 +999,11 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2Collis
 
 	collision = Evaluate_Typed(lineMask, rectangleMask);
 	
-	if (!collision.didCollide) {
+	if (!collision.did) {
 		collision = Evaluate_Typed(halfSpaceMask, Point2CollisionMask<T>(center, true));
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = halfSpace.Get_Direction();
 	}
 
@@ -1219,13 +1033,13 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(HalfSpace2Collis
 	Collision<T, 2> testCollision;
 	for (uint i = 0; i < 3; i++) {
 		testCollision = Evaluate_Typed(halfSpaceMask, pointMasks[i]);
-		if (testCollision.didCollide) {
+		if (testCollision.did) {
 			collision = testCollision;
 			break;
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = halfSpace.Get_Direction();
 	}
 
@@ -1250,13 +1064,13 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(LineSegment2Coll
 	);
 	returnPoint = thisReturnPoint;
 
-	if (testCollision.didCollide &&
-		Is_Between_Inc(
-			lineSegment1.Get_Projection_Coefficient(testCollision.collisionPoint), 
+	if (testCollision.did &&
+		Between_Inc(
+			lineSegment1.Get_Projection_Coefficient(testCollision.point), 
 			lineSegment1.Get_Projection_Coefficient1(), 
 			lineSegment1.Get_Projection_Coefficient2()) &&
-		Is_Between_Inc(
-			lineSegment2.Get_Projection_Coefficient(testCollision.collisionPoint), 
+		Between_Inc(
+			lineSegment2.Get_Projection_Coefficient(testCollision.point), 
 			lineSegment2.Get_Projection_Coefficient1(), 
 			lineSegment2.Get_Projection_Coefficient2())
 		) {
@@ -1264,7 +1078,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(LineSegment2Coll
 		collision = testCollision;
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		Vector<T, 2> points1[2] = {
 			lineSegment1.Get_Point1(),
 			lineSegment1.Get_Point2()
@@ -1308,11 +1122,11 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(LineSegment2Coll
 
 	T projectionCoefficient = lineSegment.Get_Direction().Dot(point);
 
-	if (Is_Between_Inc<T>(projectionCoefficient, lineSegment.Get_Projection_Coefficient1(), lineSegment.Get_Projection_Coefficient2())) {
+	if (Between_Inc<T>(projectionCoefficient, lineSegment.Get_Projection_Coefficient1(), lineSegment.Get_Projection_Coefficient2())) {
 		collision = Evaluate_Typed(Line2CollisionMask<T>(line, true), Point2CollisionMask<T>(point, true));
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = point - (lineSegment.Get_Point1() + lineSegment.Get_Direction() * projectionCoefficient);
 	}
 
@@ -1337,17 +1151,17 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(LineSegment2Coll
 	);
 	returnPoint = thisReturnPoint;
 
-	if (testCollision.didCollide &&
-		Is_Between_Inc(
-			lineSegment.Get_Projection_Coefficient(testCollision.collisionPoint),
+	if (testCollision.did &&
+		Between_Inc(
+			lineSegment.Get_Projection_Coefficient(testCollision.point),
 			lineSegment.Get_Projection_Coefficient1(),
 			lineSegment.Get_Projection_Coefficient2()) &&
-		ray.Get_Projection_Coefficient(testCollision.collisionPoint) >= ray.Get_Projection_Coefficient()) {
+		ray.Get_Projection_Coefficient(testCollision.point) >= ray.Get_Projection_Coefficient()) {
 
 		collision = testCollision;
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		Vector<T, 2> rayNormal = ray.Get_Direction().Orthogonal();
 		if (Sign((lineSegment.Get_Point1() - ray.Get_Point()).Dot(rayNormal) -
 				ray.Get_Point().Dot(rayNormal)) ==
@@ -1383,20 +1197,20 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(LineSegment2Coll
 	Collision<T, 2> testCollision;
 	for (uint i = 0; i < 4; i++) {
 		projectionPoint = lineSegment.Get_Projection(corners[i]);
-		if (Is_Between_Inc(
+		if (Between_Inc(
 			lineSegment.Get_Projection_Coefficient(projectionPoint), 
 			lineSegment.Get_Projection_Coefficient1(), 
 			lineSegment.Get_Projection_Coefficient2())) {
 
 			testCollision = Evaluate_Typed(Point2CollisionMask<T>(projectionPoint, true), rectangleMask);
-				if (testCollision.didCollide) {
+				if (testCollision.did) {
 					collision = testCollision;
 					break;
 				}
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		Vector<T, 2> points[2] = {
 			lineSegment.Get_Point1(),
 			lineSegment.Get_Point2()
@@ -1441,21 +1255,21 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(LineSegment2Coll
 		diff2 = corners[(i + 1) % 3] - projectionPoints[(i + 1) % 3];
 		if (diff1.Dot(diff2) < 0.0) {
 			testPoint = projectionPoints[i].Lerp(diff2.Magnitude() / diff1.Magnitude(), projectionPoints[(i + 1) % 3]);
-			if (Is_Between_Inc(
+			if (Between_Inc(
 					lineSegment.Get_Projection_Coefficient(testPoint),
 					lineSegment.Get_Projection_Coefficient1(),
 					lineSegment.Get_Projection_Coefficient2()
 				)) {
-				collision.didCollide = true;
+				collision.did = true;
 				if (returnPoint) {
-					collision.collisionPoint = testPoint;
+					collision.point = testPoint;
 				}
 				break;
 			}
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		Vector<T, 2> points[2] = {
 			lineSegment.Get_Point1(),
 			lineSegment.Get_Point2()
@@ -1511,13 +1325,13 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Point2CollisionM
 	Vector<T, 2> const& point2 = *basis2;
 
 	if (point1 == point2) {
-		collision.didCollide = true;
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint = point1;
+			collision.point = point1;
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = point1 - point2;
 	}
 
@@ -1539,11 +1353,11 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Point2CollisionM
 		Point2CollisionMask<T>(point, true)
 	);
 
-	if (testCollision.didCollide && ray.Get_Projection_Coefficient(point) >= ray.Get_Projection_Coefficient()) {
+	if (testCollision.did && ray.Get_Projection_Coefficient(point) >= ray.Get_Projection_Coefficient()) {
 		collision = testCollision;
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		if (ray.Get_Projection_Coefficient(point) >= ray.Get_Projection_Coefficient()) {
 			collision.separator = testCollision.separator;
 		}
@@ -1575,18 +1389,18 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Point2CollisionM
 	T axisMax1 = axes[0].Dot_Self();
 	T axisMax2 = axes[1].Dot_Self();
 
-	if (Is_Between_Inc<T>(pointDotAxis1, 0, axisMax1) && Is_Between_Inc<T>(pointDotAxis2, 0, axisMax2)) {
-		collision.didCollide = true;
+	if (Between_Inc<T>(pointDotAxis1, 0, axisMax1) && Between_Inc<T>(pointDotAxis2, 0, axisMax2)) {
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint = point;
+			collision.point = point;
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
-		if (Is_Between_Inc<T>(pointDotAxis1, 0, axisMax1)) {
+	if (!collision.did && returnSeparator) {
+		if (Between_Inc<T>(pointDotAxis1, 0, axisMax1)) {
 			collision.separator = axes[1];
 		}
-		else if (Is_Between_Inc<T>(pointDotAxis2, 0, axisMax2)) {
+		else if (Between_Inc<T>(pointDotAxis2, 0, axisMax2)) {
 			collision.separator = axes[0];
 		}
 		else {
@@ -1624,9 +1438,9 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Point2CollisionM
 		}
 	}
 
-	collision.didCollide = true;
+	collision.did = true;
 	if (returnPoint) {
-		collision.collisionPoint = point;
+		collision.point = point;
 	}
 
 	return collision;
@@ -1650,15 +1464,15 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Ray2CollisionMas
 	);
 	returnPoint = thisReturnPoint;
 
-	if (testCollision.didCollide &&
-		ray1.Get_Projection_Coefficient(testCollision.collisionPoint) >= ray1.Get_Projection_Coefficient() &&
-		ray2.Get_Projection_Coefficient(testCollision.collisionPoint) >= ray2.Get_Projection_Coefficient()) {
+	if (testCollision.did &&
+		ray1.Get_Projection_Coefficient(testCollision.point) >= ray1.Get_Projection_Coefficient() &&
+		ray2.Get_Projection_Coefficient(testCollision.point) >= ray2.Get_Projection_Coefficient()) {
 
 		collision = testCollision;
 	}
 
-	if (!collision.didCollide && returnSeparator) {
-		collision.collisionPoint = ray1.Get_Point() - ray2.Get_Point();
+	if (!collision.did && returnSeparator) {
+		collision.point = ray1.Get_Point() - ray2.Get_Point();
 	}
 
 	return collision;
@@ -1692,17 +1506,17 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Ray2CollisionMas
 	Collision<T, 2> testCollision;
 	for (uint i = 0; i < 4; i++) {
 		testCollision = Evaluate_Typed(lineSegmentMasks[i], rayMask);
-		if (testCollision.didCollide) {
-			if (!collision.didCollide ||
-				ray.Get_Projection_Coefficient(testCollision.collisionPoint) <
-				ray.Get_Projection_Coefficient(collision.collisionPoint)) {
+		if (testCollision.did) {
+			if (!collision.did ||
+				ray.Get_Projection_Coefficient(testCollision.point) <
+				ray.Get_Projection_Coefficient(collision.point)) {
 
 				collision = testCollision;
 			}
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		Vector<T, 2> axes[2];
 		rectangle.Get_Axes(axes);
 		bool oneSided = true;
@@ -1718,7 +1532,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Ray2CollisionMas
 			collision.separator = rayNormal;
 		}
 		else {
-			if (Is_Between_Inc(
+			if (Between_Inc(
 				axes[0].Dot(ray.Get_Point()),
 				axes[0].Dot(corners[0]),
 				axes[0].Dot(corners[3])
@@ -1761,18 +1575,18 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Ray2CollisionMas
 	Collision<T, 2> testCollision;
 	for (uint i = 0; i < 3; i++) {
 		testCollision = Evaluate_Typed(lineSegmentMasks[i], rayMask);
-		if (testCollision.didCollide) {
-			if (!collision.didCollide ||
-				ray.Get_Projection_Coefficient(testCollision.collisionPoint) <
-				ray.Get_Projection_Coefficient(collision.collisionPoint)) {
+		if (testCollision.did) {
+			if (!collision.did ||
+				ray.Get_Projection_Coefficient(testCollision.point) <
+				ray.Get_Projection_Coefficient(collision.point)) {
 
 				collision = testCollision;
 			}
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
-		if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
+		if (!collision.did && returnSeparator) {
 			Vector<T, 2> axes[3];
 			triangle.Get_Lazy_Normals(axes);
 			bool oneSided = true;
@@ -1856,16 +1670,16 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(RectangleCollisi
 		i2 = (i == 0) ? 1 : 0;
 
 		for (uint j = 0; j < 4; j++) {
-			if (!Evaluate_Typed(Point2CollisionMask<T>(corners[i][j], true), rectangleMasks[i2]).didCollide) {
+			if (!Evaluate_Typed(Point2CollisionMask<T>(corners[i][j], true), rectangleMasks[i2]).did) {
 				isInside = false;
 				break;
 			}
 		}
 
 		if (isInside) {
-			collision.didCollide = true;
+			collision.did = true;
 			if (returnPoint) {
-				collision.collisionPoint = (corners[i][0] + corners[i][1] + corners[i][2] + corners[i][3]) / 4.0;
+				collision.point = (corners[i][0] + corners[i][1] + corners[i][2] + corners[i][3]) / 4.0;
 			}
 		}
 	}
@@ -1873,7 +1687,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(RectangleCollisi
 	for (uint j = 0; j < 4; j++) {
 		LineSegment<T, 2> edge = LineSegment<T, 2>::From_Points(corners[0][j], corners[0][(j + 1) % 4]);
 		collision = Evaluate_Typed(LineSegment2CollisionMask<T>(edge), rectangleMasks[1]);
-		if (collision.didCollide) {
+		if (collision.did) {
 			return collision;
 		}
 	}
@@ -1900,19 +1714,19 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(RectangleCollisi
 
 	for (uint i = 0; i < 3; i++) {
 		collision = Evaluate_Typed(LineSegment2CollisionMask<T>(LineSegment<T, 2>::From_Points(triangleCorners[i], triangleCorners[(i + 1) % 3]), true), rectangleMask);
-		if (collision.didCollide) {
+		if (collision.did) {
 			return collision;
 		}
 	}
 
 	collision = Evaluate_Typed(Point2CollisionMask<T>(rectangle.Get_Center(), true), triangleMask);
-	if (collision.didCollide) {
+	if (collision.did) {
 		return collision;
 	}
 
 	collision = Evaluate_Typed(Point2CollisionMask<T>(triangleCorners[0], true), rectangleMask);
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		Vector<T, 2> rectCorners[4];
 		rectangle.Get_Corners(rectCorners);
 
@@ -1988,9 +1802,9 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Triangle2Collisi
 		i2 = (i == 0) ? 1 : 0;
 		
 		for (uint j = 0; j < 3; j++) {
-			if (Evaluate_Typed(Point2CollisionMask<T>(corners[i][j], true), triangleMasks[i2]).didCollide) {
-				collision.didCollide = true;
-				collision.collisionPoint = corners[i][j];
+			if (Evaluate_Typed(Point2CollisionMask<T>(corners[i][j], true), triangleMasks[i2]).did) {
+				collision.did = true;
+				collision.point = corners[i][j];
 				return collision;
 			}
 		}
@@ -1999,7 +1813,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Triangle2Collisi
 	for (uint j = 0; j < 3; j++) {
 		LineSegment<T, 2> edge = LineSegment<T, 2>::From_Points(corners[0][j], corners[0][(j + 1) % 3]);
 		collision = Evaluate_Typed(LineSegment2CollisionMask<T>(edge), triangleMasks[1]);
-		if (collision.didCollide) {
+		if (collision.did) {
 			return collision;
 		}
 	}
@@ -2025,13 +1839,13 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMa
 	matrix.RREFify();
 
 	if (!matrix.Row_Is_Zero(1)) {
-		collision.didCollide = true;
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint = line1.Get_Point() + line1.Get_Direction() * matrix.Element(0, 2);
+			collision.point = line1.Get_Point() + line1.Get_Direction() * matrix.Element(0, 2);
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = line1.Get_Direction().Orthogonal();
 	}
 
@@ -2058,9 +1872,9 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMa
 	);
 	returnPoint = thisReturnPoint;
 
-	if (testCollision.didCollide && 
-		Is_Between_Inc(
-			lineSegment.Get_Projection_Coefficient(testCollision.collisionPoint),
+	if (testCollision.did && 
+		Between_Inc(
+			lineSegment.Get_Projection_Coefficient(testCollision.point),
 			lineSegment.Get_Projection_Coefficient1(),
 			lineSegment.Get_Projection_Coefficient2())
 		) {
@@ -2068,7 +1882,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMa
 		collision = testCollision;
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = line.Get_Direction().Orthogonal();
 	}
 
@@ -2094,13 +1908,13 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMa
 	Vector<T, 2> direction = line.Get_Direction();
 
 	if (pointOffset.X() / direction.X() == pointOffset.Y() / direction.Y()) {
-		collision.didCollide = true;
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint = point;
+			collision.point = point;
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = line.Get_Direction().Orthogonal();
 	}
 
@@ -2127,11 +1941,11 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMa
 	);
 	returnPoint = thisReturnPoint;
 
-	if (testCollision.didCollide && ray.Get_Projection_Coefficient(testCollision.collisionPoint) >= ray.Get_Projection_Coefficient()) {
+	if (testCollision.did && ray.Get_Projection_Coefficient(testCollision.point) >= ray.Get_Projection_Coefficient()) {
 		collision = testCollision;
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = line.Get_Direction().Orthogonal();
 	}
 
@@ -2157,12 +1971,12 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMa
 	for (uint i = 0; i < 4; i++) {
 		projectionPoint = line.Get_Projection(corners[i]);
 		collision = Evaluate_Typed(Point2CollisionMask<T>(projectionPoint, true), rectangleMask);
-		if (collision.didCollide) {
+		if (collision.did) {
 			return collision;
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = line.Get_Direction().Orthogonal();
 	}
 
@@ -2192,15 +2006,15 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(Line2CollisionMa
 		diff1 = corners[i] - projectionPoints[i];
 		diff2 = corners[(i + 1) % 3] - projectionPoints[(i + 1) % 3];
 		if (diff1.Dot(diff2) < 0.0) {
-			collision.didCollide = true;
+			collision.did = true;
 			if (returnPoint) {
-				collision.collisionPoint = projectionPoints[i].Lerp(diff2.Magnitude() / diff1.Magnitude(), projectionPoints[(i + 1) % 3]);
+				collision.point = projectionPoints[i].Lerp(diff2.Magnitude() / diff1.Magnitude(), projectionPoints[(i + 1) % 3]);
 			}
 			break;
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = line.Get_Direction().Orthogonal();
 	}
 
@@ -2225,15 +2039,15 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AAHalfSpace2Coll
 
 	Range<T> range = Range<T>(point1[dimension], point2[dimension]);
 
-	if (Is_Between_Inc(
+	if (Between_Inc(
 		halfSpace.Get_Value(),
 		range.Get_Low(),
 		range.Get_High()
 	)) {
-		collision.didCollide = true;
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint[dimension] = halfSpace.Get_Value();
-			collision.collisionPoint[otherDimension] = Lerp(
+			collision.point[dimension] = halfSpace.Get_Value();
+			collision.point[otherDimension] = Lerp(
 				point1[otherDimension], 
 				point2[otherDimension], 
 				halfSpace.Get_Value(), 
@@ -2246,14 +2060,15 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AAHalfSpace2Coll
 		Ceq_Switch(halfSpace.Get_Value(), point1[dimension], !halfSpace.Is_Positive()) ||
 		Ceq_Switch(halfSpace.Get_Value(), point2[dimension], !halfSpace.Is_Positive())) {
 
-		collision.didCollide = true;
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint = lineSegment.Get_Center();
+			collision.point = lineSegment.Get_Center();
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
-		collision.separator = halfSpace.Get_Direction();
+	if (!collision.did && returnSeparator) {
+		collision.owner = &in_mask1;
+		collision.separator = -halfSpace.Get_Direction();
 	}
 
 	return collision;
@@ -2278,13 +2093,13 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AAHalfSpace2Coll
 	T halfSpaceValue = halfSpace.Get_Value();
 
 	if (Ceq_Switch(halfSpaceValue, pointValue, halfSpace.Is_Positive())) {
-		collision.didCollide = true;
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint = point;
+			collision.point = point;
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = halfSpace.Get_Direction();
 	}
 
@@ -2309,14 +2124,14 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AAHalfSpace2Coll
 	Collision<T, 2> testCollision = Evaluate_Typed(halfSpaceMask, lineMask);
 	returnPoint = thisReturnPoint;
 
-	if (testCollision.didCollide && ray.Get_Projection_Coefficient(testCollision.collisionPoint) >= ray.Get_Projection_Coefficient()) {
-		collision.didCollide = true;
+	if (testCollision.did && ray.Get_Projection_Coefficient(testCollision.point) >= ray.Get_Projection_Coefficient()) {
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint = testCollision.collisionPoint;
+			collision.point = testCollision.point;
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = halfSpace.Get_Direction();
 	}
 
@@ -2367,8 +2182,8 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AAHalfSpace2Coll
 	uint minIndex = 0;
 	uint maxIndex = 0;
 	for (uint i = 0; i < 3; i++) {
-		if (!collision.didCollide && Ceq_Switch(halfSpace.Get_Value(), corners[i][dimension], !halfSpace.Is_Positive())) {
-			collision.didCollide = true;
+		if (!collision.did && Ceq_Switch(halfSpace.Get_Value(), corners[i][dimension], !halfSpace.Is_Positive())) {
+			collision.did = true;
 			if (!returnPoint) {
 				return collision;
 			}
@@ -2377,15 +2192,16 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AAHalfSpace2Coll
 		if (corners[i][dimension] > corners[maxIndex][dimension]) maxIndex = i;
 	}
 
-	if (returnPoint && collision.didCollide) {
+	if (returnPoint && collision.did) {
 		collision = Evaluate_Typed(
 			AAHalfSpace2CollisionMask<T>(halfSpace, true),
 			LineSegment2CollisionMask<T>(LineSegment<T, 2>::From_Points(corners[minIndex], corners[maxIndex]), true)
 		);
 	}
 
-	if (!collision.didCollide && returnSeparator) {
-		collision.separator = halfSpace.Get_Direction();
+	if (!collision.did && returnSeparator) {
+		collision.owner = &in_mask1;
+		collision.separator = -halfSpace.Get_Direction();
 	}
 
 	return collision;
@@ -2404,27 +2220,27 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AAHalfSpace2Coll
 	if (halfSpace1.Get_Dimension() == halfSpace2.Get_Dimension()) {
 		uint dimension = halfSpace1.Get_Dimension();
 		if (Ceq_Switch(halfSpace1.Get_Value(), halfSpace2.Get_Value(), !halfSpace1.Is_Positive())) {
-			collision.didCollide = true;
+			collision.did = true;
 			if (returnPoint) {
-				collision.collisionPoint[dimension] = halfSpace2.Get_Value();
+				collision.point[dimension] = halfSpace2.Get_Value();
 			}
 		}
 		else if (Ceq_Switch(halfSpace2.Get_Value(), halfSpace1.Get_Value(), !halfSpace2.Is_Positive())) {
-			collision.didCollide = true;
+			collision.did = true;
 			if (returnPoint) {
-				collision.collisionPoint[dimension] = halfSpace1.Get_Value();
+				collision.point[dimension] = halfSpace1.Get_Value();
 			}
 		}
 	}
 	else {
-		collision.didCollide = true;
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint[halfSpace1.Get_Dimension()] = halfSpace1.Get_Value();
-			collision.collisionPoint[halfSpace2.Get_Dimension()] = halfSpace2.Get_Value();
+			collision.point[halfSpace1.Get_Dimension()] = halfSpace1.Get_Value();
+			collision.point[halfSpace2.Get_Dimension()] = halfSpace2.Get_Value();
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = halfSpace1.Get_Direction();
 	}
 
@@ -2444,21 +2260,21 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AAHalfSpace2Coll
 	if (halfSpace.Get_Dimension() == line.Get_Dimension()) {
 		uint dimension = halfSpace.Get_Dimension();
 		if (Ceq_Switch(halfSpace.Get_Value(), line.Get_Value(), !halfSpace.Is_Positive())) {
-			collision.didCollide = true;
+			collision.did = true;
 			if (returnPoint) {
-				collision.collisionPoint[dimension] = line.Get_Value();
+				collision.point[dimension] = line.Get_Value();
 			}
 		}
 	}
 	else {
-		collision.didCollide = true;
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint[halfSpace.Get_Dimension()] = halfSpace.Get_Value();
-			collision.collisionPoint[line.Get_Dimension()] = line.Get_Value();
+			collision.point[halfSpace.Get_Dimension()] = halfSpace.Get_Value();
+			collision.point[line.Get_Dimension()] = line.Get_Value();
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = halfSpace.Get_Direction();
 	}
 
@@ -2481,6 +2297,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AAHalfSpace2Coll
 
 template<class T>
 Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AAHalfSpace2CollisionMask<T>& in_mask1, CircleCollisionMask<T>& in_mask2) {
+	Collision<T, 2> collision;
 
 	auto basis1 = in_mask1.Get_Transformed_Basis();
 	auto basis2 = in_mask2.Get_Transformed_Basis();
@@ -2489,10 +2306,15 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AAHalfSpace2Coll
 
 	uint dimension = in_mask1.Get_Basis().Get_Dimension();
 
-	return Evaluate_Typed(
-		in_mask1,
-		LineSegment2CollisionMask<T>(LineSegment<T, 2>::From_Points(circle.Get_Extrema(dimension, false), circle.Get_Extrema(dimension, true)), true)
-	);
+	LineSegment2CollisionMask<T> newLineSegmentMask(LineSegment<T, 2>::From_Points(circle.Get_Extrema(dimension, false), circle.Get_Extrema(dimension, true)), true);
+
+	collision = Evaluate_Typed(in_mask1, newLineSegmentMask);
+
+	if (!collision.did && returnSeparator) {
+		if (collision.owner == &newLineSegmentMask) collision.owner = &in_mask2;
+	}
+
+	return collision;
 }
 
 template<class T>
@@ -2512,14 +2334,14 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AAHalfSpace2Coll
 
 	collision = Evaluate_Typed(aaHalfSpaceMask, lineMask);
 
-	if (!collision.didCollide && Ceq_Switch(aaHalfSpace.Get_Value(), halfSpace.Get_Point()[aaHalfSpace.Get_Dimension()], !aaHalfSpace.Is_Positive())) {
-		collision.didCollide = true;
+	if (!collision.did && Ceq_Switch(aaHalfSpace.Get_Value(), halfSpace.Get_Point()[aaHalfSpace.Get_Dimension()], !aaHalfSpace.Is_Positive())) {
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint = halfSpace.Get_Point();
+			collision.point = halfSpace.Get_Point();
 		}
 	}
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = halfSpace.Get_Direction();
 	}
 
@@ -2539,20 +2361,20 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::Evaluate_Typed(AAHalfSpace2Coll
 	uint dimension = halfSpace.Get_Dimension();
 
 	if (line.Get_Direction()[dimension] != 0.0) {
-		collision.didCollide = true;
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint = line.Get_Point();
-			collision.collisionPoint += line.Get_Direction() * (halfSpace.Get_Value() - line.Get_Point()[dimension]) / line.Get_Direction()[dimension];
+			collision.point = line.Get_Point();
+			collision.point += line.Get_Direction() * (halfSpace.Get_Value() - line.Get_Point()[dimension]) / line.Get_Direction()[dimension];
 		}
 	}
 	else if (Ceq_Switch(halfSpace.Get_Value(), line.Get_Point()[dimension], !halfSpace.Is_Positive())) {
-		collision.didCollide = true;
+		collision.did = true;
 		if (returnPoint) {
-			collision.collisionPoint = line.Get_Point();
+			collision.point = line.Get_Point();
 		}
 	} 
 
-	if (!collision.didCollide && returnSeparator) {
+	if (!collision.did && returnSeparator) {
 		collision.separator = halfSpace.Get_Direction();
 	}
 

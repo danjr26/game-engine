@@ -4,6 +4,7 @@
 #include "definitions.h"
 #include "misc.h"
 #include <cmath>
+#include <functional>
 
 template<class T, uint n>
 class Vector {
@@ -11,6 +12,17 @@ class Vector {
 	friend Vector<T, n> operator*(T s, const Vector<T, n>& v) {
 		return v * s;
 	}
+
+	friend struct Hash;
+	struct Hash {
+		std::size_t operator()(const Vector<T, n>& v) {
+			std::size_t out = 0;
+			for (uint i = 0; i < n; i++) {
+				out += std::hash<T>(v.members[i]);
+			}
+			return out;
+		}
+	};
 
 protected:
 	T members[n];

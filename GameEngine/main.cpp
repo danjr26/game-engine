@@ -110,19 +110,6 @@ void Test_Render(Window* window) {
 
 	QuadTreed quadTree(AxisAlignedRectangled::From_Extrema(Vector2d(0, 0), Vector2d(800, 600)));
 
-	/*
-	Clock c;
-	uint n = 10000;
-	double t1 = c.Now();
-	for (uint i = 0; i < n; i++) {
-		//std::find(testVec.begin(), testVec.end(), 10);
-	}
-	double t2 = c.Now();
-	double averageT = (t2 - t1) / n;
-	Log::main(std::to_string(averageT * 1000000) + " us");
-
-	*/
-
 	Vector2d positions[] = {
 		Vector2d(100.0f, 0.0f),
 		Vector2d(-50.0f, -86.6f),
@@ -131,6 +118,16 @@ void Test_Render(Window* window) {
 
 	Triangle2d triangle = Triangle2d::From_Points(positions);
 	Triangle2CollisionMask<double> triangleMask = Triangle2CollisionMask<double>(triangle);
+
+	Clock c;
+	uint n = 10000;
+	double t1 = c.Now();
+	for (uint i = 0; i < n; i++) {
+		triangleMask.Get_Closest_Point(Vector2d());
+	}
+	double t2 = c.Now();
+	double averageT = (t2 - t1) / n;
+	Log::main(std::to_string(averageT * 1000000) + " us");
 
 	uchar indices[] = { 0, 1, 2 };
 
@@ -151,14 +148,19 @@ void Test_Render(Window* window) {
 
 	Vector2d polyPoints[] = {
 		Vector2d(0, 0),
+		Vector2d(30, 20),
+		Vector2d(40, 10),
+		Vector2d(70, 0),
+		Vector2d(90, 60),
 		Vector2d(100, 50),
+		Vector2d(80, 40),
 		Vector2d(50, 50),
 		Vector2d(100, 100),
 		Vector2d(0, 100)
 	};
 
 	MeshVertexData poly(MeshVertexData::DataType::_ubyte);
-	poly.Add_Vertices(5, {});
+	poly.Add_Vertices(10, {});
 	poly.Add_Member(MeshVertexData::MemberID::position, MeshVertexData::DataType::_double, 2, polyPoints);
 	poly.Add_Faces_Polygon<double>();
 
@@ -234,10 +236,6 @@ int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nA
 	Window window(params);
 		
 	wglSwapIntervalEXT(0);
-
-	Log::main(std::to_string(GE.Time().Now()));
-
-	Log::main((const char*)glewGetErrorString(glGetError()));
 
 	GE.Render().mainTarget = &window;
 	GE.Render().mainWindow = &window;

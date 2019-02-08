@@ -129,7 +129,7 @@ void PhysicsManager::Apply_Rigid_Bodies_To_Rigid_Bodies(double in_dt) {
 	collisionContext.Update();
 
 	uint repeatCount = 0;
-	while (collisionContext.Get_Total_Partnerings() > 0/* && repeatCount < maxStepRepeat*/) {
+	while (collisionContext.Get_Total_Partnerings() > 0 && repeatCount < maxStepRepeat) {
 		minPartners.clear();
 		minInterval = Ranged(in_dt, in_dt);
 
@@ -181,12 +181,13 @@ void PhysicsManager::Apply_Rigid_Bodies_To_Rigid_Bodies(double in_dt) {
 
 					Collision2d collision = evaluator.Evaluate(*rigidBody1->Get_Collision_Mask(), *rigidBody2->Get_Collision_Mask());
 					processed.collision.separator = collision.separator;
+					processed.collision.owner = collision.owner;
 
 					rigidBody1->Get_Transform() = transform1;
 					rigidBody2->Get_Transform() = transform2;
 				}
 
-				if (processed.collision.separator.Is_Zero()) {
+				if (processed.collision.owner == nullptr) {
 					Log::main("err");
 				}
 
@@ -218,7 +219,7 @@ void PhysicsManager::Apply_Rigid_Bodies_To_Rigid_Bodies(double in_dt) {
 
 			Evaluate_Collision(*it->body1, *it->body2, it->collision, impulse.vector, friction);
 
-			impulse.position = it->collision.collisionPoint;
+			impulse.position = it->collision.point;
 			impulse.vector += friction;
 
 			for (auto body : { it->body1, it->body2 }) {
@@ -364,7 +365,7 @@ void PhysicsManager::Calculate_Rigid_Body_Effects(double in_dt) {
 					Collision2d collision = (*jt)->collision;
 					Narrow_Collision_Interval(**it, **kt, collision, interval, collisionNarrowSteps);
 
-					LocatedVector2d impulse = { collision.collisionPoint, Evaluate_Collision(**it, **kt, collision, interval.Get_High() - in_dt) };
+					LocatedVector2d impulse = { collision.point, Evaluate_Collision(**it, **kt, collision, interval.Get_High() - in_dt) };
 					LocatedVector2d reverseImpulse = impulse;
 					reverseImpulse.vector = -reverseImpulse.vector;
 					Vector2d normal = RigidBody2::Get_Collision_Normal(**it, **kt, collision, interval.Get_High() - in_dt);
@@ -513,16 +514,17 @@ void PhysicsManager::Narrow_Collision_Interval(RigidBody2& in_body1, RigidBody2&
 		in_body2.Update(dt);
 		t += dt;
 		collision = collisionEvaluator.Evaluate(*in_body1.Get_Collision_Mask(), *in_body2.Get_Collision_Mask());
-		if (collision.didCollide) {
+		if (collision.did) {
 			inout_range.Set_High(t);
 			dt = -inout_range.Get_Span() / 2;
-			inout_collision.didCollide = collision.didCollide;
-			inout_collision.collisionPoint = collision.collisionPoint;
+			inout_collision.did = collision.did;
+			inout_collision.point = collision.point;
 		}
 		else {
 			inout_range.Set_Low(t);
 			dt = inout_range.Get_Span() / 2;
 			inout_collision.separator = collision.separator;
+			inout_collision.owner = collision.owner;
 			if (out_transform1 != nullptr) *out_transform1 = in_body1.Get_Transform();
 			if (out_transform2 != nullptr) *out_transform2 = in_body2.Get_Transform();
 		}
@@ -533,7 +535,7 @@ void PhysicsManager::Narrow_Collision_Interval(RigidBody2& in_body1, RigidBody2&
 }
 
 void PhysicsManager::Evaluate_Collision(RigidBody2& in_body1, RigidBody2& in_body2, const Collision2d& in_collision, Vector2d& out_bounce, Vector2d& out_friction) {
-	Vector2d point = in_collision.collisionPoint;
+	Vector2d point = in_collision.point;
 	Vector2d normal = RigidBody2::Get_Collision_Normal(in_body1, in_body2, in_collision);
 
 	double restitution = Calculate_Restitution_Coefficient(in_body1, in_body2);
@@ -586,7 +588,7 @@ void PhysicsManager::Evaluate_Collision(RigidBody2& in_body1, RigidBody2& in_bod
 typename PhysicsManager::RigidBodyUpdateInfo2::RigidBodyEffectInfo::Status PhysicsManager::Evaluate_Status(RigidBody2& in_body1, RigidBody2& in_body2, 
 	const Collision2d& in_collision) {
 
-	Vector2d point = in_collision.collisionPoint;
+	Vector2d point = in_collision.point;
 	Vector2d normal = RigidBody2::Get_Collision_Normal(in_body1, in_body2, in_collision);
 	Vector2d velocity1 = in_body1.Get_World_Point_Velocity(point);
 	Vector2d velocity2 = in_body2.Get_World_Point_Velocity(point);
@@ -607,7 +609,7 @@ typename PhysicsManager::RigidBodyUpdateInfo2::RigidBodyEffectInfo::Status Physi
 }
 
 void PhysicsManager::Conform_To_Status(RigidBody2& in_body1, RigidBody2& in_body2, const Collision2d& in_collision, RigidBodyUpdateInfo2::RigidBodyEffectInfo::Status in_status) {
-	Vector2d point = in_collision.collisionPoint;
+	Vector2d point = in_collision.point;
 	Vector2d velocity1 = in_body1.Get_World_Point_Velocity(point);
 	Vector2d velocity2 = in_body2.Get_World_Point_Velocity(point);
 }

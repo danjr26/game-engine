@@ -166,34 +166,18 @@ void RigidBody<n>::Update(double in_dt, const Vector<double, n>& in_normal) {
 
 template<uint n>
 Vector<double, n> RigidBody<n>::Get_Collision_Normal(RigidBody<n>& in_body1, RigidBody<n>& in_body2, const Collision<double, n>& in_collision) {
-	Vector<double, n> point = in_collision.collisionPoint;
-	Vector<double, n> normal1 = in_body1.Get_Collision_Mask()->Get_Closest_Normal(point, CollisionMask2d::PointNormalPolicy::zero);
-	Vector<double, n> normal2 = in_body2.Get_Collision_Mask()->Get_Closest_Normal(point, CollisionMask2d::PointNormalPolicy::zero);
-	Vector<double, n> normal;
-
-	if (in_collision.separator.Is_Zero()) {
-		Log::main("err");
-	}
-
-	if (normal1.Is_Zero()) {
-		if (normal2.Is_Zero()) {
-			normal = in_body1.Get_Collision_Mask()->Get_Closest_Normal(point, CollisionMask2d::PointNormalPolicy::nearest_edge);
+	//return in_body1.Get_Collision_Mask()->Get_Closest_Normal(in_collision.point, CollisionMask2d::PointNormalPolicy::towards_point);
+	if (!in_collision.separator.Is_Zero() && in_collision.owner != nullptr) {
+		if (in_collision.owner == in_body1.Get_Collision_Mask() || in_collision.owner == in_body2.Get_Collision_Mask()) {
+			return in_collision.separator.Normalized() * ((in_collision.owner == in_body1.Get_Collision_Mask()) ? 1 : -1);
 		}
 		else {
-			normal = -normal2;
+			throw InvalidArgumentException();
 		}
 	}
 	else {
-		if(normal2.Is_Zero()) {
-			normal = normal1;
-		}
-		else {
-			normal = (normal1 - normal2).Normalized();
-		}
+		throw InvalidArgumentException();
 	}
-
-	return ((in_body1.Get_Transform().Get_World_Position() - in_body2.Get_Transform().Get_World_Position()).Dot(in_collision.separator) >= 0) ? 
-		in_collision.separator.Normalized() : -in_collision.separator.Normalized();
 }
 
 template class RigidBody<2>;

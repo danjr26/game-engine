@@ -58,7 +58,7 @@ inline T Mean(T a, T b) {
 }
 
 template<class T>
-inline bool Is_Between_Exc(T a, T b1, T b2) {
+inline bool Between_Exc(T a, T b1, T b2) {
 	if (b1 < b2) {
 		return a > b1 && a < b2;
 	}
@@ -68,7 +68,7 @@ inline bool Is_Between_Exc(T a, T b1, T b2) {
 }
 
 template<class T>
-bool Is_Between_Inc(T a, T b1, T b2) {
+bool Between_Inc(T a, T b1, T b2) {
 	if (b1 < b2) {
 		return a >= b1 && a <= b2;
 	}

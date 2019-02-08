@@ -1,62 +1,46 @@
 #include "collision_basis_wrapper.h"
 
 template<class T>
-void CollisionBasisWrapper<AxisAlignedHalfSpace<T, 2>, T>::Apply_Transform(
-	const Transform<T, 2>& in_transform) {
-
+void CollisionBasisWrapper<AxisAlignedHalfSpace<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
 	basis.Apply_Transform(in_transform);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<AxisAlignedHalfSpace<T, 2>, T>::Get_Closest_Point(
-	const basis_t& in_basis, const Vector<T, 2>& in_point) {
-
+Vector<T, 2> CollisionBasisWrapper<AxisAlignedHalfSpace<T, 2>, T>::Get_Closest_Point(const basis_t& in_basis, const Vector<T, 2>& in_point) {
 	Vector<T, 2> out = in_point;
 	out[in_basis.Get_Dimension()] = in_basis.Get_Value();
 	return out;
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<AxisAlignedHalfSpace<T, 2>, T>::Get_Closest_Normal(
-	const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
-
+Vector<T, 2> CollisionBasisWrapper<AxisAlignedHalfSpace<T, 2>, T>::Get_Closest_Normal(const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
 	return -in_basis.Get_Direction();
 }
 
 template<class T>
-void CollisionBasisWrapper<AxisAlignedLine<T, 2>, T>::Apply_Transform(
-	const Transform<T, 2>& in_transform) {
-
+void CollisionBasisWrapper<AxisAlignedLine<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
 	basis.Apply_Transform(in_transform);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<AxisAlignedLine<T, 2>, T>::Get_Closest_Point(
-	const basis_t& in_basis, const Vector<T, 2>& in_point) {
-
+Vector<T, 2> CollisionBasisWrapper<AxisAlignedLine<T, 2>, T>::Get_Closest_Point(const basis_t& in_basis, const Vector<T, 2>& in_point) {
 	Vector<T, 2> out = in_point;
 	out[in_basis.Get_Dimension()] = in_basis.Get_Value();
 	return out;
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<AxisAlignedLine<T, 2>, T>::Get_Closest_Normal(
-	const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
-
+Vector<T, 2> CollisionBasisWrapper<AxisAlignedLine<T, 2>, T>::Get_Closest_Normal(const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
 	return in_basis.Get_Direction().Orthogonal();
 }
 
 template<class T>
-void CollisionBasisWrapper<AxisAlignedBox<T, 2>, T>::Apply_Transform(
-	const Transform<T, 2>& in_transform) {
-
+void CollisionBasisWrapper<AxisAlignedBox<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
 	basis.Apply_Transform(in_transform);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<AxisAlignedBox<T, 2>, T>::Get_Closest_Point(
-	const basis_t& in_basis, const Vector<T, 2>& in_point) {
-
+Vector<T, 2> CollisionBasisWrapper<AxisAlignedBox<T, 2>, T>::Get_Closest_Point(const basis_t& in_basis, const Vector<T, 2>& in_point) {
 	Vector<T, 2> center = in_basis.Get_Center();
 	Vector<T, 2> offset = in_point - center;
 
@@ -68,10 +52,18 @@ Vector<T, 2> CollisionBasisWrapper<AxisAlignedBox<T, 2>, T>::Get_Closest_Point(
 
 	if (xRange.Contains_Inc(in_point.X())) {
 		if (yRange.Contains_Inc(in_point.Y())) {
-			return Vector<T, 2>(
-				(offset.X() > 0) ? maxima.X() : minima.X(),
-				(offset.Y() > 0) ? maxima.Y() : minima.Y()
-				);
+			if(abs(offset.X()) > abs(offset.Y())) {
+				return Vector<T, 2>(
+					(offset.X() > 0) ? maxima.X() : minima.X(),
+					in_point.Y()
+					);
+			}
+			else {
+				return Vector<T, 2>(
+					in_point.X(),
+					(offset.Y() > 0) ? maxima.Y() : minima.Y()
+					);
+			}
 		}
 		else {
 			return Vector<T, 2>(
@@ -97,9 +89,7 @@ Vector<T, 2> CollisionBasisWrapper<AxisAlignedBox<T, 2>, T>::Get_Closest_Point(
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<AxisAlignedBox<T, 2>, T>::Get_Closest_Normal(
-	const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy){
-
+Vector<T, 2> CollisionBasisWrapper<AxisAlignedBox<T, 2>, T>::Get_Closest_Normal(const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy){
 	Vector<T, 2> center = in_basis.Get_Center();
 	Vector<T, 2> offset = in_point - center;
 
@@ -143,66 +133,58 @@ Vector<T, 2> CollisionBasisWrapper<AxisAlignedBox<T, 2>, T>::Get_Closest_Normal(
 }
 
 template<class T>
-void CollisionBasisWrapper<Sphere<T, 2>, T>::Apply_Transform(
-	const Transform<T, 2>& in_transform) {
-
+void CollisionBasisWrapper<Sphere<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
 	basis.Apply_Transform(in_transform);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<Sphere<T, 2>, T>::Get_Closest_Point(
-	const basis_t& in_basis, const Vector<T, 2>& in_point) {
-
+Vector<T, 2> CollisionBasisWrapper<Sphere<T, 2>, T>::Get_Closest_Point(const basis_t& in_basis, const Vector<T, 2>& in_point) {
 	return (in_point - in_basis.Get_Center()).Normalized() * in_basis.Get_Radius();
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<Sphere<T, 2>, T>::Get_Closest_Normal(
-	const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
-
+Vector<T, 2> CollisionBasisWrapper<Sphere<T, 2>, T>::Get_Closest_Normal(const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
 	return (in_point - in_basis.Get_Center()).Normalized();
 }
 
 template<class T>
-void CollisionBasisWrapper<HalfSpace<T, 2>, T>::Apply_Transform(
-	const Transform<T, 2>& in_transform) {
-
+void CollisionBasisWrapper<HalfSpace<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
 	basis.Apply_Transform(in_transform);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<HalfSpace<T, 2>, T>::Get_Closest_Point(
-	const basis_t& in_basis, const Vector<T, 2>& in_point) {
-
+Vector<T, 2> CollisionBasisWrapper<HalfSpace<T, 2>, T>::Get_Closest_Point(const basis_t& in_basis, const Vector<T, 2>& in_point) {
 	return in_point.Projection(in_basis.Get_Direction().Orthogonal()) + in_basis.Get_Point();
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<HalfSpace<T, 2>, T>::Get_Closest_Normal(
-	const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
-
+Vector<T, 2> CollisionBasisWrapper<HalfSpace<T, 2>, T>::Get_Closest_Normal(const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
 	return -in_basis.Get_Direction();
 }
 
 template<class T>
-void CollisionBasisWrapper<LineSegment<T, 2>, T>::Apply_Transform(
-	const Transform<T, 2>& in_transform) {
-
+void CollisionBasisWrapper<LineSegment<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
 	basis.Apply_Transform(in_transform);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<LineSegment<T, 2>, T>::Get_Closest_Point(
-	const basis_t& in_basis, const Vector<T, 2>& in_point) {
+Vector<T, 2> CollisionBasisWrapper<LineSegment<T, 2>, T>::Get_Closest_Point(const basis_t& in_basis, const Vector<T, 2>& in_point) {
+	T proj1 = in_basis.Get_Projection_Coefficient1();
+	T proj2 = in_basis.Get_Projection_Coefficient2();
+	T projPoint = in_basis.Get_Projection_Coefficient(in_point);
 
-	throw NotImplementedException();
-	return Vector<T, 2>();
+	if (projPoint <= proj1) {
+		return in_basis.Get_Point1();
+	}
+	if (projPoint >= proj2) {
+		return in_basis.Get_Point2();
+	}
+
+	return in_basis.Get_Projection(in_point);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<LineSegment<T, 2>, T>::Get_Closest_Normal(
-	const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
-
+Vector<T, 2> CollisionBasisWrapper<LineSegment<T, 2>, T>::Get_Closest_Normal(const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
 	Vector<T, 2> normal = in_basis.Get_Direction().Orthogonal();
 	Vector<T, 2> points[2] = {
 		in_basis.Get_Point1(),
@@ -210,11 +192,12 @@ Vector<T, 2> CollisionBasisWrapper<LineSegment<T, 2>, T>::Get_Closest_Normal(
 	};
 	Vector<T, 2> direction = in_basis.Get_Direction();
 
-	if (Is_Between_Inc<T>(
+	if (Between_Inc<T>(
 		(in_point - points[0]).Dot(direction),
 		0, (points[1] - points[0]).Dot(direction)
 		)) {
-		(normal.Dot(in_point) >= normal.Dot(points[0])) ? normal : -normal;
+
+		return (normal.Dot(in_point) >= normal.Dot(points[0])) ? normal : -normal;
 	}
 	switch (in_policy) {
 	case pnp_t::zero:
@@ -230,77 +213,145 @@ Vector<T, 2> CollisionBasisWrapper<LineSegment<T, 2>, T>::Get_Closest_Normal(
 			});
 		return (in_point - points[index]).Normalized();
 	}
-										   break;
+		break;
 	default:
 		throw InvalidArgumentException();
 	}
 }
 
 template<class T>
-void CollisionBasisWrapper<Line<T, 2>, T>::Apply_Transform(
-	const Transform<T, 2>& in_transform) {
-
+void CollisionBasisWrapper<Line<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
 	basis.Apply_Transform(in_transform);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<Line<T, 2>, T>::Get_Closest_Point(
-	const basis_t& in_basis, const Vector<T, 2>& in_point) {
-
-	throw NotImplementedException();
-	return Vector<T, 2>();
+Vector<T, 2> CollisionBasisWrapper<Line<T, 2>, T>::Get_Closest_Point(const basis_t& in_basis, const Vector<T, 2>& in_point) {
+	return in_basis.Get_Projection(in_point);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<Line<T, 2>, T>::Get_Closest_Normal(
-	const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
-
+Vector<T, 2> CollisionBasisWrapper<Line<T, 2>, T>::Get_Closest_Normal(const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
 	Vector<T, 2> normal = in_basis.Get_Direction().Orthogonal();
 	return (normal.Dot(in_point) >= normal.Dot(in_basis.Get_Point())) ? normal : -normal;
 }
 
 template<class T>
-void CollisionBasisWrapper<MeshSphereTree<T, 2>, T>::Apply_Transform(
-	const Transform<T, 2>& in_transform) {
-
+void CollisionBasisWrapper<MeshSphereTree<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
 	basis.Apply_Transform(in_transform);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<MeshSphereTree<T, 2>, T>::Get_Closest_Point(
-	const basis_t& in_basis, const Vector<T, 2>& in_point) {
+Vector<T, 2> CollisionBasisWrapper<MeshSphereTree<T, 2>, T>::Get_Closest_Point(const basis_t& in_basis, const Vector<T, 2>& in_point) {
+	using iter_t = typename MeshSphereTree<T, 2>::Iterator;
+	using Triangle2Wrapper = CollisionBasisWrapper<Triangle<T, 2>, T>;
 
-	throw NotImplementedException();
-	return Vector<T, 2>();
+	std::vector<iter_t> itStack;
+	std::vector<iter_t> leaves;
+	itStack.reserve(in_basis.Get_Mesh_Data().Get_Number_Faces() / 2);
+	leaves.reserve(in_basis.Get_Mesh_Data().Get_Number_Faces());
+	itStack.push_back(in_basis.Get_Iterator());
+	while (!itStack.empty()) {
+		iter_t it = itStack.back();
+		itStack.pop_back();
+
+		if (it.Is_Leaf()) {
+			leaves.push_back(it);
+		}
+		else {
+			itStack.push_back(it.Go_Both());
+			itStack.push_back(it);
+		}
+	}
+
+	auto bestIt = leaves.begin();
+	T bestDistance = std::numeric_limits<T>::infinity();
+	for (auto it = leaves.begin(); it != leaves.end(); it++) {
+		T distance = (it->Get_Sphere().Get_Center() - in_point).Dot_Self();
+		if (distance < bestDistance) {
+			distance = bestDistance;
+			bestIt = it;
+		}
+	}
+
+	Vector<T, 2> bestPoint = Triangle2Wrapper::Get_Closest_Point(bestIt->Get_Triangle(), in_point);
+	bestDistance = (bestPoint - in_point).Magnitude();
+	for (auto it = leaves.begin(); it != leaves.end(); it++) {
+		T distance = (it->Get_Sphere().Get_Center() - in_point).Magnitude() - it->Get_Sphere().Get_Radius();
+		if (distance < bestDistance) {
+			Vector<T, 2> point = Triangle2Wrapper::Get_Closest_Point(it->Get_Triangle(), in_point);
+			distance = (point - in_point).Magnitude();
+			if (distance < bestDistance) {
+				bestPoint = point;
+				bestIt = it;
+			}
+		}
+	}
+
+	return bestPoint;
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<MeshSphereTree<T, 2>, T>::Get_Closest_Normal(
-	const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
+Vector<T, 2> CollisionBasisWrapper<MeshSphereTree<T, 2>, T>::Get_Closest_Normal(const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
+	using iter_t = typename MeshSphereTree<T, 2>::Iterator;
+	using Triangle2Wrapper = CollisionBasisWrapper<Triangle<T, 2>, T>;
 
-	throw NotImplementedException();
-	return Vector<T, 2>();
+	std::vector<iter_t> itStack;
+	std::vector<iter_t> leaves;
+	itStack.reserve(in_basis.Get_Mesh_Data().Get_Number_Faces() / 2);
+	leaves.reserve(in_basis.Get_Mesh_Data().Get_Number_Faces());
+	itStack.push_back(in_basis.Get_Iterator());
+	while (!itStack.empty()) {
+		iter_t it = itStack.back();
+		itStack.pop_back();
+
+		if (it.Is_Leaf()) {
+			leaves.push_back(it);
+		}
+		else {
+			itStack.push_back(it.Go_Both());
+			itStack.push_back(it);
+		}
+	}
+
+	auto bestIt = leaves.begin();
+	T bestDistance = std::numeric_limits<T>::infinity();
+	for (auto it = leaves.begin(); it != leaves.end(); it++) {
+		T distance = (it->Get_Sphere().Get_Center() - in_point).Dot_Self();
+		if (distance < bestDistance) {
+			distance = bestDistance;
+			bestIt = it;
+		}
+	}
+
+	Vector<T, 2> bestPoint = Triangle2Wrapper::Get_Closest_Point(bestIt->Get_Triangle(), in_point);
+	bestDistance = (bestPoint - in_point).Magnitude();
+	for (auto it = leaves.begin(); it != leaves.end(); it++) {
+		T distance = (it->Get_Sphere().Get_Center() - in_point).Magnitude() - it->Get_Sphere().Get_Radius();
+		if (distance < bestDistance) {
+			Vector<T, 2> point = Triangle2Wrapper::Get_Closest_Point(it->Get_Triangle(), in_point);
+			distance = (point - in_point).Magnitude();
+			if (distance < bestDistance) {
+				bestPoint = point;
+				bestIt = it;
+			}
+		}
+	}
+
+	return Triangle2Wrapper::Get_Closest_Normal(bestIt->Get_Triangle(), in_point, in_policy);
 }
 
 template<class T>
-void CollisionBasisWrapper<Vector<T, 2>, T>::Apply_Transform(
-	const Transform<T, 2>& in_transform) {
-
+void CollisionBasisWrapper<Vector<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
 	basis = in_transform.Local_To_World_Point(basis);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<Vector<T, 2>, T>::Get_Closest_Point(
-	const basis_t& in_basis, const Vector<T, 2>& in_point) {
-
-	throw NotImplementedException();
-	return Vector<T, 2>();
+Vector<T, 2> CollisionBasisWrapper<Vector<T, 2>, T>::Get_Closest_Point(const basis_t& in_basis, const Vector<T, 2>& in_point) {
+	return in_basis;
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<Vector<T, 2>, T>::Get_Closest_Normal(
-	const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
-
+Vector<T, 2> CollisionBasisWrapper<Vector<T, 2>, T>::Get_Closest_Normal(const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
 	switch (in_policy) {
 	case pnp_t::zero:
 		return Vector<T, 2>();
@@ -315,24 +366,24 @@ Vector<T, 2> CollisionBasisWrapper<Vector<T, 2>, T>::Get_Closest_Normal(
 }
 
 template<class T>
-void CollisionBasisWrapper<Ray<T, 2>, T>::Apply_Transform(
-	const Transform<T, 2>& in_transform) {
-
+void CollisionBasisWrapper<Ray<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
 	basis.Apply_Transform(in_transform);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<Ray<T, 2>, T>::Get_Closest_Point(
-	const basis_t& in_basis, const Vector<T, 2>& in_point) {
+Vector<T, 2> CollisionBasisWrapper<Ray<T, 2>, T>::Get_Closest_Point(const basis_t& in_basis, const Vector<T, 2>& in_point) {
+	T projRay = in_basis.Get_Projection_Coefficient();
+	T projPoint = in_basis.Get_Projection_Coefficient(in_point);
 
-	throw NotImplementedException();
-	return Vector<T, 2>();
+	if (projPoint <= projRay) {
+		return in_basis.Get_Point();
+	}
+
+	return in_basis.Get_Projection(in_point);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<Ray<T, 2>, T>::Get_Closest_Normal(
-	const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
-
+Vector<T, 2> CollisionBasisWrapper<Ray<T, 2>, T>::Get_Closest_Normal(const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
 	Vector<T, 2> normal = in_basis.Get_Direction().Orthogonal();
 	if ((in_point - in_basis.Get_Point()).Dot(in_basis.Get_Direction()) >= 0) {
 		(normal.Dot(in_point) >= normal.Dot(in_basis.Get_Point())) ? normal : -normal;
@@ -353,24 +404,67 @@ Vector<T, 2> CollisionBasisWrapper<Ray<T, 2>, T>::Get_Closest_Normal(
 }
 
 template<class T>
-void CollisionBasisWrapper<Box<T, 2>, T>::Apply_Transform(
-	const Transform<T, 2>& in_transform) {
-
+void CollisionBasisWrapper<Box<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
 	basis.Apply_Transform(in_transform);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<Box<T, 2>, T>::Get_Closest_Point(
-	const basis_t& in_basis, const Vector<T, 2>& in_point) {
+Vector<T, 2> CollisionBasisWrapper<Box<T, 2>, T>::Get_Closest_Point(const basis_t& in_basis, const Vector<T, 2>& in_point) {
+	Vector<T, 2> axes[2];
+	in_basis.Get_Axes(axes);
 
-	throw NotImplementedException();
-	return Vector<T, 2>();
+	Vector<T, 2> normAxes[2];
+	for (uint i = 0; i < 2; i++) {
+		normAxes[i] = axes[i].Normalized();
+	}
+
+	Vector<T, 2> origin = in_basis.Get_Origin();
+
+	Range<T> projRanges[2];
+	T projPoints[2];
+	T projOffsets[2];
+
+	for (uint i = 0; i < 2; i++) {
+		projRanges[i] = Range<T>(origin.Projection_Coeff(axes[i]), (origin + axes[i]).Projection_Coeff(axes[i]));
+		projPoints[i] = in_point.Projection_Coeff(axes[i]);
+		projOffsets[i] = projRanges[i].Get_Mean() - projPoints[i];
+	}
+
+	if (projRanges[0].Contains_Inc(in_point.X())) {
+		if (projRanges[1].Contains_Inc(in_point.Y())) {
+			if (abs(projOffsets[0]) > abs(projOffsets[1])) {
+				return origin +
+					((projOffsets[0] > 0) ? axes[0] : Vector<T, 2>()) +
+					normAxes[1] * projPoints[1];
+			}
+			else {
+				return origin +
+					normAxes[0] * projPoints[0] +
+					((projOffsets[1] > 0) ? axes[1] : Vector<T, 2>());
+			}
+		}
+		else {
+			return origin +
+				normAxes[0] * projPoints[0] +
+				((projOffsets[1] > 0) ? axes[1] : Vector<T, 2>());
+		}
+	}
+	else {
+		if (projRanges[1].Contains_Inc(in_point.Y())) {
+			return origin +
+				((projOffsets[0] > 0) ? axes[0] : Vector<T, 2>()) +
+				normAxes[1] * projPoints[1];
+		}
+		else {
+			return origin +
+				((projOffsets[0] > 0) ? axes[0] : Vector<T, 2>()) +
+				((projOffsets[1] > 0) ? axes[1] : Vector<T, 2>());
+		}
+	}
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<Box<T, 2>, T>::Get_Closest_Normal(
-	const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
-
+Vector<T, 2> CollisionBasisWrapper<Box<T, 2>, T>::Get_Closest_Normal(const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
 	Vector<T, 2> corners[4];
 	Vector<T, 2> axes[2];
 	in_basis.Get_Axes(axes);
@@ -429,30 +523,50 @@ Vector<T, 2> CollisionBasisWrapper<Box<T, 2>, T>::Get_Closest_Normal(
 }
 
 template<class T>
-void CollisionBasisWrapper<Triangle<T, 2>, T>::Apply_Transform(
-	const Transform<T, 2>& in_transform) {
-
+void CollisionBasisWrapper<Triangle<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
 	basis.Apply_Transform(in_transform);
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<Triangle<T, 2>, T>::Get_Closest_Point(
-	const basis_t& in_basis, const Vector<T, 2>& in_point) {
-
+Vector<T, 2> CollisionBasisWrapper<Triangle<T, 2>, T>::Get_Closest_Point(const basis_t& in_basis, const Vector<T, 2>& in_point) {
 	Vector<T, 2> corners[3];
+	Vector<T, 2> normals[3];
 	in_basis.Get_Points(corners);
-
+	in_basis.Get_Normals(normals);
+	Vector<T, 2> cornerNormals[3];
+	Vector<T, 2> cornerTangents[3];
 	bool alley[3];
 	bool front[3];
 
-	throw NotImplementedException();
-	return Vector<T, 2>();
+	for (uint i = 0; i < 3; i++) {
+		cornerNormals[i] = (normals[i] + normals[(i + 2) % 3]) / 2;
+		cornerTangents[i] = cornerNormals[i].Orthogonal();
+
+		Vector<T, 2> offset = corners[(i + 1) % 3] - corners[i];
+		alley[i] = Between_Exc(
+			in_point.Dot(offset),
+			corners[i].Dot(offset),
+			corners[(i + 1) % 3].Dot(offset)
+		);
+
+		front[i] = (in_point - corners[i]).Dot(normals[i]) >= 0.0;
+
+		if (front[i] && alley[i]) {
+			return corners[i] + (in_point - corners[i]).Projection(offset);
+		}
+	}
+
+	uint index = Min_Index({
+			(in_point - corners[0]).Dot_Self(),
+			(in_point - corners[1]).Dot_Self(),
+			(in_point - corners[2]).Dot_Self()
+		});
+
+	return corners[index];
 }
 
 template<class T>
-Vector<T, 2> CollisionBasisWrapper<Triangle<T, 2>, T>::Get_Closest_Normal(
-	const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
-
+Vector<T, 2> CollisionBasisWrapper<Triangle<T, 2>, T>::Get_Closest_Normal(const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy) {
 	Vector<T, 2> corners[3];
 	Vector<T, 2> normals[3];
 	in_basis.Get_Normals(normals);
@@ -469,7 +583,7 @@ Vector<T, 2> CollisionBasisWrapper<Triangle<T, 2>, T>::Get_Closest_Normal(
 		slice[i] = cornerTangents[i].Dot(in_point) >= cornerTangents[i].Dot(corners[i]);
 
 		Vector<T, 2> offset = corners[(i + 1) % 3] - corners[i];
-		alley[i] = Is_Between_Exc(
+		alley[i] = Between_Exc(
 			in_point.Dot(offset),
 			corners[i].Dot(offset),
 			corners[(i + 1) % 3].Dot(offset)
@@ -534,8 +648,8 @@ template class CollisionBasisWrapper<LineSegment2f, float>;
 template class CollisionBasisWrapper<LineSegment2d, double>;
 template class CollisionBasisWrapper<Line2f, float>;
 template class CollisionBasisWrapper<Line2d, double>;
-template class CollisionBasisWrapper<MeshVertexData, float>;
-template class CollisionBasisWrapper<MeshVertexData, double>;
+template class CollisionBasisWrapper<MeshSphereTree2f, float>;
+template class CollisionBasisWrapper<MeshSphereTree2d, double>;
 template class CollisionBasisWrapper<Vector2f, float>;
 template class CollisionBasisWrapper<Vector2d, double>;
 template class CollisionBasisWrapper<Ray2f, float>;

@@ -336,7 +336,7 @@ void CollisionContext<T, n>::Partner_If_Collide(CollisionMask<T, n>* in_mask1, C
 		}
 	}
 
-	if (!found && (collision = collisionEvaluator.Evaluate(*in_mask1, *in_mask2)).didCollide) {
+	if (!found && (collision = collisionEvaluator.Evaluate(*in_mask1, *in_mask2)).did) {
 		in_partnering.insert(Partnering::value_type(in_mask1, { in_mask2, collision }));
 		in_partnering.insert(Partnering::value_type(in_mask2, { in_mask1, collision }));
 	}
@@ -355,8 +355,11 @@ void CollisionContext<T, n>::Partner_If_Collide_Async(
 	Collision<T, n> collision;
 	InPlaceCollisionEvaluator<T, n> collisionEvaluator;
 
-	if ((collision = collisionEvaluator.Evaluate(*in_mask1, *in_mask2)).didCollide) {
+	if ((collision = collisionEvaluator.Evaluate(*in_mask1, *in_mask2)).did) {
 		std::lock_guard<std::mutex> lock(in_mutex);
+
+		if (collision.owner == in_mask1) collision.owner = in_maskToPartner1;
+		if (collision.owner == in_mask2) collision.owner = in_maskToPartner2;
 
 		auto range = in_partnering.equal_range(in_maskToPartner1);
 		for (auto it = range.first; it != range.second; it++) {

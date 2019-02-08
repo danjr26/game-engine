@@ -19,7 +19,7 @@ struct CollisionBasisWrapper<AxisAlignedHalfSpace<T, 2>, T> {
 	static Vector<T, 2> Get_Closest_Point(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
 	static Vector<T, 2> Get_Closest_Normal(
-		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = towards_point);
+		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
 template<class T>
@@ -33,7 +33,7 @@ struct CollisionBasisWrapper<AxisAlignedLine<T, 2>, T> {
 	static Vector<T, 2> Get_Closest_Point(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
 	static Vector<T, 2> Get_Closest_Normal(
-		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = towards_point);
+		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
 template<class T>
@@ -47,7 +47,7 @@ struct CollisionBasisWrapper<AxisAlignedBox<T, 2>, T> {
 	static Vector<T, 2> Get_Closest_Point(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
 	static Vector<T, 2> Get_Closest_Normal(
-		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = towards_point);
+		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
 template<class T>
@@ -61,7 +61,7 @@ struct CollisionBasisWrapper<Sphere<T, 2>, T> {
 	static Vector<T, 2> Get_Closest_Point(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
 	static Vector<T, 2> Get_Closest_Normal(
-		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = towards_point);
+		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
 template<class T>
@@ -75,7 +75,7 @@ struct CollisionBasisWrapper<HalfSpace<T, 2>, T> {
 	static Vector<T, 2> Get_Closest_Point(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
 	static Vector<T, 2> Get_Closest_Normal(
-		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = towards_point);
+		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
 template<class T>
@@ -89,7 +89,7 @@ struct CollisionBasisWrapper<LineSegment<T, 2>, T> {
 	static Vector<T, 2> Get_Closest_Point(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
 	static Vector<T, 2> Get_Closest_Normal(
-		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = towards_point);
+		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
 template<class T>
@@ -103,7 +103,7 @@ struct CollisionBasisWrapper<Line<T, 2>, T> {
 	static Vector<T, 2> Get_Closest_Point(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
 	static Vector<T, 2> Get_Closest_Normal(
-		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = towards_point);
+		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
 template<class T>
@@ -117,7 +117,7 @@ struct CollisionBasisWrapper<MeshSphereTree<T, 2>, T> {
 	static Vector<T, 2> Get_Closest_Point(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
 	static Vector<T, 2> Get_Closest_Normal(
-		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = towards_point);
+		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
 template<class T>
@@ -131,7 +131,7 @@ struct CollisionBasisWrapper<Vector<T, 2>, T> {
 	static Vector<T, 2> Get_Closest_Point(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
 	static Vector<T, 2> Get_Closest_Normal(
-		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = towards_point);
+		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
 template<class T>
@@ -145,7 +145,7 @@ struct CollisionBasisWrapper<Ray<T, 2>, T> {
 	static Vector<T, 2> Get_Closest_Point(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
 	static Vector<T, 2> Get_Closest_Normal(
-		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = towards_point);
+		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
 template<class T>
@@ -159,7 +159,7 @@ struct CollisionBasisWrapper<Box<T, 2>, T> {
 	static Vector<T, 2> Get_Closest_Point(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
 	static Vector<T, 2> Get_Closest_Normal(
-		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = towards_point);
+		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
 template<class T>
@@ -173,7 +173,7 @@ struct CollisionBasisWrapper<Triangle<T, 2>, T> {
 	static Vector<T, 2> Get_Closest_Point(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
 	static Vector<T, 2> Get_Closest_Normal(
-		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = towards_point);
+		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
 #endif

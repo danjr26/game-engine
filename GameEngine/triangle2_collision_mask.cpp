@@ -67,7 +67,7 @@ Vector<T, 2> Triangle2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>& i
 		slice[i] = cornerTangents[i].Dot(in_point) >= cornerTangents[i].Dot(corners[i]);
 
 		Vector<T, 2> offset = corners[(i + 1) % 3] - corners[i];
-		alley[i] = Is_Between_Exc(
+		alley[i] = Between_Exc(
 			in_point.Dot(offset),
 			corners[i].Dot(offset),
 			corners[(i + 1) % 3].Dot(offset)

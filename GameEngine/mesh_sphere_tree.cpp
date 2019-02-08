@@ -77,8 +77,28 @@ void MeshSphereTree<T, n>::operator=(const MeshSphereTree& in_other) {
 }
 
 template<class T, uint n>
+const MeshVertexData& MeshSphereTree<T, n>::Get_Mesh_Data() const {
+	return meshData;
+}
+
+template<class T, uint n>
 void MeshSphereTree<T, n>::Apply_Transform(const Transform<T, n>& in_transform) {
 	meshData.Apply_Transform_Points(in_transform, MeshVertexData::MemberID::position);
+	
+	std::vector<Node*> nodeStack;
+	nodeStack.reserve(meshData.Get_Number_Faces());
+	nodeStack.push_back(rootNode);
+	while (!nodeStack.empty()) {
+		Node* node = nodeStack.back();
+		nodeStack.pop_back();
+
+		node->sphere.Apply_Transform(in_transform);
+		for (uint i = 0; i < 2; i++) {
+			if (node->children[i] != nullptr) {
+				nodeStack.push_back(node->children[i]);
+			}
+		}
+	}
 }
 
 template<class T, uint n>
@@ -252,7 +272,7 @@ typename MeshSphereTree<T, n>::Iterator MeshSphereTree<T, n>::Iterator::Go_Both(
 }
 
 template<class T, uint n>
-Sphere<T, n> MeshSphereTree<T, n>::Iterator::Get_Sphere() const {
+const Sphere<T, n>& MeshSphereTree<T, n>::Iterator::Get_Sphere() const {
 	return node->sphere;
 }
 

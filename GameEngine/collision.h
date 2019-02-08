@@ -5,15 +5,16 @@
 
 template<class T, uint n>
 struct Collision {
-	bool didCollide;
-	Vector<T, n> collisionPoint;
+	Vector<T, n> point;
 	Vector<T, n> separator;
-	T collisionTime;
+	void* owner;
+	bool did;
 
 	Collision() :
-		didCollide(false),
-		collisionPoint(),
-		collisionTime(0)
+		point(),
+		separator(),
+		owner(nullptr),
+		did(false)
 	{}
 };
 

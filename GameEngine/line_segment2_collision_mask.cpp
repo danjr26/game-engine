@@ -45,7 +45,7 @@ Vector<T, 2> LineSegment2CollisionMask<T>::Get_Closest_Normal(const Vector<T, 2>
 	};
 	Vector<T, 2> direction = transformedLineSegment.Get_Direction();
 
-	if (Is_Between_Inc<T>(
+	if (Between_Inc<T>(
 		(in_point - points[0]).Dot(direction),
 		0, (points[1] - points[0]).Dot(direction)
 	)) {

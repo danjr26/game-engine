@@ -552,7 +552,7 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 
 				if (pointData[j] == lowEdge.first || pointData[j] == lowEdge.second || 
 					pointData[j] == highEdge.first || pointData[j] == highEdge.second || 
-					Is_Between_Inc<T>(testPoint.Y(), interpolatedY1, interpolatedY2)) {
+					Between_Inc<T>(testPoint.Y(), interpolatedY1, interpolatedY2)) {
 
 					for (int k = i; values[pointData[k]->index].X() == point.X(); k = pointData[k]->next->index) {
 						newEdges.insert(std::pair<PointData*, PointData*>(pointData[k], pointData[j]));

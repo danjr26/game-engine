@@ -336,8 +336,8 @@ void BinaryCollisionTree<T, n>::Evaluate(CollisionMask<T, n>* in_mask, uint in_d
 			mask1.Get_Basis() = halfSpace1;
 			mask2.Get_Basis() = halfSpace2;
 
-			bool didCollide1 = evaluator.Evaluate(*out_evaluation.Get_Transformed_Parent_Mask(), mask1).didCollide;
-			bool didCollide2 = evaluator.Evaluate(*out_evaluation.Get_Transformed_Parent_Mask(), mask2).didCollide;
+			bool didCollide1 = evaluator.Evaluate(*out_evaluation.Get_Transformed_Parent_Mask(), mask1).did;
+			bool didCollide2 = evaluator.Evaluate(*out_evaluation.Get_Transformed_Parent_Mask(), mask2).did;
 
 			out_evaluation.data[i][out_evaluation.dataSizes[i]++] = didCollide1;
 			out_evaluation.data[i][out_evaluation.dataSizes[i]++] = didCollide2;

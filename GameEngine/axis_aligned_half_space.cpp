@@ -5,7 +5,7 @@ inline AxisAlignedHalfSpace<T, n>::AxisAlignedHalfSpace(int in_dimension, T in_v
 	dimension(in_dimension),
 	value(in_value) {
 
-	if (!Is_Between_Inc(dimension, -(int)n, (int)n - 1)) {
+	if (!Between_Inc(dimension, -(int)n, (int)n - 1)) {
 		throw InvalidArgumentException();
 	}
 }

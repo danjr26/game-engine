@@ -6,7 +6,7 @@ inline AxisAlignedLine<T, n>::AxisAlignedLine(uint in_dimension, T in_value) :
 	dimension(in_dimension),
 	value(in_value) {
 
-	if (!Is_Between_Inc(dimension, (uint)0, (uint)n - 1)) {
+	if (!Between_Inc(dimension, (uint)0, (uint)n - 1)) {
 		throw InvalidArgumentException();
 	}
 }
