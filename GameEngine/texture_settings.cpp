@@ -32,7 +32,7 @@ void TextureSettings::Set_Edge_Case(EdgeCase in_sEdgeCase, EdgeCase in_tEdgeCase
 
 void TextureSettings::Set_Minify_Filter(FilterMode in_filterMode) {
 	if (!(texture->Get_Flags() & Texture::Flags::mipmaps)) {
-		if (in_filterMode == FilterMode::none && in_filterMode == FilterMode::z_bilinear) {
+		if (in_filterMode == FilterMode::none || in_filterMode == FilterMode::z_bilinear) {
 			minifyFilter = GL_NEAREST;
 		}
 		else {
@@ -45,7 +45,7 @@ void TextureSettings::Set_Minify_Filter(FilterMode in_filterMode) {
 }
 
 void TextureSettings::Set_Magnify_Filter(FilterMode in_filterMode) {
-	if (in_filterMode == FilterMode::none && in_filterMode == FilterMode::z_bilinear) {
+	if (in_filterMode == FilterMode::none || in_filterMode == FilterMode::z_bilinear) {
 		magnifyFilter = GL_NEAREST;
 	}
 	else {
