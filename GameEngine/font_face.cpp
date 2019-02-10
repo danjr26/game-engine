@@ -6,7 +6,7 @@
 
 FontFace::FontFace(std::string in_filename) {
 	FT_Library library = GE.Fonts().Get_Library();
-	FT_Error error = FT_New_Face(library, in_filename.c_str(), 0, &face);
+	FT_Error error = FT_New_Face(library, in_filename.c_str(), 0, &mFace);
 	if (error) {
 		Log::main(std::string("error: could not load font face '") + in_filename + "'");
 		GE.Exit();
@@ -14,21 +14,21 @@ FontFace::FontFace(std::string in_filename) {
 }
 
 FontFace::~FontFace() {
-	FT_Done_Face(face);
+	FT_Done_Face(mFace);
 }
 
 FontFaceRasterSet* FontFace::Rasterize(uint in_size) {
 	FontFaceRasterSet* rasterSet = new FontFaceRasterSet();
-	rasterSet->face = this;
-	rasterSet->size = in_size;
-	rasterSet->offsets.reserve('~' - ' ' + 1);
-	rasterSet->dimensions.reserve('~' - ' ' + 1);
-	rasterSet->advances.reserve('~' - ' ' + 1);
+	rasterSet->mFace = this;
+	rasterSet->mSize = in_size;
+	rasterSet->mOffsets.reserve('~' - ' ' + 1);
+	rasterSet->mDimensions.reserve('~' - ' ' + 1);
+	rasterSet->mAdvances.reserve('~' - ' ' + 1);
 
-	FT_Set_Pixel_Sizes(face, in_size, 0);
+	FT_Set_Pixel_Sizes(mFace, in_size, 0);
 
-	rasterSet->topToBaseline = face->size->metrics.ascender / (float)(1 << 6);
-	rasterSet->baselineToBottom = face->size->metrics.descender / (float)(1 << 6);
+	rasterSet->mTopToBaseline = mFace->size->metrics.ascender / (float)(1 << 6);
+	rasterSet->mBaselineToBottom = mFace->size->metrics.descender / (float)(1 << 6);
 
 	std::vector<FT_BitmapGlyph> glyphs = std::vector<FT_BitmapGlyph>();
 	glyphs.reserve('~' - ' ' + 1);
@@ -39,10 +39,10 @@ FontFaceRasterSet* FontFace::Rasterize(uint in_size) {
 	Vector3ui maxDimensions = Vector3ui(0, 0, '~' - ' ' + 1);
 
 	for (uchar c = ' '; c <= '~'; c++) {
-		charIndex = FT_Get_Char_Index(face, c);
+		charIndex = FT_Get_Char_Index(mFace, c);
 
-		if (FT_Load_Glyph(face, charIndex, FT_LOAD_DEFAULT) ||
-			FT_Get_Glyph(face->glyph, &tempGlyph) ||
+		if (FT_Load_Glyph(mFace, charIndex, FT_LOAD_DEFAULT) ||
+			FT_Get_Glyph(mFace->glyph, &tempGlyph) ||
 			FT_Glyph_To_Bitmap(&tempGlyph, FT_RENDER_MODE_NORMAL, nullptr, true)) {
 
 			throw ProcessFailureException("could not rasterize text glyph");
@@ -52,12 +52,12 @@ FontFaceRasterSet* FontFace::Rasterize(uint in_size) {
 
 		glyphs.push_back(glyph);
 		
-		rasterSet->offsets.push_back(Vector2i(
-			(face->glyph->metrics.horiBearingX) / (float)(1 << 6),
-			(-face->glyph->metrics.horiBearingY) / (float)(1 << 6)
+		rasterSet->mOffsets.push_back(Vector2i(
+			(mFace->glyph->metrics.horiBearingX) / (float)(1 << 6),
+			(-mFace->glyph->metrics.horiBearingY) / (float)(1 << 6)
 		));
-		rasterSet->dimensions.push_back(Vector2i(glyph->bitmap.width, glyph->bitmap.rows));
-		rasterSet->advances.push_back(face->glyph->advance.x / (float)(1 << 6));
+		rasterSet->mDimensions.push_back(Vector2i(glyph->bitmap.width, glyph->bitmap.rows));
+		rasterSet->mAdvances.push_back(mFace->glyph->advance.x / (float)(1 << 6));
 
 		maxDimensions[0] = max((uint)maxDimensions[0], glyph->bitmap.width);
 		maxDimensions[1] = max((uint)maxDimensions[1], glyph->bitmap.rows);
@@ -96,7 +96,7 @@ FontFaceRasterSet* FontFace::Rasterize(uint in_size) {
 
 	delete[] bitmap;
 
-	rasterSet->texture = texture;
+	rasterSet->mTexture = texture;
 
 	return rasterSet;
 }

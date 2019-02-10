@@ -3,8 +3,8 @@
 
 template<class T, uint n>
 struct LocatedVector {
-	Vector<T, n> position;
-	Vector<T, n> vector;
+	Vector<T, n> mPosition;
+	Vector<T, n> mVector;
 };
 
 using LocatedVector2f = LocatedVector<float, 2>;

@@ -11,7 +11,7 @@ class Renderer;
 
 class RenderableObject : public FilteredObject, public DisableableObject {
 private:
-	AxisAlignedRectangled cullingRectangle;
+	AxisAlignedRectangled mCullingRectangle;
 public:
 	RenderableObject();
 	virtual ~RenderableObject();

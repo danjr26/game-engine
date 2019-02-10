@@ -4,19 +4,19 @@
 
 template<class T>
 Rotation<T, 2>::Rotation() :
-	angle(0)
+	mAngle(0)
 {}
 
 template<class T>
 Rotation<T, 2>::Rotation(T in_angle) :
-	angle(in_angle) {
+	mAngle(in_angle) {
 
 	Clamp();
 }
 
 template<class T>
 Rotation<T, 2>::Rotation(const Vector<T, 2>& in_vec) :
-	angle(in_vec.Theta(Vector2d(1, 0)))
+	mAngle(in_vec.Theta(Vector2d(1, 0)))
 {}
 
 template<class T>
@@ -28,37 +28,37 @@ Rotation<T, 2>::Rotation(T in_from, T in_to) {
 
 template<class T>
 Rotation<T, 2>::Rotation(const Rotation<T, 2>& in_from, const Rotation<T, 2>& in_to) :
-	angle(Short_Difference(in_to.angle, in_from.angle)) 
+	mAngle(Short_Difference(in_to.mAngle, in_from.mAngle)) 
 {}
 
 template<class T>
 Rotation<T, 2>::Rotation(const UnclampedRotation<T, 2>& in_rotation) :
-	angle(in_rotation.Get_Angle())
+	mAngle(in_rotation.Get_Angle())
 {}
 
 template<class T>
 bool Rotation<T, 2>::Is_Identity() const {
-	return angle == 0;
+	return mAngle == 0;
 }
 
 template<class T>
 void Rotation<T, 2>::Invert() {
-	angle = -angle;
+	mAngle = -mAngle;
 }
 
 template<class T>
 Rotation<T, 2> Rotation<T, 2>::Get_Inverse() const {
-	return Rotation<T, 2>(-angle);
+	return Rotation<T, 2>(-mAngle);
 }
 
 template<class T>
 Rotation<T, 2> Rotation<T, 2>::Followed_By(const Rotation<T, 2>& in_rotation) const {
-	return Rotation<T, 2>(angle + in_rotation.angle);
+	return Rotation<T, 2>(mAngle + in_rotation.mAngle);
 }
 
 template<class T>
 Rotation<T, 2> Rotation<T, 2>::Lerp(const Rotation<T, 2>& in_rotation, T t) const {
-	return Rotation<T, 2>(angle * (1 - t)  + (angle + Short_Difference(in_rotation.angle, angle)) * t);
+	return Rotation<T, 2>(mAngle * (1 - t)  + (mAngle + Short_Difference(in_rotation.mAngle, mAngle)) * t);
 }
 
 template<class T>
@@ -68,18 +68,18 @@ Rotation<T, 2> Rotation<T, 2>::Reflect_Over(const Rotation<T, 2>& in_rotation) c
 
 template<class T>
 T Rotation<T, 2>::Get_Angle() const {
-	return angle;
+	return mAngle;
 }
 
 template<class T>
 Vector<T, 2> Rotation<T, 2>::Apply_To(const Vector<T, 2>& in_point) const {
-	return in_point.Rotated(angle);
+	return in_point.Rotated(mAngle);
 }
 
 template<class T>
 Matrix<T, 4, 4> Rotation<T, 2>::Get_Matrix() const {
-	T s = (T)sin(angle);
-	T c = (T)cos(angle);
+	T s = (T)sin(mAngle);
+	T c = (T)cos(mAngle);
 
 	return {
 		c, -s, (T)0, (T)0,
@@ -102,27 +102,27 @@ T Rotation<T, 2>::Short_Difference(T angle1, T angle2) {
 
 template<class T>
 void Rotation<T, 2>::Clamp() {
-	while (angle > (T)PI) {
-		angle -= (T)(2.0 * PI);
+	while (mAngle > (T)PI) {
+		mAngle -= (T)(2.0 * PI);
 	}
-	while (angle < -(T)PI) {
-		angle += (T)(2.0 * PI);
+	while (mAngle < -(T)PI) {
+		mAngle += (T)(2.0 * PI);
 	}
 }
 
 template<class T>
 Rotation<T, 3>::Rotation(const Vector<T, 4>& in_quaternion) :
-	quaternion(in_quaternion) 
+	mQuaternion(in_quaternion) 
 {}
 
 template<class T>
 Rotation<T, 3>::Rotation() :
-	quaternion((T)0, (T)0, (T)0, (T)1) 
+	mQuaternion((T)0, (T)0, (T)0, (T)1) 
 {}
 
 template<class T>
 Rotation<T, 3>::Rotation(const Vector<T, 3>& in_axis, T in_angle) :
-	quaternion(in_axis * sin(in_angle / 2), cos(in_angle / 2)) 
+	mQuaternion(in_axis * sin(in_angle / 2), cos(in_angle / 2)) 
 {}
 
 template<class T>
@@ -136,7 +136,7 @@ Rotation<T, 3>::Rotation(const Vector<T, 3>& in_from, const Vector<T, 3>& in_to)
 	else {
 		axis = in_from.Cross(in_to).Normalized();
 	}
-	quaternion = Vector<T, 4>(axis  * sin(angle / 2), cos(angle / 2));
+	mQuaternion = Vector<T, 4>(axis  * sin(angle / 2), cos(angle / 2));
 }
 
 template<class T>
@@ -148,50 +148,50 @@ template<class T>
 Rotation<T, 3>::Rotation(const UnclampedRotation<T, 3>& in_rotation) {
 	Vector<T, 3> axis = in_rotation.Get_Axis();
 	T angle = in_rotation.Get_Angle();
-	quaternion = Quaterniond(axis * sin(angle / 2), cos(angle / 2));
+	mQuaternion = Quaterniond(axis * sin(angle / 2), cos(angle / 2));
 }
 
 template<class T>
 bool Rotation<T, 3>::Is_Identity() const {
-	return quaternion.X() == (T)0 && quaternion.Y() == (T)0 && quaternion.Z() == (T)0 && quaternion.W() == (T)1;
+	return mQuaternion.X() == (T)0 && mQuaternion.Y() == (T)0 && mQuaternion.Z() == (T)0 && mQuaternion.W() == (T)1;
 }
 
 template<class T>
 void Rotation<T, 3>::Invert() {
-	quaternion.Conjugate();
+	mQuaternion.Conjugate();
 }
 
 template<class T>
 Rotation<T, 3> Rotation<T, 3>::Get_Inverse() const {
-	return Rotation<T, 3>(quaternion.Conjugated());
+	return Rotation<T, 3>(mQuaternion.Conjugated());
 }
 
 template<class T>
 Rotation<T, 3> Rotation<T, 3>::Followed_By(const Rotation<T, 3>& in_rotation) const {
-	return in_rotation.quaternion.Hamilton(quaternion);
+	return in_rotation.mQuaternion.Hamilton(mQuaternion);
 }
 
 template<class T>
 Rotation<T, 3> Rotation<T, 3>::Lerp(const Rotation<T, 3>& in_rotation, T t) const {
-	return (quaternion * (1 - t) + in_rotation.quaternion * t).Normalized();
+	return (mQuaternion * (1 - t) + in_rotation.mQuaternion * t).Normalized();
 }
 
 template<class T>
 Rotation<T, 3> Rotation<T, 3>::Slerp(const Rotation<T, 3>& in_rotation, T t) const {
-	T dot = Clamp<T>(quaternion.Dot(in_rotation.quaternion), -1, 1);
+	T dot = Clamp<T>(mQuaternion.Dot(in_rotation.mQuaternion), -1, 1);
 	T dotSign = Sign(dot);
 	T theta = acos(dot * dotSign);
-	return (quaternion * sin((1 - t) * theta) + in_rotation.quaternion * dotSign * sin(t * theta)) / sin(theta);
+	return (mQuaternion * sin((1 - t) * theta) + in_rotation.mQuaternion * dotSign * sin(t * theta)) / sin(theta);
 }
 
 template<class T>
 Rotation<T, 3> Rotation<T, 3>::Reflect_Over(const Rotation<T, 3>& in_rotation) const {
-	return 2 * quaternion.Dot(in_rotation.quaternion) * in_rotation.quaternion - quaternion;
+	return 2 * mQuaternion.Dot(in_rotation.mQuaternion) * in_rotation.mQuaternion - mQuaternion;
 }
 
 template<class T>
 T Rotation<T, 3>::Get_Angle() const {
-	return acos(Clamp<T>(quaternion.W(), -1, 1));
+	return acos(Clamp<T>(mQuaternion.W(), -1, 1));
 }
 
 template<class T>
@@ -201,7 +201,7 @@ Rotation<T, 3> Rotation<T, 3>::With_Angle(T in_angle) {
 
 template<class T>
 Vector<T, 3> Rotation<T, 3>::Get_Axis() const {
-	return Vector<T, 3>(quaternion) / sqrt(1 - quaternion.W() * quaternion.W());
+	return Vector<T, 3>(mQuaternion) / sqrt(1 - mQuaternion.W() * mQuaternion.W());
 }
 
 template<class T>
@@ -212,7 +212,7 @@ Rotation<T, 3> Rotation<T, 3>::With_Axis(const Vector<T, 3>& in_axis) const {
 template<class T>
 Vector<T, 3> Rotation<T, 3>::Apply_To(const Vector<T, 3>& in_point) const {
 	if (!Is_Identity()) {
-		return Vector<T, 3>(quaternion.Hamilton(Vector<T, 4>(in_point, 0)).Hamilton(quaternion.Inverse()));
+		return Vector<T, 3>(mQuaternion.Hamilton(Vector<T, 4>(in_point, 0)).Hamilton(mQuaternion.Inverse()));
 	}
 	else {
 		return in_point;
@@ -221,10 +221,10 @@ Vector<T, 3> Rotation<T, 3>::Apply_To(const Vector<T, 3>& in_point) const {
 
 template<class T>
 Matrix<T, 4, 4> Rotation<T, 3>::Get_Matrix() const {
-	T x = quaternion.X();
-	T y = quaternion.Y();
-	T z = quaternion.Z();
-	T w = quaternion.W();
+	T x = mQuaternion.X();
+	T y = mQuaternion.Y();
+	T z = mQuaternion.Z();
+	T w = mQuaternion.W();
 
 	T xx = 2 * x * x;
 	T xy = 2 * x * y;

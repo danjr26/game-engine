@@ -2,23 +2,23 @@
 #include "log.h"
 
 AsyncTask::AsyncTask(double in_time, double in_epsilon) :
-	time(in_time),
-	epsilon(in_epsilon),
-	state(State::notRun)
+	mTime(in_time),
+	mEpsilon(in_epsilon),
+	mState(State::notRun)
 {}
 
 AsyncTask::State AsyncTask::Get_State() const {
-	return state;
+	return mState;
 }
 void AsyncTask::Wait_For_Finish() {
-	while (state != finished) {
+	while (mState != finished) {
 		std::this_thread::sleep_for(std::chrono::microseconds(100));
 	}
 }
 void AsyncTask::Run() {
-	state = running;
+	mState = running;
 	_Run();
-	state = finished;
+	mState = finished;
 }
 /*
 

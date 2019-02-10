@@ -7,7 +7,7 @@
 
 class PerFrameUpdateManager {
 private:
-	std::vector<PerFrameUpdateableObject*> updateables;
+	std::vector<PerFrameUpdateableObject*> mUpdateables;
 
 public:
 	PerFrameUpdateManager();

@@ -6,10 +6,10 @@
 template<class T>
 class CollisionManager {
 private:
-	std::vector<CollisionContext<T, 2>*> context2s;
+	std::vector<CollisionContext<T, 2>*> mContext2s;
 	//std::vector<CollisionContext3*> context3s;
 
-	CollisionContext<T, 2>* activeContext2;
+	CollisionContext<T, 2>* mActiveContext2;
 	//CollisionContext3* activeContext3;
 
 public:

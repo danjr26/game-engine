@@ -6,7 +6,7 @@
 template<class T, uint n>
 class Triangle {
 private:
-	Vector<T, n> points[3];
+	Vector<T, n> mPoints[3];
 
 	Triangle(const Vector<T, n>* in_points);
 

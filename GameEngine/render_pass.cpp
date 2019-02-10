@@ -9,48 +9,48 @@ void* RenderPass::OnEnd() {
 }
 
 RenderPass::RenderPass(RenderTarget* in_target, Camera* in_camera) :
-	camera(in_camera),
-	target(in_target),
-	query(FilterQuery::Any()),
-	clearBits(0),
-	sortOrder(dont_care) 
+	mCamera(in_camera),
+	mTarget(in_target),
+	mQuery(FilterQuery::Any()),
+	mClearBits(0),
+	mSortOrder(dont_care) 
 {}
 
 RenderPass::~RenderPass() 
 {}
 
 RenderPass& RenderPass::Filter(const FilterQuery& in_query) {
-	query = in_query;
+	mQuery = in_query;
 	return (*this);
 }
 
 RenderPass& RenderPass::Sort_Order(SortOrder in_order) {
-	sortOrder = in_order;
+	mSortOrder = in_order;
 	return (*this);
 }
 
 void RenderPass::Begin(void* in_params) {
 	OnBegin(in_params);
-	target->Draw_To_This();
-	camera->Use();
+	mTarget->Draw_To_This();
+	mCamera->Use();
 
-	if (clearBits & GL_COLOR_BUFFER_BIT) {
+	if (mClearBits & GL_COLOR_BUFFER_BIT) {
 		glClearColor(
-			clearColor.R(), 
-			clearColor.G(), 
-			clearColor.B(), 
-			clearColor.A()
+			mClearColor.R(), 
+			mClearColor.G(), 
+			mClearColor.B(), 
+			mClearColor.A()
 		);
 	}
-	if (clearBits & GL_DEPTH_BUFFER_BIT) {
-		glClearDepth(clearDepth);
+	if (mClearBits & GL_DEPTH_BUFFER_BIT) {
+		glClearDepth(mClearDepth);
 	}
-	if (clearBits & GL_STENCIL_BUFFER_BIT) {
-		glClearStencil(clearStencil);
+	if (mClearBits & GL_STENCIL_BUFFER_BIT) {
+		glClearStencil(mClearStencil);
 	}
 	//glFinish();
 	//Log::main(std::string("before glClear(): ") + std::to_string(GE.Time().Now()));
-	glClear(clearBits);
+	glClear(mClearBits);
 	//Log::main(std::string("after glClear(): ") + std::to_string(GE.Time().Now()));
 }
 
@@ -59,46 +59,46 @@ void* RenderPass::End() {
 }
 
 RenderTarget* RenderPass::Get_Render_Target() {
-	return target;
+	return mTarget;
 }
 
 const FilterQuery& RenderPass::Get_Query() const {
-	return query;
+	return mQuery;
 }
 
 RenderPass::SortOrder RenderPass::Get_Sort_Order() const {
-	return sortOrder;
+	return mSortOrder;
 }
 
 RenderPass& RenderPass::Clear_Color(const ColorRGBAf& in_value) {
-	Set_Bit<GLuint>(clearBits, GL_COLOR_BUFFER_BIT, true);
-	clearColor = in_value;
+	Set_Bit<GLuint>(mClearBits, GL_COLOR_BUFFER_BIT, true);
+	mClearColor = in_value;
 	return (*this);
 }
 
 RenderPass& RenderPass::Clear_Depth(GLfloat in_value) {
-	Set_Bit<GLuint>(clearBits, GL_DEPTH_BUFFER_BIT, true);
-	clearDepth = in_value;
+	Set_Bit<GLuint>(mClearBits, GL_DEPTH_BUFFER_BIT, true);
+	mClearDepth = in_value;
 	return (*this);
 }
 
 RenderPass& RenderPass::Clear_Stencil(GLint in_value) {
-	Set_Bit<GLuint>(clearBits, GL_STENCIL_BUFFER_BIT, true);
-	clearStencil = in_value;
+	Set_Bit<GLuint>(mClearBits, GL_STENCIL_BUFFER_BIT, true);
+	mClearStencil = in_value;
 	return (*this);
 }
 
 RenderPass& RenderPass::Cancel_Clear_Color() {
-	Set_Bit<GLuint>(clearBits, GL_COLOR_BUFFER_BIT, false);
+	Set_Bit<GLuint>(mClearBits, GL_COLOR_BUFFER_BIT, false);
 	return (*this);
 }
 
 RenderPass& RenderPass::Cancel_Clear_Depth() {
-	Set_Bit<GLuint>(clearBits, GL_DEPTH_BUFFER_BIT, false);
+	Set_Bit<GLuint>(mClearBits, GL_DEPTH_BUFFER_BIT, false);
 	return (*this);
 }
 
 RenderPass & RenderPass::Cancel_Clear_Stencil() {
-	Set_Bit<GLuint>(clearBits, GL_STENCIL_BUFFER_BIT, false);
+	Set_Bit<GLuint>(mClearBits, GL_STENCIL_BUFFER_BIT, false);
 	return (*this);
 }

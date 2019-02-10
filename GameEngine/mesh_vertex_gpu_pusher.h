@@ -15,37 +15,37 @@ public:
 	};
 
 	struct ExtraParams {
-		UseCase useCase;
-		uint nVerticesToReserve;
-		uint nFacesToReserve;
-		ulong membersToIgnore;
+		UseCase mUseCase;
+		uint mNVerticesToReserve;
+		uint mNFacesToReserve;
+		ulong mMembersToIgnore;
 
 		ExtraParams();
 	};
 
 private:
 	struct Member {
-		DataType type;
-		ubyte depth;
-		GLuint bufferID;
+		DataType mType;
+		ubyte mDepth;
+		GLuint mBufferID;
 
 		ubyte Get_Vertex_Size() const;
 	};
 
-	MeshVertexData* data;
+	MeshVertexData* mData;
 
-	GLuint vertexArrayID;
+	GLuint mVertexArrayID;
 
-	std::unordered_map<uint, Member> members;
-	GLuint indexBufferID;
+	std::unordered_map<uint, Member> mMembers;
+	GLuint mIndexBufferID;
 
-	uint usedVertices;
-	uint usedFaceElements;
+	uint mUsedVertices;
+	uint mUsedFaceElements;
 
-	uint reservedVertices;
-	uint reservedFaceElements;
+	uint mReservedVertices;
+	uint mReservedFaceElements;
 
-	UseCase useCase;
+	UseCase mUseCase;
 
 public:
 	MeshVertexGPUPusher();

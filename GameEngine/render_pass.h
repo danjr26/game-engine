@@ -22,16 +22,16 @@ public:
 	};
 
 private:
-	RenderTarget* target;
-	Camera* camera;
+	RenderTarget* mTarget;
+	Camera* mCamera;
 
-	GLuint clearBits;
-	ColorRGBAf clearColor;
-	GLfloat clearDepth;
-	GLint clearStencil;
-	SortOrder sortOrder;
+	GLuint mClearBits;
+	ColorRGBAf mClearColor;
+	GLfloat mClearDepth;
+	GLint mClearStencil;
+	SortOrder mSortOrder;
 
-	FilterQuery query;
+	FilterQuery mQuery;
 
 protected:
 	virtual void OnBegin(void* in_params);

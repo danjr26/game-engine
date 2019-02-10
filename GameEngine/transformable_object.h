@@ -6,7 +6,7 @@
 template<class T, uint n>
 class TransformableObject {
 protected:
-	Transform<T, n> transform;
+	Transform<T, n> mTransform;
 public:
 	TransformableObject();
 	Transform<T, n>& Get_Transform();

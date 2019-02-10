@@ -3,14 +3,14 @@
 #include "game_engine.h"
 
 Sprite::Sprite(const AxisAlignedRectangled& in_rectangle, Texture* in_texture, const ColorRGBAf& in_color) :
-	meshVertexData(MeshVertexData::DataType::_ushort), 
-	gpuPusher(),
-	color(in_color),
-	textureInstance(in_texture) {
+	mMeshVertexData(MeshVertexData::DataType::_ushort), 
+	mGPUPusher(),
+	mColor(in_color),
+	mTextureInstance(in_texture) {
 
-	innerTransform.Set_Local_Position(in_rectangle.Get_Minima());
-	innerTransform.Scale_Local(in_rectangle.Get_Dimensions());
-	innerTransform.Set_Parent(&transform);
+	mInnerTransform.Set_Local_Position(in_rectangle.Get_Minima());
+	mInnerTransform.Scale_Local(in_rectangle.Get_Dimensions());
+	mInnerTransform.Set_Parent(&mTransform);
 
 	Vector3f positions[] = {
 		Vector3f(0.0f, 0.0f, 0.0f),
@@ -31,12 +31,12 @@ Sprite::Sprite(const AxisAlignedRectangled& in_rectangle, Texture* in_texture, c
 		2, 1, 3
 	};
 
-	meshVertexData.Add_Vertices(4, {});
-	meshVertexData.Add_Member(MeshVertexData::MemberID::position, MeshVertexData::DataType::_float, 3, positions);
-	meshVertexData.Add_Member(MeshVertexData::MemberID::uv, MeshVertexData::DataType::_float, 2, uvs);
-	meshVertexData.Add_Faces(2, indices);
+	mMeshVertexData.Add_Vertices(4, {});
+	mMeshVertexData.Add_Member(MeshVertexData::MemberID::position, MeshVertexData::DataType::_float, 3, positions);
+	mMeshVertexData.Add_Member(MeshVertexData::MemberID::uv, MeshVertexData::DataType::_float, 2, uvs);
+	mMeshVertexData.Add_Faces(2, indices);
 
-	gpuPusher.Initialize(&meshVertexData);
+	mGPUPusher.Initialize(&mMeshVertexData);
 }
 
 Sprite::~Sprite() 
@@ -50,20 +50,20 @@ void Sprite::Set_UVs(const Vector2f& in_topLeft, const Vector2f& in_bottomRight)
 		Vector2f(in_bottomRight.X(), in_topLeft.Y())
 	};
 
-	meshVertexData.Set_Member_Values(MeshVertexData::MemberID::uv, 0, 4, uvs);
-	gpuPusher.Push_Member(MeshVertexData::MemberID::uv);
+	mMeshVertexData.Set_Member_Values(MeshVertexData::MemberID::uv, 0, 4, uvs);
+	mGPUPusher.Push_Member(MeshVertexData::MemberID::uv);
 }
 
 void Sprite::Set_Color(const ColorRGBAf& in_color) {
-	color = in_color;
+	mColor = in_color;
 }
 
 TextureInstance& Sprite::Texture_Instance() {
-	return textureInstance;
+	return mTextureInstance;
 }
 
 double Sprite::Z() const {
-	return depthTransform.Get_World_Depth();
+	return mDepthTransform.Get_World_Depth();
 }
 
 bool Sprite::Should_Cull() const {
@@ -75,11 +75,11 @@ void Sprite::Render() {
 
 	ShaderProgram* shaderProgram;
 
-	Matrix4f modelMatrix = innerTransform.Get_World_Matrix();
-	Matrix4f viewMatrix = GE.Cameras().active->Get_View_Matrix();
-	Matrix4f projectionMatrix = GE.Cameras().active->Get_Projection_Matrix();
+	Matrix4f modelMatrix = mInnerTransform.Get_World_Matrix();
+	Matrix4f viewMatrix = GE.Cameras().mActive->Get_View_Matrix();
+	Matrix4f projectionMatrix = GE.Cameras().mActive->Get_Projection_Matrix();
 
-	if (textureInstance.Get_Texture() == nullptr) {
+	if (mTextureInstance.Get_Texture() == nullptr) {
 		shaderProgram = GE.Assets().Get<ShaderProgram>("MonoShader");
 
 		GLint locations[2] = {
@@ -87,7 +87,7 @@ void Sprite::Render() {
 			shaderProgram->Get_Uniform_Location("color")
 		};
 
-		ColorRGBAf tintFloat = color;
+		ColorRGBAf tintFloat = mColor;
 
 		Matrix4f mvpMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
@@ -105,9 +105,9 @@ void Sprite::Render() {
 			shaderProgram->Get_Uniform_Location("color")
 		};
 
-		textureInstance.Use();
+		mTextureInstance.Use();
 
-		ColorRGBAf tintFloat = color;
+		ColorRGBAf tintFloat = mColor;
 
 		shaderProgram->Use();
 		glUniformMatrix4fv(locations[0], 1, GL_TRUE, modelMatrix.Pointer());
@@ -116,5 +116,5 @@ void Sprite::Render() {
 		glUniform4fv(locations[3], 1, tintFloat.Pointer());
 	}
 
-	gpuPusher.Draw();
+	mGPUPusher.Draw();
 }

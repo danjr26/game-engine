@@ -8,8 +8,8 @@
 template<class T>
 class TrackableAsyncTask : public AsyncTask {
 private:
-	std::atomic<bool> hasChanged;
-	std::atomic<T> progress;
+	std::atomic<bool> mHasChanged;
+	std::atomic<T> mProgress;
 
 private:
 	void Set_Progress(T in_progress);

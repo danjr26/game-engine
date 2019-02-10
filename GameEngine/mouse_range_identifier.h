@@ -12,9 +12,9 @@ public:
 	};
 
 private:
-	MouseAxis axis;
-	float lowValue;
-	float highValue;
+	MouseAxis mAxis;
+	float mLowValue;
+	float mHighValue;
 
 public:
 	MouseRangeIdentifier(MouseAxis in_axis, float in_lowValue = 0.0f, float in_highValue = 1.0f);

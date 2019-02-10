@@ -12,17 +12,17 @@ class InputContext;
 class InputListener {
 public:
 	struct Reception {
-		bool taken;
-		bool eaten;
+		bool mTaken;
+		bool mEaten;
 	};
 private:
-	InputContext* context;
-	std::vector<InputEvent> eventQueue;
+	InputContext* mContext;
+	std::vector<InputEvent> mEventQueue;
 
-	uint level;
-	double depth;
+	uint mLevel;
+	double mDepth;
 
-	std::function<Reception(const InputEvent&)> receiver;
+	std::function<Reception(const InputEvent&)> mReceiver;
 
 public:
 	InputListener(InputContext* in_context, uint in_level = 0, double in_depth = 0.0);

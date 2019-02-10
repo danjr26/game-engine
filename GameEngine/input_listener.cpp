@@ -3,57 +3,57 @@
 #include "exceptions.h"
 
 InputListener::InputListener(InputContext* in_context, uint in_level, double in_depth) :
-	context(in_context),
-	level(in_level),
-	depth(in_depth),
-	receiver([](const InputEvent& in_event) -> Reception {return { true, false }; })
+	mContext(in_context),
+	mLevel(in_level),
+	mDepth(in_depth),
+	mReceiver([](const InputEvent& in_event) -> Reception {return { true, false }; })
 {
-	if (in_context == nullptr) throw InvalidArgumentException("input context was null");
+	if (in_context == nullptr) throw InvalidArgumentException("input mContext was null");
 	in_context->Add(this);
 }
 
 bool InputListener::Post_Event(const InputEvent& in_event) {
-	Reception reception = receiver(in_event);
-	if (reception.taken) {
-		eventQueue.insert(eventQueue.begin(), in_event);
+	Reception reception = mReceiver(in_event);
+	if (reception.mTaken) {
+		mEventQueue.insert(mEventQueue.begin(), in_event);
 	}
-	return reception.eaten;
+	return reception.mEaten;
 }
 
 InputEvent InputListener::Pop_Event() {
-	InputEvent _event = eventQueue.back();
-	eventQueue.pop_back();
+	InputEvent _event = mEventQueue.back();
+	mEventQueue.pop_back();
 	return _event;
 }
 
 uint InputListener::Get_Number_Events() {
-	return (uint)eventQueue.size();
+	return (uint)mEventQueue.size();
 }
 
 void InputListener::Clear_Events() {
-	eventQueue.clear();
+	mEventQueue.clear();
 }
 
 uint InputListener::Get_Level() const {
-	return level;
+	return mLevel;
 }
 
 void InputListener::Set_Level(uint in_level) {
-	level = in_level;
-	context->Sort();
+	mLevel = in_level;
+	mContext->Sort();
 }
 
 double InputListener::Get_Depth() const {
-	return depth;
+	return mDepth;
 }
 
 void InputListener::Set_Depth(double in_depth) {
-	depth = in_depth;
-	context->Sort();
+	mDepth = in_depth;
+	mContext->Sort();
 }
 
 void InputListener::Set_Receiver(const std::function<Reception(const InputEvent&)>& in_receiver) {
-	receiver = in_receiver;
+	mReceiver = in_receiver;
 }
 
 bool InputListener::Compare(const InputListener& in_listener1, const InputListener& in_listener2) {
@@ -73,5 +73,5 @@ bool InputListener::Compare_Pointers(const InputListener* in_listener1, const In
 }
 
 InputContext* InputListener::Get_Context() {
-	return context;
+	return mContext;
 }

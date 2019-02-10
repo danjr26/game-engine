@@ -14,11 +14,11 @@ private:
 		combine_or,
 		combine_xor,
 		combine_not
-	} type;
+	} mType;
 
-	std::vector<ubyte> filters;
-	const FilterQuery* query1;
-	const FilterQuery* query2;
+	std::vector<ubyte> mFilters;
+	const FilterQuery* mQuery1;
+	const FilterQuery* mQuery2;
 
 	FilterQuery(Type in_type);
 	FilterQuery(Type in_type, std::vector<ubyte> in_filters);

@@ -48,9 +48,9 @@ public:
 
 protected:
 	struct Member {
-		DataType type;
-		ubyte depth;
-		std::vector<ubyte> data;
+		DataType mType;
+		ubyte mDepth;
+		std::vector<ubyte> mData;
 
 		Member();
 		Member(DataType in_type, ubyte in_depth, uint in_nVertices, const void* in_data);
@@ -59,11 +59,11 @@ protected:
 		ubyte Get_Vertex_Size() const;
 	};
 
-	std::unordered_map<ubyte, Member> members;
-	std::vector<ubyte> indices;
-	DataType indexType;
-	FaceMode faceMode;
-	uint nVertices;
+	std::unordered_map<ubyte, Member> mMembers;
+	std::vector<ubyte> mIndices;
+	DataType mIndexType;
+	FaceMode mFaceMode;
+	uint mNVertices;
 
 public:
 	MeshVertexData(DataType in_indexType = DataType::_uint, FaceMode in_faceMode = FaceMode::triangles);

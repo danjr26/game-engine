@@ -151,11 +151,11 @@ ubyte MeshVertexData::Get_Data_Type_Size(DataType in_type) {
 }
 
 MeshVertexData::MeshVertexData(DataType in_indexType, FaceMode in_faceMode) :
-	members(),
-	indices(),
-	indexType(in_indexType),
-	nVertices(0),
-	faceMode(in_faceMode)
+	mMembers(),
+	mIndices(),
+	mIndexType(in_indexType),
+	mNVertices(0),
+	mFaceMode(in_faceMode)
 {}
 
 MeshVertexData::MeshVertexData(const MeshVertexData& in_other) {
@@ -166,48 +166,48 @@ MeshVertexData::~MeshVertexData()
 {}
 
 void MeshVertexData::operator=(const MeshVertexData& in_other) {
-	members = in_other.members;
-	indices = in_other.indices;
-	indexType = in_other.indexType;
-	faceMode = in_other.faceMode;
-	nVertices = in_other.nVertices;
+	mMembers = in_other.mMembers;
+	mIndices = in_other.mIndices;
+	mIndexType = in_other.mIndexType;
+	mFaceMode = in_other.mFaceMode;
+	mNVertices = in_other.mNVertices;
 }
 
 template<class T, uint n>
 void MeshVertexData::Apply_Transform_Points(const Transform<T, n>& in_transform, ubyte in_member) {
-	Member& member = members[in_member];
-	if (member.type != To_Data_Type<T>() || member.depth != n) {
+	Member& member = mMembers[in_member];
+	if (member.mType != To_Data_Type<T>() || member.mDepth != n) {
 		throw InvalidArgumentException();
 	}
 
-	Vector<T, n>* data = (Vector<T, n>*)member.data.data();
-	for (uint i = 0; i < member.data.size() / member.Get_Vertex_Size(); i++) {
+	Vector<T, n>* data = (Vector<T, n>*)member.mData.data();
+	for (uint i = 0; i < member.mData.size() / member.Get_Vertex_Size(); i++) {
 		data[i] = in_transform.Local_To_World_Point(data[i]);
 	}
 }
 
 template<class T, uint n>
 void MeshVertexData::Apply_Transform_Directions(const Transform<T, n>& in_transform, ubyte in_member) {
-	Member& member = members[in_member];
-	if (member.type != To_Data_Type<T>() || member.depth != n) {
+	Member& member = mMembers[in_member];
+	if (member.mType != To_Data_Type<T>() || member.mDepth != n) {
 		throw InvalidArgumentException();
 	}
 
-	Vector<T, n>* data = (Vector<T, n>*)member.data.data();
-	for (uint i = 0; i < member.data.size() / member.Get_Vertex_Size(); i++) {
+	Vector<T, n>* data = (Vector<T, n>*)member.mData.data();
+	for (uint i = 0; i < member.mData.size() / member.Get_Vertex_Size(); i++) {
 		data[i] = in_transform.Local_To_World_Direction(data[i]);
 	}
 }
 
 template<class T, uint n>
 void MeshVertexData::Apply_Transform_Vectors(const Transform<T, n>& in_transform, ubyte in_member) {
-	Member& member = members[in_member];
-	if (member.type != To_Data_Type<T>() || member.depth != n) {
+	Member& member = mMembers[in_member];
+	if (member.mType != To_Data_Type<T>() || member.mDepth != n) {
 		throw InvalidArgumentException();
 	}
 
-	Vector<T, n>* data = (Vector<T, n>*)member.data.data();
-	for (uint i = 0; i < member.data.size() / member.Get_Vertex_Size(); i++) {
+	Vector<T, n>* data = (Vector<T, n>*)member.mData.data();
+	for (uint i = 0; i < member.mData.size() / member.Get_Vertex_Size(); i++) {
 		data[i] = in_transform.Local_To_World_Vector(data[i]);
 	}
 }
@@ -274,95 +274,95 @@ ubyte MeshVertexData::Get_Face_Mode_Base(FaceMode in_faceMode) {
 }
 
 uint MeshVertexData::Get_Number_Vertices() const {
-	return nVertices;
+	return mNVertices;
 }
 
 uint MeshVertexData::Get_Number_Faces() const {
-	return (Get_Number_Face_Elements() - Get_Face_Mode_Base(faceMode)) / Get_Face_Mode_Rank(faceMode);
+	return (Get_Number_Face_Elements() - Get_Face_Mode_Base(mFaceMode)) / Get_Face_Mode_Rank(mFaceMode);
 }
 
 uint MeshVertexData::Get_Number_Face_Elements() const {
-	return (uint)indices.size() / Get_Data_Type_Size(indexType);
+	return (uint)mIndices.size() / Get_Data_Type_Size(mIndexType);
 }
 
 uint MeshVertexData::Get_Number_Members() const {
-	return (uint)members.size();
+	return (uint)mMembers.size();
 }
 
 bool MeshVertexData::Is_Valid_Number_Elements(uint in_nElements) const {
-	uint rank = Get_Face_Mode_Rank(faceMode);
-	uint base = Get_Face_Mode_Base(faceMode);
+	uint rank = Get_Face_Mode_Rank(mFaceMode);
+	uint base = Get_Face_Mode_Base(mFaceMode);
 	return (in_nElements - base) % rank == 0;
 }
 
 void MeshVertexData::Get_Member_IDs(std::vector<ubyte>& out_ids) {
-	out_ids.reserve(out_ids.size() + members.size());
-	for (auto it = members.cbegin(); it != members.cend(); it++) {
+	out_ids.reserve(out_ids.size() + mMembers.size());
+	for (auto it = mMembers.cbegin(); it != mMembers.cend(); it++) {
 		out_ids.push_back(it->first);
 	}
 }
 
 void MeshVertexData::Add_Member(ubyte in_id, DataType in_type, ubyte in_depth, const void* in_data) {
-	if (!members.insert(std::pair<ubyte, Member>(in_id, Member())).second) {
+	if (!mMembers.insert(std::pair<ubyte, Member>(in_id, Member())).second) {
 		throw InvalidArgumentException("duplicate mesh member id");
 	}
 
 	if (in_data == nullptr) {
-		members[in_id] = Member(in_type, in_depth, nVertices);
+		mMembers[in_id] = Member(in_type, in_depth, mNVertices);
 	}
 	else {
-		members[in_id] = Member(in_type, in_depth, nVertices, in_data);
+		mMembers[in_id] = Member(in_type, in_depth, mNVertices, in_data);
 	}
 }
 
 void MeshVertexData::Remove_Member(ubyte in_member) {
-	members.erase(in_member);
+	mMembers.erase(in_member);
 }
 
 void MeshVertexData::Set_Member_Value(ubyte in_member, uint in_index, const void* in_value) {
-	Member& member = members[in_member];
+	Member& member = mMembers[in_member];
 	uint size = member.Get_Vertex_Size();
-	memcpy(&member.data[in_index * size], in_value, size);
+	memcpy(&member.mData[in_index * size], in_value, size);
 }
 
 void MeshVertexData::Set_Member_Values(ubyte in_member, uint in_index, uint in_nValues, const void* in_values) {
-	Member& member = members[in_member];
+	Member& member = mMembers[in_member];
 	uint size = member.Get_Vertex_Size();
-	memcpy(&member.data[in_index * size], in_values, in_nValues * size);
+	memcpy(&member.mData[in_index * size], in_values, in_nValues * size);
 }
 
 void MeshVertexData::Get_Member_Value(ubyte in_member, uint in_index, void* out_value) const {
-	const Member& member = members.at(in_member);
+	const Member& member = mMembers.at(in_member);
 	uint size = member.Get_Vertex_Size();
-	memcpy(out_value, &member.data[in_index * size], size);
+	memcpy(out_value, &member.mData[in_index * size], size);
 }
 
 void MeshVertexData::Expand_Member(ubyte in_member, void* out_values) {
-	Member& member = members[in_member];
+	Member& member = mMembers[in_member];
 	uint size = member.Get_Vertex_Size();
 	ubyte* outPtr = (ubyte*)out_values;
 	for (uint i = 0; i < Get_Number_Face_Elements(); i++) {
 		uint index = Get_Standard_Face_Element(i);
-		memcpy(&outPtr[i * size], &member.data[index * size], size);
+		memcpy(&outPtr[i * size], &member.mData[index * size], size);
 	}
 }
 
 bool MeshVertexData::Has_Member(ubyte in_id) const {
-	return members.find(in_id) != members.end();
+	return mMembers.find(in_id) != mMembers.end();
 }
 
 MeshVertexData::DataType MeshVertexData::Get_Member_Type(ubyte in_member) const {
-	return members.at(in_member).type;
+	return mMembers.at(in_member).mType;
 }
 
 ubyte MeshVertexData::Get_Member_Depth(ubyte in_member) const {
-	return members.at(in_member).depth;
+	return mMembers.at(in_member).mDepth;
 }
 
 void MeshVertexData::Reserve_Total_Vertices(uint in_nVertices) {
-	for (auto it = members.begin(); it != members.end(); it++) {
+	for (auto it = mMembers.begin(); it != mMembers.end(); it++) {
 		Member& member = it->second;
-		member.data.reserve(in_nVertices * member.Get_Vertex_Size());
+		member.mData.reserve(in_nVertices * member.Get_Vertex_Size());
 	}
 }
 
@@ -371,43 +371,43 @@ void MeshVertexData::Reserve_Total_Faces(uint in_nFaces) {
 }
 
 void MeshVertexData::Reserve_Total_Face_Elements(uint in_nElements) {
-	indices.reserve(in_nElements * Get_Data_Type_Size(indexType));
+	mIndices.reserve(in_nElements * Get_Data_Type_Size(mIndexType));
 }
 
 void MeshVertexData::Add_Vertices(uint in_nVertices, const std::unordered_map<ubyte, const void*>& in_data) {
-	for (auto it = members.begin(); it != members.end(); it++) {
+	for (auto it = mMembers.begin(); it != mMembers.end(); it++) {
 		Member& member = it->second;
 		auto search = in_data.find(it->first);
 		if (search == in_data.end() || search->second == nullptr) {
-			member.data.resize(member.data.size() + in_nVertices * member.Get_Vertex_Size());
+			member.mData.resize(member.mData.size() + in_nVertices * member.Get_Vertex_Size());
 		}
 		else {
 			const ubyte* ptr = (const ubyte*)search->second;
-			member.data.insert(member.data.end(), ptr, ptr + in_nVertices * member.Get_Vertex_Size());
+			member.mData.insert(member.mData.end(), ptr, ptr + in_nVertices * member.Get_Vertex_Size());
 		}
 	}
 
-	nVertices += in_nVertices;
+	mNVertices += in_nVertices;
 }
 
 void MeshVertexData::Remove_Vertex(uint in_index) {
-	if (in_index >= nVertices) {
+	if (in_index >= mNVertices) {
 		throw InvalidArgumentException("invalid index");
 	}
 
-	for (auto it = members.begin(); it != members.end(); it++) {
+	for (auto it = mMembers.begin(); it != mMembers.end(); it++) {
 		Member& member = it->second;
-		member.data.erase(
-			member.data.begin() + in_index * member.Get_Vertex_Size(), 
-			member.data.begin() + (in_index + 1) * member.Get_Vertex_Size()
+		member.mData.erase(
+			member.mData.begin() + in_index * member.Get_Vertex_Size(), 
+			member.mData.begin() + (in_index + 1) * member.Get_Vertex_Size()
 		);
 	}
 
-	nVertices--;
+	mNVertices--;
 }
 
 void MeshVertexData::Set_Vertex(uint in_index, std::unordered_map<ubyte, const void*> in_data) {
-	for (auto it = members.begin(); it != members.end(); it++) {
+	for (auto it = mMembers.begin(); it != mMembers.end(); it++) {
 		auto search = in_data.find(it->first);
 		if (search == in_data.end() || search->second == nullptr) {
 			Set_Member_Value(it->first, in_index, search->second);
@@ -416,7 +416,7 @@ void MeshVertexData::Set_Vertex(uint in_index, std::unordered_map<ubyte, const v
 }
 
 void MeshVertexData::Set_Vertices(uint in_index, uint in_nVertices, std::unordered_map<ubyte, const void*> in_data) {
-	for (auto it = members.begin(); it != members.end(); it++) {
+	for (auto it = mMembers.begin(); it != mMembers.end(); it++) {
 		auto search = in_data.find(it->first);
 		if (search == in_data.end() || search->second == nullptr) {
 			Set_Member_Values(it->first, in_index, in_nVertices, search->second);
@@ -426,17 +426,17 @@ void MeshVertexData::Set_Vertices(uint in_index, uint in_nVertices, std::unorder
 
 void MeshVertexData::Swap_Vertices(uint in_index1, uint in_index2) {
 	if (in_index1 == in_index2) return;
-	if (in_index1 >= nVertices || in_index2 >= nVertices) {
+	if (in_index1 >= mNVertices || in_index2 >= mNVertices) {
 		throw InvalidArgumentException("invalid index");
 	}
 
-	for (auto it = members.begin(); it != members.end(); it++) {
+	for (auto it = mMembers.begin(); it != mMembers.end(); it++) {
 		Member& member = it->second;
 		uint size = member.Get_Vertex_Size();
 		std::swap_ranges(
-			member.data.begin() + in_index1 * size,
-			member.data.begin() + (in_index1 + 1) * size,
-			member.data.begin() + in_index2 * size
+			member.mData.begin() + in_index1 * size,
+			member.mData.begin() + (in_index1 + 1) * size,
+			member.mData.begin() + in_index2 * size
 			);
 	}
 }
@@ -449,15 +449,15 @@ void MeshVertexData::Add_Face_Elements(uint in_nElements, const void* in_indices
 	if (!Is_Valid_Number_Elements(Get_Number_Face_Elements() + in_nElements)) {
 		throw InvalidArgumentException();
 	}
-	uint length = in_nElements * Get_Data_Type_Size(indexType);
+	uint length = in_nElements * Get_Data_Type_Size(mIndexType);
 	const ubyte* ptr = (const ubyte*)in_indices;
 
-	indices.insert(indices.end(), ptr, ptr + length);
+	mIndices.insert(mIndices.end(), ptr, ptr + length);
 }
 
 template<class T>
 void MeshVertexData::Add_Faces_Polygon() {
-	Add_Faces_Polygon<T>(0, nVertices);
+	Add_Faces_Polygon<T>(0, mNVertices);
 }
 
 template void MeshVertexData::Add_Faces_Polygon<float>();
@@ -465,7 +465,7 @@ template void MeshVertexData::Add_Faces_Polygon<double>();
 
 template<class T>
 void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
-	if (faceMode != FaceMode::triangles || !Has_Member(MemberID::position) || 
+	if (mFaceMode != FaceMode::triangles || !Has_Member(MemberID::position) || 
 		Get_Member_Type(MemberID::position) != To_Data_Type<T>() || in_nVertices < 3) {
 
 		throw InvalidArgumentException();
@@ -592,7 +592,7 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 			uint ints[3];
 		} indices;
 
-		switch (indexType) {
+		switch (mIndexType) {
 		case DataType::_byte:
 		case DataType::_ubyte:
 			indices.bytes[0] = earNode->prev->index;
@@ -667,7 +667,7 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 
 template<class T>
 void MeshVertexData::Add_Faces_Delaunay() {
-	Add_Faces_Delaunay(0, nVertices);
+	Add_Faces_Delaunay(0, mNVertices);
 }
 
 template<class T>
@@ -676,15 +676,15 @@ void MeshVertexData::Add_Faces_Delaunay(uint in_index, uint in_nVertices) {
 }
 
 void MeshVertexData::Remove_Face(uint in_index) {
-	uint size = Get_Data_Type_Size(indexType);
+	uint size = Get_Data_Type_Size(mIndexType);
 	uint index1 = Face_To_Element_Index(in_index);
 	uint index2 = Face_To_Element_Index(in_index + 1);
-	indices.erase(indices.begin() + index1 * size, indices.begin() + index2 * size);
+	mIndices.erase(mIndices.begin() + index1 * size, mIndices.begin() + index2 * size);
 }
 
 void MeshVertexData::Remove_Face_Element(uint in_index) {
-	uint size = Get_Data_Type_Size(indexType);
-	indices.erase(indices.begin() + in_index * size);
+	uint size = Get_Data_Type_Size(mIndexType);
+	mIndices.erase(mIndices.begin() + in_index * size);
 }
 
 const void* MeshVertexData::Get_Face(uint in_index) const {
@@ -692,30 +692,30 @@ const void* MeshVertexData::Get_Face(uint in_index) const {
 }
 
 const void* MeshVertexData::Get_Face_Element(uint in_index) const {
-	uint size = Get_Data_Type_Size(indexType);
-	return indices.data() + in_index * size;
+	uint size = Get_Data_Type_Size(mIndexType);
+	return mIndices.data() + in_index * size;
 }
 
 uint MeshVertexData::Get_Standard_Face_Element(uint in_index) const {
 	uint index = 0;
-	switch (indexType) {
+	switch (mIndexType) {
 	case DataType::_byte:
-		index = ((byte*)indices.data())[in_index];
+		index = ((byte*)mIndices.data())[in_index];
 		break;
 	case DataType::_ubyte:
-		index = ((ubyte*)indices.data())[in_index];
+		index = ((ubyte*)mIndices.data())[in_index];
 		break;
 	case DataType::_short:
-		index = ((short*)indices.data())[in_index];
+		index = ((short*)mIndices.data())[in_index];
 		break;
 	case DataType::_ushort:
-		index = ((ushort*)indices.data())[in_index];
+		index = ((ushort*)mIndices.data())[in_index];
 		break;
 	case DataType::_int:
-		index = ((int*)indices.data())[in_index];
+		index = ((int*)mIndices.data())[in_index];
 		break;
 	case DataType::_uint:
-		index = ((uint*)indices.data())[in_index];
+		index = ((uint*)mIndices.data())[in_index];
 		break;
 	default:
 		throw InvalidArgumentException();
@@ -736,48 +736,48 @@ void MeshVertexData::Set_Faces(uint in_faceIndex, uint in_nFaces, const void* in
 }
 
 void MeshVertexData::Set_Face_Elements(uint in_faceElement, uint in_nFaceElements, const void* in_indices) {
-	uint size = Get_Data_Type_Size(indexType);
+	uint size = Get_Data_Type_Size(mIndexType);
 	const ubyte* ptr = (const ubyte*)in_indices;
-	memcpy(&indices[in_faceElement * size], in_indices, in_nFaceElements * size);
+	memcpy(&mIndices[in_faceElement * size], in_indices, in_nFaceElements * size);
 }
 
 void MeshVertexData::Set_Face_Mode(FaceMode in_faceMode) {
-	if (!indices.empty()) {
+	if (!mIndices.empty()) {
 		throw InvalidArgumentException();
 	}
 
-	faceMode = in_faceMode;
+	mFaceMode = in_faceMode;
 }
 
 MeshVertexData::FaceMode MeshVertexData::Get_Face_Mode() const {
-	return faceMode;
+	return mFaceMode;
 }
 
 ubyte MeshVertexData::Get_Face_Element_Size() const {
-	return Get_Data_Type_Size(indexType);
+	return Get_Data_Type_Size(mIndexType);
 }
 
 MeshVertexData::DataType MeshVertexData::Get_Face_Type() const {
-	return indexType;
+	return mIndexType;
 }
 
 const void* MeshVertexData::Get_Member_Pointer(ubyte in_member) const {
-	return members.at(in_member).data.data();
+	return mMembers.at(in_member).mData.data();
 }
 
 const void* MeshVertexData::Get_Face_Pointer() const {
-	return indices.data();
+	return mIndices.data();
 }
 
 uint MeshVertexData::Element_To_Face_Index(uint in_elementIndex) const {
-	uint rank = Get_Face_Mode_Rank(faceMode);
-	uint base = Get_Face_Mode_Base(faceMode);
+	uint rank = Get_Face_Mode_Rank(mFaceMode);
+	uint base = Get_Face_Mode_Base(mFaceMode);
 	return (in_elementIndex <= base) ? (0) : ((in_elementIndex - base) / rank);
 }
 
 uint MeshVertexData::Face_To_Element_Index(uint in_faceIndex) const {
-	uint rank = Get_Face_Mode_Rank(faceMode);
-	uint base = Get_Face_Mode_Base(faceMode);
+	uint rank = Get_Face_Mode_Rank(mFaceMode);
+	uint base = Get_Face_Mode_Base(mFaceMode);
 	return (in_faceIndex == 0) ? (0) : in_faceIndex * rank + base;
 }
 
@@ -793,17 +793,17 @@ MeshVertexData::Member::Member()
 {}
 
 MeshVertexData::Member::Member(DataType in_type, ubyte in_depth, uint in_nVertices, const void* in_data) :
-	type(in_type),
-	depth(in_depth),
-	data(((const ubyte*)in_data), ((const ubyte*)in_data) + (in_nVertices * in_depth * Get_Data_Type_Size(in_type)))
+	mType(in_type),
+	mDepth(in_depth),
+	mData(((const ubyte*)in_data), ((const ubyte*)in_data) + (in_nVertices * in_depth * Get_Data_Type_Size(in_type)))
 {}
 
 MeshVertexData::Member::Member(DataType in_type, ubyte in_depth, uint in_nVertices) :
-	type(in_type),
-	depth(in_depth),
-	data(in_nVertices * in_depth * Get_Data_Type_Size(in_type))
+	mType(in_type),
+	mDepth(in_depth),
+	mData(in_nVertices * in_depth * Get_Data_Type_Size(in_type))
 {}
 
 ubyte MeshVertexData::Member::Get_Vertex_Size() const {
-	return depth * MeshVertexData::Get_Data_Type_Size(type);
+	return mDepth * MeshVertexData::Get_Data_Type_Size(mType);
 }

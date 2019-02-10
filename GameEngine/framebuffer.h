@@ -8,9 +8,9 @@
 
 class Framebuffer : public RenderTarget {
 private:
-	GLuint id;
-	std::vector<Texture*> colorTextures;
-	Texture* depthTexture;
+	GLuint mID;
+	std::vector<Texture*> mColorTextures;
+	Texture* mDepthTexture;
 
 public:
 	Framebuffer(std::vector<Texture*> in_colorTextures, Texture* in_depthTexture);

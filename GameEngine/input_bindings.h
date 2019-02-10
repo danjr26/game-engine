@@ -18,11 +18,11 @@ public:
 			state,
 			range
 		};
-		Mode mode;
-		InputBindings& parent;
-		const RawInputEvent& _event;
-		const RawInputState& state;
-		int index;
+		Mode mMode;
+		InputBindings& mParent;
+		const RawInputEvent& mEvent;
+		const RawInputState& mState;
+		int mIndex;
 
 	private:
 		Iterator(Mode in_mode, InputBindings& in_parent, const RawInputEvent& in_event, const RawInputState& in_state);

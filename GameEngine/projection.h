@@ -7,8 +7,8 @@
 template<class T>
 class Projection {
 public:
-	Vector<T, 3> minima;
-	Vector<T, 3> maxima;
+	Vector<T, 3> mMinima;
+	Vector<T, 3> mMaxima;
 	enum Type : bool {
 		orthographic = false,
 		perspective = true

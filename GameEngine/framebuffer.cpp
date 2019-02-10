@@ -214,32 +214,32 @@ void Framebuffer::Apply_Default(Flags mode) {
 */
 
 Framebuffer::Framebuffer(std::vector<Texture*> in_colorTextures, Texture* in_depthTexture) :
-colorTextures(in_colorTextures),
-depthTexture(in_depthTexture) {
-	if (colorTextures.size() == 0) {
+mColorTextures(in_colorTextures),
+mDepthTexture(in_depthTexture) {
+	if (mColorTextures.size() == 0) {
 		throw InvalidArgumentException("no color textures passed to framebuffer");
 	}
 
-	Vector3i dimensions = colorTextures[0]->Get_Dimensions();
-	for (uint i = 1; i < colorTextures.size(); i++) {
-		if (colorTextures[i] == nullptr || colorTextures[i]->Get_Dimensions() != dimensions) {
+	Vector3i dimensions = mColorTextures[0]->Get_Dimensions();
+	for (uint i = 1; i < mColorTextures.size(); i++) {
+		if (mColorTextures[i] == nullptr || mColorTextures[i]->Get_Dimensions() != dimensions) {
 			throw InvalidArgumentException("invalid color texture passed to framebuffer");
 		}
 	}
 
-	if(depthTexture != nullptr && depthTexture->Get_Dimensions() != dimensions) {
+	if(mDepthTexture != nullptr && mDepthTexture->Get_Dimensions() != dimensions) {
 		throw InvalidArgumentException("invalid depth texture passed to framebuffer");
 	}
 
-	glGenFramebuffers(1, &id);
-	glBindFramebuffer(GL_FRAMEBUFFER, id);
+	glGenFramebuffers(1, &mID);
+	glBindFramebuffer(GL_FRAMEBUFFER, mID);
 
-	for (uint i = 0; i < colorTextures.size(); i++) {
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, colorTextures[i]->id, 0);
+	for (uint i = 0; i < mColorTextures.size(); i++) {
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, mColorTextures[i]->mID, 0);
 	}
 
-	if (depthTexture != nullptr) {
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture->id, 0);
+	if (mDepthTexture != nullptr) {
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, mDepthTexture->mID, 0);
 	}
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
@@ -250,28 +250,28 @@ depthTexture(in_depthTexture) {
 }
 
 Framebuffer::~Framebuffer() {
-	glDeleteFramebuffers(1, &id);
+	glDeleteFramebuffers(1, &mID);
 }
 
 std::vector<Texture*> Framebuffer::Get_Color_Textures() {
-	return colorTextures;
+	return mColorTextures;
 }
 
 Texture* Framebuffer::Get_Color_Texture(uint in_index) {
-	return colorTextures[in_index];
+	return mColorTextures[in_index];
 }
 
 Texture* Framebuffer::Get_Depth_Texture() {
-	return depthTexture;
+	return mDepthTexture;
 }
 
 Vector2i Framebuffer::Get_Dimensions() const {
-	return (Vector2i)colorTextures[0]->Get_Dimensions();
+	return (Vector2i)mColorTextures[0]->Get_Dimensions();
 }
 
 void Framebuffer::_Draw_To_This() {
-	Vector3i dimensions = colorTextures[0]->Get_Dimensions();
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, id);
+	Vector3i dimensions = mColorTextures[0]->Get_Dimensions();
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mID);
 	glViewport(0, 0, dimensions.X(), dimensions.Y());
 }
 

@@ -3,43 +3,43 @@
 
 template<class T, uint n>
 HalfSpace<T, n>::HalfSpace(const Vector<T, n>& in_point, const Vector<T, n>& in_direction) :
-	point(in_point),
-	direction(in_direction.Normalized()) {}
+	mPoint(in_point),
+	mDirection(in_direction.Normalized()) {}
 
 template<class T, uint n>
 void HalfSpace<T, n>::Apply_Transform(const Transform<T, n>& in_transform) {
-	point = in_transform.Local_To_World_Point(point);
-	direction = in_transform.Local_To_World_Direction(direction);
+	mPoint = in_transform.Local_To_World_Point(mPoint);
+	mDirection = in_transform.Local_To_World_Direction(mDirection);
 }
 
 template<class T, uint n>
 Vector<T, n> HalfSpace<T, n>::Get_Point() const {
-	return point;
+	return mPoint;
 }
 
 template<class T, uint n>
 void HalfSpace<T, n>::Set_Point(const Vector<T, n>& in_point) {
-	point = in_point;
+	mPoint = in_point;
 }
 
 template<class T, uint n>
 Vector<T, n> HalfSpace<T, n>::Get_Direction() const {
-	return direction;
+	return mDirection;
 }
 
 template<class T, uint n>
 void HalfSpace<T, n>::Set_Direction(const Vector<T, n>& in_direction) {
-	direction = in_direction.Normalized();
+	mDirection = in_direction.Normalized();
 }
 
 template<class T, uint n>
 T HalfSpace<T, n>::Get_Projection_Coefficient() const {
-	return point.Dot(direction);
+	return mPoint.Dot(mDirection);
 }
 
 template<class T, uint n>
 Vector<T, n> HalfSpace<T, n>::Get_Projection() const {
-	return point.Dot(direction) * direction;
+	return mPoint.Dot(mDirection) * mDirection;
 }
 
 template<class T, uint n>

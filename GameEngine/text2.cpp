@@ -3,16 +3,16 @@
 #include "game_engine.h"
 
 Text2::Text2(const std::string& in_text, FontFaceRasterSet* in_rasterSet, ColorRGBAc in_color) :
-	text(in_text),
-	rasterSet(in_rasterSet),
-	bitmapArray(in_rasterSet->texture),
-	containerDimensions(300, 300) {
+	mText(in_text),
+	mRasterSet(in_rasterSet),
+	mBitmapArray(in_rasterSet->mTexture),
+	mContainerDimensions(300, 300) {
 	
-	if (in_rasterSet->texture == nullptr || in_rasterSet->texture->Get_Type() != Texture::Type::_2d_array) {
+	if (in_rasterSet->mTexture == nullptr || in_rasterSet->mTexture->Get_Type() != Texture::Type::_2d_array) {
 		throw InvalidArgumentException("invalid raster texture passed to text");
 	}
 
-	scrollTransform.Set_Parent(&transform);
+	mScrollTransform.Set_Parent(&mTransform);
 
 	Create_OpenGL();
 }
@@ -24,8 +24,8 @@ Text2::~Text2() {
 Vector2f Text2::Get_Local_Dimensions() const {
 	Vector2f dimensions;
 
-	Vector2f pen = Vector2f(0, rasterSet->topToBaseline);
-	for (uint i = 0; i < text.size(); i++) {
+	Vector2f pen = Vector2f(0, mRasterSet->mTopToBaseline);
+	for (uint i = 0; i < mText.size(); i++) {
 		Increment_Pen(pen, i);
 		dimensions = Vector2f(Max(dimensions.X(), pen.X()), Max(dimensions.Y(), pen.Y()));
 	}
@@ -42,17 +42,17 @@ Vector2f Text2::Get_Local_Char_Position(uint in_index) const {
 }
 
 Vector2f Text2::Get_Char_Dimensions(uint in_index) const {
-	if (FontFace::Is_Printable(text[in_index])) {
-		uint charIndex = text[in_index] - ' ';
-		return Vector2f(rasterSet->advances[charIndex], Get_Char_Height());
+	if (FontFace::Is_Printable(mText[in_index])) {
+		uint charIndex = mText[in_index] - ' ';
+		return Vector2f(mRasterSet->mAdvances[charIndex], Get_Char_Height());
 	}
 	return Vector2f(0, Get_Char_Height());
 }
 
 uint Text2::Get_Number_Lines() const {
-	uint out = 1u + (uint)lineWrap.size();
-	for (uint i = 0; i < text.size(); i++) {
-		if (text[i] == '\n') {
+	uint out = 1u + (uint)mLineWrap.size();
+	for (uint i = 0; i < mText.size(); i++) {
+		if (mText[i] == '\n') {
 			out++;
 		}
 	}
@@ -62,11 +62,11 @@ uint Text2::Get_Number_Lines() const {
 uint Text2::Get_Line_Index(uint in_charIndex) const {
 	uint out = 0;
 	uint lineWrapI = 0;
-	for (uint i = 0; i < in_charIndex && i < text.size(); i++) {
-		if (text[i] == '\n') {
+	for (uint i = 0; i < in_charIndex && i < mText.size(); i++) {
+		if (mText[i] == '\n') {
 			out++;
 		}
-		if (lineWrapI < lineWrap.size() && lineWrap[lineWrapI] == i) {
+		if (lineWrapI < mLineWrap.size() && mLineWrap[lineWrapI] == i) {
 			out++;
 			lineWrapI++;
 		}
@@ -76,22 +76,22 @@ uint Text2::Get_Line_Index(uint in_charIndex) const {
 
 Rangeui Text2::Get_Line_Range(uint in_lineIndex) const {
 	uint low = 0;
-	uint high = (uint)text.size();
+	uint high = (uint)mText.size();
 	uint lineIndex = 0;
 	uint lineWrapI = 0;
 	uint i;
-	for (i = 0; i < text.size() && lineIndex < in_lineIndex; i++) {
-		if (text[i] == '\n') {
+	for (i = 0; i < mText.size() && lineIndex < in_lineIndex; i++) {
+		if (mText[i] == '\n') {
 			lineIndex++;
 		}
-		if (lineWrapI < lineWrap.size() && lineWrap[lineWrapI] == i) {
+		if (lineWrapI < mLineWrap.size() && mLineWrap[lineWrapI] == i) {
 			lineIndex++;
 			lineWrapI++;
 		}
 	}
 	low = i;
-	for (; i < text.size(); i++) {
-		if (text[i] == '\n' || (lineWrapI < lineWrap.size() && lineWrap[lineWrapI] == i)) {
+	for (; i < mText.size(); i++) {
+		if (mText[i] == '\n' || (lineWrapI < mLineWrap.size() && mLineWrap[lineWrapI] == i)) {
 			high = i;
 			break;
 		}
@@ -100,11 +100,11 @@ Rangeui Text2::Get_Line_Range(uint in_lineIndex) const {
 }
 
 float Text2::Get_Char_Height() const {
-	return rasterSet->topToBaseline;
+	return mRasterSet->mTopToBaseline;
 }
 
 float Text2::Get_Newline_Height() const {
-	return (float)rasterSet->size;
+	return (float)mRasterSet->mSize;
 }
 
 uint Text2::Get_Closest_Char_Index(Vector2f in_point) const {
@@ -113,7 +113,7 @@ uint Text2::Get_Closest_Char_Index(Vector2f in_point) const {
 		return 0;
 	}
 	if (lineIndex >= (int)Get_Number_Lines()) {
-		return (uint)text.size();
+		return (uint)mText.size();
 	}
 	Rangeui lineRange = Get_Line_Range(lineIndex);
 
@@ -137,25 +137,25 @@ uint Text2::Get_Closest_Char_Index(Vector2f in_point) const {
 }
 
 Vector2f Text2::Get_Container_Dimensions() const {
-	return containerDimensions;
+	return mContainerDimensions;
 }
 
 Transform2d& Text2::Get_Scroll_Transform() {
-	return scrollTransform;
+	return mScrollTransform;
 }
 
 void Text2::Set_Scroll_Position(Vector2f in_position) {
-	scrollTransform.Set_Local_Position(in_position);
+	mScrollTransform.Set_Local_Position(in_position);
 }
 
 Vector2f Text2::Get_Scroll_To_Include_Char(uint in_charIndex) const {
 	Vector2d minima = Get_Local_Char_Position(in_charIndex);
 	Vector2d maxima = minima + Get_Char_Dimensions(in_charIndex);
-	Vector2d currentMinima = -Vector2d(scrollTransform.Get_Local_Position());
+	Vector2d currentMinima = -Vector2d(mScrollTransform.Get_Local_Position());
 	Vector2d currentMaxima = currentMinima + Get_Container_Dimensions();
 
-	Vector2d out = Vector2d(scrollTransform.Get_Local_Position());
-	if (std::find(lineWrap.begin(), lineWrap.end(), in_charIndex) == lineWrap.end()) {
+	Vector2d out = Vector2d(mScrollTransform.Get_Local_Position());
+	if (std::find(mLineWrap.begin(), mLineWrap.end(), in_charIndex) == mLineWrap.end()) {
 		if (minima.X() < currentMinima.X()) {
 			out[0] = minima.X();
 		}
@@ -175,7 +175,7 @@ Vector2f Text2::Get_Scroll_To_Include_Char(uint in_charIndex) const {
 }
 
 std::string Text2::Get_Text() const {
-	return text;
+	return mText;
 }
 
 void Text2::Insert(char in_char, uint in_index) {
@@ -186,30 +186,30 @@ void Text2::Insert(char in_char, uint in_index) {
 
 void Text2::Insert(const std::string& in_text, uint in_index) {
 	Destroy_OpenGL();
-	text.insert(text.begin() + in_index, in_text.begin(), in_text.end());
+	mText.insert(mText.begin() + in_index, in_text.begin(), in_text.end());
 	Create_OpenGL();
 }
 
 void Text2::Delete(uint in_start, uint in_number) {
 	Destroy_OpenGL();
-	text.erase(in_start, in_number);
+	mText.erase(in_start, in_number);
 	Create_OpenGL();
 }
 
 void Text2::Replace(const std::string& in_text) {
 	Destroy_OpenGL();
-	text = in_text;
+	mText = in_text;
 	Create_OpenGL();
 }
 
 void Text2::Replace(const std::string& in_text, uint in_start, uint in_number) {
 	Destroy_OpenGL();
-	text.replace(in_start, in_number, in_text);
+	mText.replace(in_start, in_number, in_text);
 	Create_OpenGL();
 }
 
 double Text2::Z() const {
-	return depthTransform.Get_World_Depth();
+	return mDepthTransform.Get_World_Depth();
 }
 
 bool Text2::Should_Cull() const {
@@ -221,17 +221,17 @@ void Text2::Render() {
 
 	// glDisable(GL_CULL_FACE);
 
-	Matrix4f modelMatrix = scrollTransform.Get_World_Matrix();
-	Matrix4f viewMatrix = GE.Cameras().active->Get_Matrix();
+	Matrix4f modelMatrix = mScrollTransform.Get_World_Matrix();
+	Matrix4f viewMatrix = GE.Cameras().mActive->Get_Matrix();
 	Matrix4f modelviewMatrix = viewMatrix * modelMatrix;
 
 	GLint locations[1] = {
 		shaderProgram->Get_Uniform_Location("matrix")
 	};
 	
-	bitmapArray.Use();
+	mBitmapArray.Use();
 
-	glBindVertexArray(vertexArrayID);
+	glBindVertexArray(mVertexArrayID);
 
 	shaderProgram->Use();
 	glUniformMatrix4fv(locations[0], 1, GL_TRUE, modelviewMatrix.Pointer());
@@ -243,8 +243,8 @@ void Text2::Render() {
 
 uint Text2::Get_Number_Printable() {
 	uint nPrintable = 0;
-	for (uint i = 0; i < text.size(); i++) {
-		if (FontFace::Is_Printable(text[i])) {
+	for (uint i = 0; i < mText.size(); i++) {
+		if (FontFace::Is_Printable(mText[i])) {
 			nPrintable++;
 		}
 	}
@@ -252,25 +252,25 @@ uint Text2::Get_Number_Printable() {
 }
 
 void Text2::Increment_Pen(Vector2f& inout_pen, uint in_index) const {
-	if (std::find(lineWrap.begin(), lineWrap.end(), in_index) != lineWrap.end()) {
+	if (std::find(mLineWrap.begin(), mLineWrap.end(), in_index) != mLineWrap.end()) {
 		inout_pen[0] = 0;
 		inout_pen[1] += Get_Newline_Height();
 	}
 
-	if (FontFace::Is_Printable(text[in_index])) {
-		uint charIndex = text[in_index] - ' ';
-		inout_pen[0] += rasterSet->advances[charIndex];
+	if (FontFace::Is_Printable(mText[in_index])) {
+		uint charIndex = mText[in_index] - ' ';
+		inout_pen[0] += mRasterSet->mAdvances[charIndex];
 	}
-	else if (text[in_index] == '\n') {
+	else if (mText[in_index] == '\n') {
 		inout_pen[0] = 0;
 		inout_pen[1] += Get_Newline_Height();
 	}
 }
 
 void Text2::Create_OpenGL() {
-	bitmapArray.Settings().Set_Magnify_Filter(TextureSettings::FilterMode::none);
-	bitmapArray.Settings().Set_Minify_Filter(TextureSettings::FilterMode::none);
-	bitmapArray.Settings().Set_Swizzle(
+	mBitmapArray.Settings().Set_Magnify_Filter(TextureSettings::FilterMode::none);
+	mBitmapArray.Settings().Set_Minify_Filter(TextureSettings::FilterMode::none);
+	mBitmapArray.Settings().Set_Swizzle(
 		TextureSettings::Swizzle::one,
 		TextureSettings::Swizzle::one,
 		TextureSettings::Swizzle::one,
@@ -290,30 +290,30 @@ void Text2::Create_OpenGL() {
 	indices.reserve(nVertices / 2 * 3);
 
 	uint glyphIndex = 0;
-	Vector2f pen = Vector2f(0, rasterSet->topToBaseline);
+	Vector2f pen = Vector2f(0, mRasterSet->mTopToBaseline);
 
-	lineWrap.clear();
+	mLineWrap.clear();
 
-	for (uint i = 0; i < text.size(); i++) {
-		uint charIndex = text[i] - ' ';
+	for (uint i = 0; i < mText.size(); i++) {
+		uint charIndex = mText[i] - ' ';
 		Vector2f testPen = pen;
 		Increment_Pen(testPen, i);
-		bool isPrintable = FontFace::Is_Printable(text[i]);
-		bool didWrap = isPrintable ? testPen.X() > containerDimensions.X() : false;
+		bool isPrintable = FontFace::Is_Printable(mText[i]);
+		bool didWrap = isPrintable ? testPen.X() > mContainerDimensions.X() : false;
 		if (didWrap) {
 			pen[0] = 0;
 			pen[1] += Get_Newline_Height();
 		}
 
 		if (isPrintable) {
-			Vector2i targetDimensions = GE.Render().mainTarget->Get_Dimensions();
+			Vector2i targetDimensions = GE.Render().mMainTarget->Get_Dimensions();
 
-			Vector2f minCoords = pen + rasterSet->offsets[charIndex];
-			Vector2f dimensions = rasterSet->dimensions[charIndex];
+			Vector2f minCoords = pen + mRasterSet->mOffsets[charIndex];
+			Vector2f dimensions = mRasterSet->mDimensions[charIndex];
 			Vector2f maxCoords = minCoords + dimensions;
 
 			Vector2f minUVs = Vector2f(0.0f, 0.0f);
-			Vector2f maxUVs = dimensions.Compwise((Vector2f(Vector3f(rasterSet->texture->Get_Dimensions()))).Component_Inverted());
+			Vector2f maxUVs = dimensions.Compwise((Vector2f(Vector3f(mRasterSet->mTexture->Get_Dimensions()))).Component_Inverted());
 
 			Vector2f minScreenCoords = DisplayUnits2f::Pixels(minCoords, targetDimensions).OpenGL_Position();
 			Vector2f maxScreenCoords = DisplayUnits2f::Pixels(maxCoords, targetDimensions).OpenGL_Position();
@@ -341,35 +341,35 @@ void Text2::Create_OpenGL() {
 		Increment_Pen(pen, i);
 
 		if (didWrap) {
-			lineWrap.push_back(i);
+			mLineWrap.push_back(i);
 		}
 	}
 
-	glGenVertexArrays(1, &vertexArrayID);
-	glBindVertexArray(vertexArrayID);
+	glGenVertexArrays(1, &mVertexArrayID);
+	glBindVertexArray(mVertexArrayID);
 
-	glGenBuffers(1, &vertexBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+	glGenBuffers(1, &mVertexBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * nVertices, vertices.data(), GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-	glGenBuffers(1, &uvBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, uvBufferID);
+	glGenBuffers(1, &mUVBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, mUVBufferID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * nVertices, uvs.data(), GL_STATIC_DRAW);
 	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-	glGenBuffers(1, &indexBufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+	glGenBuffers(1, &mIndexBufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ushort) * nVertices / 2 * 3, indices.data(), GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
 }
 
 void Text2::Destroy_OpenGL() {
-	glDeleteBuffers(1, &vertexBufferID);
-	glDeleteBuffers(1, &uvBufferID);
-	glDeleteBuffers(1, &indexBufferID);
-	glDeleteVertexArrays(1, &vertexArrayID);
+	glDeleteBuffers(1, &mVertexBufferID);
+	glDeleteBuffers(1, &mUVBufferID);
+	glDeleteBuffers(1, &mIndexBufferID);
+	glDeleteVertexArrays(1, &mVertexArrayID);
 }

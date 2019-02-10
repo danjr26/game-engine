@@ -34,9 +34,6 @@
     <Filter Include="Header Files\collision">
       <UniqueIdentifier>{b2fd311c-f319-430f-a4a9-f9a13ba0ee96}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\util\array">
-      <UniqueIdentifier>{893178b8-5a48-403c-b78e-234951cb4dfa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\ai">
       <UniqueIdentifier>{71184422-d7bf-47fc-8e16-0ddd6749066a}</UniqueIdentifier>
     </Filter>
@@ -174,25 +171,10 @@
     <ClInclude Include="collision.h">
       <Filter>Header Files\collision</Filter>
     </ClInclude>
-    <ClInclude Include="custom_array.h">
-      <Filter>Header Files\util\array</Filter>
-    </ClInclude>
-    <ClInclude Include="parse.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
     <ClInclude Include="misc.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
-    <ClInclude Include="triple.h">
-      <Filter>Header Files\util\array</Filter>
-    </ClInclude>
     <ClInclude Include="stepper.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="progress_tracker.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="transition_tracker.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
     <ClInclude Include="line_segment.h">
@@ -239,9 +221,6 @@
     </ClInclude>
     <ClInclude Include="transformable_object.h">
       <Filter>Header Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="matrix4.h">
-      <Filter>Header Files\util</Filter>
     </ClInclude>
     <ClInclude Include="box.h">
       <Filter>Header Files\geometry</Filter>
@@ -348,44 +327,17 @@
     <ClInclude Include="sphere.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="circle_collision_mask.h">
-      <Filter>Header Files\collision\masks</Filter>
-    </ClInclude>
     <ClInclude Include="collision_mask.h">
       <Filter>Header Files\collision\masks</Filter>
     </ClInclude>
     <ClInclude Include="collision_evaluator.h">
       <Filter>Header Files\collision\evaluators</Filter>
     </ClInclude>
-    <ClInclude Include="axis_aligned_rectangle_collision_mask.h">
-      <Filter>Header Files\collision\masks</Filter>
-    </ClInclude>
     <ClInclude Include="range.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="point2_collision_mask.h">
-      <Filter>Header Files\collision\masks</Filter>
-    </ClInclude>
     <ClInclude Include="half_space.h">
       <Filter>Header Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="half_space2_collision_mask.h">
-      <Filter>Header Files\collision\masks</Filter>
-    </ClInclude>
-    <ClInclude Include="line2_collision_mask.h">
-      <Filter>Header Files\collision\masks</Filter>
-    </ClInclude>
-    <ClInclude Include="line_segment2_collision_mask.h">
-      <Filter>Header Files\collision\masks</Filter>
-    </ClInclude>
-    <ClInclude Include="ray2_collision_mask.h">
-      <Filter>Header Files\collision\masks</Filter>
-    </ClInclude>
-    <ClInclude Include="rectangle_collision_mask.h">
-      <Filter>Header Files\collision\masks</Filter>
-    </ClInclude>
-    <ClInclude Include="triangle2_collision_mask.h">
-      <Filter>Header Files\collision\masks</Filter>
     </ClInclude>
     <ClInclude Include="binary_collision_tree.h">
       <Filter>Header Files\collision</Filter>
@@ -395,12 +347,6 @@
     </ClInclude>
     <ClInclude Include="axis_aligned_half_space.h">
       <Filter>Header Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="axis_aligned_half_space2_collision_mask.h">
-      <Filter>Header Files\collision\masks</Filter>
-    </ClInclude>
-    <ClInclude Include="axis_aligned_line2_collision_mask.h">
-      <Filter>Header Files\collision\masks</Filter>
     </ClInclude>
     <ClInclude Include="keyboard_action_identifier.h">
       <Filter>Header Files\framework\input\identifiers</Filter>
@@ -515,9 +461,6 @@
     </ClInclude>
     <ClInclude Include="catmull_rom_transitioner.h">
       <Filter>Header Files\util\transition</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh2_collision_mask.h">
-      <Filter>Header Files\collision\masks</Filter>
     </ClInclude>
     <ClInclude Include="basic_collision_mask.h">
       <Filter>Header Files\collision\masks</Filter>
@@ -701,40 +644,7 @@
     <ClCompile Include="collision_evaluator.cpp">
       <Filter>Source Files\collision\evaluators</Filter>
     </ClCompile>
-    <ClCompile Include="circle_collision_mask.cpp">
-      <Filter>Source Files\collision\masks</Filter>
-    </ClCompile>
-    <ClCompile Include="point2_collision_mask.cpp">
-      <Filter>Source Files\collision\masks</Filter>
-    </ClCompile>
     <ClCompile Include="collision_mask.cpp">
-      <Filter>Source Files\collision\masks</Filter>
-    </ClCompile>
-    <ClCompile Include="axis_aligned_rectangle_collision_mask.cpp">
-      <Filter>Source Files\collision\masks</Filter>
-    </ClCompile>
-    <ClCompile Include="half_space2_collision_mask.cpp">
-      <Filter>Source Files\collision\masks</Filter>
-    </ClCompile>
-    <ClCompile Include="line_segment2_collision_mask.cpp">
-      <Filter>Source Files\collision\masks</Filter>
-    </ClCompile>
-    <ClCompile Include="line2_collision_mask.cpp">
-      <Filter>Source Files\collision\masks</Filter>
-    </ClCompile>
-    <ClCompile Include="ray2_collision_mask.cpp">
-      <Filter>Source Files\collision\masks</Filter>
-    </ClCompile>
-    <ClCompile Include="rectangle_collision_mask.cpp">
-      <Filter>Source Files\collision\masks</Filter>
-    </ClCompile>
-    <ClCompile Include="triangle2_collision_mask.cpp">
-      <Filter>Source Files\collision\masks</Filter>
-    </ClCompile>
-    <ClCompile Include="axis_aligned_half_space2_collision_mask.cpp">
-      <Filter>Source Files\collision\masks</Filter>
-    </ClCompile>
-    <ClCompile Include="axis_aligned_line2_collision_mask.cpp">
       <Filter>Source Files\collision\masks</Filter>
     </ClCompile>
     <ClCompile Include="editable_text.cpp">
@@ -850,9 +760,6 @@
     </ClCompile>
     <ClCompile Include="binary_collision_tree.cpp">
       <Filter>Source Files\collision</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh2_collision_mask.cpp">
-      <Filter>Source Files\collision\masks</Filter>
     </ClCompile>
     <ClCompile Include="basic_collision_mask.cpp">
       <Filter>Source Files\collision\masks</Filter>

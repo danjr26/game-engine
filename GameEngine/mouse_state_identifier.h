@@ -5,9 +5,9 @@
 #include "mouse_button.h"
 
 class MouseStateIdentifier {
-	RawInputEvent::Type type;
-	MouseButton button;
-	InputStateChange stateChange;
+	RawInputEvent::Type mType;
+	MouseButton mButton;
+	InputStateChange mStateChange;
 
 	MouseStateIdentifier(RawInputEvent::Type in_type, MouseButton in_button, InputStateChange in_stateChange);
 	InputStateChange operator()(const RawInputEvent& in_event, const RawInputState& in_state) const;

@@ -8,7 +8,7 @@
 
 class AssetManager {
 private:
-	std::unordered_map<std::string, Asset*> assets;
+	std::unordered_map<std::string, Asset*> mAssets;
 
 public:
 	void Add(const std::string& in_name, Asset* in_asset);
@@ -17,8 +17,8 @@ public:
 
 	template<class T>
 	T* Get(const std::string& in_name) {
-		auto result = assets.find(in_name);
-		if (result == assets.end()) {
+		auto result = mAssets.find(in_name);
+		if (result == mAssets.end()) {
 			return nullptr;
 		}
 		else {

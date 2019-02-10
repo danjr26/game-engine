@@ -13,7 +13,7 @@ struct CollisionBasisWrapper<AxisAlignedHalfSpace<T, 2>, T> {
 	using basis_t = AxisAlignedHalfSpace<T, 2>;
 	using pnp_t = typename CollisionMask<T, 2>::PointNormalPolicy;
 
-	basis_t basis;
+	basis_t mBasis;
 
 	void Apply_Transform(const Transform<T, 2>& in_transform);
 	static Vector<T, 2> Get_Closest_Point(
@@ -27,7 +27,7 @@ struct CollisionBasisWrapper<AxisAlignedLine<T, 2>, T> {
 	using basis_t = AxisAlignedLine<T, 2>;
 	using pnp_t = typename CollisionMask<T, 2>::PointNormalPolicy;
 
-	basis_t basis;
+	basis_t mBasis;
 
 	void Apply_Transform(const Transform<T, 2>& in_transform);
 	static Vector<T, 2> Get_Closest_Point(
@@ -41,7 +41,7 @@ struct CollisionBasisWrapper<AxisAlignedBox<T, 2>, T> {
 	using basis_t = AxisAlignedBox<T, 2>;
 	using pnp_t = typename CollisionMask<T, 2>::PointNormalPolicy;
 
-	basis_t basis;
+	basis_t mBasis;
 
 	void Apply_Transform(const Transform<T, 2>& in_transform);
 	static Vector<T, 2> Get_Closest_Point(
@@ -55,7 +55,7 @@ struct CollisionBasisWrapper<Sphere<T, 2>, T> {
 	using basis_t = Sphere<T, 2>;
 	using pnp_t = typename CollisionMask<T, 2>::PointNormalPolicy;
 
-	basis_t basis;
+	basis_t mBasis;
 
 	void Apply_Transform(const Transform<T, 2>& in_transform);
 	static Vector<T, 2> Get_Closest_Point(
@@ -69,7 +69,7 @@ struct CollisionBasisWrapper<HalfSpace<T, 2>, T> {
 	using basis_t = HalfSpace<T, 2>;
 	using pnp_t = typename CollisionMask<T, 2>::PointNormalPolicy;
 
-	basis_t basis;
+	basis_t mBasis;
 
 	void Apply_Transform(const Transform<T, 2>& in_transform);
 	static Vector<T, 2> Get_Closest_Point(
@@ -83,7 +83,7 @@ struct CollisionBasisWrapper<LineSegment<T, 2>, T> {
 	using basis_t = LineSegment<T, 2>;
 	using pnp_t = typename CollisionMask<T, 2>::PointNormalPolicy;
 
-	basis_t basis;
+	basis_t mBasis;
 
 	void Apply_Transform(const Transform<T, 2>& in_transform);
 	static Vector<T, 2> Get_Closest_Point(
@@ -97,7 +97,7 @@ struct CollisionBasisWrapper<Line<T, 2>, T> {
 	using basis_t = Line<T, 2>;
 	using pnp_t = typename CollisionMask<T, 2>::PointNormalPolicy;
 
-	basis_t basis;
+	basis_t mBasis;
 
 	void Apply_Transform(const Transform<T, 2>& in_transform);
 	static Vector<T, 2> Get_Closest_Point(
@@ -111,7 +111,7 @@ struct CollisionBasisWrapper<MeshSphereTree<T, 2>, T> {
 	using basis_t = MeshSphereTree<T, 2>;
 	using pnp_t = typename CollisionMask<T, 2>::PointNormalPolicy;
 
-	basis_t basis;
+	basis_t mBasis;
 
 	void Apply_Transform(const Transform<T, 2>& in_transform);
 	static Vector<T, 2> Get_Closest_Point(
@@ -125,7 +125,7 @@ struct CollisionBasisWrapper<Vector<T, 2>, T> {
 	using basis_t = Vector<T, 2>;
 	using pnp_t = typename CollisionMask<T, 2>::PointNormalPolicy;
 
-	basis_t basis;
+	basis_t mBasis;
 
 	void Apply_Transform(const Transform<T, 2>& in_transform);
 	static Vector<T, 2> Get_Closest_Point(
@@ -139,7 +139,7 @@ struct CollisionBasisWrapper<Ray<T, 2>, T> {
 	using basis_t = Ray<T, 2>;
 	using pnp_t = typename CollisionMask<T, 2>::PointNormalPolicy;
 
-	basis_t basis;
+	basis_t mBasis;
 
 	void Apply_Transform(const Transform<T, 2>& in_transform);
 	static Vector<T, 2> Get_Closest_Point(
@@ -153,7 +153,7 @@ struct CollisionBasisWrapper<Box<T, 2>, T> {
 	using basis_t = Box<T, 2>;
 	using pnp_t = typename CollisionMask<T, 2>::PointNormalPolicy;
 
-	basis_t basis;
+	basis_t mBasis;
 
 	void Apply_Transform(const Transform<T, 2>& in_transform);
 	static Vector<T, 2> Get_Closest_Point(
@@ -167,7 +167,7 @@ struct CollisionBasisWrapper<Triangle<T, 2>, T> {
 	using basis_t = Triangle<T, 2>;
 	using pnp_t = typename CollisionMask<T, 2>::PointNormalPolicy;
 
-	basis_t basis;
+	basis_t mBasis;
 
 	void Apply_Transform(const Transform<T, 2>& in_transform);
 	static Vector<T, 2> Get_Closest_Point(

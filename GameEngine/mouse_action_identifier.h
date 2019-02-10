@@ -6,8 +6,8 @@
 #include "raw_input_state.h"
 
 struct MouseActionIdentifier {
-	RawInputEvent::Type type;
-	MouseButton button;
+	RawInputEvent::Type mType;
+	MouseButton mButton;
 
 	MouseActionIdentifier(RawInputEvent::Type in_type, MouseButton in_button);
 	bool operator()(const RawInputEvent& in_event, const RawInputState& in_state) const;

@@ -9,10 +9,10 @@
 
 class DebugMeshVertexDataRenderer : public RenderableObject, public TransformableObject2d {
 private:
-	MeshVertexData* meshVertexData;
-	MeshVertexGPUPusher gpuPusher;
-	ColorRGBAf fillColor;
-	ColorRGBAf wireframeColor;
+	MeshVertexData* mMeshVertexData;
+	MeshVertexGPUPusher mGPUPusher;
+	ColorRGBAf mFillColor;
+	ColorRGBAf mWireframeColor;
 public:
 	DebugMeshVertexDataRenderer(MeshVertexData* in_meshVertexData, const ColorRGBAf& in_fillColor = ColorRGBAf(0.6, 0.6, 0.6, 1.0), 
 		const ColorRGBAf& in_wireframeColor = ColorRGBAf(1.0, 1.0, 1.0, 1.0));

@@ -15,6 +15,6 @@ Log::~Log() {
 }
 
 void Log::operator()(std::string s) const {
-	std::lock_guard<std::mutex> lock(mutex);
+	std::lock_guard<std::mutex> lock(mMutex);
 	OutputDebugStringA((s + "\n").c_str());
 }

@@ -13,11 +13,11 @@
 
 class Sprite : public RenderableObject, public DeepTransformableObject2d {
 protected:
-	Transform2d innerTransform;
-	MeshVertexData meshVertexData;
-	MeshVertexGPUPusher gpuPusher;
-	TextureInstance textureInstance;
-	ColorRGBAf color;
+	Transform2d mInnerTransform;
+	MeshVertexData mMeshVertexData;
+	MeshVertexGPUPusher mGPUPusher;
+	TextureInstance mTextureInstance;
+	ColorRGBAf mColor;
 public:
 	Sprite(const AxisAlignedRectangled& in_rectangle, Texture* in_texture = nullptr, const ColorRGBAf& in_color = ColorRGBAf(1, 1, 1, 1));
 	~Sprite();

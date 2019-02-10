@@ -10,9 +10,9 @@ using ExactTime = SysClock::duration;
 
 class Clock {
 private:
-	mutable std::mutex mutex;
-	SysTimePoint startTime;
-	SysTimePoint pauseTime;
+	mutable std::mutex mMutex;
+	SysTimePoint mStartTime;
+	SysTimePoint mPauseTime;
 
 public:
 	Clock();

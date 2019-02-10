@@ -3,97 +3,97 @@
 
 template<class T>
 UnclampedRotation<T, 2>::UnclampedRotation() :
-	angle(0)
+	mAngle(0)
 {}
 
 template<class T>
 UnclampedRotation<T, 2>::UnclampedRotation(T in_angle) :
-	angle(in_angle)
+	mAngle(in_angle)
 {}
 
 template<class T>
 UnclampedRotation<T, 2>::UnclampedRotation(T in_from, T in_to) :
-	angle(in_to - in_from) 
+	mAngle(in_to - in_from) 
 {}
 
 template<class T>
 UnclampedRotation<T, 2>::UnclampedRotation(const UnclampedRotation<T, 2>& in_from, const UnclampedRotation<T, 2>& in_to) :
-	angle(in_to.angle - in_from.angle)
+	mAngle(in_to.mAngle - in_from.mAngle)
 {}
 
 template<class T>
 UnclampedRotation<T, 2>::UnclampedRotation(const Rotation<T, 2>& in_rotation) :
-	angle(in_rotation.Get_Angle())
+	mAngle(in_rotation.Get_Angle())
 {}
 
 template<class T>
 bool UnclampedRotation<T, 2>::Is_Identity() const {
-	return angle == 0;
+	return mAngle == 0;
 }
 
 template<class T>
 void UnclampedRotation<T, 2>::Invert() {
-	angle = -angle;
+	mAngle = -mAngle;
 }
 
 template<class T>
 UnclampedRotation<T, 2> UnclampedRotation<T, 2>::Get_Inverse() const {
-	return UnclampedRotation<T, 2>(-angle);
+	return UnclampedRotation<T, 2>(-mAngle);
 }
 
 template<class T>
 UnclampedRotation<T, 2> UnclampedRotation<T, 2>::operator+(const UnclampedRotation<T, 2>& in_rotation) const {
-	return UnclampedRotation<T, 2>(angle + in_rotation.angle);
+	return UnclampedRotation<T, 2>(mAngle + in_rotation.mAngle);
 }
 
 template<class T>
 UnclampedRotation<T, 2> UnclampedRotation<T, 2>::operator-(const UnclampedRotation<T, 2>& in_rotation) const {
-	return UnclampedRotation<T, 2>(angle - in_rotation.angle);
+	return UnclampedRotation<T, 2>(mAngle - in_rotation.mAngle);
 }
 
 template<class T>
 UnclampedRotation<T, 2> UnclampedRotation<T, 2>::operator*(T in_scalar) const {
-	return UnclampedRotation<T, 2>(angle * in_scalar);
+	return UnclampedRotation<T, 2>(mAngle * in_scalar);
 }
 
 template<class T>
 UnclampedRotation<T, 2> UnclampedRotation<T, 2>::operator/(T in_scalar) const {
-	return UnclampedRotation<T, 2>(angle / in_scalar);
+	return UnclampedRotation<T, 2>(mAngle / in_scalar);
 }
 
 template<class T>
 void UnclampedRotation<T, 2>::operator+=(const UnclampedRotation<T, 2>& in_rotation) {
-	angle += in_rotation.angle;
+	mAngle += in_rotation.mAngle;
 }
 
 template<class T>
 void UnclampedRotation<T, 2>::operator-=(const UnclampedRotation<T, 2>& in_rotation) {
-	angle -= in_rotation.angle;
+	mAngle -= in_rotation.mAngle;
 }
 
 template<class T>
 void UnclampedRotation<T, 2>::operator*=(T in_scalar) {
-	angle *= in_scalar;
+	mAngle *= in_scalar;
 }
 
 template<class T>
 void UnclampedRotation<T, 2>::operator/=(T in_scalar) {
-	angle /= in_scalar;
+	mAngle /= in_scalar;
 }
 
 template<class T>
 UnclampedRotation<T, 2> UnclampedRotation<T, 2>::Lerp(const UnclampedRotation<T, 2>& in_rotation, T t) const {
-	return UnclampedRotation<T, 2>(angle * (1 - t) + in_rotation.angle * t);
+	return UnclampedRotation<T, 2>(mAngle * (1 - t) + in_rotation.mAngle * t);
 }
 
 template<class T>
 T UnclampedRotation<T, 2>::Get_Angle() const {
-	return angle;
+	return mAngle;
 }
 
 template<class T>
 Vector<T, 2> UnclampedRotation<T, 2>::Apply_To(const Vector<T, 2>& in_point) const {
-	return in_point.Rotated(angle);
+	return in_point.Rotated(mAngle);
 }
 
 template<class T>

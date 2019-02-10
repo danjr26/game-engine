@@ -10,8 +10,8 @@ class Triangle;
 template<class T, uint n = 3>
 class Sphere {
 private:
-	Vector<T, n> center;
-	T radius;
+	Vector<T, n> mCenter;
+	T mRadius;
 
 	Sphere(const Vector<T, n>& in_center, T in_radius);
 

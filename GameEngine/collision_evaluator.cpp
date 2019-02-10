@@ -3,17 +3,17 @@
 
 template<class T>
 inline void CollisionEvaluator<T, 2>::Return_Point(bool in_val) {
-	returnPoint = in_val;
+	mReturnPoint = in_val;
 }
 
 template<class T>
 inline CollisionEvaluator<T, 2>::CollisionEvaluator() :
-	returnPoint(true),
-	returnSeparator(false) {}
+	mReturnPoint(true),
+	mReturnSeparator(false) {}
 
 template<class T>
 inline void CollisionEvaluator<T, 2>::Return_Separator(bool in_val) {
-	returnSeparator = in_val;
+	mReturnSeparator = in_val;
 }
 
 template<class T>

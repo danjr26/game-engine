@@ -19,7 +19,7 @@ public:
 	using pnp_t = typename CollisionMask<T, 2>::PointNormalPolicy;
 
 private:
-	CollisionBasisWrapper<basis_t, T> wrappedBasis;
+	CollisionBasisWrapper<basis_t, T> mWrappedBasis;
 
 public:
 	BasicCollisionMask(const basis_t& in_basis, bool in_ignoreTransform = false);

@@ -2,8 +2,8 @@
 #include "game_engine.h"
 
 PerFrameUpdateableObject::PerFrameUpdateableObject() :
-numberToSkip(0),
-skipCount(0) 
+mNumberToSkip(0),
+mSkipCount(0) 
 {}
 
 PerFrameUpdateableObject::~PerFrameUpdateableObject() {
@@ -11,11 +11,11 @@ PerFrameUpdateableObject::~PerFrameUpdateableObject() {
 }
 
 void PerFrameUpdateableObject::Next_Frame(double in_dt) {
-	if (skipCount++ >= numberToSkip) {
+	if (mSkipCount++ >= mNumberToSkip) {
 		Update(in_dt);
 	}
 }
 
 void PerFrameUpdateableObject::Skip_Frames(ubyte in_numberToSkip) {
-	numberToSkip = in_numberToSkip;
+	mNumberToSkip = in_numberToSkip;
 }

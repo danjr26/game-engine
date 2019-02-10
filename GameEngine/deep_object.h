@@ -6,7 +6,7 @@
 template<class T, uint n>
 class DeepObject {
 protected:
-	DepthTransform<T, n> depthTransform;
+	DepthTransform<T, n> mDepthTransform;
 
 public:
 	DeepObject();

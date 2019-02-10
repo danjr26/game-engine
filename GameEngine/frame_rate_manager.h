@@ -8,14 +8,14 @@
 
 class FrameRateManager {
 private:
-	Clock clock;
-	Stepper timestepper;
-	uint nBackedUp;
-	uint maxBackedUp;
-	double lastFrame;
+	Clock mClock;
+	Stepper mTimeStepper;
+	uint mNBackedUp;
+	uint mMaxBackedUp;
+	double mLastFrame;
 
-	uint nTrackedFrames;
-	std::vector<double> lastFrameTimes;
+	uint mNTrackedFrames;
+	std::vector<double> mLastFrameTimes;
 
 public:
 	FrameRateManager(double in_fps = 60.0);

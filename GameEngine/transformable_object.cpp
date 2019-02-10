@@ -6,7 +6,7 @@ TransformableObject<T, n>::TransformableObject()
 
 template<class T, uint n>
 Transform<T, n>& TransformableObject<T, n>::Get_Transform() {
-	return transform;
+	return mTransform;
 }
 
 template class TransformableObject<float, 2>;

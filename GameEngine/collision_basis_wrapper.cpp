@@ -2,7 +2,7 @@
 
 template<class T>
 void CollisionBasisWrapper<AxisAlignedHalfSpace<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
-	basis.Apply_Transform(in_transform);
+	mBasis.Apply_Transform(in_transform);
 }
 
 template<class T>
@@ -19,7 +19,7 @@ Vector<T, 2> CollisionBasisWrapper<AxisAlignedHalfSpace<T, 2>, T>::Get_Closest_N
 
 template<class T>
 void CollisionBasisWrapper<AxisAlignedLine<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
-	basis.Apply_Transform(in_transform);
+	mBasis.Apply_Transform(in_transform);
 }
 
 template<class T>
@@ -36,7 +36,7 @@ Vector<T, 2> CollisionBasisWrapper<AxisAlignedLine<T, 2>, T>::Get_Closest_Normal
 
 template<class T>
 void CollisionBasisWrapper<AxisAlignedBox<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
-	basis.Apply_Transform(in_transform);
+	mBasis.Apply_Transform(in_transform);
 }
 
 template<class T>
@@ -134,7 +134,7 @@ Vector<T, 2> CollisionBasisWrapper<AxisAlignedBox<T, 2>, T>::Get_Closest_Normal(
 
 template<class T>
 void CollisionBasisWrapper<Sphere<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
-	basis.Apply_Transform(in_transform);
+	mBasis.Apply_Transform(in_transform);
 }
 
 template<class T>
@@ -149,7 +149,7 @@ Vector<T, 2> CollisionBasisWrapper<Sphere<T, 2>, T>::Get_Closest_Normal(const ba
 
 template<class T>
 void CollisionBasisWrapper<HalfSpace<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
-	basis.Apply_Transform(in_transform);
+	mBasis.Apply_Transform(in_transform);
 }
 
 template<class T>
@@ -164,7 +164,7 @@ Vector<T, 2> CollisionBasisWrapper<HalfSpace<T, 2>, T>::Get_Closest_Normal(const
 
 template<class T>
 void CollisionBasisWrapper<LineSegment<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
-	basis.Apply_Transform(in_transform);
+	mBasis.Apply_Transform(in_transform);
 }
 
 template<class T>
@@ -221,7 +221,7 @@ Vector<T, 2> CollisionBasisWrapper<LineSegment<T, 2>, T>::Get_Closest_Normal(con
 
 template<class T>
 void CollisionBasisWrapper<Line<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
-	basis.Apply_Transform(in_transform);
+	mBasis.Apply_Transform(in_transform);
 }
 
 template<class T>
@@ -237,7 +237,7 @@ Vector<T, 2> CollisionBasisWrapper<Line<T, 2>, T>::Get_Closest_Normal(const basi
 
 template<class T>
 void CollisionBasisWrapper<MeshSphereTree<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
-	basis.Apply_Transform(in_transform);
+	mBasis.Apply_Transform(in_transform);
 }
 
 template<class T>
@@ -342,7 +342,7 @@ Vector<T, 2> CollisionBasisWrapper<MeshSphereTree<T, 2>, T>::Get_Closest_Normal(
 
 template<class T>
 void CollisionBasisWrapper<Vector<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
-	basis = in_transform.Local_To_World_Point(basis);
+	mBasis = in_transform.Local_To_World_Point(mBasis);
 }
 
 template<class T>
@@ -367,7 +367,7 @@ Vector<T, 2> CollisionBasisWrapper<Vector<T, 2>, T>::Get_Closest_Normal(const ba
 
 template<class T>
 void CollisionBasisWrapper<Ray<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
-	basis.Apply_Transform(in_transform);
+	mBasis.Apply_Transform(in_transform);
 }
 
 template<class T>
@@ -405,7 +405,7 @@ Vector<T, 2> CollisionBasisWrapper<Ray<T, 2>, T>::Get_Closest_Normal(const basis
 
 template<class T>
 void CollisionBasisWrapper<Box<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
-	basis.Apply_Transform(in_transform);
+	mBasis.Apply_Transform(in_transform);
 }
 
 template<class T>
@@ -524,7 +524,7 @@ Vector<T, 2> CollisionBasisWrapper<Box<T, 2>, T>::Get_Closest_Normal(const basis
 
 template<class T>
 void CollisionBasisWrapper<Triangle<T, 2>, T>::Apply_Transform(const Transform<T, 2>& in_transform) {
-	basis.Apply_Transform(in_transform);
+	mBasis.Apply_Transform(in_transform);
 }
 
 template<class T>

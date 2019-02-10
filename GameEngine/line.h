@@ -6,8 +6,8 @@
 template<class T, uint n>
 class Line {
 private:
-	Vector<T, n> point;
-	Vector<T, n> direction;
+	Vector<T, n> mPoint;
+	Vector<T, n> mDirection;
 
 private:
 	Line(const Vector<T, n>& in_point, const Vector<T, n> in_direction);

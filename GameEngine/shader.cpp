@@ -2,7 +2,7 @@
 #include "game_engine.h"
 
 Shader::Shader(Shader::Type in_type, std::string in_filename) :
-type(in_type) {
+mType(in_type) {
 	std::fstream file;
 	file.open(in_filename);
 
@@ -24,17 +24,17 @@ type(in_type) {
 
 	file.close();
 
-	id = glCreateShader((GLuint)in_type);
-	glShaderSource(id, 1, &buffer, &length);
-	glCompileShader(id);
+	mID = glCreateShader((GLuint)in_type);
+	glShaderSource(mID, 1, &buffer, &length);
+	glCompileShader(mID);
 
 	GLint success = 0;
-	glGetShaderiv(id, GL_COMPILE_STATUS, &success);
+	glGetShaderiv(mID, GL_COMPILE_STATUS, &success);
 	if (success == GL_FALSE) {
 		GLint logLength = 0;
-		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &logLength);
+		glGetShaderiv(mID, GL_INFO_LOG_LENGTH, &logLength);
 		char* log = new char[logLength];
-		glGetShaderInfoLog(id, logLength, nullptr, log);
+		glGetShaderInfoLog(mID, logLength, nullptr, log);
 		Log::main(std::string("\nerror: shader '") + in_filename + "' compilation failed:\n" + log);
 		delete[] log;
 		GE.Exit();
@@ -44,11 +44,11 @@ type(in_type) {
 }
 
 Shader::~Shader() {
-	glDeleteShader(id);
+	glDeleteShader(mID);
 }
 
 Shader::Type Shader::Get_Type() {
-	return type;
+	return mType;
 }
 
 Shader::Type Shader::Parse_Type(const std::string& in_text) {

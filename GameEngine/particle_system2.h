@@ -21,16 +21,16 @@ public:
 	using angular_velocity_t = float;
 
 	struct Accessor {
-		position_t* position;
-		color_t* color;
-		uv1_t* uv1;
-		uv2_t* uv2;
-		dimensions_t* dimensions;
-		angle_t* angle;
-		age_t* age;
-		linear_velocity_t* linearVelocity;
-		angular_velocity_t* angularVelocity;
-		std::unordered_map<ubyte, void*> extra;
+		position_t* mPosition;
+		color_t* mColor;
+		uv1_t* mUV1;
+		uv2_t* mUV2;
+		dimensions_t* mDimensions;
+		angle_t* mAngle;
+		age_t* mAge;
+		linear_velocity_t* mLinearVelocity;
+		angular_velocity_t* mAngularVelocity;
+		std::unordered_map<ubyte, void*> mExtra;
 	};
 
 	class Specifier {
@@ -59,10 +59,10 @@ public:
 	};
 
 protected:
-	MeshVertexData vertexData;
-	MeshVertexGPUPusher gpuPusher;
-	TextureInstance textureInstance;
-	Specifier* specifier;
+	MeshVertexData mVertexData;
+	MeshVertexGPUPusher mGPUPusher;
+	TextureInstance mTextureInstance;
+	Specifier* mSpecifier;
 
 public:
 	ParticleSystem2(Texture* in_texture, Specifier* in_specifier);

@@ -8,7 +8,7 @@
 class FilteredObject {
 	friend class FilterQuery;
 private:
-	ullong filter;
+	ullong mFilter;
 
 public:
 	static const ubyte maxFilters = sizeof(ullong);

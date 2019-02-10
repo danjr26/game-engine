@@ -37,23 +37,23 @@ public:
 	};
 
 private:
-	Type type;
+	Type mType;
 
-	ubyte* data;
-	GLuint id;
+	ubyte* mData;
+	GLuint mID;
 
-	GLenum pixelFormat;
-	GLenum internalFormat;
-	GLenum target;
+	GLenum mPixelFormat;
+	GLenum mInternalFormat;
+	GLenum mTarget;
 
-	Vector3i dimensions;
-	ubyte nChannels;
-	ubyte nBitsPerChannel;
-	ubyte nSamplesMSAA;
+	Vector3i mDimensions;
+	ubyte mNChannels;
+	ubyte mNBitsPerChannel;
+	ubyte mNSamplesMSAA;
 
-	uint flags;
+	uint mFlags;
 
-	TextureSettings activeSettings;
+	TextureSettings mActiveSettings;
 
 public:
 	Texture(Type in_type, std::string in_filename, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA = 0);

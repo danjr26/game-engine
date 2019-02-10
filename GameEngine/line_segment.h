@@ -6,8 +6,8 @@
 template<class T, uint n>
 class LineSegment {
 private:
-	Vector<T, n> point1;
-	Vector<T, n> point2;
+	Vector<T, n> mPoint1;
+	Vector<T, n> mPoint2;
 
 	LineSegment(Vector<T, n>& in_point1, Vector<T, n>& in_point2);
 

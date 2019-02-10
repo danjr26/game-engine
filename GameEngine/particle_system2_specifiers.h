@@ -7,9 +7,9 @@
 
 class TestParticleSpecifier : public ParticleSystem2::Specifier {
 	using Accessor = ParticleSystem2::Accessor;
-	CubicTransitioner<ColorRGBAf> colorTransition;
-	Stepper generateStepper;
-	uint nGenerated;
+	CubicTransitioner<ColorRGBAf> mColorTransition;
+	Stepper mGenerateStepper;
+	uint mNGenerated;
 
 public:
 	TestParticleSpecifier();

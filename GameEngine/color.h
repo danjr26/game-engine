@@ -17,55 +17,55 @@ public:
 	template<typename = typename std::enable_if<std::is_same<uchar, T>::value, void>::type>
 	Color(const Color<float, n>& in_source) {
 		for (uint i = 0; i < n; i++) {
-			members[i] = (uchar)(in_source.Get(i) * 255.0f);
+			mMembers[i] = (uchar)(in_source.Get(i) * 255.0f);
 		}
 	}
 
 	template<typename = typename std::enable_if<std::is_same<float, T>::value, void>::type>
 	Color(const Color<uchar, n>& in_source) {
 		for (uint i = 0; i < n; i++) {
-			members[i] = ((float)in_source.Get(i) / 255.0f);
+			mMembers[i] = ((float)in_source.Get(i) / 255.0f);
 		}
 	}
 
 	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
 	T R() const {
-		return members[0];
+		return mMembers[0];
 	}
 
 	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
 	T& R() {
-		return members[0];
+		return mMembers[0];
 	}
 
 	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
 	T G() const {
-		return members[1];
+		return mMembers[1];
 	}
 
 	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
 	T& G() {
-		return members[1];
+		return mMembers[1];
 	}
 
 	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
 	T B() const {
-		return members[2];
+		return mMembers[2];
 	}
 
 	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
 	T& B() {
-		return members[2];
+		return mMembers[2];
 	}
 
 	template<typename = typename std::enable_if<n == 4, void>::type>
 	T A() const {
-		return members[3];
+		return mMembers[3];
 	}
 
 	template<typename = typename std::enable_if<n == 4, void>::type>
 	T& A() {
-		return members[3];
+		return mMembers[3];
 	}
 
 	T Dot(const Vector<T, n>& v) const = delete;

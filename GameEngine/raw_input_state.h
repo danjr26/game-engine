@@ -6,8 +6,8 @@
 #include "mouse_state.h"
 
 struct RawInputState {
-	KeyboardState keyboard;
-	MouseState mouse;
+	KeyboardState mKeyboard;
+	MouseState mMouse;
 
 	void Process_Raw_Event(const RawInputEvent& in_event);
 };

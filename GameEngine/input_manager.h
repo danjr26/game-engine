@@ -10,8 +10,8 @@
 class InputManager {
 	friend LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPARAM in_lParam);
 
-	RawInputState rawState;
-	std::vector<InputContext*> contexts;
+	RawInputState mRawState;
+	std::vector<InputContext*> mContexts;
 
 public:
 	InputManager();

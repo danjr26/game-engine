@@ -3,7 +3,7 @@
 
 class DisableableObject {
 private:
-	bool isEnabled;
+	bool mIsEnabled;
 public:
 	DisableableObject();
 	void Enable();

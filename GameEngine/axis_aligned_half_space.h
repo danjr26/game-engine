@@ -7,8 +7,8 @@
 template<class T, uint n>
 class AxisAlignedHalfSpace {
 private:
-	int dimension;
-	T value;
+	int mDimension;
+	T mValue;
 
 	AxisAlignedHalfSpace(int in_dimension, T in_value);
 

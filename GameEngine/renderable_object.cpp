@@ -6,7 +6,7 @@
 #include "Texture2_instance.h"
 
 RenderableObject::RenderableObject() :
-	cullingRectangle(AxisAlignedRectangled::From_Extrema(Vector2d(), Vector2d()))
+	mCullingRectangle(AxisAlignedRectangled::From_Extrema(Vector2d(), Vector2d()))
 {}
 
 RenderableObject::~RenderableObject() 

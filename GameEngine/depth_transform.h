@@ -6,8 +6,8 @@
 template<class T, uint n>
 class DepthTransform {
 private:
-	DepthTransform* parent;
-	T depth;
+	DepthTransform* mParent;
+	T mDepth;
 
 public:
 	DepthTransform();

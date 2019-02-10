@@ -6,12 +6,12 @@
 #include "raw_input_state.h"
 
 struct KeyboardActionIdentifier {
-	RawInputEvent::Type type;
+	RawInputEvent::Type mType;
 	union {
-		Key key;
-		char character;
+		Key mKey;
+		char mCharacter;
 	};
-	bool acceptRepeat;
+	bool mAcceptRepeat;
 
 	KeyboardActionIdentifier(RawInputEvent::Type in_type, Key in_key, bool in_acceptRepeat = false);
 	KeyboardActionIdentifier(RawInputEvent::Type in_type, char in_character, bool in_acceptRepeat = false);

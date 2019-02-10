@@ -3,38 +3,38 @@
 
 template<class T, uint n>
 inline Line<T, n>::Line(const Vector<T, n>& in_point, const Vector<T, n> in_direction) :
-	point(in_point),
-	direction(in_direction.Normalized()) {}
+	mPoint(in_point),
+	mDirection(in_direction.Normalized()) {}
 
 template<class T, uint n>
 inline void Line<T, n>::Apply_Transform(const Transform<T, n>& in_transform) {
-	point = in_transform.Local_To_World_Point(point);
-	direction = in_transform.Local_To_World_Direction(direction);
+	mPoint = in_transform.Local_To_World_Point(mPoint);
+	mDirection = in_transform.Local_To_World_Direction(mDirection);
 }
 
 template<class T, uint n>
 inline Vector<T, n> Line<T, n>::Get_Point() const {
-	return point;
+	return mPoint;
 }
 
 template<class T, uint n>
 inline Vector<T, n> Line<T, n>::Get_Direction() const {
-	return direction;
+	return mDirection;
 }
 
 template<class T, uint n>
 T Line<T, n>::Get_Projection_Coefficient() const {
-	return point.Projection_Coeff(direction);
+	return mPoint.Projection_Coeff(mDirection);
 }
 
 template<class T, uint n>
 inline T Line<T, n>::Get_Projection_Coefficient(const Vector<T, n>& in_point) const {
-	return in_point.Projection_Coeff(direction);
+	return in_point.Projection_Coeff(mDirection);
 }
 
 template<class T, uint n>
 inline Vector<T, n> Line<T, n>::Get_Projection(const Vector<T, n>& in_point) const {
-	return (in_point - point).Projection(direction) + point;
+	return (in_point - mPoint).Projection(mDirection) + mPoint;
 }
 
 template<class T, uint n>

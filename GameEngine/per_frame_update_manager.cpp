@@ -5,20 +5,20 @@ PerFrameUpdateManager::PerFrameUpdateManager()
 {}
 
 void PerFrameUpdateManager::Update(double in_dt) {
-	for (uint i = 0; i < updateables.size(); i++) {
-		if (updateables[i]->Is_Enabled()) {
-			updateables[i]->Next_Frame(in_dt);
+	for (uint i = 0; i < mUpdateables.size(); i++) {
+		if (mUpdateables[i]->Is_Enabled()) {
+			mUpdateables[i]->Next_Frame(in_dt);
 		}
 	}
 }
 
 void PerFrameUpdateManager::Add(PerFrameUpdateableObject* in_updateable) {
-	updateables.push_back(in_updateable);
+	mUpdateables.push_back(in_updateable);
 }
 
 void PerFrameUpdateManager::Remove(PerFrameUpdateableObject* in_updateable) {
-	auto position = std::find(updateables.begin(), updateables.end(), in_updateable);
-	if (position != updateables.end()) {
-		updateables.erase(position);
+	auto position = std::find(mUpdateables.begin(), mUpdateables.end(), in_updateable);
+	if (position != mUpdateables.end()) {
+		mUpdateables.erase(position);
 	}
 }

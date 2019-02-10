@@ -6,7 +6,7 @@
 
 class Camera : public TransformableObject3d {
 private:
-	Projectiond projection;
+	Projectiond mProjection;
 
 public:
 	Camera();

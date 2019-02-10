@@ -12,19 +12,19 @@ class Transform {
 	// applies components in this order:
 	// scale, rotation, translation
 private:
-	Transform<T, n>* parent;
-	Vector<T, n> translation;
-	Vector<T, n> scale;
-	Rotation<T, n> rotation;
+	Transform<T, n>* mParent;
+	Vector<T, n> mTranslation;
+	Vector<T, n> mScale;
+	Rotation<T, n> mRotation;
 
 public:
 	Transform();
 	template<class T2, std::enable_if_t<!std::is_same_v<T, T2>>>
 	Transform(const Transform<T2, n>& in_other) : 
-		parent(nullptr),
-		translation(in_other.translation),
-		scale(in_other.scale),
-		rotation(in_other.rotation)
+		mParent(nullptr),
+		mTranslation(in_other.mTranslation),
+		mScale(in_other.mScale),
+		mRotation(in_other.mRotation)
 	{}
 
 	Transform<T, n>* Get_Parent();

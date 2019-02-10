@@ -4,87 +4,87 @@
 #include <thread>
 
 FrameRateManager::FrameRateManager(double in_fps) :
-	timestepper(1.0 / in_fps),
-	nTrackedFrames(60),
-	nBackedUp(0),
-	maxBackedUp(6) {
+	mTimeStepper(1.0 / in_fps),
+	mNTrackedFrames(60),
+	mNBackedUp(0),
+	mMaxBackedUp(6) {
 
-	lastFrameTimes.reserve(nTrackedFrames);
+	mLastFrameTimes.reserve(mNTrackedFrames);
 
-	lastFrame = clock.Now();
+	mLastFrame = mClock.Now();
 }
 
 void FrameRateManager::Set_FPS(double in_fps) {
-	timestepper.step = 1.0 / in_fps;
+	mTimeStepper.mStep = 1.0 / in_fps;
 }
 
 double FrameRateManager::Get_FPS() const {
-	return 1.0 / timestepper.step;
+	return 1.0 / mTimeStepper.mStep;
 }
 
 void FrameRateManager::Set_Dt(double in_dt) {
-	timestepper.step = in_dt;
+	mTimeStepper.mStep = in_dt;
 }
 
 double FrameRateManager::Get_Dt() const {
-	return timestepper.step;
+	return mTimeStepper.mStep;
 }
 
 void FrameRateManager::Reset_Timer() {
-	lastFrame = clock.Now();
+	mLastFrame = mClock.Now();
 }
 
 void FrameRateManager::Yield_Until_Next_Frame() {
-	double now = clock.Now();
-	uint nFrames = timestepper.Step_Number(now - lastFrame) + nBackedUp;
+	double now = mClock.Now();
+	uint nFrames = mTimeStepper.Step_Number(now - mLastFrame) + mNBackedUp;
 
 	while (nFrames == 0) {
-		now = clock.Now();
+		now = mClock.Now();
 		std::this_thread::sleep_for(std::chrono::microseconds(100));
-		nFrames = timestepper.Step_Number(clock.Now() - now);
+		nFrames = mTimeStepper.Step_Number(mClock.Now() - now);
 	}
-	nBackedUp = nFrames - 1;
+	mNBackedUp = nFrames - 1;
 
-	now = clock.Now();
-	double thisFrameTime = now - lastFrame;
-	lastFrame = now;
+	now = mClock.Now();
+	double thisFrameTime = now - mLastFrame;
+	mLastFrame = now;
 
-	if (lastFrameTimes.size() < nTrackedFrames) {
-		lastFrameTimes.push_back(thisFrameTime);
+	if (mLastFrameTimes.size() < mNTrackedFrames) {
+		mLastFrameTimes.push_back(thisFrameTime);
 	}
 	else {
-		for (uint i = 0; i < lastFrameTimes.size() - 1; i++) {
-			lastFrameTimes[i] = lastFrameTimes[i + 1];
+		for (uint i = 0; i < mLastFrameTimes.size() - 1; i++) {
+			mLastFrameTimes[i] = mLastFrameTimes[i + 1];
 		}
-		lastFrameTimes[lastFrameTimes.size() - 1] = thisFrameTime;
+		mLastFrameTimes[mLastFrameTimes.size() - 1] = thisFrameTime;
 	}
 }
 
 bool FrameRateManager::Is_Lean_Frame() const {
-	return nBackedUp >= maxBackedUp;
+	return mNBackedUp >= mMaxBackedUp;
 }
 
 double FrameRateManager::Get_Real_FPS() {
-	if (lastFrameTimes.size() == 0) {
+	if (mLastFrameTimes.size() == 0) {
 		return 0.0;
 	}
 	double total = 0.0;
-	for (uint i = 0; i < lastFrameTimes.size(); i++) {
-		total += lastFrameTimes[i];
+	for (uint i = 0; i < mLastFrameTimes.size(); i++) {
+		total += mLastFrameTimes[i];
 	}
-	return lastFrameTimes.size() / total;
+	return mLastFrameTimes.size() / total;
 }
 
 double FrameRateManager::Get_Longest_Frame_Time() {
-	if (lastFrameTimes.size() == 0) {
+	if (mLastFrameTimes.size() == 0) {
 		return 0.0;
 	}
-	return Max(lastFrameTimes);
+	return Max(mLastFrameTimes);
 }
 
 double FrameRateManager::Get_Last_Frame_Time() {
-	if (lastFrameTimes.size() == 0) {
+	if (mLastFrameTimes.size() == 0) {
 		return 0.0;
 	}
-	return lastFrameTimes[lastFrameTimes.size() - 1];
+	return mLastFrameTimes[mLastFrameTimes.size() - 1];
 }

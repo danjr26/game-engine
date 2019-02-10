@@ -28,8 +28,8 @@ public:
 	};
 
 private:
-	Type type;
-	GLuint id;
+	Type mType;
+	GLuint mID;
 
 public:
 	Shader(Type in_type, std::string in_filename);

@@ -10,7 +10,7 @@ template<class T, uint m, uint n>
 class Matrix {
 	friend class Matrix;
 protected:
-	T data[m][n];
+	T mData[m][n];
 
 public:
 	Matrix() 
@@ -19,20 +19,20 @@ public:
 	Matrix(T in_data[m][n]) {
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < n; j++) {
-				data[i][j] = in_data[i][j];
+				mData[i][j] = in_data[i][j];
 			}
 		}
 	}
 
 	template<typename... Args, typename = typename std::enable_if<sizeof...(Args) == m * n, void>::type>
 	Matrix(Args... in_data) :
-		data{ in_data... }
+		mData{ in_data... }
 	{}
 
 	Matrix(const T* in_data) {
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < n; j++) {
-				data[i][j] = in_data[i * n + j];
+				mData[i][j] = in_data[i * n + j];
 			}
 		}
 	}
@@ -40,7 +40,7 @@ public:
 	Matrix(const T in_data[m][n]) {
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < n; j++) {
-				data[i][j] = in_data[i][j];
+				mData[i][j] = in_data[i][j];
 			}
 		}
 	}
@@ -48,14 +48,14 @@ public:
 	template<typename = typename std::enable_if<n == 1, void>::type>
 	Matrix(const Vector<T, m>& vec) {
 		for (uint i = 0; i < m; i++) {
-			data[i][0] = vec.Get(i);
+			mData[i][0] = vec.Get(i);
 		}
 	}
 
 	Matrix(const Matrix<T, m, n>& mat) {
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < n; j++) {
-				data[i][j] = mat.data[i][j];
+				mData[i][j] = mat.mData[i][j];
 			}
 		}
 	}
@@ -64,7 +64,7 @@ public:
 	Matrix(const Matrix<T2, m, n>& mat) {
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < n; j++) {
-				data[i][j] = (T)mat.data[i][j];
+				mData[i][j] = (T)mat.mData[i][j];
 			}
 		}
 	}
@@ -73,33 +73,33 @@ public:
 	explicit operator Vector<T, m> () {
 		Vector<T, m> vOut = Vector<T, m>();
 		for (uint i = 0; i < m; i++) {
-			vOut[i] = data[i][0];
+			vOut[i] = mData[i][0];
 		}
 		return vOut;
 	}
 
 	T Element(uint i, uint j) const {
-		return data[i][j];
+		return mData[i][j];
 	}
 
 	Vector<T, n> Row(uint i) const {
-		return Vector<T, n>(&data[i][0]);
+		return Vector<T, n>(&mData[i][0]);
 	}
 
 	Vector<T, m> Column(uint j) const {
 		Vector<T, n> vOut();
 		for (uint i = 0; i < m; i++) {
-			vOut[i] = data[i][j];
+			vOut[i] = mData[i][j];
 		}
 	} 
 
 	bool Element_Is_Zero(uint i, uint j) const {
-		return data[i][j] == 0;
+		return mData[i][j] == 0;
 	}
 
 	bool Row_Is_Zero(uint i) {
 		for (uint j = 0; j < n; j++) {
-			if (data[i][j] != 0) {
+			if (mData[i][j] != 0) {
 				return false;
 			}
 		}
@@ -108,7 +108,7 @@ public:
 
 	bool Column_Is_Zero(uint j) const {
 		for (uint i = 0; i < m; i++) {
-			if (data[i][j] != 0) {
+			if (mData[i][j] != 0) {
 				return false;
 			}
 		}
@@ -118,7 +118,7 @@ public:
 	bool Submatrix_Is_Zero(uint i1, uint j1, uint i2, uint j2) const {
 		for (uint i = i1; i <= i2; i++) {
 			for (uint j = j1; j < j2; j++) {
-				if (data[i][j] != 0) {
+				if (mData[i][j] != 0) {
 					return false;
 				}
 			}
@@ -127,29 +127,29 @@ public:
 	}
 
 	void Element(uint i, uint j, T value) {
-		data[i][j] = value;
+		mData[i][j] = value;
 	}
 
 	void Row(uint i, const Vector<T, n>& values) {
 		for (uint j = 0; j < n; j++) {
-			data[i][j] = values[j];
+			mData[i][j] = values[j];
 		}
 	}
 	
 	void Column(uint j, const Vector<T, m>& values) {
 		for (uint i = 0; i < m; i++) {
-			data[i][j] = values.Get(i);
+			mData[i][j] = values.Get(i);
 		}
 	}
 
 	Matrix<T, m, n> operator+(const Matrix<T, m, n>& mat) const {
-		Matrix<T, m, n> matOut = data;
+		Matrix<T, m, n> matOut = mData;
 		matOut += mat;
 		return matOut;
 	}
 
 	Matrix<T, m, n> operator-(const Matrix<T, m, n>& mat) const {
-		Matrix<T, m, n> matOut = data;
+		Matrix<T, m, n> matOut = mData;
 		matOut -= mat;
 		return matOut;
 	}
@@ -159,9 +159,9 @@ public:
 		Matrix<T, m, p> matOut = Matrix<T, m, p>();
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < p; j++) {
-				matOut.data[i][j] = 0;
+				matOut.mData[i][j] = 0;
 				for (uint k = 0; k < n; k++) {
-					matOut.data[i][j] += data[i][k] * mat.data[k][j];
+					matOut.mData[i][j] += mData[i][k] * mat.mData[k][j];
 				}
 			}
 		}
@@ -173,13 +173,13 @@ public:
 	}
 
 	Matrix<T, m, n> operator*(T scalar) const {
-		Matrix<T, m, n> matOut = data;
+		Matrix<T, m, n> matOut = mData;
 		matOut *= scalar;
 		return matOut;
 	}
 
 	Matrix<T, m, n> operator/(T scalar) const {
-		Matrix<T, m, n> matOut = data;
+		Matrix<T, m, n> matOut = mData;
 		matOut /= scalar;
 		return matOut;
 	}
@@ -187,7 +187,7 @@ public:
 	void operator+=(const Matrix<T, m, n>& mat) {
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < n; j++) {
-				data[i][j] += mat.data[i][j];
+				mData[i][j] += mat.mData[i][j];
 			}
 		}
 	}
@@ -195,20 +195,20 @@ public:
 	void operator-=(const Matrix<T, m, n>& mat) {
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < n; j++) {
-				data[i][j] -= mat.data[i][j];
+				mData[i][j] -= mat.mData[i][j];
 			}
 		}
 	}
 	
 	template<typename = typename std::enable_if<m == n, void>::type>
 	void operator *=(const Matrix<T, m, n>& mat) {
-		(*this) = Matrix<T, m, n>(data) * mat;
+		(*this) = Matrix<T, m, n>(mData) * mat;
 	}
 
 	void operator*=(T scalar) {
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < n; j++) {
-				data[i][j] *= scalar;
+				mData[i][j] *= scalar;
 			}
 		}
 	}
@@ -217,7 +217,7 @@ public:
 		Matrix<T, m, n> matOut = Matrix<T, m, n>();
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < n; j++) {
-				data[i][j] *= scalar;
+				mData[i][j] *= scalar;
 			}
 		}
 	}
@@ -226,7 +226,7 @@ public:
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < n; j++) {
 				if (i != j) {
-					std::swap(data[i][j], data[j][i]);
+					std::swap(mData[i][j], mData[j][i]);
 				}
 			}
 		}
@@ -237,10 +237,10 @@ public:
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < n; j++) {
 				if (i == j) {
-					matOut.data[i][j] = 1;
+					matOut.mData[i][j] = 1;
 				}
 				else {
-					matOut.data[i][j] = 0;
+					matOut.mData[i][j] = 0;
 				}
 			}
 		}
@@ -321,7 +321,7 @@ public:
 		uint iStart = 0;
 		for (uint j = 0; j < n && iStart < m; j++) {
 			uint i;
-			for (i = iStart; data[i][j] == 0 && i < m; i++) 
+			for (i = iStart; mData[i][j] == 0 && i < m; i++) 
 			{}
 			if (i == m) {
 				// all-zero column
@@ -330,16 +330,16 @@ public:
 			if (i != iStart) {
 				// switch for row with non-zero leading entry
 				for (uint k = j; k < n; k++) {
-					std::swap(data[iStart][k], data[i][k]);
+					std::swap(mData[iStart][k], mData[i][k]);
 				}
 			}
 
 			T mult;
 			for (i = iStart + 1; i < m; i++) {
-				mult = data[i][j] / data[iStart][j];
-				data[i][j] = 0;
+				mult = mData[i][j] / mData[iStart][j];
+				mData[i][j] = 0;
 				for (uint k = j + 1; k < n; k++) {
-					data[i][k] -= data[iStart][k] * mult;
+					mData[i][k] -= mData[iStart][k] * mult;
 				}
 			}
 			iStart++;
@@ -351,22 +351,22 @@ public:
 		T mult;
 		uint i = 0;
 		for (uint j = 0; j < n; j++) {
-			mult = data[i][j];
+			mult = mData[i][j];
 			if (mult == 0) {
 				continue;
 			}
-			data[i][j] = 1;
+			mData[i][j] = 1;
 			for (uint k = j + 1; k < n; k++) {
-				data[i][k] /= mult;
+				mData[i][k] /= mult;
 			}
 			for (int i2 = i - 1; i2 >= 0; i2--) {
-				mult = data[i2][j];
+				mult = mData[i2][j];
 				if (mult == 0) {
 					continue;
 				}
-				data[i2][j] = 0;
+				mData[i2][j] = 0;
 				for (uint k = j + 1; k < n; k++) {
-					data[i2][k] -= data[i][k] * mult;
+					mData[i2][k] -= mData[i][k] * mult;
 				}
 			}
 			i++;
@@ -379,7 +379,7 @@ public:
 		ss << "Matrix (" << m << ", " << n << ")\n";
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < n; j++) {
-				ss << std::scientific << std::setprecision(6) << std::setw(14) << data[i][j];
+				ss << std::scientific << std::setprecision(6) << std::setw(14) << mData[i][j];
 			}
 			ss << '\n';
 		}
@@ -387,7 +387,7 @@ public:
 	}
 
 	const T* Pointer() {
-		return &data[0][0];
+		return &mData[0][0];
 	}
 };
 

@@ -1,17 +1,17 @@
 #include "disableable_object.h"
 
 DisableableObject::DisableableObject() :
-	isEnabled(true)
+	mIsEnabled(true)
 {}
 
 void DisableableObject::Enable() {
-	isEnabled = true;
+	mIsEnabled = true;
 }
 
 void DisableableObject::Disable() {
-	isEnabled = false;
+	mIsEnabled = false;
 }
 
 bool DisableableObject::Is_Enabled() {
-	return isEnabled;
+	return mIsEnabled;
 }

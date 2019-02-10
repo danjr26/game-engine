@@ -2,27 +2,27 @@
 
 template<class T, uint n>
 inline AxisAlignedHalfSpace<T, n>::AxisAlignedHalfSpace(int in_dimension, T in_value) :
-	dimension(in_dimension),
-	value(in_value) {
+	mDimension(in_dimension),
+	mValue(in_value) {
 
-	if (!Between_Inc(dimension, -(int)n, (int)n - 1)) {
+	if (!Between_Inc(mDimension, -(int)n, (int)n - 1)) {
 		throw InvalidArgumentException();
 	}
 }
 
 template<class T, uint n>
 inline uint AxisAlignedHalfSpace<T, n>::Get_Dimension() const {
-	return (dimension < 0) ? -(dimension + 1) : dimension;
+	return (mDimension < 0) ? -(mDimension + 1) : mDimension;
 }
 
 template<class T, uint n>
 inline T AxisAlignedHalfSpace<T, n>::Get_Value() const {
-	return value;
+	return mValue;
 }
 
 template<class T, uint n>
 inline bool AxisAlignedHalfSpace<T, n>::Is_Positive() const {
-	return dimension >= 0;
+	return mDimension >= 0;
 }
 
 template<class T, uint n>
@@ -35,8 +35,8 @@ inline Vector<T, n> AxisAlignedHalfSpace<T, n>::Get_Direction() const {
 template<class T, uint n>
 inline void AxisAlignedHalfSpace<T, n>::Apply_Transform(const Transform<T, n>& in_transform) {
 	for (Transform<T, n> const* t = &in_transform; t != nullptr; t = t->Get_Const_Parent()) {
-		value *= t->Get_Local_Scale()[Get_Dimension()];
-		value += t->Get_Local_Position()[Get_Dimension()];
+		mValue *= t->Get_Local_Scale()[Get_Dimension()];
+		mValue += t->Get_Local_Position()[Get_Dimension()];
 	}
 }
 
@@ -48,7 +48,7 @@ inline AxisAlignedHalfSpace<T, n> AxisAlignedHalfSpace<T, n>::From_Dimension_Val
 template<class T, uint n>
 inline AxisAlignedHalfSpace<T, n> AxisAlignedHalfSpace<T, n>::From_Inverse(const AxisAlignedHalfSpace & in_inverse) {
 	AxisAlignedHalfSpace<T, n> out = in_inverse;
-	out.dimension = -(out.dimension + 1);
+	out.mDimension = -(out.mDimension + 1);
 	return out;
 }
 

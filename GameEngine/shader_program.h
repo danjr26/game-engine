@@ -7,7 +7,7 @@
 
 class ShaderProgram : public Asset {
 private:
-	GLuint id;
+	GLuint mID;
 
 public:
 	ShaderProgram(std::vector<Shader*> in_shaders);

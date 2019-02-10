@@ -6,7 +6,7 @@
 
 class CameraManager {
 public:
-	Camera* active;
+	Camera* mActive;
 
 public:
 	CameraManager();

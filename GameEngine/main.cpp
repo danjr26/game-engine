@@ -64,7 +64,7 @@ void Test_Render(Window* window) {
 		.Clear_Color(ColorRGBAf(0.08f, 0.05f, 0.1f, 1.0f))
 		.Sort_Order(RenderPass::SortOrder::back_to_front);
 
-	GE.Render().passes.push_back(&testPass);
+	GE.Render().mPasses.push_back(&testPass);
 
 	window->Set_Visible(true);
 
@@ -86,8 +86,8 @@ int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nA
 		
 	wglSwapIntervalEXT(0);
 
-	GE.Render().mainTarget = &window;
-	GE.Render().mainWindow = &window;
+	GE.Render().mMainTarget = &window;
+	GE.Render().mMainWindow = &window;
 
 	Test_Render(&window);
 

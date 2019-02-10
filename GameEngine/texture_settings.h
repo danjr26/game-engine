@@ -32,14 +32,14 @@ public:
 	};
 
 private:
-	Texture* texture;
-	ColorRGBAc borderColor;
-	GLint swizzleMask[4];
-	GLenum sEdgeCase;
-	GLenum tEdgeCase;
-	GLenum rEdgeCase;
-	GLenum minifyFilter;
-	GLenum magnifyFilter;
+	Texture* mTexture;
+	ColorRGBAc mBorderColor;
+	GLint mSwizzleMask[4];
+	GLenum mSEdgeCase;
+	GLenum mTEdgeCase;
+	GLenum mREdgeCase;
+	GLenum mMinifyFilter;
+	GLenum mMagnifyFilter;
 
 public:
 	TextureSettings(Texture* in_texture);

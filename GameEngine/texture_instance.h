@@ -19,9 +19,9 @@ public:
 		count
 	};
 private:
-	Texture* texture;
-	TextureSettings settings;
-	float influences[(uint)Influence::count];
+	Texture* mTexture;
+	TextureSettings mSettings;
+	float mInfluences[(uint)Influence::count];
 
 public:
 	TextureInstance(Texture* in_texture);

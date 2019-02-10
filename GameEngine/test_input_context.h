@@ -45,8 +45,8 @@ public:
 
 class TestSpriteMover : public PerFrameUpdateableObject {
 private:
-	Sprite* sprite;
-	RigidBody2* rigidBody;
+	Sprite* mSprite;
+	RigidBody2* mRigidBody;
 
 public:
 	TestSpriteMover(Sprite* in_sprite, CollisionMask2d& in_mask);
@@ -55,9 +55,9 @@ public:
 
 class TestSpriteMover2 : public PerFrameUpdateableObject {
 private:
-	Sprite* sprite;
-	double accum;
-	HermiteTransitioner<double, 2> transitioner;
+	Sprite* mSprite;
+	double mAccum;
+	HermiteTransitioner<double, 2> mTransitioner;
 
 public:
 	TestSpriteMover2(Sprite* in_sprite);

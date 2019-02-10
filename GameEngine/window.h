@@ -11,16 +11,16 @@ public:
 	class Params {
 		friend class Window;
 	private:
-		HINSTANCE hInstance;
-		Vector2i position;
-		Vector2i dimensions;
-		std::wstring name;
-		DWORD style;
-		DWORD exStyle;
-		BYTE colorBits;
-		BYTE depthBits;
-		BYTE stencilBits;
-		bool fullscreen;
+		HINSTANCE mInstanceHandle;
+		Vector2i mPosition;
+		Vector2i mDimensions;
+		std::wstring mName;
+		DWORD mStyle;
+		DWORD mExStyle;
+		BYTE mColorBits;
+		BYTE mDepthBits;
+		BYTE mStencilBits;
+		bool mFullscreen;
 
 	public:
 		Params(HINSTANCE in_instance);
@@ -45,22 +45,22 @@ public:
 	};
 
 	struct DisplayMode {
-		Vector2i dimensions;
-		uint frequency;
-		DWORD colorBits;
+		Vector2i mDimensions;
+		uint mFrequency;
+		DWORD mColorBits;
 	};
 
 private:
 	static uint classIndex;
 
-	mutable std::mutex mutex;
+	mutable std::mutex mMutex;
 
-	HWND hWindow;
-	WNDCLASSEX windowClass;
-	HDC	hDeviceContext;
-	HGLRC hGLRenderContext;
+	HWND mWindowHandle;
+	WNDCLASSEX mWindowClass;
+	HDC	mDeviceContextHandle;
+	HGLRC mRenderContext;
 	
-	Params params;
+	Params mParams;
 
 public:
 	Window(Params& in_params);

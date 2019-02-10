@@ -17,12 +17,12 @@
 
 template<class T>
 struct NeuterableDeleter {
-	bool neuter;
+	bool mNeuter;
 
-	NeuterableDeleter() : neuter(false) {};
+	NeuterableDeleter() : mNeuter(false) {};
 
 	void operator()(T* in_toDelete) const {
-		if (!neuter) delete in_toDelete;
+		if (!mNeuter) delete in_toDelete;
 	}
 };
 

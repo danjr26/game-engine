@@ -9,8 +9,8 @@
 template<class T, uint n>
 class Box {
 private:
-	Vector<T, n> origin;
-	Vector<T, n> axes[n];
+	Vector<T, n> mOrigin;
+	Vector<T, n> mAxes[n];
 
 private:
 	Box(const Vector<T, n>& in_origin, const Vector<T, n>* in_axes);

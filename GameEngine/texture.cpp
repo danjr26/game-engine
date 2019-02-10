@@ -3,23 +3,23 @@
 #include "game_engine.h"
 
 Texture::Texture(Type in_type, std::string in_filename, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA) :
-	type(in_type),
-	nSamplesMSAA(in_nSamplesMSAA),
-	nBitsPerChannel(in_nBitsPerChannel),
-	flags(in_flags),
-	activeSettings(this) {
+	mType(in_type),
+	mNSamplesMSAA(in_nSamplesMSAA),
+	mNBitsPerChannel(in_nBitsPerChannel),
+	mFlags(in_flags),
+	mActiveSettings(this) {
 
 	cimg_library::CImg<ubyte> image((in_filename).c_str());
 
-	dimensions = Vector3i(image.width(), image.height(), image.depth());
-	nChannels = image.spectrum();
+	mDimensions = Vector3i(image.width(), image.height(), image.depth());
+	mNChannels = image.spectrum();
 
-	data = new ubyte[dimensions.Component_Product() * nChannels];
+	mData = new ubyte[mDimensions.Component_Product() * mNChannels];
 	cimg_forXYZC(image, x, y, z, c) {
-		data[
-			z * dimensions.X() * dimensions.Y() * nChannels +
-				y * dimensions.X() * nChannels +
-				x * nChannels +
+		mData[
+			z * mDimensions.X() * mDimensions.Y() * mNChannels +
+				y * mDimensions.X() * mNChannels +
+				x * mNChannels +
 				c] = image(x, y, z, c);
 	}
 
@@ -27,33 +27,33 @@ Texture::Texture(Type in_type, std::string in_filename, ubyte in_nBitsPerChannel
 }
 
 Texture::Texture(Type in_type, Vector3i in_dimensions, ubyte* in_data, ubyte in_nChannels, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA) :
-	type(in_type),
-	dimensions(in_dimensions),
-	nSamplesMSAA(in_nSamplesMSAA),
-	nChannels(in_nChannels),
-	nBitsPerChannel(in_nBitsPerChannel),
-	flags(in_flags),
-	activeSettings(this) {
+	mType(in_type),
+	mDimensions(in_dimensions),
+	mNSamplesMSAA(in_nSamplesMSAA),
+	mNChannels(in_nChannels),
+	mNBitsPerChannel(in_nBitsPerChannel),
+	mFlags(in_flags),
+	mActiveSettings(this) {
 
-	data = new ubyte[dimensions.Component_Product() * nChannels];
-	memcpy(data, in_data, dimensions.Component_Product() * nChannels);
+	mData = new ubyte[mDimensions.Component_Product() * mNChannels];
+	memcpy(mData, in_data, mDimensions.Component_Product() * mNChannels);
 
 	Finish_Setup();
 }
 
 Texture::Texture(Type in_type, Vector3i in_dimensions, ColorRGBAc in_color, ubyte in_nChannels, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA) :
-	type(in_type),
-	dimensions(in_dimensions),
-	nSamplesMSAA(in_nSamplesMSAA),
-	nChannels(in_nChannels),
-	nBitsPerChannel(in_nBitsPerChannel),
-	flags(in_flags),
-	activeSettings(this) {
+	mType(in_type),
+	mDimensions(in_dimensions),
+	mNSamplesMSAA(in_nSamplesMSAA),
+	mNChannels(in_nChannels),
+	mNBitsPerChannel(in_nBitsPerChannel),
+	mFlags(in_flags),
+	mActiveSettings(this) {
 
-	data = new ubyte[dimensions.Component_Product() * nChannels];
-	for (int i = 0; i < dimensions.Component_Product(); i++) {
-		for (int j = 0; j < nChannels; j++) {
-			data[i * nChannels + j] = in_color[j];
+	mData = new ubyte[mDimensions.Component_Product() * mNChannels];
+	for (int i = 0; i < mDimensions.Component_Product(); i++) {
+		for (int j = 0; j < mNChannels; j++) {
+			mData[i * mNChannels + j] = in_color[j];
 		}
 	}
 
@@ -61,25 +61,25 @@ Texture::Texture(Type in_type, Vector3i in_dimensions, ColorRGBAc in_color, ubyt
 }
 
 Texture::Texture(Type in_type, Vector3i in_dimensions, ubyte in_nChannels, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA) :
-	type(in_type),
-	data(nullptr),
-	dimensions(in_dimensions),
-	nSamplesMSAA(in_nSamplesMSAA),
-	nChannels(in_nChannels),
-	nBitsPerChannel(in_nBitsPerChannel),
-	flags(in_flags),
-	activeSettings(this) {
+	mType(in_type),
+	mData(nullptr),
+	mDimensions(in_dimensions),
+	mNSamplesMSAA(in_nSamplesMSAA),
+	mNChannels(in_nChannels),
+	mNBitsPerChannel(in_nBitsPerChannel),
+	mFlags(in_flags),
+	mActiveSettings(this) {
 
-	if (flags & Flags::readable) {
-		data = new ubyte[dimensions.Component_Product() * nChannels];
+	if (mFlags & Flags::readable) {
+		mData = new ubyte[mDimensions.Component_Product() * mNChannels];
 	}
 
 	Finish_Setup();
 }
 
 const ubyte* Texture::Read() {
-	if (flags & Flags::readable) {
-		return data;
+	if (mFlags & Flags::readable) {
+		return mData;
 	}
 	else {
 		throw ProcessFailureException("attempt to read texture marked as non-readable");
@@ -87,8 +87,8 @@ const ubyte* Texture::Read() {
 }
 
 void Texture::Refresh_From_OpenGL() {
-	if (flags & Flags::readable) {
-		glGetTextureImage(id, 0, pixelFormat, GL_UNSIGNED_BYTE, dimensions.Component_Product() * nChannels, data);
+	if (mFlags & Flags::readable) {
+		glGetTextureImage(mID, 0, mPixelFormat, GL_UNSIGNED_BYTE, mDimensions.Component_Product() * mNChannels, mData);
 	}
 	else {
 		throw ProcessFailureException("attempt to refresh texture marked as non-readable");
@@ -97,86 +97,86 @@ void Texture::Refresh_From_OpenGL() {
 
 void Texture::Use(ubyte in_slot) {
 	glActiveTexture(GL_TEXTURE0 + in_slot);
-	glBindTexture(target, id);
+	glBindTexture(mTarget, mID);
 }
 
 void Texture::Use_None(ubyte in_slot) {
 	glActiveTexture(GL_TEXTURE0 + in_slot);
-	glBindTexture(target, 0);
+	glBindTexture(mTarget, 0);
 }
 
 Texture::Type Texture::Get_Type() {
-	return type;
+	return mType;
 }
 
 Vector3i Texture::Get_Dimensions() {
-	return dimensions;
+	return mDimensions;
 }
 
 ubyte Texture::Get_Number_Channels() {
-	return nChannels;
+	return mNChannels;
 }
 
 ubyte Texture::Get_Number_Bits_Per_Channel() {
-	return nBitsPerChannel;
+	return mNBitsPerChannel;
 }
 
 ubyte Texture::Get_Number_Samples_MSAA() {
-	return nSamplesMSAA;
+	return mNSamplesMSAA;
 }
 
 uint Texture::Get_Flags() {
-	return flags;
+	return mFlags;
 }
 
 TextureSettings Texture::Get_Active_Settings() {
-	return activeSettings;
+	return mActiveSettings;
 }
 
 void Texture::Finish_Setup() {
-	target = Determine_Target();
-	pixelFormat = Determine_Pixel_Format();
-	internalFormat = Determine_Internal_Format();
+	mTarget = Determine_Target();
+	mPixelFormat = Determine_Pixel_Format();
+	mInternalFormat = Determine_Internal_Format();
 
-	glCreateTextures(target, 1, &id);
-	activeSettings.Use();
+	glCreateTextures(mTarget, 1, &mID);
+	mActiveSettings.Use();
 	Load_To_OpenGL();
 
-	if (!(flags & Flags::readable)) {
-		delete[] data;
-		data = nullptr;
+	if (!(mFlags & Flags::readable)) {
+		delete[] mData;
+		mData = nullptr;
 	}
 }
 
 void Texture::Load_To_OpenGL() {
-	glBindTexture(target, id);
+	glBindTexture(mTarget, mID);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 	switch (Determine_Span()) {
 	case 1:
-		glTexImage1D(target, 0, internalFormat, dimensions.X(), 0, pixelFormat, GL_UNSIGNED_BYTE, data);
+		glTexImage1D(mTarget, 0, mInternalFormat, mDimensions.X(), 0, mPixelFormat, GL_UNSIGNED_BYTE, mData);
 		break;
 	case 2:
-		glTexImage2D(target, 0, internalFormat, dimensions.X(), dimensions.Y(), 0, pixelFormat, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(mTarget, 0, mInternalFormat, mDimensions.X(), mDimensions.Y(), 0, mPixelFormat, GL_UNSIGNED_BYTE, mData);
 		break;
 	case 3:
-		glTexImage3D(target, 0, internalFormat, dimensions.X(), dimensions.Y(), dimensions.Z(), 0, pixelFormat, GL_UNSIGNED_BYTE, data);
+		glTexImage3D(mTarget, 0, mInternalFormat, mDimensions.X(), mDimensions.Y(), mDimensions.Z(), 0, mPixelFormat, GL_UNSIGNED_BYTE, mData);
 		break;
 	}
 
-	if (flags & Flags::mipmaps) {
-		glGenerateMipmap(target);
+	if (mFlags & Flags::mipmaps) {
+		glGenerateMipmap(mTarget);
 	}
 
-	glBindTexture(target, 0);
+	glBindTexture(mTarget, 0);
 }
 
 GLenum Texture::Determine_Pixel_Format() {
-	if (flags & Flags::depth) {
+	if (mFlags & Flags::depth) {
 		return GL_DEPTH_COMPONENT;
 	}
 	else {
-		switch (nChannels) {
+		switch (mNChannels) {
 		case 1:
 			return GL_RED;
 		case 2:
@@ -191,8 +191,8 @@ GLenum Texture::Determine_Pixel_Format() {
 }
 
 GLenum Texture::Determine_Internal_Format() {
-	if (flags & Flags::depth) {
-		switch (nBitsPerChannel) {
+	if (mFlags & Flags::depth) {
+		switch (mNBitsPerChannel) {
 		case 16:
 			return GL_DEPTH_COMPONENT16;
 		case 24:
@@ -204,16 +204,16 @@ GLenum Texture::Determine_Internal_Format() {
 		}
 	}
 	else {
-		switch (nBitsPerChannel) {
+		switch (mNBitsPerChannel) {
 		case 4:
-			switch (nChannels) {
+			switch (mNChannels) {
 			case 3:
 				return GL_RGB4;
 			case 4:
 				return GL_RGBA4;
 			}
 		case 8:
-			switch (nChannels) {
+			switch (mNChannels) {
 			case 1:
 				return GL_R8;
 			case 2:
@@ -224,15 +224,15 @@ GLenum Texture::Determine_Internal_Format() {
 				return GL_RGBA8;
 			}
 		case 12:
-			switch (nChannels) {
+			switch (mNChannels) {
 			case 3:
 				return GL_RGB12;
 			case 4:
 				return GL_RGBA12;
 			}
 		case 16:
-			if (flags & Flags::hdr) {
-				switch (nChannels) {
+			if (mFlags & Flags::hdr) {
+				switch (mNChannels) {
 				case 1:
 					return GL_R16F;
 				case 2:
@@ -244,7 +244,7 @@ GLenum Texture::Determine_Internal_Format() {
 				}
 			}
 			else {
-				switch (nChannels) {
+				switch (mNChannels) {
 				case 1:
 					return GL_R16;
 				case 2:
@@ -256,8 +256,8 @@ GLenum Texture::Determine_Internal_Format() {
 				}
 			}
 		case 32:
-			if (flags & Flags::hdr) {
-				switch (nChannels) {
+			if (mFlags & Flags::hdr) {
+				switch (mNChannels) {
 				case 1:
 					return GL_R32F;
 				case 2:
@@ -275,8 +275,8 @@ GLenum Texture::Determine_Internal_Format() {
 }
 
 GLenum Texture::Determine_Target() {
-	if (nSamplesMSAA > 1) {
-		switch (type) {
+	if (mNSamplesMSAA > 1) {
+		switch (mType) {
 		case Type::_1d:
 		case Type::_1d_array:
 			throw InvalidArgumentException("multisampling not supported for 1d textures");
@@ -296,13 +296,13 @@ GLenum Texture::Determine_Target() {
 		}
 	}
 	else {
-		return type;
+		return mType;
 	}
 	throw InvalidArgumentException("invalid texture target type");
 }
 
 ubyte Texture::Determine_Span() {
-	switch (type) {
+	switch (mType) {
 	case _1d:
 		return 1;
 	case _1d_array:

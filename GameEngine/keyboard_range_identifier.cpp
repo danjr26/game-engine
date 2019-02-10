@@ -2,39 +2,39 @@
 
 KeyboardRangeIdentifier::KeyboardRangeIdentifier(Key in_lowKey, Key in_highKey,
 	float in_lowValue, float in_midValue, float in_highValue, bool in_acceptRepeat) :
-	lowKey(in_lowKey),
-	highKey(in_highKey),
-	lowValue(in_lowValue),
-	midValue(in_midValue),
-	highValue(in_highValue),
-	acceptRepeat(in_acceptRepeat)
+	mLowKey(in_lowKey),
+	mHighKey(in_highKey),
+	mLowValue(in_lowValue),
+	mMidValue(in_midValue),
+	mHighValue(in_highValue),
+	mAcceptRepeat(in_acceptRepeat)
 {}
 
 float KeyboardRangeIdentifier::operator()(const RawInputEvent& in_event, const RawInputState& in_state) const {
-	if ((in_event.keyboard.repeat) ? acceptRepeat : true) {
-		if (in_event.type == RawInputEvent::Type::key_down) {
-			if (in_event.keyboard.key == lowKey) {
-				return lowValue;
+	if ((in_event.mKeyboard.mRepeat) ? mAcceptRepeat : true) {
+		if (in_event.mType == RawInputEvent::Type::key_down) {
+			if (in_event.mKeyboard.mKey == mLowKey) {
+				return mLowValue;
 			}
-			if (in_event.keyboard.key == highKey) {
-				return highValue;
+			if (in_event.mKeyboard.mKey == mHighKey) {
+				return mHighValue;
 			}
 		}
-		if (in_event.type == RawInputEvent::Type::key_up) {
-			if (in_event.keyboard.key == lowKey) {
-				if (in_state.keyboard.Is_Down(highKey)) {
-					return highValue;
+		if (in_event.mType == RawInputEvent::Type::key_up) {
+			if (in_event.mKeyboard.mKey == mLowKey) {
+				if (in_state.mKeyboard.Is_Down(mHighKey)) {
+					return mHighValue;
 				}
 				else {
-					return midValue;
+					return mMidValue;
 				}
 			}
-			if (in_event.keyboard.key == highKey) {
-				if (in_state.keyboard.Is_Down(lowKey)) {
-					return lowValue;
+			if (in_event.mKeyboard.mKey == mHighKey) {
+				if (in_state.mKeyboard.Is_Down(mLowKey)) {
+					return mLowValue;
 				}
 				else {
-					return midValue;
+					return mMidValue;
 				}
 			}
 		}

@@ -8,8 +8,8 @@
 template<uint n>
 class ForceField {
 protected:
-	CollisionContext<double, n>* collisionContext;
-	CollisionMask<double, n>* collisionMask;
+	CollisionContext<double, n>* mCollisionContext;
+	CollisionMask<double, n>* mCollisionMask;
 
 public:
 	ForceField(CollisionMask<double, n>* in_mask = nullptr);

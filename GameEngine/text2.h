@@ -17,20 +17,20 @@ public:
 		word_wrap
 	};
 private:
-	std::string text;
+	std::string mText;
 
-	OverflowPolicy overflowPolicy;
-	std::vector<uint> lineWrap;
-	Vector2f containerDimensions;
-	Transform2d scrollTransform;
+	OverflowPolicy mOverflowPolicy;
+	std::vector<uint> mLineWrap;
+	Vector2f mContainerDimensions;
+	Transform2d mScrollTransform;
 
-	FontFaceRasterSet* rasterSet;
-	TextureInstance bitmapArray;
+	FontFaceRasterSet* mRasterSet;
+	TextureInstance mBitmapArray;
 
-	GLuint vertexArrayID;
-	GLuint vertexBufferID;
-	GLuint uvBufferID;
-	GLuint indexBufferID;
+	GLuint mVertexArrayID;
+	GLuint mVertexBufferID;
+	GLuint mUVBufferID;
+	GLuint mIndexBufferID;
 
 public:
 	Text2(const std::string& in_text, FontFaceRasterSet* in_rasterSet, ColorRGBAc in_color = ColorRGBAc(255, 255, 255, 255));

@@ -24,13 +24,13 @@ public:
 
 private:
 	struct UniformData {
-		UniformType type;
-		GLint location;
-		const void* data;
+		UniformType mType;
+		GLint mLocation;
+		const void* mData;
 	};
 
-	ShaderProgram* program;
-	std::unordered_map<std::string, UniformData> uniforms;
+	ShaderProgram* mProgram;
+	std::unordered_map<std::string, UniformData> mUniforms;
 	using UniformNameValuePair = std::unordered_map<std::string, UniformData>::value_type;
 
 public:

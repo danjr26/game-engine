@@ -70,38 +70,38 @@ using DisplayDistance3 = DisplayDistance<3>;
 template<class T, uint n>
 class DisplayUnits {
 private:
-	Vector<T, n> value;
+	Vector<T, n> mValue;
 
 private:
 	DisplayUnits(Vector<T, n> in_value) :
-		value(in_value)
+		mValue(in_value)
 	{}
 
 public:
 	Vector<T, n> Percent() {
-		Vector<T, n> output = value;
+		Vector<T, n> output = mValue;
 		for (uint i = 0; i < Min(n, 2U); i++) {
-			output[i] = value[i] * 100.0f;
+			output[i] = mValue[i] * 100.0f;
 		}
 		return output;
 	}
 
 	Vector<T, n> Percent_X(Vector2i in_targetDimensions) {
-		Vector<T, n> output = value;
+		Vector<T, n> output = mValue;
 		output[0] = output[0] * 100.0f;
 		output[1] = output[1] * 100.0f * in_targetDimensions[0] / in_targetDimensions[1];
 		return output;
 	}
 
 	Vector<T, n> Percent_Y(Vector2i in_targetDimensions) {
-		Vector<T, n> output = value;
+		Vector<T, n> output = mValue;
 		output[0] = output[0] * 100.0f * in_targetDimensions[1] / in_targetDimensions[0];
 		output[1] = output[1] * 100.0f;
 		return output;
 	}
 
 	Vector<T, n> Pixels(Vector2i in_targetDimensions) {
-		Vector<T, n> output = value;
+		Vector<T, n> output = mValue;
 		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = output[i] * in_targetDimensions[i];
 		}
@@ -109,7 +109,7 @@ public:
 	}
 
 	Vector<T, n> OpenGL_Position() {
-		Vector<T, n> output = value;
+		Vector<T, n> output = mValue;
 		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = output[i] * 2.0f - 1.0f;
 		}
@@ -117,7 +117,7 @@ public:
 	}
 
 	Vector<T, n> OpenGL_Displacement() {
-		Vector<T, n> output = value;
+		Vector<T, n> output = mValue;
 		for (uint i = 0; i < Min(n, 2U); i++) {
 			output[i] = output[i] * 2.0f;
 		}

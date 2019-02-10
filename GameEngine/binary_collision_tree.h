@@ -20,9 +20,9 @@ public:
 		class Iterator {
 			friend class Evaluation;
 		private:
-			Evaluation* parent;
-			uint depths[n];
-			uint evals[n];
+			Evaluation* mParent;
+			uint mDepths[n];
+			uint mEvals[n];
 
 		private:
 			Iterator(Evaluation* in_parent);
@@ -38,12 +38,12 @@ public:
 		};
 
 	private:
-		BinaryCollisionTree<T, n>* parentTree;
-		CollisionMask<T, n>* parentMask;
-		CollisionMask<T, n>* transformedParentMask;
-		ubyte* data[n];
-		uint dataSizes[n];
-		uint depth;
+		BinaryCollisionTree<T, n>* mParentTree;
+		CollisionMask<T, n>* mParentMask;
+		CollisionMask<T, n>* mTransformedParentMask;
+		ubyte* mData[n];
+		uint mDataSizes[n];
+		uint mDepth;
 
 	public:
 		Evaluation();
@@ -59,17 +59,17 @@ public:
 		friend class BinaryCollisionTree<T, n>;
 	private:
 		struct Grouping {
-			ubyte path[n][maxDepth];
-			std::vector<Evaluation*> evals;
+			ubyte mPath[n][maxDepth];
+			std::vector<Evaluation*> mEvals;
 		};
 
 	public:
 		class Iterator {
 			friend class GroupingScheme;
 		private:
-			GroupingScheme* parent;
-			typename std::list<Grouping>::iterator it;
-			uint i, j;
+			GroupingScheme* mParent;
+			typename std::list<Grouping>::iterator mIt;
+			uint mI, mJ;
 
 		private:
 			Iterator(GroupingScheme* in_parent);
@@ -84,8 +84,8 @@ public:
 		friend class GroupingScheme::Iterator;
 
 	private:
-		BinaryCollisionTree<T, n>* parent;
-		std::list<Grouping> groupings;
+		BinaryCollisionTree<T, n>* mParent;
+		std::list<Grouping> mGroupings;
 
 	public:
 		uint Get_Number_Groups() const;
@@ -98,18 +98,18 @@ public:
 		friend class BinaryCollisionTree<T, n>;
 	private:
 		struct Grouping {
-			ubyte path[n][maxDepth];
-			std::vector<Evaluation*> evals1;
-			std::vector<Evaluation*> evals2;
+			ubyte mPath[n][maxDepth];
+			std::vector<Evaluation*> mEvals1;
+			std::vector<Evaluation*> mEvals2;
 		};
 
 	public:
 		class Iterator {
 			friend class PairedGroupingScheme;
 		private:
-			PairedGroupingScheme* parent;
-			typename std::list<Grouping>::iterator it;
-			uint i, j;
+			PairedGroupingScheme* mParent;
+			typename std::list<Grouping>::iterator mIt;
+			uint mI, mJ;
 
 		private:
 			Iterator(PairedGroupingScheme* in_parent);
@@ -124,8 +124,8 @@ public:
 		friend class PairedGroupingScheme::Iterator;
 
 	private:
-		BinaryCollisionTree<T, n>* parent;
-		std::list<Grouping> groupings;
+		BinaryCollisionTree<T, n>* mParent;
+		std::list<Grouping> mGroupings;
 
 	public:
 		uint Get_Number_Groups() const;
@@ -134,22 +134,22 @@ public:
 	};
 
 private:
-	AxisAlignedBox<T, n> box;
+	AxisAlignedBox<T, n> mBox;
 
 	struct EvaluationStackElement {
-		uint dimension;
-		T value;
-		bool isPositive;
-		uint depth;
+		uint mDimension;
+		T mValue;
+		bool mIsPositive;
+		uint mDepth;
 	};
 
 	struct IntersectionStackElement {
-		typename Evaluation::Iterator it1;
-		typename Evaluation::Iterator it2;
+		typename Evaluation::Iterator mIt1;
+		typename Evaluation::Iterator mIt2;
 	};
 
-	std::list<typename GroupingScheme::Grouping> recycling;
-	std::list<typename PairedGroupingScheme::Grouping> pairRecycling;
+	std::list<typename GroupingScheme::Grouping> mRecycling;
+	std::list<typename PairedGroupingScheme::Grouping> mPairRecycling;
 
 	template<typename = std::enable_if_t<n == 2>>
 	using AxisAlignedHalfSpaceCollisionMask = AAHalfSpace2CollisionMask<T>;

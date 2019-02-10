@@ -7,7 +7,7 @@
 #include "window.h"
 
 struct RawInputEvent {
-	HWND windowHandle;
+	HWND mWindowHandle;
 
 	enum Type {
 		mouse_down,
@@ -18,24 +18,24 @@ struct RawInputEvent {
 		key_down,
 		key_up,
 		character
-	} type;
+	} mType;
 
 	union {
 		struct RawMouseEvent {
 			union {
-				MouseButton button;
-				float wheelValue;
+				MouseButton mButton;
+				float mWheelValue;
 			};
-			Vector2i position;
-		} mouse;
+			Vector2i mPosition;
+		} mMouse;
 
 		struct RawKeyboardEvent {
 			union {
-				Key key;
-				char character;
+				Key mKey;
+				char mCharacter;
 			};
-			bool repeat;
-		} keyboard;
+			bool mRepeat;
+		} mKeyboard;
 	};
 
 	RawInputEvent();

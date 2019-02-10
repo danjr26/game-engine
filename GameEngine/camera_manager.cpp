@@ -2,6 +2,6 @@
 #include "log.h"
 
 CameraManager::CameraManager() :
-active(nullptr)
+mActive(nullptr)
 {}
 

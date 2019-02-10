@@ -23,31 +23,31 @@ public:
 
 	static const ubyte maxFilters = FilteredObject::maxFilters;
 	struct CollisionPartner {
-		CollisionMask<T, n>* mask;
-		Collision<T, n> collision;
+		CollisionMask<T, n>* mMask;
+		Collision<T, n> mCollision;
 
 		bool operator==(const CollisionPartner& in_other) {
-			return mask == in_other.mask;
+			return mMask == in_other.mMask;
 		}
 	};
 
 private:
-	BinaryCollisionTree<T, n> tree;
+	BinaryCollisionTree<T, n> mTree;
 
-	std::vector<CollisionMask<T, n>*> masksToAdd;
+	std::vector<CollisionMask<T, n>*> mMasksToAdd;
 
-	std::vector<typename BinaryCollisionTree<T, n>::Evaluation> evaluations;
-	std::vector<typename BinaryCollisionTree<T, n>::GroupingScheme> groupingSchemes;
-	std::vector<typename BinaryCollisionTree<T, n>::PairedGroupingScheme> pairedGroupingSchemes;
+	std::vector<typename BinaryCollisionTree<T, n>::Evaluation> mEvaluations;
+	std::vector<typename BinaryCollisionTree<T, n>::GroupingScheme> mGroupingSchemes;
+	std::vector<typename BinaryCollisionTree<T, n>::PairedGroupingScheme> mPairedGroupingSchemes;
 
 	using Partnering = std::unordered_multimap<CollisionMask<T, n>*, CollisionPartner>;
-	Partnering partnering;
-	std::mutex partneringMutex;
-	std::vector<PackagedAsyncTask<void>*> tasks;
+	Partnering mPartnering;
+	std::mutex mPartneringMutex;
+	std::vector<PackagedAsyncTask<void>*> mTasks;
 
-	std::set<std::pair<ubyte, ubyte>> partnersToTest;
+	std::set<std::pair<ubyte, ubyte>> mPartnersToTest;
 
-	uint depth;
+	uint mDepth;
 
 public:
 	CollisionContext(const AxisAlignedBox<T, n>& in_box, uint in_depth);

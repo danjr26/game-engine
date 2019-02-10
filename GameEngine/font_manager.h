@@ -8,7 +8,7 @@
 
 class FontManager {
 private:
-	FT_Library library;
+	FT_Library mLibrary;
 
 public:
 	FontManager();

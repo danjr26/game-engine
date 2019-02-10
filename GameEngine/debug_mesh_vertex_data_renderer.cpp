@@ -20,12 +20,12 @@ void DebugMeshVertexDataRenderer::Render() {
 */
 
 DebugMeshVertexDataRenderer::DebugMeshVertexDataRenderer(MeshVertexData* in_meshVertexData, const ColorRGBAf& in_fillColor, const ColorRGBAf& in_wireframeColor) :
-	meshVertexData(in_meshVertexData),
-	gpuPusher(),
-	fillColor(in_fillColor),
-	wireframeColor(in_wireframeColor) {
+	mMeshVertexData(in_meshVertexData),
+	mGPUPusher(),
+	mFillColor(in_fillColor),
+	mWireframeColor(in_wireframeColor) {
 	
-	gpuPusher.Initialize(meshVertexData);
+	mGPUPusher.Initialize(mMeshVertexData);
 }
 
 double DebugMeshVertexDataRenderer::Z() const {
@@ -45,22 +45,22 @@ void DebugMeshVertexDataRenderer::Render() {
 	};
 
 	Matrix4f mvpMatrix = 
-		GE.Cameras().active->Get_Projection_Matrix() * 
-		GE.Cameras().active->Get_View_Matrix() * 
-		(Matrix4f)transform.Get_World_Matrix();
+		GE.Cameras().mActive->Get_Projection_Matrix() * 
+		GE.Cameras().mActive->Get_View_Matrix() * 
+		(Matrix4f)mTransform.Get_World_Matrix();
 
 	shaderProgram->Use();
 	glUniformMatrix4fv(locations[0], 1, GL_TRUE, mvpMatrix.Pointer());
-	glUniform4fv(locations[1], 1, fillColor.Pointer());
+	glUniform4fv(locations[1], 1, mFillColor.Pointer());
 
-	gpuPusher.Draw();
+	mGPUPusher.Draw();
 
-	glUniform4fv(locations[1], 1, wireframeColor.Pointer());
+	glUniform4fv(locations[1], 1, mWireframeColor.Pointer());
 	glLineWidth(1.5f);
 //	glEnable(GL_LINE_SMOOTH);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	gpuPusher.Draw();
+	mGPUPusher.Draw();
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

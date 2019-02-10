@@ -7,7 +7,7 @@
 
 class KeyboardState {
 private:
-	std::vector<bool> keyStates;
+	std::vector<bool> mKeyStates;
 
 public:
 	KeyboardState();

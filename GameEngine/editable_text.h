@@ -10,13 +10,13 @@
 
 class EditableText : public RenderableObject, public DeepTransformableObject2d, public PerFrameUpdateableObject {
 private:
-	const float cursorWidth = 1.0f;
+	const float mCursorWidth = 1.0f;
 
-	InputListener input;
-	Text2 text;
-	Sprite cursorSprite;
-	Stepper cursorBlinkStepper;
-	uint cursorPos;
+	InputListener mInput;
+	Text2 mText;
+	Sprite mCursorSprite;
+	Stepper mCursorBlinkStepper;
+	uint mCursorPosition;
 
 public:
 	EditableText(TextInputContext* in_context, FontFaceRasterSet* in_rasterSet);

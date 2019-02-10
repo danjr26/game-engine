@@ -9,12 +9,12 @@
 
 class InputContext {
 protected:
-	InputBindings bindings;
+	InputBindings mBindings;
 
-	std::vector<bool> states;
-	std::vector<float> ranges;
+	std::vector<bool> mStates;
+	std::vector<float> mRanges;
 
-	std::vector<InputListener*> listeners;
+	std::vector<InputListener*> mListeners;
 
 protected:
 	InputContext(uint in_nActions, uint in_nStates, uint in_nRanges);

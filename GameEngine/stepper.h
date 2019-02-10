@@ -5,8 +5,8 @@
 
 class Stepper {
 public:
-	std::atomic<double> step;
-	std::atomic<double> accumulation;
+	std::atomic<double> mStep;
+	std::atomic<double> mAccum;
 
 	Stepper(double in_step);
 	Stepper(double in_step, double in_accumulation);

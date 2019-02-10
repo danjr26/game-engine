@@ -13,7 +13,7 @@ extern "C" {
 
 class FontFace : public Asset {
 private:
-	FT_Face face;
+	FT_Face mFace;
 
 public:
 	FontFace(std::string in_filename);

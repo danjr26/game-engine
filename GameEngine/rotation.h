@@ -15,12 +15,12 @@ template<class T>
 class Rotation<T, 2> {
 	friend class Rotation;
 private:
-	T angle;
+	T mAngle;
 
 public:
 	Rotation();
 	template<class T2>
-	Rotation(const Rotation<T2, 2>& in_other) : angle((T)in_other.angle) {}
+	Rotation(const Rotation<T2, 2>& in_other) : mAngle((T)in_other.angle) {}
 	Rotation(T in_angle);
 	Rotation(T in_from, T in_to);
 	Rotation(const Vector<T, 2>& in_vec);
@@ -47,7 +47,7 @@ template<class T>
 class Rotation<T, 3> {
 	friend class Rotation;
 private:
-	Vector<T, 4> quaternion;
+	Vector<T, 4> mQuaternion;
 
 private:
 	Rotation(const Vector<T, 4>& in_quaternion);
@@ -55,7 +55,7 @@ private:
 public:
 	Rotation();
 	template<class T2>
-	Rotation(const Rotation<T2, 3>& in_other) : quaternion(in_other.quaternion) {}
+	Rotation(const Rotation<T2, 3>& in_other) : mQuaternion(in_other.quaternion) {}
 	Rotation(const Vector<T, 3>& in_axis, T in_angle);
 	Rotation(const Vector<T, 3>& in_from, const Vector<T, 3>& in_to);
 	Rotation(const Rotation<T, 3>& in_from, const Rotation<T, 3>& in_to);

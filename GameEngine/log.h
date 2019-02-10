@@ -10,7 +10,7 @@ class Log {
 public:
 	static Log main;
 
-	mutable std::mutex mutex;
+	mutable std::mutex mMutex;
 
 	Log();
 	Log(const Log& in_source);

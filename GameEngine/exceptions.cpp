@@ -2,11 +2,11 @@
 #include "game_engine.h"
 
 GameEngineException::GameEngineException(const std::string& in_message) :
-	message(in_message)
+	mMessage(in_message)
 {}
 
 char const* GameEngineException::what() const {
-	return message.c_str();
+	return mMessage.c_str();
 }
 
 FileNotFoundException::FileNotFoundException(const std::string& in_filename, const std::string& in_extraInfo) :

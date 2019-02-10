@@ -6,7 +6,7 @@
 class Asset {
 	friend class AssetManager;
 private:
-	std::string name;
+	std::string mName;
 
 private:
 	std::string Get_Name();

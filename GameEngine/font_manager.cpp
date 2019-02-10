@@ -2,16 +2,16 @@
 #include "log.h"
 
 FontManager::FontManager() {
-	FT_Error error = FT_Init_FreeType(&library);
+	FT_Error error = FT_Init_FreeType(&mLibrary);
 	if (error) {
 		throw ProcessFailureException("could not initialize font library");
 	}
 }
 
 FontManager::~FontManager() {
-	FT_Done_FreeType(library);
+	FT_Done_FreeType(mLibrary);
 }
 
 FT_Library FontManager::Get_Library() {
-	return library;
+	return mLibrary;
 }

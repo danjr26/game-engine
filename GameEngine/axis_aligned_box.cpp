@@ -3,8 +3,8 @@
 
 template<class T, uint n>
 inline AxisAlignedBox<T, n>::AxisAlignedBox(const Vector<T, n>& in_minima, const Vector<T, n>& in_maxima) :
-	minima(in_minima),
-	maxima(in_maxima) {}
+	mMinima(in_minima),
+	mMaxima(in_maxima) {}
 
 template<class T, uint n>
 inline void AxisAlignedBox<T, n>::Get_Corners(Vector<T, n>* out_corners) const {
@@ -12,7 +12,7 @@ inline void AxisAlignedBox<T, n>::Get_Corners(Vector<T, n>* out_corners) const {
 
 	for (uint i = 0; i < nCorners; i++) {
 		for (uint j = 0; j < n; j++) {
-			out_corners[i][j] = ((i >> j) & 1) ? maxima[j] : minima[j];
+			out_corners[i][j] = ((i >> j) & 1) ? mMaxima[j] : mMinima[j];
 		}
 	}
 }
@@ -21,11 +21,11 @@ template<class T, uint n>
 inline void AxisAlignedBox<T, n>::Apply_Transform(const Transform<T, n>& transform) {
 	if (transform.Get_World_Rotation().Is_Identity()) {
 		for (Transform<T, n> const* t = &transform; t != nullptr; t = t->Get_Const_Parent()) {
-			minima = minima.Compwise(t->Get_Local_Scale());
-			minima += t->Get_Local_Position();
+			mMinima = mMinima.Compwise(t->Get_Local_Scale());
+			mMinima += t->Get_Local_Position();
 
-			maxima = maxima.Compwise(t->Get_Local_Scale());
-			maxima += t->Get_Local_Position();
+			mMaxima = mMaxima.Compwise(t->Get_Local_Scale());
+			mMaxima += t->Get_Local_Position();
 		}
 		return;
 	}
@@ -44,32 +44,32 @@ inline void AxisAlignedBox<T, n>::Apply_Transform(const Transform<T, n>& transfo
 
 template<class T, uint n>
 inline Vector<T, n> AxisAlignedBox<T, n>::Get_Center() const {
-	return (minima + maxima) / 2;
+	return (mMinima + mMaxima) / 2;
 }
 
 template<class T, uint n>
 inline Vector<T, n> AxisAlignedBox<T, n>::Get_Dimensions() const {
-	return maxima - minima;
+	return mMaxima - mMinima;
 }
 
 template<class T, uint n>
 inline Vector<T, n> AxisAlignedBox<T, n>::Get_Minima() const {
-	return minima;
+	return mMinima;
 }
 
 template<class T, uint n>
 inline void AxisAlignedBox<T, n>::Set_Minima(const Vector<T, n>& in_minima) {
-	minima = in_minima;
+	mMinima = in_minima;
 }
 
 template<class T, uint n>
 inline Vector<T, n> AxisAlignedBox<T, n>::Get_Maxima() const {
-	return maxima;
+	return mMaxima;
 }
 
 template<class T, uint n>
 inline void AxisAlignedBox<T, n>::Set_Maxima(const Vector<T, n>& in_maxima) {
-	maxima = in_maxima;
+	mMaxima = in_maxima;
 }
 
 template<class T, uint n>
@@ -77,7 +77,7 @@ inline Range<T> AxisAlignedBox<T, n>::Get_Range(uint dimension) const {
 	if (dimension >= n) {
 		throw InvalidArgumentException();
 	}
-	return Range<T>(minima[dimension], maxima[dimension]);
+	return Range<T>(mMinima[dimension], mMaxima[dimension]);
 }
 
 template<class T, uint n>
@@ -86,10 +86,10 @@ inline Vector<T, n> AxisAlignedBox<T, n>::Random_Point_Boundary() const {
 	uint stuckDimension = Random<uint>(n);
 	for (uint i = 0; i < n; i++) {
 		if (i == stuckDimension) {
-			out[i] = (Random<bool>()) ? minima.Get(i) : maxima.Get(i);
+			out[i] = (Random<bool>()) ? mMinima.Get(i) : mMaxima.Get(i);
 		}
 		else {
-			out[i] = Random<T>(minima.Get(i), maxima.Get(i));
+			out[i] = Random<T>(mMinima.Get(i), mMaxima.Get(i));
 		}
 	}
 	return out;
@@ -98,26 +98,26 @@ inline Vector<T, n> AxisAlignedBox<T, n>::Random_Point_Boundary() const {
 template<class T, uint n>
 template<typename>
 inline T AxisAlignedBox<T, n>::Get_Area() const {
-	return (maxima - minima).Component_Product();
+	return (mMaxima - mMinima).Component_Product();
 }
 
 template<class T, uint n>
 template<typename>
 inline T AxisAlignedBox<T, n>::Get_Perimeter() const {
-	return (maxima - minima).Component_Sum() * 2.0;
+	return (mMaxima - mMinima).Component_Sum() * 2.0;
 }
 
 template<class T, uint n>
 template<typename>
 inline T AxisAlignedBox<T, n>::Get_Volume() const {
-	return (maxima - minima).Component_Product();
+	return (mMaxima - mMinima).Component_Product();
 
 }
 
 template<class T, uint n>
 template<typename>
 inline T AxisAlignedBox<T, n>::Get_Surface_Area() const {
-	Vector<T, n> edgeLengths = maxima - minima;
+	Vector<T, n> edgeLengths = mMaxima - mMinima;
 	return (
 		edgeLengths.X() * edgeLengths.Y() +
 		edgeLengths.Y() * edgeLengths.Z() +
@@ -128,14 +128,14 @@ inline T AxisAlignedBox<T, n>::Get_Surface_Area() const {
 template<class T, uint n>
 template<typename>
 inline T AxisAlignedBox<T, n>::Get_Total_Edge_Length() const {
-	return (maxima - minima).Component_Sum() * 2.0;
+	return (mMaxima - mMinima).Component_Sum() * 2.0;
 }
 
 template<class T, uint n>
 inline Vector<T, n> AxisAlignedBox<T, n>::Random_Point_Inside() const {
 	Vector<T, n> out;
 	for (uint i = 0; i < n; i++) {
-		out[i] = Random<T>(minima.Get(i), maxima.Get(i));
+		out[i] = Random<T>(mMinima.Get(i), mMaxima.Get(i));
 	}
 	return out;
 }

@@ -16,7 +16,7 @@ template<class T>
 class UnclampedRotation<T, 2> {
 	friend class UnclampedRotation;
 private:
-	T angle;
+	T mAngle;
 
 public:
 	UnclampedRotation();

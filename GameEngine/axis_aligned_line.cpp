@@ -3,36 +3,36 @@
 
 template<class T, uint n>
 inline AxisAlignedLine<T, n>::AxisAlignedLine(uint in_dimension, T in_value) :
-	dimension(in_dimension),
-	value(in_value) {
+	mDimension(in_dimension),
+	mValue(in_value) {
 
-	if (!Between_Inc(dimension, (uint)0, (uint)n - 1)) {
+	if (!Between_Inc(mDimension, (uint)0, (uint)n - 1)) {
 		throw InvalidArgumentException();
 	}
 }
 
 template<class T, uint n>
 inline uint AxisAlignedLine<T, n>::Get_Dimension() const {
-	return dimension;
+	return mDimension;
 }
 
 template<class T, uint n>
 inline T AxisAlignedLine<T, n>::Get_Value() const {
-	return value;
+	return mValue;
 }
 
 template<class T, uint n>
 inline Vector<T, n> AxisAlignedLine<T, n>::Get_Direction() const {
 	Vector<T, n> out;
-	out[dimension] = Sign(value);
+	out[mDimension] = Sign(mValue);
 	return out;
 }
 
 template<class T, uint n>
 inline void AxisAlignedLine<T, n>::Apply_Transform(const Transform<T, n>& in_transform) {
 	for (Transform<T, n> const* t = &in_transform; t != nullptr; t = t->Get_Const_Parent()) {
-		value *= t->Get_Local_Scale()[dimension];
-		value += t->Get_Local_Position()[dimension];
+		mValue *= t->Get_Local_Scale()[mDimension];
+		mValue += t->Get_Local_Position()[mDimension];
 	}
 }
 

@@ -23,20 +23,20 @@ class GameEngine {
 private:
 	static GameEngine* instance;
 
-	bool hasBegun;
+	bool mHasBegun;
 
-	Clock clock;
-	FrameRateManager frameRateManager;
-	PerFrameUpdateManager perFrameUpdateManager;
-	InputManager inputManager;
-	CameraManager cameraManager;
-	AssetManager assetManager;
-	FontManager fontManager;
-	RenderManager renderManager;
-	WindowManager windowManager;
-	CollisionManagerd collisionManager;
-	AsyncTaskManager asyncTaskManager;
-	PhysicsManager physicsManager;
+	Clock mClock;
+	FrameRateManager mFrameRateManager;
+	PerFrameUpdateManager mPerFrameUpdateManager;
+	InputManager mInputManager;
+	CameraManager mCameraManager;
+	AssetManager mAssetManager;
+	FontManager mFontManager;
+	RenderManager mRenderManager;
+	WindowManager mWindowManager;
+	CollisionManagerd mCollisionManager;
+	AsyncTaskManager mAsyncTaskManager;
+	PhysicsManager mPhysicsManager;
 
 public:
 	GameEngine();
@@ -53,7 +53,7 @@ public:
 	CollisionManagerd& Collision();
 	AsyncTaskManager& Async();
 	PhysicsManager& Physics();
-    Clock& Time();
+  Clock& Time();
 
 	void Begin();
 	void Exit();
@@ -68,7 +68,7 @@ private:
 render
 	-window
 input
-	-mouse
+	-mMouse
 	-keyboard
 physics
 	-collision

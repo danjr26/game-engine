@@ -6,8 +6,8 @@
 template<class T, uint n>
 class HalfSpace {
 private:
-	Vector<T, n> point;
-	Vector<T, n> direction;
+	Vector<T, n> mPoint;
+	Vector<T, n> mDirection;
 
 	HalfSpace(const Vector<T, n>& in_point, const Vector<T, n>& in_direction);
 

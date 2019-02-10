@@ -15,9 +15,9 @@ public:
 		finished
 	};
 private:
-	double time;
-	double epsilon;
-	std::atomic<State> state;
+	double mTime;
+	double mEpsilon;
+	std::atomic<State> mState;
 
 public:
 	AsyncTask(double in_time = 0.0, double in_epsilon = 0.0);

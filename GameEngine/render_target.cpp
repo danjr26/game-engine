@@ -2,6 +2,6 @@
 #include "game_engine.h"
 
 void RenderTarget::Draw_To_This() {
-	GE.Render().activeTarget = this;
+	GE.Render().mActiveTarget = this;
 	_Draw_To_This();
 }

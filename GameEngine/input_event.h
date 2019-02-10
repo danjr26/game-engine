@@ -7,22 +7,22 @@
 class InputContext;
 
 struct InputEvent {
-	InputContext* context;
+	InputContext* mContext;
 	enum class Type {
 		action,
 		state_change,
 		range_change
-	} type;
-	uint message;
+	} mType;
+	uint mMessage;
 	union {
 		struct {
 			float oldValue;
 			float newValue;
-		} range;
+		} mRange;
 		struct {
 			bool oldValue;
 			bool newValue;
-		} state;
+		} mState;
 	};
 };
 

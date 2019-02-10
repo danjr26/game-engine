@@ -6,8 +6,8 @@
 
 class CircleRenderer : public Sprite {
 private:
-	float outlineWidth;
-	ColorRGBAf outlineColor;
+	float mOutlineWidth;
+	ColorRGBAf mOutlineColor;
 public:
 	CircleRenderer(const Circled& in_circle, const ColorRGBAf& in_color, 
 		float in_outlineWidth = 0.0, const ColorRGBAf& in_outlineColor = ColorRGBAf(0, 0, 0, 1));

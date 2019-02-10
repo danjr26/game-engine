@@ -3,8 +3,8 @@
 GameEngine* GameEngine::instance = nullptr;
 
 GameEngine::GameEngine() :
-hasBegun(false),
-asyncTaskManager(clock) {
+mHasBegun(false),
+mAsyncTaskManager(mClock) {
 	if (instance != nullptr) {
 		throw ProcessFailureException("game engine already created");
 	}
@@ -18,65 +18,65 @@ GameEngine::~GameEngine() {
 }
 
 FrameRateManager& GameEngine::Frame_Rate() {
-	return frameRateManager;
+	return mFrameRateManager;
 }
 
 PerFrameUpdateManager& GameEngine::Per_Frame_Update() {
-	return perFrameUpdateManager;
+	return mPerFrameUpdateManager;
 }
 
 InputManager& GameEngine::Input() {
-	return inputManager;
+	return mInputManager;
 }
 
 CameraManager& GameEngine::Cameras() {
-	return cameraManager;
+	return mCameraManager;
 }
 
 AssetManager& GameEngine::Assets() {
-	return assetManager;
+	return mAssetManager;
 }
 
 FontManager& GameEngine::Fonts() {
-	return fontManager;
+	return mFontManager;
 }
 
 RenderManager& GameEngine::Render() {
-	return renderManager;
+	return mRenderManager;
 }
 
 WindowManager& GameEngine::Windows() {
-	return windowManager;
+	return mWindowManager;
 }
 
 CollisionManagerd& GameEngine::Collision() {
-	return collisionManager;
+	return mCollisionManager;
 }
 
 AsyncTaskManager& GameEngine::Async() {
-	return asyncTaskManager;
+	return mAsyncTaskManager;
 }
 
 PhysicsManager& GameEngine::Physics() {
-	return physicsManager;
+	return mPhysicsManager;
 }
 
 Clock& GameEngine::Time() {
-    return clock;
+    return mClock;
 }
 
 void GameEngine::Begin() {
 	try {
-		if (hasBegun) {
+		if (mHasBegun) {
 			throw ProcessFailureException("game engine already started");
 		}
-		hasBegun = true;
+		mHasBegun = true;
 
-		frameRateManager.Reset_Timer();
+		mFrameRateManager.Reset_Timer();
 
 		for (uint i = 0; true; i++) {
 			Next_Frame();
-			frameRateManager.Yield_Until_Next_Frame();
+			mFrameRateManager.Yield_Until_Next_Frame();
 		}
 	}
 	catch (const std::exception& e) {
@@ -114,18 +114,18 @@ void GameEngine::Next_Frame() {
 		rCount = 0;
 	}
 
-	double dt = frameRateManager.Get_Dt();
+	double dt = mFrameRateManager.Get_Dt();
 	double t1 = GE.Time().Now();
-	inputManager.Update();
-	collisionManager.Update();
-	physicsManager.Update(dt);
-	perFrameUpdateManager.Update(dt);
+	mInputManager.Update();
+	mCollisionManager.Update();
+	mPhysicsManager.Update(dt);
+	mPerFrameUpdateManager.Update(dt);
 	double t2 = GE.Time().Now();
-	if (!frameRateManager.Is_Lean_Frame()) {
+	if (!mFrameRateManager.Is_Lean_Frame()) {
 		//glFinish();
 		rCount++;
-		renderManager.mainWindow->Flip_Buffers();
-		renderManager.Render_Frame();
+		mRenderManager.mMainWindow->Flip_Buffers();
+		mRenderManager.Render_Frame();
 	}
 
 	double t3 = GE.Time().Now();

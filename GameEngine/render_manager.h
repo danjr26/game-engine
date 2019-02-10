@@ -16,19 +16,19 @@ public:
 
 private:
 	struct RenderableWithZ {
-		RenderableObject* object;
-		double z;
+		RenderableObject* mObject;
+		double mZ;
 	};
-	std::vector<RenderableWithZ> renderables;
+	std::vector<RenderableWithZ> mRenderables;
 
-	void* renderPassArg;
+	void* mRenderPassArg;
 
 public:
-	std::vector<RenderPass*> passes;
-	RenderPass* activePass;
-	RenderTarget* activeTarget;
-	RenderTarget* mainTarget;
-	Window* mainWindow;
+	std::vector<RenderPass*> mPasses;
+	RenderPass* mActivePass;
+	RenderTarget* mActiveTarget;
+	RenderTarget* mMainTarget;
+	Window* mMainWindow;
 
 public:
 	RenderManager();

@@ -9,35 +9,35 @@ ShaderProgram::ShaderProgram(std::vector<Shader*> in_shaders) {
 		throw InvalidArgumentException("no shaders provided to linker");
 	}
 
-	id = glCreateProgram();
+	mID = glCreateProgram();
 	
 	for (uint i = 0; i < in_shaders.size(); i++) {
-		glAttachShader(id, in_shaders[i]->id);
+		glAttachShader(mID, in_shaders[i]->mID);
 	}
 
-	glLinkProgram(id);
+	glLinkProgram(mID);
 
 	GLint success = 0;
-	glGetProgramiv(id, GL_LINK_STATUS, &success);
+	glGetProgramiv(mID, GL_LINK_STATUS, &success);
 	if (success == GL_FALSE) {
 		GLint logLength = 0;
-		glGetProgramiv(id, GL_INFO_LOG_LENGTH, &logLength);
+		glGetProgramiv(mID, GL_INFO_LOG_LENGTH, &logLength);
 		char* log = new char[logLength];
-		glGetProgramInfoLog(id, logLength, nullptr, log);
+		glGetProgramInfoLog(mID, logLength, nullptr, log);
 		throw InvalidArgumentException(std::string("shader linking failed with error message:\n") + log);
 	}
 }
 
 ShaderProgram::~ShaderProgram() {
-	glDeleteProgram(id);
+	glDeleteProgram(mID);
 }
 
 void ShaderProgram::Use() {
-	glUseProgram(id);
+	glUseProgram(mID);
 }
 
 GLint ShaderProgram::Get_Uniform_Location(std::string in_name) {
-	return glGetUniformLocation(id, in_name.c_str());
+	return glGetUniformLocation(mID, in_name.c_str());
 }
 
 void ShaderProgram::Use_None() {

@@ -6,8 +6,8 @@
 template<class T, uint n>
 class AxisAlignedLine {
 private:
-	uint dimension;
-	T value;
+	uint mDimension;
+	T mValue;
 
 	AxisAlignedLine(uint in_dimension, T in_value);
 

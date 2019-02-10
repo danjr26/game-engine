@@ -8,7 +8,7 @@
 template<uint n>
 class UniformForceField : public ForceField<n> {
 private:
-	Vector<double, n> force;
+	Vector<double, n> mForce;
 
 public:
 	UniformForceField(Vector<double, n> in_force, CollisionMask<double, n>* in_mask = nullptr);

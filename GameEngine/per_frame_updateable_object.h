@@ -6,8 +6,8 @@
 
 class PerFrameUpdateableObject : public DisableableObject {
 protected:
-	ubyte numberToSkip;
-	ubyte skipCount;
+	ubyte mNumberToSkip;
+	ubyte mSkipCount;
 
 public:
 	PerFrameUpdateableObject();

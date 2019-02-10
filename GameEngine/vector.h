@@ -18,86 +18,86 @@ class Vector {
 		std::size_t operator()(const Vector<T, n>& v) {
 			std::size_t out = 0;
 			for (uint i = 0; i < n; i++) {
-				out += std::hash<T>(v.members[i]);
+				out += std::hash<T>(v.mMembers[i]);
 			}
 			return out;
 		}
 	};
 
 protected:
-	T members[n];
+	T mMembers[n];
 
 public:
 	Vector() :
-		members{0}
+		mMembers{0}
 	{}
 
 	template<typename... Args, typename = std::enable_if_t<sizeof...(Args) == n>>
 	Vector(Args... in_members) :
-		members{(T)in_members...} 
+		mMembers{(T)in_members...} 
 	{}
 
 	Vector(const T* in_members) {
 		for (int i = 0; i < n; i++) {
-			members[i] = in_members[i];
+			mMembers[i] = in_members[i];
 		}
 	}
 
 	template<class T2>
 	Vector(const Vector<T2, n>& v) {
 		for (int i = 0; i < n; i++) {
-			members[i] = (T)v.members[i];
+			mMembers[i] = (T)v.mMembers[i];
 		}
 	}
 
 	template<class T2>
 	void operator=(const Vector<T2, n>& v) {
 		for (int i = 0; i < n; i++) {
-			members[i] = (T)v.members[i];
+			mMembers[i] = (T)v.mMembers[i];
 		}
 	}
 
 	explicit Vector(const Vector<T, n + 1> v) {
 		for (int i = 0; i < n; i++) {
-			members[i] = v.members[i];
+			mMembers[i] = v.mMembers[i];
 		}
 	}
 
 	explicit Vector(const Vector<T, n - 1> v) {
 		for (int i = 0; i < n - 1; i++) {
-			members[i] = v.members[i];
+			mMembers[i] = v.mMembers[i];
 		}
-		members[n - 1] = 0;
+		mMembers[n - 1] = 0;
 	}
 
 	template<typename = std::enable_if_t<n == 1, void>>
 	operator T() const {
-		return *members;
+		return *mMembers;
 	}
 
 	template<typename = std::enable_if_t<n == 1, void>>
 	Vector(T in_source) {
-		members[0] = in_source;
+		mMembers[0] = in_source;
 	}
 
 	Vector(const Vector<T, n - 1> v, T in_addMember) {
 		for (int i = 0; i < n - 1; i++) {
-			members[i] = v.members[i];
+			mMembers[i] = v.mMembers[i];
 		}
-		members[n - 1] = in_addMember;
+		mMembers[n - 1] = in_addMember;
 	}
 
 	bool operator<(const Vector<T, n>& v) const {
 		for (uint i = 0; i < n; i++) {
-			if (members[i] < v.members[i]) return true;
-			if (members[i] > v.members[i]) return false;
+			if (mMembers[i] < v.mMembers[i]) return true;
+			if (mMembers[i] > v.mMembers[i]) return false;
 		}
 		return false;
 	}
 
 	bool operator==(const Vector<T, n>& v) const {
 		for (int i = 0; i < n; i++) {
-			if (members[i] != v.members[i]) {
+			if (mMembers[i] != v.mMembers[i]) {
 				return false;
 			}
 		}
@@ -106,7 +106,7 @@ public:
 
 	bool operator!=(const Vector<T, n>& v) const {
 		for (int i = 0; i < n; i++) {
-			if (members[i] != v.members[i]) {
+			if (mMembers[i] != v.mMembers[i]) {
 				return true;
 			}
 		}
@@ -114,76 +114,76 @@ public:
 	}
 
 	Vector<T, n> operator-() const {
-		Vector<T, n> vOut = members;
+		Vector<T, n> vOut = mMembers;
 		for (int i = 0; i < n; i++) {
-			vOut.members[i] = -vOut.members[i];
+			vOut.mMembers[i] = -vOut.mMembers[i];
 		}
 		return vOut;
 	}
 
 	Vector<T, n> operator+(const Vector<T, n>& v) const {
-		Vector<T, n> vOut = members;
+		Vector<T, n> vOut = mMembers;
 		vOut += v;
 		return vOut;
 	}
 
 	Vector<T, n> operator-(const Vector<T, n>& v) const {
-		Vector<T, n> vOut = members;
+		Vector<T, n> vOut = mMembers;
 		vOut -= v;
 		return vOut;
 	}
 
 	Vector<T, n> operator*(T s) const {
-		Vector<T, n> vOut = members;
+		Vector<T, n> vOut = mMembers;
 		vOut *= s;
 		return vOut;
 	}
 
 	Vector<T, n> operator/(T s) const {
-		Vector<T, n> vOut = members;
+		Vector<T, n> vOut = mMembers;
 		vOut /= s;
 		return vOut;
 	}
 
 	void operator+=(const Vector<T, n>& v) {
 		for (int i = 0; i < n; i++) {
-			members[i] += v.members[i];
+			mMembers[i] += v.mMembers[i];
 		}
 	}
 
 	void operator-=(const Vector<T, n>& v) {
 		for (int i = 0; i < n; i++) {
-			members[i] -= v.members[i];
+			mMembers[i] -= v.mMembers[i];
 		}
 	}
 
 	void operator*=(T s) {
 		for (int i = 0; i < n; i++) {
-			members[i] *= s;
+			mMembers[i] *= s;
 		}
 	}
 
 	void operator/=(T s) {
 		for (int i = 0; i < n; i++) {
-			members[i] /= s;
+			mMembers[i] /= s;
 		}
 	}
 
 	T& operator[](uint i) {
-		return members[i];
+		return mMembers[i];
 	}
 
 	const T& operator[](uint i) const {
-		return members[i];
+		return mMembers[i];
 	}
 
 	T Get(uint i) const {
-		return members[i];
+		return mMembers[i];
 	}
 
 	bool Has_NaN() {
 		for (int i = 0; i < n; i++) {
-			if (std::isnan(members[i])) {
+			if (std::isnan(mMembers[i])) {
 				return true;
 			}
 		}
@@ -192,7 +192,7 @@ public:
 
 	bool Is_Zero() const {
 		for (int i = 0; i < n; i++) {
-			if (members[i] != 0) {
+			if (mMembers[i] != 0) {
 				return false;
 			}
 		}
@@ -202,7 +202,7 @@ public:
 	T Dot(const Vector<T, n>& v) const {
 		T total = 0;
 		for (int i = 0; i < n; i++) {
-			total += members[i] * v.members[i];
+			total += mMembers[i] * v.mMembers[i];
 		}
 		return total;
 	}
@@ -210,7 +210,7 @@ public:
 	T Dot_Self() const {
 		T total = 0;
 		for (int i = 0; i < n; i++) {
-			total += members[i] * members[i];
+			total += mMembers[i] * mMembers[i];
 		}
 		return total;
 	}
@@ -230,7 +230,7 @@ public:
 	}
 
 	Vector<T, n> Normalized() const {
-		Vector<T, n> vOut = members;
+		Vector<T, n> vOut = mMembers;
 		vOut.Normalize();
 		return vOut;
 	}
@@ -250,9 +250,9 @@ public:
 	}
 
 	Vector<T, n> Compwise(const Vector<T, n>& v) const {
-		Vector<T, n> vOut = members;
+		Vector<T, n> vOut = mMembers;
 		for (int i = 0; i < n; i++) {
-			vOut[i] *= v.members[i];
+			vOut[i] *= v.mMembers[i];
 		}
 		return vOut;
 	}
@@ -260,7 +260,7 @@ public:
 	T Component_Sum() const {
 		T sum = 0;
 		for (uint i = 0; i < n; i++) {
-			sum += members[i];
+			sum += mMembers[i];
 		}
 		return sum;
 	}
@@ -268,38 +268,38 @@ public:
 	T Component_Product() const {
 		T product = 1;
 		for (uint i = 0; i < n; i++) {
-			product *= members[i];
+			product *= mMembers[i];
 		}
 		return product;
 	}
 
 	void Component_Invert() {
 		for (uint i = 0; i < n; i++) {
-			members[i] = 1 / members[i];
+			mMembers[i] = 1 / mMembers[i];
 		}
 	}
 
 	Vector<T, n> Component_Inverted() const {
-		Vector<T, n> vOut = members;
+		Vector<T, n> vOut = mMembers;
 		vOut.Component_Invert();
 		return vOut;
 	}
 
 	T Max_Component() const {
-		T result = members[0];
+		T result = mMembers[0];
 		for (uint i = 1; i < n; i++) {
-			if (members[i] > result) {
-				result = members[i];
+			if (mMembers[i] > result) {
+				result = mMembers[i];
 			}
 		}
 		return result;
 	}
 
 	T Min_Component() const {
-		T result = members[0];
+		T result = mMembers[0];
 		for (uint i = 1; i < n; i++) {
-			if (members[i] < result) {
-				result = members[i];
+			if (mMembers[i] < result) {
+				result = mMembers[i];
 			}
 		}
 		return result;
@@ -319,14 +319,14 @@ public:
 	}
 
 	const T* Pointer() const {
-		return members;
+		return mMembers;
 	}
 
 	std::string To_String() const {
 		std::stringstream ss;
 		ss << "Vector (" << n << ")\n";
 			for (uint i = 0; i < n; i++) {
-				ss << std::scientific << std::setprecision(6) << std::setw(14) << members[i];
+				ss << std::scientific << std::setprecision(6) << std::setw(14) << mMembers[i];
 			}
 			ss << '\n';
 		return ss.str();
@@ -336,57 +336,57 @@ public:
 
 	template<typename = std::enable_if_t<n >= 1, void>>
 	T X() const {
-		return members[0];
+		return mMembers[0];
 	}
 
 	template<typename = std::enable_if_t<n >= 1, void>>
 	T& X() {
-		return members[0];
+		return mMembers[0];
 	}
 
 	// Vector2-specific
 
 	template<typename = std::enable_if_t<n >= 2, void>>
 	T Y() const {
-		return members[1];
+		return mMembers[1];
 	}
 
 	template<typename = std::enable_if_t<n >= 2, void>>
 	T& Y() {
-		return members[1];
+		return mMembers[1];
 	}
 
 	template<typename = std::enable_if_t<n == 2, void>>
 	void Rotate(T angle) {
 		T sine = sin(angle);
 		T cosine = cos(angle);
-		T tempX = members[0] * cosine - members[1] * sine;
-		members[1] = members[0] * sine + members[1] * cosine;
-		members[0] = tempX;
+		T tempX = mMembers[0] * cosine - mMembers[1] * sine;
+		mMembers[1] = mMembers[0] * sine + mMembers[1] * cosine;
+		mMembers[0] = tempX;
 	}
 
 	template<typename = std::enable_if_t<n == 2, void>>
 	Vector<T, 2> Rotated(T angle) const {
-		Vector<T, 2> vOut = members;
+		Vector<T, 2> vOut = mMembers;
 		vOut.Rotate(angle);
 		return vOut;
 	}
 
 	template<typename = std::enable_if_t<n == 2, void>>
 	Vector<T, 2> Orthogonal() const {
-		return { members[1], -members[0] };
+		return { mMembers[1], -mMembers[0] };
 	}
 
 	// Vector3-specific
 
 	template<typename = std::enable_if_t<n >= 3, void>>
 	T Z() const {
-		return members[2];
+		return mMembers[2];
 	}
 
 	template<typename = std::enable_if_t<n >= 3, void>>
 	T& Z() {
-		return members[2];
+		return mMembers[2];
 	}
 
 	template<typename = std::enable_if_t<n == 3, void>>
@@ -401,7 +401,7 @@ public:
 
 	template<typename = std::enable_if_t<n == 3, void>>
 	Vector<T, 3> Rotated(const Vector<T, 3>& v) const {
-		Vector<T, 3> vOut = members;
+		Vector<T, 3> vOut = mMembers;
 		vOut.Rotate(v);
 		return vOut;
 	}
@@ -420,7 +420,7 @@ public:
 
 	template<typename = std::enable_if_t<n == 3, void>>
 	Vector<T, 3> Rotated(const Vector<T, 3>& axis, T angle) const {
-		Vector<T, 3> vOut = members;
+		Vector<T, 3> vOut = mMembers;
 		vOut.Rotate(axis, angle);
 		return vOut;
 	}
@@ -428,9 +428,9 @@ public:
 	template<typename = std::enable_if_t<n == 3, void>>
 	Vector<T, 3> Cross(const Vector<T, 3>& v) const {
 		return Vector<T, 3>(
-			members[1] * v.members[2] - members[2] * v.members[1],
-			members[2] * v.members[0] - members[0] * v.members[2],
-			members[0] * v.members[1] - members[1] * v.members[0]
+			mMembers[1] * v.mMembers[2] - mMembers[2] * v.mMembers[1],
+			mMembers[2] * v.mMembers[0] - mMembers[0] * v.mMembers[2],
+			mMembers[0] * v.mMembers[1] - mMembers[1] * v.mMembers[0]
 			);
 	}
 
@@ -438,27 +438,27 @@ public:
 
 	template<typename = std::enable_if_t<n >= 4, void>>
 	T W() const {
-		return members[3];
+		return mMembers[3];
 	}
 
 	template<typename = std::enable_if_t<n >= 4, void>>
 	T& W() {
-		return members[3];
+		return mMembers[3];
 	}
 
 	template<typename = std::enable_if_t<n >= 4, void>>
 	inline Vector<T, 4> Hamilton(const Vector<T, 4>& v) const {
 		return Vector<T, 4>(
-			members[3] * v.members[0] + members[0] * v.members[3] + members[1] * v.members[2] - members[2] * v.members[1],
-			members[3] * v.members[1] - members[0] * v.members[2] + members[1] * v.members[3] + members[2] * v.members[0],
-			members[3] * v.members[2] + members[0] * v.members[1] - members[1] * v.members[0] + members[2] * v.members[3],
-			members[3] * v.members[3] - members[0] * v.members[0] - members[1] * v.members[1] - members[2] * v.members[2]
+			mMembers[3] * v.mMembers[0] + mMembers[0] * v.mMembers[3] + mMembers[1] * v.mMembers[2] - mMembers[2] * v.mMembers[1],
+			mMembers[3] * v.mMembers[1] - mMembers[0] * v.mMembers[2] + mMembers[1] * v.mMembers[3] + mMembers[2] * v.mMembers[0],
+			mMembers[3] * v.mMembers[2] + mMembers[0] * v.mMembers[1] - mMembers[1] * v.mMembers[0] + mMembers[2] * v.mMembers[3],
+			mMembers[3] * v.mMembers[3] - mMembers[0] * v.mMembers[0] - mMembers[1] * v.mMembers[1] - mMembers[2] * v.mMembers[2]
 		);
 	}
 
 	template<typename = std::enable_if_t<n >= 4, void>>
 	Vector<T, 4> Inverse() const {
-		Vector<T, 4> vOut = members;
+		Vector<T, 4> vOut = mMembers;
 		vOut.Invert();
 		return vOut;
 	}
@@ -471,16 +471,16 @@ public:
 
 	template<typename = std::enable_if_t<n >= 4, void>>
 	Vector<T, 4> Conjugated() const {
-		Vector<T, 4> vOut = members;
+		Vector<T, 4> vOut = mMembers;
 		vOut.Conjugate();
 		return vOut;
 	}
 
 	template<typename = std::enable_if_t<n >= 4, void>>
 	void Conjugate() {
-		members[0] = -members[0];
-		members[1] = -members[1];
-		members[2] = -members[2];
+		mMembers[0] = -mMembers[0];
+		mMembers[1] = -mMembers[1];
+		mMembers[2] = -mMembers[2];
 	}
 };
 

@@ -6,7 +6,7 @@
 
 class WindowManager {
 private:
-	std::vector<Window*> windows;
+	std::vector<Window*> mWindows;
 
 public:
 	WindowManager();

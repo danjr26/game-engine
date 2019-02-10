@@ -5,7 +5,7 @@
 #include <string>
 
 class GameEngineException : public std::exception {
-	std::string message;
+	std::string mMessage;
 
 public:
 	GameEngineException(const std::string& in_message);

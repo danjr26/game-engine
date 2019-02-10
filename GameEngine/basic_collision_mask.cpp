@@ -4,30 +4,30 @@
 template<class Basis, class T>
 BasicCollisionMask<Basis, T, 2>::BasicCollisionMask(const basis_t& in_basis, bool in_ignoreTransform) :
 	CollisionMask<T, 2>(in_ignoreTransform),
-	wrappedBasis{ in_basis }
+	mWrappedBasis{ in_basis }
 {}
 
 template<class Basis, class T>
 Basis& BasicCollisionMask<Basis, T, 2>::Get_Basis() {
-	return wrappedBasis.basis;
+	return mWrappedBasis.mBasis;
 }
 
 template<class Basis, class T>
 const Basis& BasicCollisionMask<Basis, T, 2>::Get_Basis() const {
-	return wrappedBasis.basis;
+	return mWrappedBasis.mBasis;
 }
 
 template<class Basis, class T>
 neuterable_ptr<Basis> BasicCollisionMask<Basis, T, 2>::Get_Transformed_Basis() {
 	if (ignoreTransform) {
-		neuterable_ptr_t out = neuterable_ptr_t(&wrappedBasis.basis);
-		out.get_deleter().neuter = true;
+		neuterable_ptr_t out = neuterable_ptr_t(&mWrappedBasis.mBasis);
+		out.get_deleter().mNeuter = true;
 		return out;
 	}
 	else {
-		basis_t* ptr = new basis_t(wrappedBasis.basis);
+		basis_t* ptr = new basis_t(mWrappedBasis.mBasis);
 		neuterable_ptr_t out = neuterable_ptr_t(ptr);
-		reinterpret_cast<CollisionBasisWrapper<Basis, T>*>(ptr)->Apply_Transform(transform);
+		reinterpret_cast<CollisionBasisWrapper<Basis, T>*>(ptr)->Apply_Transform(mTransform);
 		return out;
 	}
 }
@@ -35,21 +35,21 @@ neuterable_ptr<Basis> BasicCollisionMask<Basis, T, 2>::Get_Transformed_Basis() {
 template<class Basis, class T>
 neuterable_ptr<const Basis> BasicCollisionMask<Basis, T, 2>::Get_Transformed_Basis() const {
 	if (ignoreTransform) {
-		neuterable_cptr_t out = neuterable_cptr_t(&wrappedBasis.basis);
-		out.get_deleter().neuter = true;
+		neuterable_cptr_t out = neuterable_cptr_t(&mWrappedBasis.mBasis);
+		out.get_deleter().mNeuter = true;
 		return out;
 	}
 	else {
-		basis_t* ptr = new basis_t(wrappedBasis.basis);
+		basis_t* ptr = new basis_t(mWrappedBasis.mBasis);
 		neuterable_cptr_t out = neuterable_cptr_t(ptr);
-		reinterpret_cast<CollisionBasisWrapper<Basis, T>*>(ptr)->Apply_Transform(transform);
+		reinterpret_cast<CollisionBasisWrapper<Basis, T>*>(ptr)->Apply_Transform(mTransform);
 		return out;
 	}
 }
 
 template<class Basis, class T>
 void BasicCollisionMask<Basis, T, 2>::Apply_Transform() {
-	wrappedBasis.Apply_Transform(transform);
+	mWrappedBasis.Apply_Transform(mTransform);
 }
 
 template<class Basis, class T>

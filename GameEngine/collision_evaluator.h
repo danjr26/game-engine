@@ -11,8 +11,8 @@ class CollisionEvaluator
 template<class T>
 class CollisionEvaluator<T, 2> {
 protected:
-	bool returnPoint;
-	bool returnSeparator;
+	bool mReturnPoint;
+	bool mReturnSeparator;
 
 public:
 	CollisionEvaluator();
@@ -119,14 +119,14 @@ public:
 template<class T>
 class CollisionEvaluator<T, 3> {
 protected:
-	bool returnPoint;
+	bool mReturnPoint;
 
 public:
 	CollisionEvaluator() :
-		returnPoint(true) {}
+		mReturnPoint(true) {}
 
 	void Return_Point(bool in_val) {
-		returnPoint = in_val;
+		mReturnPoint = in_val;
 	}
 
 public:

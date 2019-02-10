@@ -7,8 +7,8 @@
 template<class T, uint n = 3>
 class AxisAlignedBox {
 private:
-	Vector<T, n> minima;
-	Vector<T, n> maxima;
+	Vector<T, n> mMinima;
+	Vector<T, n> mMaxima;
 
 private:
 	AxisAlignedBox(const Vector<T, n>& in_minima, const Vector<T, n>& in_maxima);

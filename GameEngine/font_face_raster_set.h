@@ -9,14 +9,14 @@ class FontFace;
 class Texture;
 
 struct FontFaceRasterSet : public Asset {
-	FontFace* face;
-	Texture* texture;
-	std::vector<Vector2i> offsets;
-	std::vector<Vector2i> dimensions;
-	std::vector<float> advances;
-	float topToBaseline;
-	float baselineToBottom;
-	uint size;
+	FontFace* mFace;
+	Texture* mTexture;
+	std::vector<Vector2i> mOffsets;
+	std::vector<Vector2i> mDimensions;
+	std::vector<float> mAdvances;
+	float mTopToBaseline;
+	float mBaselineToBottom;
+	uint mSize;
 };
 
 #endif

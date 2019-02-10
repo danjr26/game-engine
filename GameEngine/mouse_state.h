@@ -7,7 +7,7 @@
 
 class MouseState {
 private:
-	std::vector<bool> buttons;
+	std::vector<bool> mButtons;
 
 public:
 	MouseState();

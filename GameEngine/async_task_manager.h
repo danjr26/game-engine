@@ -13,11 +13,11 @@ class AsyncTaskManager {
 public:
 	using TaskIterator = typename std::list<AsyncTask*>::iterator;
 private:
-	mutable std::recursive_mutex mutex;
-	const Clock& clock;
-	std::vector<std::thread*> threads;
-	std::list<AsyncTask*> tasks;
-	bool terminate;
+	mutable std::recursive_mutex mMutex;
+	const Clock& mClock;
+	std::vector<std::thread*> mThreads;
+	std::list<AsyncTask*> mTasks;
+	bool mTerminate;
 
 private:
 	 TaskIterator Get_Next_Task(bool in_useEpsilon);

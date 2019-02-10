@@ -11,28 +11,28 @@ template<class T, uint n>
 class MeshSphereTree {
 private:
 	struct Node {
-		Sphere<T, n> sphere;
-		std::vector<uint> triangles;
+		Sphere<T, n> mSphere;
+		std::vector<uint> mTriangles;
 		
-		Node* parent;
-		Node* children[2];
+		Node* mParent;
+		Node* mChildren[2];
 	};
 
 	struct MiniNode {
-		Sphere<T, n> sphere;
+		Sphere<T, n> mSphere;
 		union {
-			MiniNode* children[2];
-			uint triangle;
+			MiniNode* mChildren[2];
+			uint mTriangle;
 		};
-		bool isLeaf;
+		bool mIsLeaf;
 	};
 
 public:
 	class Iterator {
 		friend class MeshSphereTree;
 	private:
-		const MeshSphereTree<T, n>& tree;
-		const Node* node;
+		const MeshSphereTree<T, n>& mTree;
+		const Node* mNode;
 
 	public:
 		Iterator(const MeshSphereTree<T, n>& in_tree);
@@ -47,8 +47,8 @@ public:
 	};
 
 private:
-	MeshVertexData meshData;
-	Node* rootNode;
+	MeshVertexData mMeshData;
+	Node* mRootNode;
 
 public:
 	explicit MeshSphereTree(const MeshVertexData& in_meshData);

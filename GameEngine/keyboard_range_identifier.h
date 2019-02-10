@@ -6,12 +6,12 @@
 
 class KeyboardRangeIdentifier {
 private:
-	Key lowKey;
-	Key highKey;
-	float lowValue;
-	float midValue;
-	float highValue;
-	bool acceptRepeat;
+	Key mLowKey;
+	Key mHighKey;
+	float mLowValue;
+	float mMidValue;
+	float mHighValue;
+	bool mAcceptRepeat;
 
 public:
 	KeyboardRangeIdentifier(

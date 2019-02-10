@@ -7,17 +7,17 @@
 template<class ValT, class TimeT = double>
 struct Transitioner {
 	struct Key {
-		ValT value;
-		TimeT duration;
+		ValT mValue;
+		TimeT mDuration;
 	};
 
-	std::vector<Key> keys;
+	std::vector<Key> mKeys;
 
 	virtual ValT Evaluate(TimeT in_time) = 0;
 
 	TimeT Get_Total_Duration() {
 		TimeT sum = 0;
-		for (auto it = keys.begin(); it != keys.end(); it++) {
+		for (auto it = mKeys.begin(); it != mKeys.end(); it++) {
 			sum += it->duration;
 		}
 		return sum;

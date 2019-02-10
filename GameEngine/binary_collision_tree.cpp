@@ -3,11 +3,11 @@
 
 template<class T, uint n>
 BinaryCollisionTree<T, n>::Evaluation::Iterator::Iterator(Evaluation* in_parent) :
-	parent(in_parent) {
+	mParent(in_parent) {
 
 	for (uint i = 0; i < n; i++) {
-		depths[i] = 0;
-		evals[i] = 0;
+		mDepths[i] = 0;
+		mEvals[i] = 0;
 	}
 }
 
@@ -17,15 +17,15 @@ BinaryCollisionTree<T, n>::Evaluation::Iterator::Iterator()
 
 template<class T, uint n>
 bool BinaryCollisionTree<T, n>::Evaluation::Iterator::Go_Left(uint in_dimension) {
-	if (!Get_Left(in_dimension) || depths[in_dimension] == parent->depth) {
+	if (!Get_Left(in_dimension) || mDepths[in_dimension] == mParent->mDepth) {
 		return false;
 	}
 	else {
 		if (Get_Right(in_dimension)) {
-			evals[in_dimension]++;
+			mEvals[in_dimension]++;
 			uint skipStack[maxDepth];
 			uint skipStackSize = 1;
-			skipStack[0] = parent->depth - depths[in_dimension] + 1;
+			skipStack[0] = mParent->mDepth - mDepths[in_dimension] + 1;
 			while (skipStackSize > 0) {
 				if (Get_Left(in_dimension) && Get_Right(in_dimension) && skipStack[skipStackSize - 1] > 1) {
 					skipStack[skipStackSize] = --skipStack[skipStackSize - 1];
@@ -37,54 +37,54 @@ bool BinaryCollisionTree<T, n>::Evaluation::Iterator::Go_Left(uint in_dimension)
 				}
 
 				if (skipStackSize > 0) {
-					evals[in_dimension]++;
+					mEvals[in_dimension]++;
 				}
 			}
 		}
 		else {
-			evals[in_dimension]++;
+			mEvals[in_dimension]++;
 		}
 
-		depths[in_dimension]++;
+		mDepths[in_dimension]++;
 		return true;
 	}
 }
 
 template<class T, uint n>
 bool BinaryCollisionTree<T, n>::Evaluation::Iterator::Go_Right(uint in_dimension) {
-	if (!Get_Right(in_dimension) || depths[in_dimension] == parent->depth) {
+	if (!Get_Right(in_dimension) || mDepths[in_dimension] == mParent->mDepth) {
 		return false;
 	}
 	else {
-		evals[in_dimension]++;
-		depths[in_dimension]++;
+		mEvals[in_dimension]++;
+		mDepths[in_dimension]++;
 		return true;
 	}
 }
 
 template<class T, uint n>
 ubyte BinaryCollisionTree<T, n>::Evaluation::Iterator::Get_Left(uint in_dimension) {
-	return parent->data[in_dimension][evals[in_dimension] * 2 + 0];
+	return mParent->mData[in_dimension][mEvals[in_dimension] * 2 + 0];
 }
 
 template<class T, uint n>
 ubyte BinaryCollisionTree<T, n>::Evaluation::Iterator::Get_Right(uint in_dimension) {
-	return parent->data[in_dimension][evals[in_dimension] * 2 + 1];
+	return mParent->mData[in_dimension][mEvals[in_dimension] * 2 + 1];
 }
 
 template<class T, uint n>
 uint BinaryCollisionTree<T, n>::Evaluation::Iterator::Get_Depth(uint in_dimension) {
-	return depths[in_dimension];
+	return mDepths[in_dimension];
 }
 
 template<class T, uint n>
 BinaryCollisionTree<T, n>::Evaluation::Evaluation() :
-	parentTree(nullptr),
-	parentMask(nullptr),
-	transformedParentMask(nullptr),
-	depth(UINT_MAX) {
+	mParentTree(nullptr),
+	mParentMask(nullptr),
+	mTransformedParentMask(nullptr),
+	mDepth(UINT_MAX) {
 	for (uint i = 0; i < n; i++) {
-		data[i] = nullptr;
+		mData[i] = nullptr;
 	}
 }
 
@@ -95,45 +95,45 @@ typename BinaryCollisionTree<T, n>::Evaluation::Iterator BinaryCollisionTree<T, 
 
 template<class T, uint n>
 BinaryCollisionTree<T, n>* BinaryCollisionTree<T, n>::Evaluation::Get_Parent_Tree() {
-	return parentTree;
+	return mParentTree;
 }
 
 template<class T, uint n>
 CollisionMask<T, n>* BinaryCollisionTree<T, n>::Evaluation::Get_Parent_Mask() {
-	return parentMask;
+	return mParentMask;
 }
 
 template<class T, uint n>
 CollisionMask<T, n>* BinaryCollisionTree<T, n>::Evaluation::Get_Transformed_Parent_Mask() {
-	return transformedParentMask;
+	return mTransformedParentMask;
 }
 
 template<class T, uint n>
 void BinaryCollisionTree<T, n>::Evaluation::Transform_Parent_Mask() {
-	if (transformedParentMask != nullptr) {
-		delete transformedParentMask;
+	if (mTransformedParentMask != nullptr) {
+		delete mTransformedParentMask;
 	}
 
-	transformedParentMask = parentMask->Clone();
-	transformedParentMask->Apply_Transform();
-	transformedParentMask->Set_Ignore_Transform(true);
+	mTransformedParentMask = mParentMask->Clone();
+	mTransformedParentMask->Apply_Transform();
+	mTransformedParentMask->Set_Ignore_Transform(true);
 }
 
 template<class T, uint n>
 BinaryCollisionTree<T, n>::GroupingScheme::Iterator::Iterator(GroupingScheme* in_parent) :
-	parent(in_parent),
-	it(in_parent->groupings.begin()),
-	i(0),
-	j(1) {}
+	mParent(in_parent),
+	mIt(in_parent->mGroupings.begin()),
+	mI(0),
+	mJ(1) {}
 
 template<class T, uint n>
 typename BinaryCollisionTree<T, n>::Evaluation* BinaryCollisionTree<T, n>::GroupingScheme::Iterator::Get_First() {
-	return it->evals[i];
+	return mIt->mEvals[mI];
 }
 
 template<class T, uint n>
 typename BinaryCollisionTree<T, n>::Evaluation* BinaryCollisionTree<T, n>::GroupingScheme::Iterator::Get_Second() {
-	return it->evals[j];
+	return mIt->mEvals[mJ];
 }
 
 template<class T, uint n>
@@ -142,15 +142,15 @@ void BinaryCollisionTree<T, n>::GroupingScheme::Iterator::operator++(int a) {
 		throw InvalidArgumentException();
 	}
 
-	j++;
-	if (j >= it->evals.size()) {
-		i++;
-		j = i + 1;
+	mJ++;
+	if (mJ >= mIt->mEvals.size()) {
+		mI++;
+		mJ = mI + 1;
 	}
-	if (i >= it->evals.size() - 1) {
-		it++;
-		i = 0;
-		j = 1;
+	if (mI >= mIt->mEvals.size() - 1) {
+		mIt++;
+		mI = 0;
+		mJ = 1;
 	}
 }
 
@@ -164,12 +164,12 @@ void BinaryCollisionTree<T, n>::GroupingScheme::Iterator::operator+=(uint n) {
 
 template<class T, uint n>
 bool BinaryCollisionTree<T, n>::GroupingScheme::Iterator::Is_Done() {
-	return it == parent->groupings.end();
+	return mIt == mParent->mGroupings.end();
 }
 
 template<class T, uint n>
 uint BinaryCollisionTree<T, n>::GroupingScheme::Get_Number_Groups() const {
-	return (uint)groupings.size();
+	return (uint)mGroupings.size();
 }
 
 template<class T, uint n>
@@ -179,14 +179,14 @@ typename BinaryCollisionTree<T, n>::GroupingScheme::Iterator BinaryCollisionTree
 
 template<class T, uint n>
 void BinaryCollisionTree<T, n>::GroupingScheme::Remove(const Evaluation * in_eval) {
-	for (auto it = groupings.begin(); it != groupings.end(); it++) {
-		auto search = std::find(it->evals.begin(), it->evals.end(), in_eval);
-		if (search != it->evals.end()) {
-			it->evals.erase(search);
+	for (auto it = mGroupings.begin(); it != mGroupings.end(); it++) {
+		auto search = std::find(it->mEvals.begin(), it->mEvals.end(), in_eval);
+		if (search != it->mEvals.end()) {
+			it->mEvals.erase(search);
 		}
-		if (it->evals.size() == 1) {
-			groupings.erase(it);
-			it = groupings.begin();
+		if (it->mEvals.size() == 1) {
+			mGroupings.erase(it);
+			it = mGroupings.begin();
 		}
 	}
 }
@@ -194,11 +194,11 @@ void BinaryCollisionTree<T, n>::GroupingScheme::Remove(const Evaluation * in_eva
 template<class T, uint n>
 void BinaryCollisionTree<T, n>::GroupingScheme::Get_Unique_Pairs(std::vector<std::pair<Evaluation*, Evaluation*>>& in_pairs) const {
 	in_pairs.clear();
-	in_pairs.reserve(groupings.size());
-	for (auto groupIterator = groupings.begin(); groupIterator != groupings.end(); groupIterator++) {
-		for (uint i = 0; i < groupIterator->evals.size(); i++) {
-			for (uint j = i + 1; j < groupIterator->evals.size(); j++) {
-				auto newPair = std::pair<Evaluation*, Evaluation*>(groupIterator->evals[i], groupIterator->evals[j]);
+	in_pairs.reserve(mGroupings.size());
+	for (auto groupIterator = mGroupings.begin(); groupIterator != mGroupings.end(); groupIterator++) {
+		for (uint i = 0; i < groupIterator->mEvals.size(); i++) {
+			for (uint j = i + 1; j < groupIterator->mEvals.size(); j++) {
+				auto newPair = std::pair<Evaluation*, Evaluation*>(groupIterator->mEvals[i], groupIterator->mEvals[j]);
 				auto lowerBound = std::lower_bound(in_pairs.begin(), in_pairs.end(), newPair);
 				if (*lowerBound != newPair) {
 					in_pairs.insert(lowerBound, newPair);
@@ -210,19 +210,19 @@ void BinaryCollisionTree<T, n>::GroupingScheme::Get_Unique_Pairs(std::vector<std
 
 template<class T, uint n>
 BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::Iterator(PairedGroupingScheme * in_parent) :
-	parent(in_parent),
-	it(in_parent->groupings.begin()),
-	i(0),
-	j(0) {}
+	mParent(in_parent),
+	mIt(in_parent->mGroupings.begin()),
+	mI(0),
+	mJ(0) {}
 
 template<class T, uint n>
 typename BinaryCollisionTree<T, n>::Evaluation* BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::Get_First() {
-	return it->evals1[i];
+	return mIt->mEvals1[mI];
 }
 
 template<class T, uint n>
 typename BinaryCollisionTree<T, n>::Evaluation* BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::Get_Second() {
-	return it->evals2[j];
+	return mIt->mEvals2[mJ];
 }
 
 template<class T, uint n>
@@ -231,15 +231,15 @@ void BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::operator++(int a
 		throw InvalidArgumentException();
 	}
 
-	j++;
-	if (j >= it->evals2.size()) {
-		i++;
-		j = 0;
+	mJ++;
+	if (mJ >= mIt->mEvals2.size()) {
+		mI++;
+		mJ = 0;
 	}
-	if (i >= it->evals1.size()) {
-		it++;
-		i = 0;
-		j = 0;
+	if (mI >= mIt->mEvals1.size()) {
+		mIt++;
+		mI = 0;
+		mJ = 0;
 	}
 }
 
@@ -253,12 +253,12 @@ void BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::operator+=(uint 
 
 template<class T, uint n>
 bool BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::Is_Done() {
-	return it == parent->groupings.end();
+	return mIt == mParent->mGroupings.end();
 }
 
 template<class T, uint n>
 uint BinaryCollisionTree<T, n>::PairedGroupingScheme::Get_Number_Groups() const {
-	return (uint)groupings.size();
+	return (uint)mGroupings.size();
 }
 
 template<class T, uint n>
@@ -269,12 +269,12 @@ typename BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator BinaryCollisi
 template<class T, uint n>
 void BinaryCollisionTree<T, n>::PairedGroupingScheme::Get_Unique_Pairs(std::vector<std::pair<Evaluation*, Evaluation*>>& in_pairs) const {
 	in_pairs.clear();
-	in_pairs.reserve(groupings.size());
-	for (auto groupIterator = groupings.begin(); groupIterator != groupings.end(); groupIterator++) {
-		for (uint i = 0; i < groupIterator->evals1.size(); i++) {
-			for (uint j = 0; j < groupIterator->evals2.size(); j++) {
-				if (groupIterator->evals1[i] != groupIterator->evals2[j]) {
-					in_pairs.push_back(std::pair(groupIterator->evals1[i], groupIterator->evals2[j]));
+	in_pairs.reserve(mGroupings.size());
+	for (auto groupIterator = mGroupings.begin(); groupIterator != mGroupings.end(); groupIterator++) {
+		for (uint i = 0; i < groupIterator->mEvals1.size(); i++) {
+			for (uint j = 0; j < groupIterator->mEvals2.size(); j++) {
+				if (groupIterator->mEvals1[i] != groupIterator->mEvals2[j]) {
+					in_pairs.push_back(std::pair(groupIterator->mEvals1[i], groupIterator->mEvals2[j]));
 				}
 			}
 		}
@@ -283,7 +283,7 @@ void BinaryCollisionTree<T, n>::PairedGroupingScheme::Get_Unique_Pairs(std::vect
 
 template<class T, uint n>
 BinaryCollisionTree<T, n>::BinaryCollisionTree(const AxisAlignedBox<T, n>& in_box) :
-	box(in_box) {}
+	mBox(in_box) {}
 
 template<class T, uint n>
 void BinaryCollisionTree<T, n>::Evaluate(CollisionMask<T, n>* in_mask, uint in_depth, Evaluation & out_evaluation) {
@@ -292,20 +292,20 @@ void BinaryCollisionTree<T, n>::Evaluate(CollisionMask<T, n>* in_mask, uint in_d
 		throw InvalidArgumentException();
 	}
 
-	out_evaluation.parentTree = this;
-	out_evaluation.parentMask = in_mask;
+	out_evaluation.mParentTree = this;
+	out_evaluation.mParentMask = in_mask;
 	out_evaluation.Transform_Parent_Mask();
 
 	for (uint i = 0; i < n; i++) {
-		if (out_evaluation.depth != in_depth) {
-			if (out_evaluation.data[i] != nullptr) {
-				delete[] out_evaluation.data[i];
+		if (out_evaluation.mDepth != in_depth) {
+			if (out_evaluation.mData[i] != nullptr) {
+				delete[] out_evaluation.mData[i];
 			}
-			out_evaluation.data[i] = new ubyte[(1ull << (in_depth + 2))];
+			out_evaluation.mData[i] = new ubyte[(1ull << (in_depth + 2))];
 		}
-		out_evaluation.dataSizes[i] = 0;
+		out_evaluation.mDataSizes[i] = 0;
 	}
-	out_evaluation.depth = in_depth;
+	out_evaluation.mDepth = in_depth;
 
 	InPlaceCollisionEvaluator evaluator;
 	evaluator.Return_Point(false);
@@ -314,7 +314,7 @@ void BinaryCollisionTree<T, n>::Evaluate(CollisionMask<T, n>* in_mask, uint in_d
 	uint stackSizes[3];
 	for (uint i = 0; i < n; i++) {
 		stackSizes[i] = 1;
-		evaluationStacks[i][0] = { i, box.Get_Center()[i], false, 0 };
+		evaluationStacks[i][0] = { i, mBox.Get_Center()[i], false, 0 };
 	}
 
 	AxisAlignedHalfSpace<T, n> halfSpace1 = AxisAlignedHalfSpace<T, n>::From_Dimension_Value(0, 0.0, false);
@@ -329,21 +329,21 @@ void BinaryCollisionTree<T, n>::Evaluate(CollisionMask<T, n>* in_mask, uint in_d
 			StackElement& back = evaluationStacks[i][--stackSizes[i]];
 
 			halfSpace1 = AxisAlignedHalfSpace<T, n>::From_Dimension_Value(
-				back.dimension, back.value, back.isPositive);
+				back.mDimension, back.mValue, back.mIsPositive);
 			halfSpace2 = AxisAlignedHalfSpace<T, n>::From_Dimension_Value(
-				back.dimension, back.value, !back.isPositive);
+				back.mDimension, back.mValue, !back.mIsPositive);
 
 			mask1.Get_Basis() = halfSpace1;
 			mask2.Get_Basis() = halfSpace2;
 
-			bool didCollide1 = evaluator.Evaluate(*out_evaluation.Get_Transformed_Parent_Mask(), mask1).did;
-			bool didCollide2 = evaluator.Evaluate(*out_evaluation.Get_Transformed_Parent_Mask(), mask2).did;
+			bool didCollide1 = evaluator.Evaluate(*out_evaluation.Get_Transformed_Parent_Mask(), mask1).mDid;
+			bool didCollide2 = evaluator.Evaluate(*out_evaluation.Get_Transformed_Parent_Mask(), mask2).mDid;
 
-			out_evaluation.data[i][out_evaluation.dataSizes[i]++] = didCollide1;
-			out_evaluation.data[i][out_evaluation.dataSizes[i]++] = didCollide2;
+			out_evaluation.mData[i][out_evaluation.mDataSizes[i]++] = didCollide1;
+			out_evaluation.mData[i][out_evaluation.mDataSizes[i]++] = didCollide2;
 
-			T nextOffset = box.Get_Dimensions()[halfSpace1.Get_Dimension()] / (1 << (back.depth + 2));
-			uint lastDepth = back.depth;
+			T nextOffset = mBox.Get_Dimensions()[halfSpace1.Get_Dimension()] / (1 << (back.mDepth + 2));
+			uint lastDepth = back.mDepth;
 
 			if (lastDepth < in_depth) {
 				if (didCollide1) {
@@ -379,7 +379,7 @@ bool BinaryCollisionTree<T, n>::Intersection(Evaluation & in_evaluation1, Evalua
 	IntersectionStackElement intersectionStacks[n][1 << (maxDepth + 1)];
 	uint stackSizes[n];
 	bool didIntersect[n];
-	ubyte* data[2][n];
+	ubyte* mData[2][n];
 
 	uint skipStackSize = 0;
 
@@ -387,8 +387,8 @@ bool BinaryCollisionTree<T, n>::Intersection(Evaluation & in_evaluation1, Evalua
 		stackSizes[i] = 1;
 		intersectionStacks[i][0] = { in_evaluation1.Get_Iterator(), in_evaluation2.Get_Iterator() };
 		didIntersect[i] = false;
-		data[0][i] = &in_evaluation1.data[i][0];
-		data[1][i] = &in_evaluation2.data[i][0];
+		mData[0][i] = &in_evaluation1.mData[i][0];
+		mData[1][i] = &in_evaluation2.mData[i][0];
 	}
 
 	for (bool keepGoing = true; keepGoing;) {
@@ -398,22 +398,22 @@ bool BinaryCollisionTree<T, n>::Intersection(Evaluation & in_evaluation1, Evalua
 
 			StackElement element = intersectionStacks[i][--stackSizes[i]];
 
-			if (element.it1.Get_Left(i) && element.it2.Get_Left(i)) {
+			if (element.mIt1.Get_Left(i) && element.mIt2.Get_Left(i)) {
 				StackElement& newElement = intersectionStacks[i][stackSizes[i]++];
-				newElement.it1 = element.it1;
-				newElement.it2 = element.it2;
-				if (!newElement.it1.Go_Left(i) || !newElement.it2.Go_Left(i)) {
+				newElement.mIt1 = element.mIt1;
+				newElement.mIt2 = element.mIt2;
+				if (!newElement.mIt1.Go_Left(i) || !newElement.mIt2.Go_Left(i)) {
 					stackSizes[i] = 0;
 					didIntersect[i] = true;
 					continue;
 				}
 			}
 
-			if (element.it1.Get_Right(i) && element.it2.Get_Right(i)) {
+			if (element.mIt1.Get_Right(i) && element.mIt2.Get_Right(i)) {
 				StackElement& newElement = intersectionStacks[i][stackSizes[i]++];
-				newElement.it1 = element.it1;
-				newElement.it2 = element.it2;
-				if (!newElement.it1.Go_Right(i) || !newElement.it2.Go_Right(i)) {
+				newElement.mIt1 = element.mIt1;
+				newElement.mIt2 = element.mIt2;
+				if (!newElement.mIt1.Go_Right(i) || !newElement.mIt2.Go_Right(i)) {
 					stackSizes[i] = 0;
 					didIntersect[i] = true;
 					continue;
@@ -441,101 +441,101 @@ template<class T, uint n>
 void BinaryCollisionTree<T, n>::Group(Evaluation ** in_evaluations, uint in_nElements, GroupingScheme & out_groupingScheme) {
 	using Grouping = GroupingScheme::Grouping;
 
-	if (recycling.size() < 1) {
-		recycling.resize(1);
+	if (mRecycling.size() < 1) {
+		mRecycling.resize(1);
 	}
 
-	Grouping& startingGrouping = recycling.front();
-	startingGrouping.evals.resize(in_nElements);
+	Grouping& startingGrouping = mRecycling.front();
+	startingGrouping.mEvals.resize(in_nElements);
 
 	uint i = 0;
-	for (auto it = startingGrouping.evals.begin(); it != startingGrouping.evals.end(); it++) {
+	for (auto it = startingGrouping.mEvals.begin(); it != startingGrouping.mEvals.end(); it++) {
 		*it = in_evaluations[i++];
 	}
 
 	for (uint i = 0; i < n; i++) {
 		for (uint j = 0; j < maxDepth; j++) {
-			startingGrouping.path[i][j] = 255;
+			startingGrouping.mPath[i][j] = 255;
 		}
 	}
 
-	out_groupingScheme.parent = this;
-	recycling.splice(recycling.end(), out_groupingScheme.groupings);
-	out_groupingScheme.groupings.splice(out_groupingScheme.groupings.begin(), recycling, recycling.begin());
+	out_groupingScheme.mParent = this;
+	mRecycling.splice(mRecycling.end(), out_groupingScheme.mGroupings);
+	out_groupingScheme.mGroupings.splice(out_groupingScheme.mGroupings.begin(), mRecycling, mRecycling.begin());
 
-	if (recycling.size() > 100) {
-		recycling.resize(50);
+	if (mRecycling.size() > 100) {
+		mRecycling.resize(50);
 	}
 
-	for (uint currentDepth = 0; currentDepth <= in_evaluations[0]->depth; currentDepth++) {
+	for (uint currentDepth = 0; currentDepth <= in_evaluations[0]->mDepth; currentDepth++) {
 		// for each dimension
 		for (uint i = 0; i < n; i++) {
-			uint nGroups = (uint)out_groupingScheme.groupings.size();
-			auto groupIterator = out_groupingScheme.groupings.begin();
+			uint nGroups = (uint)out_groupingScheme.mGroupings.size();
+			auto groupIterator = out_groupingScheme.mGroupings.begin();
 
 			// for each grouping
 			for (uint j = 0; j < nGroups; j++) {
-				while (recycling.size() < 2) {
-					recycling.push_back(Grouping());
+				while (mRecycling.size() < 2) {
+					mRecycling.push_back(Grouping());
 				}
 
 				Grouping& parentGrouping = *groupIterator;
-				Grouping& leftGrouping = recycling.front();
-				Grouping& rightGrouping = recycling.back();
-				leftGrouping.evals.clear();
-				rightGrouping.evals.clear();
-				leftGrouping.evals.reserve(in_nElements);
-				rightGrouping.evals.reserve(in_nElements);
+				Grouping& leftGrouping = mRecycling.front();
+				Grouping& rightGrouping = mRecycling.back();
+				leftGrouping.mEvals.clear();
+				rightGrouping.mEvals.clear();
+				leftGrouping.mEvals.reserve(in_nElements);
+				rightGrouping.mEvals.reserve(in_nElements);
 
 				// for each evaluation in that grouping 
-				for (auto indexIterator = parentGrouping.evals.begin(); indexIterator != parentGrouping.evals.end(); indexIterator++) {
+				for (auto indexIterator = parentGrouping.mEvals.begin(); indexIterator != parentGrouping.mEvals.end(); indexIterator++) {
 					auto evaluationIterator = (*indexIterator)->Get_Iterator();
 
 					for (uint k = 0; k < currentDepth; k++) {
-						if (!((parentGrouping.path[i][k]) ? evaluationIterator.Go_Right(i) : evaluationIterator.Go_Left(i))) {
+						if (!((parentGrouping.mPath[i][k]) ? evaluationIterator.Go_Right(i) : evaluationIterator.Go_Left(i))) {
 							throw ProcessFailureException();
 						}
 					}
 
 					if (evaluationIterator.Get_Left(i)) {
-						leftGrouping.evals.push_back(*indexIterator);
+						leftGrouping.mEvals.push_back(*indexIterator);
 					}
 
 					if (evaluationIterator.Get_Right(i)) {
-						rightGrouping.evals.push_back(*indexIterator);
+						rightGrouping.mEvals.push_back(*indexIterator);
 					}
 				}
 
-				if (leftGrouping.evals.size() > 1) {
+				if (leftGrouping.mEvals.size() > 1) {
 					for (uint k = 0; k < n; k++) {
 						for (uint m = 0; m < maxDepth; m++) {
-							leftGrouping.path[k][m] = parentGrouping.path[k][m];
+							leftGrouping.mPath[k][m] = parentGrouping.mPath[k][m];
 						}
 					}
-					leftGrouping.path[i][currentDepth] = 0;
+					leftGrouping.mPath[i][currentDepth] = 0;
 
-					out_groupingScheme.groupings.splice(out_groupingScheme.groupings.end(), recycling, recycling.begin());
+					out_groupingScheme.mGroupings.splice(out_groupingScheme.mGroupings.end(), mRecycling, mRecycling.begin());
 				}
 
-				if (rightGrouping.evals.size() > 1) {
+				if (rightGrouping.mEvals.size() > 1) {
 					for (uint k = 0; k < n; k++) {
 						for (uint m = 0; m < maxDepth; m++) {
-							rightGrouping.path[k][m] = parentGrouping.path[k][m];
+							rightGrouping.mPath[k][m] = parentGrouping.mPath[k][m];
 						}
 					}
-					rightGrouping.path[i][currentDepth] = 1;
+					rightGrouping.mPath[i][currentDepth] = 1;
 
-					out_groupingScheme.groupings.splice(out_groupingScheme.groupings.end(), recycling, --recycling.end());
+					out_groupingScheme.mGroupings.splice(out_groupingScheme.mGroupings.end(), mRecycling, --mRecycling.end());
 				}
 				groupIterator++;
 			}
-			auto begin = out_groupingScheme.groupings.begin();
-			auto end = out_groupingScheme.groupings.begin();
+			auto begin = out_groupingScheme.mGroupings.begin();
+			auto end = out_groupingScheme.mGroupings.begin();
 			std::advance(end, nGroups);
-			recycling.splice(recycling.end(), out_groupingScheme.groupings, begin, end);
+			mRecycling.splice(mRecycling.end(), out_groupingScheme.mGroupings, begin, end);
 
-			if (out_groupingScheme.groupings.size() == 0) {
-				currentDepth = in_evaluations[0]->depth + 1;
+			if (out_groupingScheme.mGroupings.size() == 0) {
+				currentDepth = in_evaluations[0]->mDepth + 1;
 				break;
 			}
 		}
@@ -546,131 +546,131 @@ template<class T, uint n>
 void BinaryCollisionTree<T, n>::Group(Evaluation ** in_evaluations1, uint in_nElements1, Evaluation ** in_evaluations2, uint in_nElements2, PairedGroupingScheme & out_groupingScheme) {
 	using Grouping = PairedGroupingScheme::Grouping;
 
-	if (pairRecycling.size() < 1) {
-		pairRecycling.resize(1);
+	if (mPairRecycling.size() < 1) {
+		mPairRecycling.resize(1);
 	}
 
-	Grouping& startingGrouping = pairRecycling.front();
-	startingGrouping.evals1.resize(in_nElements1);
-	startingGrouping.evals2.resize(in_nElements2);
+	Grouping& startingGrouping = mPairRecycling.front();
+	startingGrouping.mEvals1.resize(in_nElements1);
+	startingGrouping.mEvals2.resize(in_nElements2);
 
 	uint i = 0;
-	for (auto it = startingGrouping.evals1.begin(); it != startingGrouping.evals1.end(); it++) {
+	for (auto it = startingGrouping.mEvals1.begin(); it != startingGrouping.mEvals1.end(); it++) {
 		*it = in_evaluations1[i++];
 	}
 
 	i = 0;
-	for (auto it = startingGrouping.evals2.begin(); it != startingGrouping.evals2.end(); it++) {
+	for (auto it = startingGrouping.mEvals2.begin(); it != startingGrouping.mEvals2.end(); it++) {
 		*it = in_evaluations2[i++];
 	}
 
 	for (uint i = 0; i < n; i++) {
 		for (uint j = 0; j < maxDepth; j++) {
-			startingGrouping.path[i][j] = 255;
+			startingGrouping.mPath[i][j] = 255;
 		}
 	}
 
-	out_groupingScheme.parent = this;
-	pairRecycling.splice(pairRecycling.end(), out_groupingScheme.groupings);
-	out_groupingScheme.groupings.splice(out_groupingScheme.groupings.begin(), pairRecycling, pairRecycling.begin());
+	out_groupingScheme.mParent = this;
+	mPairRecycling.splice(mPairRecycling.end(), out_groupingScheme.mGroupings);
+	out_groupingScheme.mGroupings.splice(out_groupingScheme.mGroupings.begin(), mPairRecycling, mPairRecycling.begin());
 
-	if (pairRecycling.size() > 100) {
-		pairRecycling.resize(50);
+	if (mPairRecycling.size() > 100) {
+		mPairRecycling.resize(50);
 	}
 
-	for (uint currentDepth = 0; currentDepth <= in_evaluations1[0]->depth; currentDepth++) {
+	for (uint currentDepth = 0; currentDepth <= in_evaluations1[0]->mDepth; currentDepth++) {
 		// for each dimension
 		for (uint i = 0; i < n; i++) {
-			uint nGroups = (uint)out_groupingScheme.groupings.size();
-			auto groupIterator = out_groupingScheme.groupings.begin();
+			uint nGroups = (uint)out_groupingScheme.mGroupings.size();
+			auto groupIterator = out_groupingScheme.mGroupings.begin();
 
 			// for each grouping
 			for (uint j = 0; j < nGroups; j++) {
-				while (pairRecycling.size() < 2) {
-					pairRecycling.push_back(Grouping());
+				while (mPairRecycling.size() < 2) {
+					mPairRecycling.push_back(Grouping());
 				}
 
 				Grouping& parentGrouping = *groupIterator;
 
-				Grouping& leftGrouping = pairRecycling.front();
-				leftGrouping.evals1.clear();
-				leftGrouping.evals1.reserve(in_nElements1);
-				leftGrouping.evals2.clear();
-				leftGrouping.evals2.reserve(in_nElements2);
+				Grouping& leftGrouping = mPairRecycling.front();
+				leftGrouping.mEvals1.clear();
+				leftGrouping.mEvals1.reserve(in_nElements1);
+				leftGrouping.mEvals2.clear();
+				leftGrouping.mEvals2.reserve(in_nElements2);
 
-				Grouping& rightGrouping = pairRecycling.back();
-				rightGrouping.evals1.clear();
-				rightGrouping.evals1.reserve(in_nElements1);
-				rightGrouping.evals2.clear();
-				rightGrouping.evals2.reserve(in_nElements2);
+				Grouping& rightGrouping = mPairRecycling.back();
+				rightGrouping.mEvals1.clear();
+				rightGrouping.mEvals1.reserve(in_nElements1);
+				rightGrouping.mEvals2.clear();
+				rightGrouping.mEvals2.reserve(in_nElements2);
 
-				for (auto indexIterator = parentGrouping.evals1.begin(); indexIterator != parentGrouping.evals1.end(); indexIterator++) {
+				for (auto indexIterator = parentGrouping.mEvals1.begin(); indexIterator != parentGrouping.mEvals1.end(); indexIterator++) {
 					auto evaluationIterator = (*indexIterator)->Get_Iterator();
 
 					for (uint k = 0; k < currentDepth; k++) {
-						if (!((parentGrouping.path[i][k]) ? evaluationIterator.Go_Right(i) : evaluationIterator.Go_Left(i))) {
+						if (!((parentGrouping.mPath[i][k]) ? evaluationIterator.Go_Right(i) : evaluationIterator.Go_Left(i))) {
 							throw ProcessFailureException();
 						}
 					}
 
 					if (evaluationIterator.Get_Left(i)) {
-						leftGrouping.evals1.push_back(*indexIterator);
+						leftGrouping.mEvals1.push_back(*indexIterator);
 					}
 
 					if (evaluationIterator.Get_Right(i)) {
-						rightGrouping.evals1.push_back(*indexIterator);
+						rightGrouping.mEvals1.push_back(*indexIterator);
 					}
 				}
 
-				for (auto indexIterator = parentGrouping.evals2.begin(); indexIterator != parentGrouping.evals2.end(); indexIterator++) {
+				for (auto indexIterator = parentGrouping.mEvals2.begin(); indexIterator != parentGrouping.mEvals2.end(); indexIterator++) {
 					auto evaluationIterator = (*indexIterator)->Get_Iterator();
 
 					for (uint k = 0; k < currentDepth; k++) {
-						if (!((parentGrouping.path[i][k]) ? evaluationIterator.Go_Right(i) : evaluationIterator.Go_Left(i))) {
+						if (!((parentGrouping.mPath[i][k]) ? evaluationIterator.Go_Right(i) : evaluationIterator.Go_Left(i))) {
 							throw ProcessFailureException();
 						}
 					}
 
 					if (evaluationIterator.Get_Left(i)) {
-						leftGrouping.evals2.push_back(*indexIterator);
+						leftGrouping.mEvals2.push_back(*indexIterator);
 					}
 
 					if (evaluationIterator.Get_Right(i)) {
-						rightGrouping.evals2.push_back(*indexIterator);
+						rightGrouping.mEvals2.push_back(*indexIterator);
 					}
 				}
 
-				if (leftGrouping.evals1.size() > 0 && leftGrouping.evals2.size() > 0) {
+				if (leftGrouping.mEvals1.size() > 0 && leftGrouping.mEvals2.size() > 0) {
 					for (uint k = 0; k < n; k++) {
 						for (uint m = 0; m < maxDepth; m++) {
-							leftGrouping.path[k][m] = parentGrouping.path[k][m];
+							leftGrouping.mPath[k][m] = parentGrouping.mPath[k][m];
 						}
 					}
-					leftGrouping.path[i][currentDepth] = 0;
+					leftGrouping.mPath[i][currentDepth] = 0;
 
-					out_groupingScheme.groupings.splice(out_groupingScheme.groupings.end(), pairRecycling, pairRecycling.begin());
+					out_groupingScheme.mGroupings.splice(out_groupingScheme.mGroupings.end(), mPairRecycling, mPairRecycling.begin());
 				}
 
-				if (rightGrouping.evals1.size() > 0 && rightGrouping.evals2.size() > 0) {
+				if (rightGrouping.mEvals1.size() > 0 && rightGrouping.mEvals2.size() > 0) {
 					for (uint k = 0; k < n; k++) {
 						for (uint m = 0; m < maxDepth; m++) {
-							rightGrouping.path[k][m] = parentGrouping.path[k][m];
+							rightGrouping.mPath[k][m] = parentGrouping.mPath[k][m];
 						}
 					}
-					rightGrouping.path[i][currentDepth] = 1;
+					rightGrouping.mPath[i][currentDepth] = 1;
 
-					out_groupingScheme.groupings.splice(out_groupingScheme.groupings.end(), pairRecycling, --pairRecycling.end());
+					out_groupingScheme.mGroupings.splice(out_groupingScheme.mGroupings.end(), mPairRecycling, --mPairRecycling.end());
 				}
 
 				groupIterator++;
 			}
-			auto begin = out_groupingScheme.groupings.begin();
-			auto end = out_groupingScheme.groupings.begin();
+			auto begin = out_groupingScheme.mGroupings.begin();
+			auto end = out_groupingScheme.mGroupings.begin();
 			std::advance(end, nGroups);
-			pairRecycling.splice(pairRecycling.end(), out_groupingScheme.groupings, begin, end);
+			mPairRecycling.splice(mPairRecycling.end(), out_groupingScheme.mGroupings, begin, end);
 
-			if (out_groupingScheme.groupings.size() == 0) {
-				currentDepth = in_evaluations1[0]->depth + 1;
+			if (out_groupingScheme.mGroupings.size() == 0) {
+				currentDepth = in_evaluations1[0]->mDepth + 1;
 				break;
 			}
 		}

@@ -10,11 +10,11 @@
 template<uint n>
 class RigidBody : public TransformableObject<double, n> {
 private:
-	CollisionMask<double, n>* collisionMask;
-	Vector<double, n> linearVelocity;
-	URotation<double, n> angularVelocity;
-	double linearMass;
-	double angularMass;
+	CollisionMask<double, n>* mCollisionMask;
+	Vector<double, n> mLinearVelocity;
+	URotation<double, n> mAngularVelocity;
+	double mLinearMass;
+	double mAngularMass;
 
 public:
 	RigidBody(const CollisionMask<double, n>& in_collisionMask);
