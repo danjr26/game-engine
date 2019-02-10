@@ -22,7 +22,7 @@ MeshVertexData::MeshVertexData(ubyte in_nPositionComponents, ubyte in_nNormalCom
 	}
 }
 
-ushort MeshVertexData::Get_Number_Vertices() const {
+ushort MeshVertexData::getNumberVertices() const {
 	for (uint i = 0; i < members.size(); i++) {
 		if (componentCounts[i] > 0) {
 			return componentCounts[i];
@@ -31,15 +31,15 @@ ushort MeshVertexData::Get_Number_Vertices() const {
 	throw InvalidArgumentException("mesh vertices have no components");
 }
 
-uint MeshVertexData::Get_Number_Faces() const {
+uint MeshVertexData::getNumberFaces() const {
 	return indices.size() / 3;
 }
 
-bool MeshVertexData::Has_Member(MemberIndex in_member) const {
+bool MeshVertexData::hasMember(MemberIndex in_member) const {
 	return componentCounts[in_member] != 0;
 }
 
-ubyte MeshVertexData::Get_Member_Depth(MemberIndex in_member) const {
+ubyte MeshVertexData::getMemberDepth(MemberIndex in_member) const {
 	return componentCounts[in_member];
 }
 
@@ -54,10 +54,10 @@ void MeshVertexData::Reserve_Total(ushort in_nVertices, uint in_nFaces) {
 }
 
 void MeshVertexData::Reserve_Additional(ushort in_nVertices, uint in_nFaces) {
-	Reserve_Total(Get_Number_Vertices() + in_nVertices, Get_Number_Faces() + in_nFaces);
+	Reserve_Total(getNumberVertices() + in_nVertices, getNumberFaces() + in_nFaces);
 }
 
-void MeshVertexData::Add_Vertices(uint in_nVertices, const float* in_positions, const float* in_normals, const float* in_colors, const float* in_uvs) {
+void MeshVertexData::addVertices(uint in_nVertices, const float* in_positions, const float* in_normals, const float* in_colors, const float* in_uvs) {
 	Reserve_Additional(in_nVertices, 0);
 
 	const float* pointers[MemberIndex::count] = {
@@ -79,7 +79,7 @@ void MeshVertexData::Add_Vertices(uint in_nVertices, const float* in_positions, 
 	}
 }
 
-void MeshVertexData::Add_Faces(uint in_nFaces, const ushort* in_indices) {
+void MeshVertexData::addFaces(uint in_nFaces, const ushort* in_indices) {
 	if (in_indices == nullptr) {
 		throw InvalidArgumentException("face data was null");
 	}
@@ -88,7 +88,7 @@ void MeshVertexData::Add_Faces(uint in_nFaces, const ushort* in_indices) {
 	}
 }
 
-void MeshVertexData::Remove_Vertex(ushort in_index) {
+void MeshVertexData::removeVertex(ushort in_index) {
 	for (uint i = 0; i < members.size(); i++) {
 		if (componentCounts[i] > 0) {
 			members[i].erase(
@@ -99,14 +99,14 @@ void MeshVertexData::Remove_Vertex(ushort in_index) {
 	}
 }
 
-void MeshVertexData::Remove_Face(uint in_index) {
+void MeshVertexData::removeFace(uint in_index) {
 	indices.erase(
 		indices.begin() + in_index * 3,
 		indices.begin() + (in_index + 1) * 3
 	);
 }
 
-const float* MeshVertexData::Get_Member_Value(MemberIndex in_member, ushort in_index) const {
+const float* MeshVertexData::getMemberValue(MemberIndex in_member, ushort in_index) const {
 	return &members[in_member][in_index * componentCounts[in_member]];
 }
 
@@ -114,29 +114,29 @@ ushort MeshVertexData::Get_Index(uint in_face, ubyte in_index) const {
 	return indices[in_face * 3 + in_index];
 }
 
-void MeshVertexData::Set_Member_Value(MemberIndex in_member, ushort in_index, const float* in_value) {
+void MeshVertexData::setMemberValue(MemberIndex in_member, ushort in_index, const float* in_value) {
 	for (ubyte i = 0; i < componentCounts[in_member]; i++) {
 		members[in_member][in_index * componentCounts[in_member] + i] = in_value[i];
 	}
 }
 
-void MeshVertexData::Set_Vertex(ushort in_index, const float* in_position, const float* in_normal, const float* in_color, const float* in_uv) {
-	Set_Member_Value(MemberIndex::position, in_index, in_position);
-	Set_Member_Value(MemberIndex::normal, in_index, in_normal);
-	Set_Member_Value(MemberIndex::color, in_index, in_color);
-	Set_Member_Value(MemberIndex::uv, in_index, in_uv);
+void MeshVertexData::setVertex(ushort in_index, const float* in_position, const float* in_normal, const float* in_color, const float* in_uv) {
+	setMemberValue(MemberIndex::position, in_index, in_position);
+	setMemberValue(MemberIndex::normal, in_index, in_normal);
+	setMemberValue(MemberIndex::color, in_index, in_color);
+	setMemberValue(MemberIndex::uv, in_index, in_uv);
 }
 
-const float* MeshVertexData::Get_Member_Pointer(MemberIndex in_member) const {
+const float* MeshVertexData::getMemberPointer(MemberIndex in_member) const {
 	return members[in_member].data();
 }
 
-const ushort* MeshVertexData::Get_Face_Pointer() const {
+const ushort* MeshVertexData::getFacePointer() const {
 	return indices.data();
 }
 */
 
-ubyte MeshVertexData::Get_Data_Type_Size(DataType in_type) {
+ubyte MeshVertexData::getDataTypeSize(DataType in_type) {
 	switch (in_type) {
 	case _byte: return sizeof(char);
 	case _ubyte: return sizeof(ubyte);
@@ -174,52 +174,52 @@ void MeshVertexData::operator=(const MeshVertexData& in_other) {
 }
 
 template<class T, uint n>
-void MeshVertexData::Apply_Transform_Points(const Transform<T, n>& in_transform, ubyte in_member) {
+void MeshVertexData::applyTransformPoints(const Transform<T, n>& in_transform, ubyte in_member) {
 	Member& member = mMembers[in_member];
-	if (member.mType != To_Data_Type<T>() || member.mDepth != n) {
+	if (member.mType != toDataType<T>() || member.mDepth != n) {
 		throw InvalidArgumentException();
 	}
 
 	Vector<T, n>* data = (Vector<T, n>*)member.mData.data();
-	for (uint i = 0; i < member.mData.size() / member.Get_Vertex_Size(); i++) {
-		data[i] = in_transform.Local_To_World_Point(data[i]);
+	for (uint i = 0; i < member.mData.size() / member.getVertexSize(); i++) {
+		data[i] = in_transform.localToWorldPoint(data[i]);
 	}
 }
 
 template<class T, uint n>
-void MeshVertexData::Apply_Transform_Directions(const Transform<T, n>& in_transform, ubyte in_member) {
+void MeshVertexData::applyTransformDirections(const Transform<T, n>& in_transform, ubyte in_member) {
 	Member& member = mMembers[in_member];
-	if (member.mType != To_Data_Type<T>() || member.mDepth != n) {
+	if (member.mType != toDataType<T>() || member.mDepth != n) {
 		throw InvalidArgumentException();
 	}
 
 	Vector<T, n>* data = (Vector<T, n>*)member.mData.data();
-	for (uint i = 0; i < member.mData.size() / member.Get_Vertex_Size(); i++) {
-		data[i] = in_transform.Local_To_World_Direction(data[i]);
+	for (uint i = 0; i < member.mData.size() / member.getVertexSize(); i++) {
+		data[i] = in_transform.localToWorldDirection(data[i]);
 	}
 }
 
 template<class T, uint n>
-void MeshVertexData::Apply_Transform_Vectors(const Transform<T, n>& in_transform, ubyte in_member) {
+void MeshVertexData::applyTransformVectors(const Transform<T, n>& in_transform, ubyte in_member) {
 	Member& member = mMembers[in_member];
-	if (member.mType != To_Data_Type<T>() || member.mDepth != n) {
+	if (member.mType != toDataType<T>() || member.mDepth != n) {
 		throw InvalidArgumentException();
 	}
 
 	Vector<T, n>* data = (Vector<T, n>*)member.mData.data();
-	for (uint i = 0; i < member.mData.size() / member.Get_Vertex_Size(); i++) {
-		data[i] = in_transform.Local_To_World_Vector(data[i]);
+	for (uint i = 0; i < member.mData.size() / member.getVertexSize(); i++) {
+		data[i] = in_transform.localToWorldVector(data[i]);
 	}
 }
 
-template void MeshVertexData::Apply_Transform_Points<float, 2>(const Transform2f& in_transform, ubyte in_member);
-template void MeshVertexData::Apply_Transform_Points<double, 2>(const Transform2d& in_transform, ubyte in_member);
-template void MeshVertexData::Apply_Transform_Directions<float, 2>(const Transform2f& in_transform, ubyte in_member);
-template void MeshVertexData::Apply_Transform_Directions<double, 2>(const Transform2d& in_transform, ubyte in_member);
-template void MeshVertexData::Apply_Transform_Vectors<float, 2>(const Transform2f& in_transform, ubyte in_member);
-template void MeshVertexData::Apply_Transform_Vectors<double, 2>(const Transform2d& in_transform, ubyte in_member);
+template void MeshVertexData::applyTransformPoints<float, 2>(const Transform2f& in_transform, ubyte in_member);
+template void MeshVertexData::applyTransformPoints<double, 2>(const Transform2d& in_transform, ubyte in_member);
+template void MeshVertexData::applyTransformDirections<float, 2>(const Transform2f& in_transform, ubyte in_member);
+template void MeshVertexData::applyTransformDirections<double, 2>(const Transform2d& in_transform, ubyte in_member);
+template void MeshVertexData::applyTransformVectors<float, 2>(const Transform2f& in_transform, ubyte in_member);
+template void MeshVertexData::applyTransformVectors<double, 2>(const Transform2d& in_transform, ubyte in_member);
 
-ubyte MeshVertexData::Get_Face_Mode_Rank(FaceMode in_faceMode) {
+ubyte MeshVertexData::getFaceModeRank(FaceMode in_faceMode) {
 	switch (in_faceMode) {
 	case MeshVertexData::points:
 		return 1;
@@ -246,7 +246,7 @@ ubyte MeshVertexData::Get_Face_Mode_Rank(FaceMode in_faceMode) {
 	}
 }
 
-ubyte MeshVertexData::Get_Face_Mode_Base(FaceMode in_faceMode) {
+ubyte MeshVertexData::getFaceModeBase(FaceMode in_faceMode) {
 	switch (in_faceMode) {
 	case MeshVertexData::points:
 		return 0;
@@ -273,36 +273,36 @@ ubyte MeshVertexData::Get_Face_Mode_Base(FaceMode in_faceMode) {
 	}
 }
 
-uint MeshVertexData::Get_Number_Vertices() const {
+uint MeshVertexData::getNumberVertices() const {
 	return mNVertices;
 }
 
-uint MeshVertexData::Get_Number_Faces() const {
-	return (Get_Number_Face_Elements() - Get_Face_Mode_Base(mFaceMode)) / Get_Face_Mode_Rank(mFaceMode);
+uint MeshVertexData::getNumberFaces() const {
+	return (getNumberFaceElements() - getFaceModeBase(mFaceMode)) / getFaceModeRank(mFaceMode);
 }
 
-uint MeshVertexData::Get_Number_Face_Elements() const {
-	return (uint)mIndices.size() / Get_Data_Type_Size(mIndexType);
+uint MeshVertexData::getNumberFaceElements() const {
+	return (uint)mIndices.size() / getDataTypeSize(mIndexType);
 }
 
-uint MeshVertexData::Get_Number_Members() const {
+uint MeshVertexData::getNumberMembers() const {
 	return (uint)mMembers.size();
 }
 
-bool MeshVertexData::Is_Valid_Number_Elements(uint in_nElements) const {
-	uint rank = Get_Face_Mode_Rank(mFaceMode);
-	uint base = Get_Face_Mode_Base(mFaceMode);
+bool MeshVertexData::isValidNumberElements(uint in_nElements) const {
+	uint rank = getFaceModeRank(mFaceMode);
+	uint base = getFaceModeBase(mFaceMode);
 	return (in_nElements - base) % rank == 0;
 }
 
-void MeshVertexData::Get_Member_IDs(std::vector<ubyte>& out_ids) {
+void MeshVertexData::getMemberIDs(std::vector<ubyte>& out_ids) {
 	out_ids.reserve(out_ids.size() + mMembers.size());
 	for (auto it = mMembers.cbegin(); it != mMembers.cend(); it++) {
 		out_ids.push_back(it->first);
 	}
 }
 
-void MeshVertexData::Add_Member(ubyte in_id, DataType in_type, ubyte in_depth, const void* in_data) {
+void MeshVertexData::addMember(ubyte in_id, DataType in_type, ubyte in_depth, const void* in_data) {
 	if (!mMembers.insert(std::pair<ubyte, Member>(in_id, Member())).second) {
 		throw InvalidArgumentException("duplicate mesh member id");
 	}
@@ -315,82 +315,82 @@ void MeshVertexData::Add_Member(ubyte in_id, DataType in_type, ubyte in_depth, c
 	}
 }
 
-void MeshVertexData::Remove_Member(ubyte in_member) {
+void MeshVertexData::removeMember(ubyte in_member) {
 	mMembers.erase(in_member);
 }
 
-void MeshVertexData::Set_Member_Value(ubyte in_member, uint in_index, const void* in_value) {
+void MeshVertexData::setMemberValue(ubyte in_member, uint in_index, const void* in_value) {
 	Member& member = mMembers[in_member];
-	uint size = member.Get_Vertex_Size();
+	uint size = member.getVertexSize();
 	memcpy(&member.mData[in_index * size], in_value, size);
 }
 
-void MeshVertexData::Set_Member_Values(ubyte in_member, uint in_index, uint in_nValues, const void* in_values) {
+void MeshVertexData::setMemberValues(ubyte in_member, uint in_index, uint in_nValues, const void* in_values) {
 	Member& member = mMembers[in_member];
-	uint size = member.Get_Vertex_Size();
+	uint size = member.getVertexSize();
 	memcpy(&member.mData[in_index * size], in_values, in_nValues * size);
 }
 
-void MeshVertexData::Get_Member_Value(ubyte in_member, uint in_index, void* out_value) const {
+void MeshVertexData::getMemberValue(ubyte in_member, uint in_index, void* out_value) const {
 	const Member& member = mMembers.at(in_member);
-	uint size = member.Get_Vertex_Size();
+	uint size = member.getVertexSize();
 	memcpy(out_value, &member.mData[in_index * size], size);
 }
 
-void MeshVertexData::Expand_Member(ubyte in_member, void* out_values) {
+void MeshVertexData::expandMember(ubyte in_member, void* out_values) {
 	Member& member = mMembers[in_member];
-	uint size = member.Get_Vertex_Size();
+	uint size = member.getVertexSize();
 	ubyte* outPtr = (ubyte*)out_values;
-	for (uint i = 0; i < Get_Number_Face_Elements(); i++) {
-		uint index = Get_Standard_Face_Element(i);
+	for (uint i = 0; i < getNumberFaceElements(); i++) {
+		uint index = getStandardFaceElement(i);
 		memcpy(&outPtr[i * size], &member.mData[index * size], size);
 	}
 }
 
-bool MeshVertexData::Has_Member(ubyte in_id) const {
+bool MeshVertexData::hasMember(ubyte in_id) const {
 	return mMembers.find(in_id) != mMembers.end();
 }
 
-MeshVertexData::DataType MeshVertexData::Get_Member_Type(ubyte in_member) const {
+MeshVertexData::DataType MeshVertexData::getMemberType(ubyte in_member) const {
 	return mMembers.at(in_member).mType;
 }
 
-ubyte MeshVertexData::Get_Member_Depth(ubyte in_member) const {
+ubyte MeshVertexData::getMemberDepth(ubyte in_member) const {
 	return mMembers.at(in_member).mDepth;
 }
 
-void MeshVertexData::Reserve_Total_Vertices(uint in_nVertices) {
+void MeshVertexData::reserveTotalVertices(uint in_nVertices) {
 	for (auto it = mMembers.begin(); it != mMembers.end(); it++) {
 		Member& member = it->second;
-		member.mData.reserve(in_nVertices * member.Get_Vertex_Size());
+		member.mData.reserve(in_nVertices * member.getVertexSize());
 	}
 }
 
-void MeshVertexData::Reserve_Total_Faces(uint in_nFaces) {
-	Reserve_Total_Face_Elements(Face_To_Element_Count(0, in_nFaces));
+void MeshVertexData::reserveTotalFaces(uint in_nFaces) {
+	reserveTotalFaceElements(faceToElementCount(0, in_nFaces));
 }
 
-void MeshVertexData::Reserve_Total_Face_Elements(uint in_nElements) {
-	mIndices.reserve(in_nElements * Get_Data_Type_Size(mIndexType));
+void MeshVertexData::reserveTotalFaceElements(uint in_nElements) {
+	mIndices.reserve(in_nElements * getDataTypeSize(mIndexType));
 }
 
-void MeshVertexData::Add_Vertices(uint in_nVertices, const std::unordered_map<ubyte, const void*>& in_data) {
+void MeshVertexData::addVertices(uint in_nVertices, const std::unordered_map<ubyte, const void*>& in_data) {
 	for (auto it = mMembers.begin(); it != mMembers.end(); it++) {
 		Member& member = it->second;
 		auto search = in_data.find(it->first);
 		if (search == in_data.end() || search->second == nullptr) {
-			member.mData.resize(member.mData.size() + in_nVertices * member.Get_Vertex_Size());
+			member.mData.resize(member.mData.size() + in_nVertices * member.getVertexSize());
 		}
 		else {
 			const ubyte* ptr = (const ubyte*)search->second;
-			member.mData.insert(member.mData.end(), ptr, ptr + in_nVertices * member.Get_Vertex_Size());
+			member.mData.insert(member.mData.end(), ptr, ptr + in_nVertices * member.getVertexSize());
 		}
 	}
 
 	mNVertices += in_nVertices;
 }
 
-void MeshVertexData::Remove_Vertex(uint in_index) {
+void MeshVertexData::removeVertex(uint in_index) {
 	if (in_index >= mNVertices) {
 		throw InvalidArgumentException("invalid index");
 	}
@@ -398,33 +398,33 @@ void MeshVertexData::Remove_Vertex(uint in_index) {
 	for (auto it = mMembers.begin(); it != mMembers.end(); it++) {
 		Member& member = it->second;
 		member.mData.erase(
-			member.mData.begin() + in_index * member.Get_Vertex_Size(), 
-			member.mData.begin() + (in_index + 1) * member.Get_Vertex_Size()
+			member.mData.begin() + in_index * member.getVertexSize(), 
+			member.mData.begin() + (in_index + 1) * member.getVertexSize()
 		);
 	}
 
 	mNVertices--;
 }
 
-void MeshVertexData::Set_Vertex(uint in_index, std::unordered_map<ubyte, const void*> in_data) {
+void MeshVertexData::setVertex(uint in_index, std::unordered_map<ubyte, const void*> in_data) {
 	for (auto it = mMembers.begin(); it != mMembers.end(); it++) {
 		auto search = in_data.find(it->first);
 		if (search == in_data.end() || search->second == nullptr) {
-			Set_Member_Value(it->first, in_index, search->second);
+			setMemberValue(it->first, in_index, search->second);
 		}
 	}
 }
 
-void MeshVertexData::Set_Vertices(uint in_index, uint in_nVertices, std::unordered_map<ubyte, const void*> in_data) {
+void MeshVertexData::setVertices(uint in_index, uint in_nVertices, std::unordered_map<ubyte, const void*> in_data) {
 	for (auto it = mMembers.begin(); it != mMembers.end(); it++) {
 		auto search = in_data.find(it->first);
 		if (search == in_data.end() || search->second == nullptr) {
-			Set_Member_Values(it->first, in_index, in_nVertices, search->second);
+			setMemberValues(it->first, in_index, in_nVertices, search->second);
 		}
 	}
 }
 
-void MeshVertexData::Swap_Vertices(uint in_index1, uint in_index2) {
+void MeshVertexData::swapVertices(uint in_index1, uint in_index2) {
 	if (in_index1 == in_index2) return;
 	if (in_index1 >= mNVertices || in_index2 >= mNVertices) {
 		throw InvalidArgumentException("invalid index");
@@ -432,7 +432,7 @@ void MeshVertexData::Swap_Vertices(uint in_index1, uint in_index2) {
 
 	for (auto it = mMembers.begin(); it != mMembers.end(); it++) {
 		Member& member = it->second;
-		uint size = member.Get_Vertex_Size();
+		uint size = member.getVertexSize();
 		std::swap_ranges(
 			member.mData.begin() + in_index1 * size,
 			member.mData.begin() + (in_index1 + 1) * size,
@@ -441,32 +441,32 @@ void MeshVertexData::Swap_Vertices(uint in_index1, uint in_index2) {
 	}
 }
 
-void MeshVertexData::Add_Faces(uint in_nFaces, const void* in_indices) {
-	Add_Face_Elements(Face_To_Element_Count(Get_Number_Faces(), in_nFaces), in_indices);
+void MeshVertexData::addFaces(uint in_nFaces, const void* in_indices) {
+	addFaceElements(faceToElementCount(getNumberFaces(), in_nFaces), in_indices);
 }
 
-void MeshVertexData::Add_Face_Elements(uint in_nElements, const void* in_indices) {
-	if (!Is_Valid_Number_Elements(Get_Number_Face_Elements() + in_nElements)) {
+void MeshVertexData::addFaceElements(uint in_nElements, const void* in_indices) {
+	if (!isValidNumberElements(getNumberFaceElements() + in_nElements)) {
 		throw InvalidArgumentException();
 	}
-	uint length = in_nElements * Get_Data_Type_Size(mIndexType);
+	uint length = in_nElements * getDataTypeSize(mIndexType);
 	const ubyte* ptr = (const ubyte*)in_indices;
 
 	mIndices.insert(mIndices.end(), ptr, ptr + length);
 }
 
 template<class T>
-void MeshVertexData::Add_Faces_Polygon() {
-	Add_Faces_Polygon<T>(0, mNVertices);
+void MeshVertexData::addFacesPolygon() {
+	addFacesPolygon<T>(0, mNVertices);
 }
 
-template void MeshVertexData::Add_Faces_Polygon<float>();
-template void MeshVertexData::Add_Faces_Polygon<double>();
+template void MeshVertexData::addFacesPolygon<float>();
+template void MeshVertexData::addFacesPolygon<double>();
 
 template<class T>
-void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
-	if (mFaceMode != FaceMode::triangles || !Has_Member(MemberID::position) || 
-		Get_Member_Type(MemberID::position) != To_Data_Type<T>() || in_nVertices < 3) {
+void MeshVertexData::addFacesPolygon(uint in_index, uint in_nVertices) {
+	if (mFaceMode != FaceMode::triangles || !hasMember(MemberID::position) || 
+		getMemberType(MemberID::position) != toDataType<T>() || in_nVertices < 3) {
 
 		throw InvalidArgumentException();
 	}
@@ -477,7 +477,7 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 		PointData* prev;
 	};
 
-	const Vector<T, 2>* values = (const Vector<T, 2>*)this->Get_Member_Pointer(MemberID::position);
+	const Vector<T, 2>* values = (const Vector<T, 2>*)this->getMemberPointer(MemberID::position);
 
 	// expand points
 	std::vector<PointData*> pointData;
@@ -500,7 +500,7 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 		pointData.begin(), 
 		pointData.end(), 
 		[values](PointData*& p1, PointData*& p2) {
-			return values[p1->index].X() < values[p2->index].X();
+			return values[p1->index].x() < values[p2->index].x();
 		}
 	);
 
@@ -516,9 +516,9 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 		auto searchRange = activeEdges.equal_range(pointData[i]);
 		activeEdges.erase(searchRange.first, searchRange.second);
 
-		const bool isLine = point.X() == prevPoint.X() && point.X() == nextPoint.X();
-		const bool isSplit = !isLine && point.X() <= prevPoint.X() && point.X() <= nextPoint.X() && nextPoint.Y() > prevPoint.Y();
-		const bool isMerge = !isLine && point.X() >= prevPoint.X() && point.X() >= nextPoint.X() && nextPoint.Y() < prevPoint.Y();
+		const bool isLine = point.x() == prevPoint.x() && point.x() == nextPoint.x();
+		const bool isSplit = !isLine && point.x() <= prevPoint.x() && point.x() <= nextPoint.x() && nextPoint.y() > prevPoint.y();
+		const bool isMerge = !isLine && point.x() >= prevPoint.x() && point.x() >= nextPoint.x() && nextPoint.y() < prevPoint.y();
 
 		if (isSplit || isMerge) {
 			PointData* anchorPoint = nullptr;
@@ -529,7 +529,7 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 			for (auto it = activeEdges.begin(); it != activeEdges.end(); it++) {
 				const Vector<T, 2>& edgePoint1 = values[it->first->index];
 				const Vector<T, 2>& edgePoint2 = values[it->second->index];
-				T interpolatedY = Lerp(edgePoint1.Y(), edgePoint2.Y(), point.X(), edgePoint1.X(), edgePoint2.X());
+				T interpolatedY = lerp(edgePoint1.y(), edgePoint2.y(), point.x(), edgePoint1.x(), edgePoint2.x());
 				if (lowEdge.first == nullptr || interpolatedY > lowY) {
 					lowY = interpolatedY;
 					lowEdge = *it;
@@ -547,14 +547,14 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 				const Vector<T, 2>& highEdgePoint1 = values[highEdge.first->index];
 				const Vector<T, 2>& highEdgePoint2 = values[highEdge.second->index];
 
-				T interpolatedY1 = Lerp(lowEdgePoint1.Y(), lowEdgePoint2.Y(), testPoint.X(), lowEdgePoint1.X(), lowEdgePoint2.X());
-				T interpolatedY2 = Lerp(highEdgePoint1.Y(), highEdgePoint2.Y(), testPoint.X(), highEdgePoint1.X(), highEdgePoint2.X());
+				T interpolatedY1 = lerp(lowEdgePoint1.y(), lowEdgePoint2.y(), testPoint.x(), lowEdgePoint1.x(), lowEdgePoint2.x());
+				T interpolatedY2 = lerp(highEdgePoint1.y(), highEdgePoint2.y(), testPoint.x(), highEdgePoint1.x(), highEdgePoint2.x());
 
 				if (pointData[j] == lowEdge.first || pointData[j] == lowEdge.second || 
 					pointData[j] == highEdge.first || pointData[j] == highEdge.second || 
-					Between_Inc<T>(testPoint.Y(), interpolatedY1, interpolatedY2)) {
+					betwInc<T>(testPoint.y(), interpolatedY1, interpolatedY2)) {
 
-					for (int k = i; values[pointData[k]->index].X() == point.X(); k = pointData[k]->next->index) {
+					for (int k = i; values[pointData[k]->index].x() == point.x(); k = pointData[k]->next->index) {
 						newEdges.insert(std::pair<PointData*, PointData*>(pointData[k], pointData[j]));
 						newEdges.insert(std::pair<PointData*, PointData*>(pointData[j], pointData[k]));
 					}
@@ -564,12 +564,12 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 		}
 
 		// add back edge
-		if (point.X() < prevPoint.X()) {
+		if (point.x() < prevPoint.x()) {
 			activeEdges.insert(std::pair<PointData*, PointData*>(pointData[i]->prev, pointData[i]));
 		}
 
 		// add forward edge
-		if (point.X() < nextPoint.X()) {
+		if (point.x() < nextPoint.x()) {
 			activeEdges.insert(std::pair<PointData*, PointData*>(pointData[i]->next, pointData[i]));
 		}
 	}
@@ -615,7 +615,7 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 			throw InvalidArgumentException();
 		}
 
-		Add_Faces(1, &indices);
+		addFaces(1, &indices);
 		earNode->prev->next = earNode->next;
 		earNode->next->prev = earNode->prev;
 	};
@@ -632,8 +632,8 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 			isRepeating = true;
 		}
 
-		if ((thisPoint - prevPoint).Orthogonal().Dot(nextPoint - thisPoint) > 0 ||
-			!(isRepeating || (thisPoint - prevPoint).Dot(nextPoint - thisPoint) <= 0)) {
+		if ((thisPoint - prevPoint).orthogonal().dot(nextPoint - thisPoint) > 0 ||
+			!(isRepeating || (thisPoint - prevPoint).dot(nextPoint - thisPoint) <= 0)) {
 			
 			continue;
 		}
@@ -641,9 +641,9 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 		bool isEar = true;
 		for (PointData* testNode = currentNode->next->next; testNode != currentNode->prev; testNode = testNode->next) {
 			const Vector<T, 2>& testPoint = values[testNode->index];
-			if ((thisPoint - prevPoint).Orthogonal().Dot(testPoint - prevPoint) <= 0 &&
-				(nextPoint - thisPoint).Orthogonal().Dot(testPoint - thisPoint) <= 0 &&
-				(prevPoint - nextPoint).Orthogonal().Dot(testPoint - nextPoint) <= 0) {
+			if ((thisPoint - prevPoint).orthogonal().dot(testPoint - prevPoint) <= 0 &&
+				(nextPoint - thisPoint).orthogonal().dot(testPoint - thisPoint) <= 0 &&
+				(prevPoint - nextPoint).orthogonal().dot(testPoint - nextPoint) <= 0) {
 
 				isEar = false;
 				break;
@@ -666,37 +666,37 @@ void MeshVertexData::Add_Faces_Polygon(uint in_index, uint in_nVertices) {
 }
 
 template<class T>
-void MeshVertexData::Add_Faces_Delaunay() {
-	Add_Faces_Delaunay(0, mNVertices);
+void MeshVertexData::addFacesDelaunay() {
+	addFacesDelaunay(0, mNVertices);
 }
 
 template<class T>
-void MeshVertexData::Add_Faces_Delaunay(uint in_index, uint in_nVertices) {
+void MeshVertexData::addFacesDelaunay(uint in_index, uint in_nVertices) {
 	throw NotImplementedException();
 }
 
-void MeshVertexData::Remove_Face(uint in_index) {
-	uint size = Get_Data_Type_Size(mIndexType);
-	uint index1 = Face_To_Element_Index(in_index);
-	uint index2 = Face_To_Element_Index(in_index + 1);
+void MeshVertexData::removeFace(uint in_index) {
+	uint size = getDataTypeSize(mIndexType);
+	uint index1 = faceToElementIndex(in_index);
+	uint index2 = faceToElementIndex(in_index + 1);
 	mIndices.erase(mIndices.begin() + index1 * size, mIndices.begin() + index2 * size);
 }
 
-void MeshVertexData::Remove_Face_Element(uint in_index) {
-	uint size = Get_Data_Type_Size(mIndexType);
+void MeshVertexData::removeFaceElement(uint in_index) {
+	uint size = getDataTypeSize(mIndexType);
 	mIndices.erase(mIndices.begin() + in_index * size);
 }
 
-const void* MeshVertexData::Get_Face(uint in_index) const {
-	return Get_Face_Element(Face_To_Element_Index(in_index));
+const void* MeshVertexData::getFace(uint in_index) const {
+	return getFaceElement(faceToElementIndex(in_index));
 }
 
-const void* MeshVertexData::Get_Face_Element(uint in_index) const {
-	uint size = Get_Data_Type_Size(mIndexType);
+const void* MeshVertexData::getFaceElement(uint in_index) const {
+	uint size = getDataTypeSize(mIndexType);
 	return mIndices.data() + in_index * size;
 }
 
-uint MeshVertexData::Get_Standard_Face_Element(uint in_index) const {
+uint MeshVertexData::getStandardFaceElement(uint in_index) const {
 	uint index = 0;
 	switch (mIndexType) {
 	case DataType::_byte:
@@ -723,25 +723,25 @@ uint MeshVertexData::Get_Standard_Face_Element(uint in_index) const {
 	return index;
 }
 
-void MeshVertexData::Set_Face(uint in_faceIndex, const void* in_indices) {
-	Set_Faces(in_faceIndex, 1, in_indices);
+void MeshVertexData::setFace(uint in_faceIndex, const void* in_indices) {
+	setFaces(in_faceIndex, 1, in_indices);
 }
 
-void MeshVertexData::Set_Face_Element(uint in_faceElement, const void* in_index) {
-	Set_Face_Elements(in_faceElement, 1, in_index);
+void MeshVertexData::setFaceElement(uint in_faceElement, const void* in_index) {
+	setFaceElements(in_faceElement, 1, in_index);
 }
 
-void MeshVertexData::Set_Faces(uint in_faceIndex, uint in_nFaces, const void* in_indices) {
-	Set_Face_Elements(Face_To_Element_Index(in_faceIndex), Face_To_Element_Count(in_faceIndex, in_nFaces), in_indices);
+void MeshVertexData::setFaces(uint in_faceIndex, uint in_nFaces, const void* in_indices) {
+	setFaceElements(faceToElementIndex(in_faceIndex), faceToElementCount(in_faceIndex, in_nFaces), in_indices);
 }
 
-void MeshVertexData::Set_Face_Elements(uint in_faceElement, uint in_nFaceElements, const void* in_indices) {
-	uint size = Get_Data_Type_Size(mIndexType);
+void MeshVertexData::setFaceElements(uint in_faceElement, uint in_nFaceElements, const void* in_indices) {
+	uint size = getDataTypeSize(mIndexType);
 	const ubyte* ptr = (const ubyte*)in_indices;
 	memcpy(&mIndices[in_faceElement * size], in_indices, in_nFaceElements * size);
 }
 
-void MeshVertexData::Set_Face_Mode(FaceMode in_faceMode) {
+void MeshVertexData::setFaceMode(FaceMode in_faceMode) {
 	if (!mIndices.empty()) {
 		throw InvalidArgumentException();
 	}
@@ -749,44 +749,44 @@ void MeshVertexData::Set_Face_Mode(FaceMode in_faceMode) {
 	mFaceMode = in_faceMode;
 }
 
-MeshVertexData::FaceMode MeshVertexData::Get_Face_Mode() const {
+MeshVertexData::FaceMode MeshVertexData::getFaceMode() const {
 	return mFaceMode;
 }
 
-ubyte MeshVertexData::Get_Face_Element_Size() const {
-	return Get_Data_Type_Size(mIndexType);
+ubyte MeshVertexData::getFaceElementSize() const {
+	return getDataTypeSize(mIndexType);
 }
 
-MeshVertexData::DataType MeshVertexData::Get_Face_Type() const {
+MeshVertexData::DataType MeshVertexData::setFaceType() const {
 	return mIndexType;
 }
 
-const void* MeshVertexData::Get_Member_Pointer(ubyte in_member) const {
+const void* MeshVertexData::getMemberPointer(ubyte in_member) const {
 	return mMembers.at(in_member).mData.data();
 }
 
-const void* MeshVertexData::Get_Face_Pointer() const {
+const void* MeshVertexData::getFacePointer() const {
 	return mIndices.data();
 }
 
-uint MeshVertexData::Element_To_Face_Index(uint in_elementIndex) const {
-	uint rank = Get_Face_Mode_Rank(mFaceMode);
-	uint base = Get_Face_Mode_Base(mFaceMode);
+uint MeshVertexData::elementToFaceIndex(uint in_elementIndex) const {
+	uint rank = getFaceModeRank(mFaceMode);
+	uint base = getFaceModeBase(mFaceMode);
 	return (in_elementIndex <= base) ? (0) : ((in_elementIndex - base) / rank);
 }
 
-uint MeshVertexData::Face_To_Element_Index(uint in_faceIndex) const {
-	uint rank = Get_Face_Mode_Rank(mFaceMode);
-	uint base = Get_Face_Mode_Base(mFaceMode);
+uint MeshVertexData::faceToElementIndex(uint in_faceIndex) const {
+	uint rank = getFaceModeRank(mFaceMode);
+	uint base = getFaceModeBase(mFaceMode);
 	return (in_faceIndex == 0) ? (0) : in_faceIndex * rank + base;
 }
 
-uint MeshVertexData::Face_To_Element_Count(uint in_faceIndex, uint in_nFaces) const {
-	return Face_To_Element_Index(in_faceIndex + in_nFaces) - Face_To_Element_Index(in_faceIndex);
+uint MeshVertexData::faceToElementCount(uint in_faceIndex, uint in_nFaces) const {
+	return faceToElementIndex(in_faceIndex + in_nFaces) - faceToElementIndex(in_faceIndex);
 }
 
-uint MeshVertexData::Element_To_Face_Count(uint in_elementIndex, uint in_nElements) const {
-	return Face_To_Element_Index(in_elementIndex + in_nElements) - Face_To_Element_Index(in_elementIndex);
+uint MeshVertexData::elementToFaceCount(uint in_elementIndex, uint in_nElements) const {
+	return faceToElementIndex(in_elementIndex + in_nElements) - faceToElementIndex(in_elementIndex);
 }
 
 MeshVertexData::Member::Member() 
@@ -795,15 +795,15 @@ MeshVertexData::Member::Member()
 MeshVertexData::Member::Member(DataType in_type, ubyte in_depth, uint in_nVertices, const void* in_data) :
 	mType(in_type),
 	mDepth(in_depth),
-	mData(((const ubyte*)in_data), ((const ubyte*)in_data) + (in_nVertices * in_depth * Get_Data_Type_Size(in_type)))
+	mData(((const ubyte*)in_data), ((const ubyte*)in_data) + (in_nVertices * in_depth * getDataTypeSize(in_type)))
 {}
 
 MeshVertexData::Member::Member(DataType in_type, ubyte in_depth, uint in_nVertices) :
 	mType(in_type),
 	mDepth(in_depth),
-	mData(in_nVertices * in_depth * Get_Data_Type_Size(in_type))
+	mData(in_nVertices * in_depth * getDataTypeSize(in_type))
 {}
 
-ubyte MeshVertexData::Member::Get_Vertex_Size() const {
-	return mDepth * MeshVertexData::Get_Data_Type_Size(mType);
+ubyte MeshVertexData::Member::getVertexSize() const {
+	return mDepth * MeshVertexData::getDataTypeSize(mType);
 }

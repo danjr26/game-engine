@@ -177,11 +177,11 @@ public:
 		return mMembers[i];
 	}
 
-	T Get(uint i) const {
+	T get(uint i) const {
 		return mMembers[i];
 	}
 
-	bool Has_NaN() {
+	bool hasNan() {
 		for (int i = 0; i < n; i++) {
 			if (std::isnan(mMembers[i])) {
 				return true;
@@ -190,7 +190,7 @@ public:
 		return false;
 	}
 
-	bool Is_Zero() const {
+	bool isZero() const {
 		for (int i = 0; i < n; i++) {
 			if (mMembers[i] != 0) {
 				return false;
@@ -199,7 +199,7 @@ public:
 		return true;
 	}
 
-	T Dot(const Vector<T, n>& v) const {
+	T dot(const Vector<T, n>& v) const {
 		T total = 0;
 		for (int i = 0; i < n; i++) {
 			total += mMembers[i] * v.mMembers[i];
@@ -207,7 +207,7 @@ public:
 		return total;
 	}
 
-	T Dot_Self() const {
+	T dotSelf() const {
 		T total = 0;
 		for (int i = 0; i < n; i++) {
 			total += mMembers[i] * mMembers[i];
@@ -215,41 +215,41 @@ public:
 		return total;
 	}
 
-	T Magnitude() const {
-		return sqrt(Dot_Self());
+	T magnitude() const {
+		return sqrt(dotSelf());
 	}
 
-	void Add_To_Magnitude(T s) {
-		T magnitude = Magnitude();
-		if (magnitude == 0) {
+	void addToMagnitude(T s) {
+		T mag = magnitude();
+		if (mag == 0) {
 			return;
 		}
 		else {
-			*this *= 1 + (s / magnitude);
+			*this *= 1 + (s / mag);
 		}
 	}
 
-	Vector<T, n> Normalized() const {
+	Vector<T, n> normalized() const {
 		Vector<T, n> vOut = mMembers;
-		vOut.Normalize();
+		vOut.normalize();
 		return vOut;
 	}
 
-	void Normalize() {
-		T magnitude = Magnitude();
-		if (magnitude == 0) {
+	void normalize() {
+		T mag = magnitude();
+		if (mag == 0) {
 			return;
 		}
 		else {
-			(*this) /= magnitude;
+			(*this) /= mag;
 		}
 	}
 
-	Vector<T, n> Lerp(T s, const Vector<T, n> v) const {
+	Vector<T, n> lerp(T s, const Vector<T, n> v) const {
 		return *this * ((T)1 - s) + v * s;
 	}
 
-	Vector<T, n> Compwise(const Vector<T, n>& v) const {
+	Vector<T, n> compwise(const Vector<T, n>& v) const {
 		Vector<T, n> vOut = mMembers;
 		for (int i = 0; i < n; i++) {
 			vOut[i] *= v.mMembers[i];
@@ -257,7 +257,7 @@ public:
 		return vOut;
 	}
 
-	T Component_Sum() const {
+	T componentSum() const {
 		T sum = 0;
 		for (uint i = 0; i < n; i++) {
 			sum += mMembers[i];
@@ -265,7 +265,7 @@ public:
 		return sum;
 	}
 
-	T Component_Product() const {
+	T componentProduct() const {
 		T product = 1;
 		for (uint i = 0; i < n; i++) {
 			product *= mMembers[i];
@@ -273,19 +273,19 @@ public:
 		return product;
 	}
 
-	void Component_Invert() {
+	void componentInvert() {
 		for (uint i = 0; i < n; i++) {
 			mMembers[i] = 1 / mMembers[i];
 		}
 	}
 
-	Vector<T, n> Component_Inverted() const {
+	Vector<T, n> componentInverted() const {
 		Vector<T, n> vOut = mMembers;
-		vOut.Component_Invert();
+		vOut.componentInvert();
 		return vOut;
 	}
 
-	T Max_Component() const {
+	T maxComponent() const {
 		T result = mMembers[0];
 		for (uint i = 1; i < n; i++) {
 			if (mMembers[i] > result) {
@@ -295,7 +295,7 @@ public:
 		return result;
 	}
 
-	T Min_Component() const {
+	T minComponent() const {
 		T result = mMembers[0];
 		for (uint i = 1; i < n; i++) {
 			if (mMembers[i] < result) {
@@ -305,24 +305,24 @@ public:
 		return result;
 	}
 
-	T Theta(const Vector<T, n>& v) const {
-		T dot = (*this).Normalized().Dot(v.Normalized());
-		return acos(Clamp<T>(dot, -1, 1));
+	T theta(const Vector<T, n>& v) const {
+		T dot = (*this).normalized().dot(v.normalized());
+		return acos(GEUtil::clamp<T>(dot, -1, 1));
 	}
 
-	T Projection_Coeff(const Vector<T, n>& v) const {
-		return (*this).Dot(v) / v.Dot_Self();
+	T projectionCoeff(const Vector<T, n>& v) const {
+		return (*this).dot(v) / v.dotSelf();
 	}
 
-	Vector<T, n> Projection(const Vector<T, n>& v) const {
-		return v * Projection_Coeff(v);
+	Vector<T, n> projection(const Vector<T, n>& v) const {
+		return v * projectionCoeff(v);
 	}
 
-	const T* Pointer() const {
+	const T* pointer() const {
 		return mMembers;
 	}
 
-	std::string To_String() const {
+	std::string toString() const {
 		std::stringstream ss;
 		ss << "Vector (" << n << ")\n";
 			for (uint i = 0; i < n; i++) {
@@ -335,29 +335,29 @@ public:
 	// Vector1-specific
 
 	template<typename = std::enable_if_t<n >= 1, void>>
-	T X() const {
+	T x() const {
 		return mMembers[0];
 	}
 
 	template<typename = std::enable_if_t<n >= 1, void>>
-	T& X() {
+	T& x() {
 		return mMembers[0];
 	}
 
 	// Vector2-specific
 
 	template<typename = std::enable_if_t<n >= 2, void>>
-	T Y() const {
+	T y() const {
 		return mMembers[1];
 	}
 
 	template<typename = std::enable_if_t<n >= 2, void>>
-	T& Y() {
+	T& y() {
 		return mMembers[1];
 	}
 
 	template<typename = std::enable_if_t<n == 2, void>>
-	void Rotate(T angle) {
+	void rotate(T angle) {
 		T sine = sin(angle);
 		T cosine = cos(angle);
 		T tempX = mMembers[0] * cosine - mMembers[1] * sine;
@@ -366,48 +366,48 @@ public:
 	}
 
 	template<typename = std::enable_if_t<n == 2, void>>
-	Vector<T, 2> Rotated(T angle) const {
+	Vector<T, 2> rotated(T angle) const {
 		Vector<T, 2> vOut = mMembers;
-		vOut.Rotate(angle);
+		vOut.rotate(angle);
 		return vOut;
 	}
 
 	template<typename = std::enable_if_t<n == 2, void>>
-	Vector<T, 2> Orthogonal() const {
+	Vector<T, 2> orthogonal() const {
 		return { mMembers[1], -mMembers[0] };
 	}
 
 	// Vector3-specific
 
 	template<typename = std::enable_if_t<n >= 3, void>>
-	T Z() const {
+	T z() const {
 		return mMembers[2];
 	}
 
 	template<typename = std::enable_if_t<n >= 3, void>>
-	T& Z() {
+	T& z() {
 		return mMembers[2];
 	}
 
 	template<typename = std::enable_if_t<n == 3, void>>
-	void Rotate(const Vector<T, 3>& v) {
-		T angle = v.Magnitude();
+	void rotate(const Vector<T, 3>& v) {
+		T angle = v.magnitude();
 		if (angle == 0) {
 			return;
 		}
 		Vector<T, 3> axis = v / angle;
-		Rotate(axis, angle);
+		rotate(axis, angle);
 	}
 
 	template<typename = std::enable_if_t<n == 3, void>>
-	Vector<T, 3> Rotated(const Vector<T, 3>& v) const {
+	Vector<T, 3> rotated(const Vector<T, 3>& v) const {
 		Vector<T, 3> vOut = mMembers;
-		vOut.Rotate(v);
+		vOut.rotate(v);
 		return vOut;
 	}
 
 	template<typename = std::enable_if_t<n == 3, void>>
-	void Rotate(const Vector<T, 3>& axis, T angle) {
+	void rotate(const Vector<T, 3>& axis, T angle) {
 		if (angle == 0) {
 			return;
 		}
@@ -415,18 +415,18 @@ public:
 		T sine = sin(angle);
 		T cosine = cos(angle);
 
-		*this = *this * cosine + axis.Cross(*this) * sine + axis * axis.Dot(*this) * ((T)1 - cosine);
+		*this = *this * cosine + axis.cross(*this) * sine + axis * axis.dot(*this) * ((T)1 - cosine);
 	}
 
 	template<typename = std::enable_if_t<n == 3, void>>
-	Vector<T, 3> Rotated(const Vector<T, 3>& axis, T angle) const {
+	Vector<T, 3> rotated(const Vector<T, 3>& axis, T angle) const {
 		Vector<T, 3> vOut = mMembers;
-		vOut.Rotate(axis, angle);
+		vOut.rotate(axis, angle);
 		return vOut;
 	}
 
 	template<typename = std::enable_if_t<n == 3, void>>
-	Vector<T, 3> Cross(const Vector<T, 3>& v) const {
+	Vector<T, 3> cross(const Vector<T, 3>& v) const {
 		return Vector<T, 3>(
 			mMembers[1] * v.mMembers[2] - mMembers[2] * v.mMembers[1],
 			mMembers[2] * v.mMembers[0] - mMembers[0] * v.mMembers[2],
@@ -437,17 +437,17 @@ public:
 	// Vector4-specific
 
 	template<typename = std::enable_if_t<n >= 4, void>>
-	T W() const {
+	T w() const {
 		return mMembers[3];
 	}
 
 	template<typename = std::enable_if_t<n >= 4, void>>
-	T& W() {
+	T& w() {
 		return mMembers[3];
 	}
 
 	template<typename = std::enable_if_t<n >= 4, void>>
-	inline Vector<T, 4> Hamilton(const Vector<T, 4>& v) const {
+	inline Vector<T, 4> hamilton(const Vector<T, 4>& v) const {
 		return Vector<T, 4>(
 			mMembers[3] * v.mMembers[0] + mMembers[0] * v.mMembers[3] + mMembers[1] * v.mMembers[2] - mMembers[2] * v.mMembers[1],
 			mMembers[3] * v.mMembers[1] - mMembers[0] * v.mMembers[2] + mMembers[1] * v.mMembers[3] + mMembers[2] * v.mMembers[0],
@@ -457,27 +457,27 @@ public:
 	}
 
 	template<typename = std::enable_if_t<n >= 4, void>>
-	Vector<T, 4> Inverse() const {
+	Vector<T, 4> inverse() const {
 		Vector<T, 4> vOut = mMembers;
-		vOut.Invert();
+		vOut.invert();
 		return vOut;
 	}
 
 	template<typename = std::enable_if_t<n >= 4, void>>
-	void Invert() {
-		Conjugate();
-		(*this) /= Dot_Self();
+	void invert() {
+		conjugate();
+		(*this) /= dotSelf();
 	}
 
 	template<typename = std::enable_if_t<n >= 4, void>>
-	Vector<T, 4> Conjugated() const {
+	Vector<T, 4> conjugated() const {
 		Vector<T, 4> vOut = mMembers;
-		vOut.Conjugate();
+		vOut.conjugate();
 		return vOut;
 	}
 
 	template<typename = std::enable_if_t<n >= 4, void>>
-	void Conjugate() {
+	void conjugate() {
 		mMembers[0] = -mMembers[0];
 		mMembers[1] = -mMembers[1];
 		mMembers[2] = -mMembers[2];

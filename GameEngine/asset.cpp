@@ -2,7 +2,7 @@
 #include "log.h"
 #include "exceptions.h"
 
-void Asset::Set_Name(std::string in_name) {
+void Asset::setName(std::string in_name) {
 	if (in_name == "") {
 		throw InvalidArgumentException("asset name was empty string");
 	}
@@ -14,7 +14,7 @@ void Asset::Set_Name(std::string in_name) {
 	mName = in_name;
 }
 
-void Asset::Clear_Name() {
+void Asset::clearName() {
 	mName = "";
 }
 
@@ -25,6 +25,6 @@ Asset::Asset() :
 Asset::~Asset()
 {}
 
-std::string Asset::Get_Name() {
+std::string Asset::getName() {
 	return mName;
 }

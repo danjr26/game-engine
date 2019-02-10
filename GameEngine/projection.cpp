@@ -26,23 +26,23 @@ Projection<T>::Projection(Vector<T, 3> in_minima, Vector<T, 3> in_maxima, Type i
 {}
 
 template<class T>
-T Projection<T>::Get_View_Angle() {
+T Projection<T>::getViewAngle() {
 	return atan(mMaxima[0] / mMinima[2]);
 }
 
 template<class T>
-void Projection<T>::Set_View_Angle(T in_value) {
+void Projection<T>::setViewAngle(T in_value) {
 	mMaxima[0] = tan(in_value) * mMinima[2];
 	mMinima[0] = -mMaxima[0];
 }
 
 template<class T>
-Matrix<T, 4, 4> Projection<T>::Get_Matrix() {
+Matrix<T, 4, 4> Projection<T>::getMatrix() {
 	if (type == Type::perspective) {
-		return Matrix<T, 4, 4>::Perspective(mMinima, mMaxima);
+		return Matrix<T, 4, 4>::perspective(mMinima, mMaxima);
 	}
 	else {
-		return Matrix<T, 4, 4>::Orthographic(mMinima, mMaxima);
+		return Matrix<T, 4, 4>::orthographic(mMinima, mMaxima);
 	}
 }
 

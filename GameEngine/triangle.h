@@ -13,45 +13,45 @@ private:
 public:
 	Triangle();
 
-	void Apply_Transform(const Transform<T, n>& in_transform);
+	void applyTransform(const Transform<T, n>& in_transform);
 
-	void Get_Points(Vector<T, n>* out_points) const;
-	void Get_Point_Offsets(Vector<T, n>* out_offsets) const;
+	void getPoints(Vector<T, n>* out_points) const;
+	void getPointOffsets(Vector<T, n>* out_offsets) const;
 
-	T Get_Angle(uint in_index) const;
-	T Get_Side_Length(uint in_index) const;
+	T getAngle(uint in_index) const;
+	T getSideLength(uint in_index) const;
 
 	template<typename = typename std::enable_if_t<n == 2, void>>
-	void Get_Lazy_Normals(Vector<T, n>* out_lazyNormals) const;
+	void getLazyNormals(Vector<T, n>* out_lazyNormals) const;
 	template<typename = typename std::enable_if_t<n == 2, void>>
-	void Get_Normals(Vector<T, n>* out_Normals) const;
+	void getNormals(Vector<T, n>* out_Normals) const;
 	template<typename = typename std::enable_if_t<n = 3, void>>
-	Vector<T, n> Get_Lazy_Normal() const;
+	Vector<T, n> getLazyNormal() const;
 	template<typename = typename std::enable_if_t<n = 3, void>>
-	Vector<T, n> Get_Normal() const;
+	Vector<T, n> getNormal() const;
 
 	Vector<T, n>& operator[](uint in_index);
-	Vector<T, n> Get_Point(uint in_index) const;
-	Vector<T, n> Get_Point_Offset(uint in_index) const;
+	Vector<T, n> getPoint(uint in_index) const;
+	Vector<T, n> getPointOffset(uint in_index) const;
 
 	template<typename = typename std::enable_if_t<n == 2, void>>
-	T Get_Area() const;
+	T getArea() const;
 	template<typename = typename std::enable_if_t<n == 3, void>, typename = void>
-	T Get_Area() const;
-	T Get_Perimeter() const;
+	T getArea() const;
+	T getPerimeter() const;
 
-	T Get_Circumradius() const;
-	Vector<T, n> Get_Circumcenter() const;
+	T getCircumradius() const;
+	Vector<T, n> getCircumcenter() const;
 
-	Vector<T, n> Random_Point_Boundary() const;
+	Vector<T, n> randomPointBoundary() const;
 	template<typename = typename std::enable_if_t<n == 2, void>>
-	Vector<T, n> Random_Point_Inside() const;
+	Vector<T, n> randomPointInside() const;
 	template<typename = typename std::enable_if_t<n == 3, void>, typename = void>
-	Vector<T, n> Random_Point_Inside() const;
+	Vector<T, n> randomPointInside() const;
 
 public:
-	static Triangle<T, n> From_Points(const Vector<T, n>* in_points);
-	static Triangle<T, n> From_Points(const Vector<T, n>& in_point1, const Vector<T, n>& in_point2, const Vector<T, n>& in_point3);
+	static Triangle<T, n> fromPoints(const Vector<T, n>* in_points);
+	static Triangle<T, n> fromPoints(const Vector<T, n>& in_point1, const Vector<T, n>& in_point2, const Vector<T, n>& in_point3);
 };
 
 using Triangle2f = Triangle<float, 2>;

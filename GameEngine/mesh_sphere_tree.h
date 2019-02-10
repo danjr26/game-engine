@@ -37,13 +37,13 @@ public:
 	public:
 		Iterator(const MeshSphereTree<T, n>& in_tree);
 
-		void Go_Left();
-		void Go_Right();
-		Iterator Go_Both();
+		void goLeft();
+		void goRight();
+		Iterator goBoth();
 
-		const Sphere<T, n>& Get_Sphere() const;
-		Triangle<T, n> Get_Triangle() const;
-		bool Is_Leaf() const;
+		const Sphere<T, n>& getSphere() const;
+		Triangle<T, n> getTriangle() const;
+		bool isLeaf() const;
 	};
 
 private:
@@ -57,15 +57,15 @@ public:
 
 	void operator=(const MeshSphereTree& in_other);
 
-	const MeshVertexData& Get_Mesh_Data() const;
+	const MeshVertexData& getMeshData() const;
 
-	void Apply_Transform(const Transform<T, n>& in_transform);
+	void applyTransform(const Transform<T, n>& in_transform);
 
-	Iterator Get_Iterator() const;
+	Iterator getIterator() const;
 
 private:
-	void Build_Tree();
-	void Destroy_Tree();
+	void buildTree();
+	void destroyTree();
 };
 
 using MeshSphereTree2f = MeshSphereTree<float, 2>;

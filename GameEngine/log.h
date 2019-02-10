@@ -1,7 +1,7 @@
 #ifndef LOG_H
 #define LOG_H
 
-#include <Windows.h>
+#include <windows.h>
 #include <string>
 #include <mutex>
 #include "exceptions.h"

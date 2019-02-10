@@ -17,93 +17,93 @@ GameEngine::~GameEngine() {
 	instance = nullptr;
 }
 
-FrameRateManager& GameEngine::Frame_Rate() {
+FrameRateManager& GameEngine::frameRate() {
 	return mFrameRateManager;
 }
 
-PerFrameUpdateManager& GameEngine::Per_Frame_Update() {
+PerFrameUpdateManager& GameEngine::perFrameUpdate() {
 	return mPerFrameUpdateManager;
 }
 
-InputManager& GameEngine::Input() {
+InputManager& GameEngine::input() {
 	return mInputManager;
 }
 
-CameraManager& GameEngine::Cameras() {
+CameraManager& GameEngine::cameras() {
 	return mCameraManager;
 }
 
-AssetManager& GameEngine::Assets() {
+AssetManager& GameEngine::assets() {
 	return mAssetManager;
 }
 
-FontManager& GameEngine::Fonts() {
+FontManager& GameEngine::fonts() {
 	return mFontManager;
 }
 
-RenderManager& GameEngine::Render() {
+RenderManager& GameEngine::render() {
 	return mRenderManager;
 }
 
-WindowManager& GameEngine::Windows() {
+WindowManager& GameEngine::windows() {
 	return mWindowManager;
 }
 
-CollisionManagerd& GameEngine::Collision() {
+CollisionManagerd& GameEngine::collision() {
 	return mCollisionManager;
 }
 
-AsyncTaskManager& GameEngine::Async() {
+AsyncTaskManager& GameEngine::async() {
 	return mAsyncTaskManager;
 }
 
-PhysicsManager& GameEngine::Physics() {
+PhysicsManager& GameEngine::physics() {
 	return mPhysicsManager;
 }
 
-Clock& GameEngine::Time() {
+Clock& GameEngine::clock() {
     return mClock;
 }
 
-void GameEngine::Begin() {
+void GameEngine::begin() {
 	try {
 		if (mHasBegun) {
 			throw ProcessFailureException("game engine already started");
 		}
 		mHasBegun = true;
 
-		mFrameRateManager.Reset_Timer();
+		mFrameRateManager.resetTimer();
 
 		for (uint i = 0; true; i++) {
-			Next_Frame();
-			mFrameRateManager.Yield_Until_Next_Frame();
+			nextFrame();
+			mFrameRateManager.yieldUntilNextFrame();
 		}
 	}
 	catch (const std::exception& e) {
-		Handle_Fatal_Exception(e);
+		handleFatalException(e);
 	}
 	catch (...) {
-		Handle_Fatal_Exception();
+		handleFatalException();
 	}
 }
 
-void GameEngine::Exit() {
+void GameEngine::quit() {
 	delete this;
 	exit(0);
 }
 
-GameEngine& GameEngine::Instance() {
+GameEngine& GameEngine::getInstance() {
 	return *instance;
 }
 
-void GameEngine::Next_Frame() {
+void GameEngine::nextFrame() {
 	static uint count = 0;
 	static uint cCount = 0;
 	static uint rCount = 0;
 	static double t = 0.0;
 
 	cCount++;
-	double now = GE.Time().Now();
+	double now = GE.clock().now();
 	if (now - t >= 1.0) {
 		count++;
 		Log::main(std::string("second ") + std::to_string(count) + ":");
@@ -114,21 +114,21 @@ void GameEngine::Next_Frame() {
 		rCount = 0;
 	}
 
-	double dt = mFrameRateManager.Get_Dt();
-	double t1 = GE.Time().Now();
-	mInputManager.Update();
-	mCollisionManager.Update();
-	mPhysicsManager.Update(dt);
-	mPerFrameUpdateManager.Update(dt);
-	double t2 = GE.Time().Now();
-	if (!mFrameRateManager.Is_Lean_Frame()) {
+	double dt = mFrameRateManager.getDt();
+	double t1 = GE.clock().now();
+	mInputManager.update();
+	mCollisionManager.update();
+	mPhysicsManager.update(dt);
+	mPerFrameUpdateManager.update(dt);
+	double t2 = GE.clock().now();
+	if (!mFrameRateManager.isLeanFrame()) {
 		//glFinish();
 		rCount++;
-		mRenderManager.mMainWindow->Flip_Buffers();
-		mRenderManager.Render_Frame();
+		mRenderManager.mMainWindow->flipBuffers();
+		mRenderManager.renderFrame();
 	}
 
-	double t3 = GE.Time().Now();
+	double t3 = GE.clock().now();
 
 	//Log::main(std::string("Calc: ") + std::to_string((t2 - t1) * 1000.0));
 	//Log::main(std::string("Rend: ") + std::to_string((t3 - t2) * 1000.0));

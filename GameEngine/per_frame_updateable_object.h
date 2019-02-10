@@ -12,9 +12,9 @@ protected:
 public:
 	PerFrameUpdateableObject();
 	virtual ~PerFrameUpdateableObject();
-	virtual void Update(double in_dt) = 0;
-	void Next_Frame(double in_dt);
-	void Skip_Frames(ubyte in_numberToSkip);
+	virtual void update(double in_dt) = 0;
+	void nextFrame(double in_dt);
+	void skipFrames(ubyte in_numberToSkip);
 };
 
 #endif

@@ -11,9 +11,9 @@ private:
 
 public:
 	KeyboardState();
-	bool Is_Down(Key in_key) const;
-	void Set_Key(Key in_key, bool in_value);
-	void Process_Raw_Event(const RawInputEvent& in_event);
+	bool isDown(Key in_key) const;
+	void setKey(Key in_key, bool in_value);
+	void processRawEvent(const RawInputEvent& in_event);
 };
 
 #endif

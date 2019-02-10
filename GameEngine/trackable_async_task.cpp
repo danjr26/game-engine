@@ -11,11 +11,11 @@ mProgress(0)
 {}
 
 template<class T>
-bool TrackableAsyncTask<T>::Has_Changed() {
+bool TrackableAsyncTask<T>::hasChanged() {
 	return mHasChanged.load();
 }
 
 template<class T>
-T TrackableAsyncTask<T>::Get_Progress() {
+T TrackableAsyncTask<T>::getProgress() {
 	return mProgress.load();
 }

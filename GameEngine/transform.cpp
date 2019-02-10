@@ -13,202 +13,202 @@ Transform<T, n>::Transform() :
 }
 
 template<class T, uint n>
-Transform<T, n>* Transform<T, n>::Get_Parent() {
+Transform<T, n>* Transform<T, n>::getParent() {
 	return mParent;
 }
 
 template<class T, uint n>
-Transform<T, n> const* Transform<T, n>::Get_Const_Parent() const {
+Transform<T, n> const* Transform<T, n>::getConstParent() const {
 	return mParent;
 }
 
 template<class T, uint n>
-void Transform<T, n>::Set_Parent(Transform* in_parent) {
+void Transform<T, n>::setParent(Transform* in_parent) {
 	mParent = in_parent;
 }
 
 template<class T, uint n>
-bool Transform<T, n>::Is_Local_Identity() const {
-	return mTranslation.Is_Zero() && mScale.Is_Zero() && mRotation.Is_Identity();
+bool Transform<T, n>::isLocalIdentity() const {
+	return mTranslation.isZero() && mScale.isZero() && mRotation.isIdentity();
 }
 
 template<class T, uint n>
-bool Transform<T, n>::Is_World_Identity() const {
+bool Transform<T, n>::isWorldIdentity() const {
 	for (Transform const* transform = mParent; transform != nullptr; transform = transform->mParent) {
-		if (!transform->Is_Local_Identity()) return false;
+		if (!transform->isLocalIdentity()) return false;
 	}
 	return true;
 }
 
 template<class T, uint n>
-Rotation<T, n> Transform<T, n>::Get_Local_Rotation() const {
+Rotation<T, n> Transform<T, n>::getLocalRotation() const {
 	return mRotation;
 }
 
 template<class T, uint n>
-Rotation<T, n> Transform<T, n>::Get_World_Rotation() const {
+Rotation<T, n> Transform<T, n>::getWorldRotation() const {
 	if (mParent == nullptr) return mRotation;
-	else return Local_To_World_Rotation(mRotation);
+	else return localToWorldRotation(mRotation);
 }
 
 template<class T, uint n>
-void Transform<T, n>::Set_Local_Rotation(const Rotation<T, n>& in_rotation) {
+void Transform<T, n>::setLocalRotation(const Rotation<T, n>& in_rotation) {
 	mRotation = in_rotation;
 }
 
 template<class T, uint n>
-void Transform<T, n>::Set_World_Rotation(const Rotation<T, n>& in_rotation) {
+void Transform<T, n>::setWorldRotation(const Rotation<T, n>& in_rotation) {
 	if (mParent == nullptr) mRotation = in_rotation;
-	else mRotation = World_To_Local_Rotation(in_rotation);
+	else mRotation = worldToLocalRotation(in_rotation);
 }
 
 template<class T, uint n>
-void Transform<T, n>::Rotate_Local(const Rotation<T, n>& in_rotation) {
-	mRotation = in_rotation.Followed_By(mRotation);
+void Transform<T, n>::rotateLocal(const Rotation<T, n>& in_rotation) {
+	mRotation = in_rotation.followedBy(mRotation);
 }
 
 template<class T, uint n>
-void Transform<T, n>::Rotate_World(const Rotation<T, n>& in_rotation) {
-	if (mParent == nullptr) mRotation = mRotation.Followed_By(in_rotation);
-	else mRotation = mRotation.Followed_By(World_To_Local_Rotation(in_rotation));
+void Transform<T, n>::rotateWorld(const Rotation<T, n>& in_rotation) {
+	if (mParent == nullptr) mRotation = mRotation.followedBy(in_rotation);
+	else mRotation = mRotation.followedBy(worldToLocalRotation(in_rotation));
 }
 
 template<class T, uint n>
-void Transform<T, n>::Rotate_Local_Around_Local_Point(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point) {
+void Transform<T, n>::rotateLocalAroundLocalPoint(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point) {
 	Vector<T, n> tempPoint = in_point;
-	mRotation = in_rotation.Followed_By(mRotation);
-	mTranslation = in_rotation.Apply_To(mTranslation - tempPoint) + tempPoint;
+	mRotation = in_rotation.followedBy(mRotation);
+	mTranslation = in_rotation.applyTo(mTranslation - tempPoint) + tempPoint;
 }
 
 template<class T, uint n>
-void Transform<T, n>::Rotate_World_Around_Local_Point(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point) {
+void Transform<T, n>::rotateWorldAroundLocalPoint(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point) {
 	Vector<T, n> tempPoint = in_point;
 	Rotation<T, n> tempRotation =
 		(mParent == nullptr) ?
 		in_rotation :
-		World_To_Local_Rotation(in_rotation);
+		worldToLocalRotation(in_rotation);
 
-	mRotation = mRotation.Followed_By(tempRotation);
-	mTranslation = tempRotation.Apply_To(mTranslation - tempPoint) + tempPoint;
+	mRotation = mRotation.followedBy(tempRotation);
+	mTranslation = tempRotation.applyTo(mTranslation - tempPoint) + tempPoint;
 }
 
 template<class T, uint n>
-void Transform<T, n>::Rotate_Local_Around_World_Point(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point) {
+void Transform<T, n>::rotateLocalAroundWorldPoint(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point) {
 	Vector<T, n> tempPoint =
 		(mParent == nullptr) ?
 		in_point :
-		World_To_Local_Point(in_point);
+		worldToLocalPoint(in_point);
 
-	mRotation = in_rotation.Followed_By(mRotation);
-	mTranslation = in_rotation.Apply_To(mTranslation - tempPoint) + tempPoint;
+	mRotation = in_rotation.followedBy(mRotation);
+	mTranslation = in_rotation.applyTo(mTranslation - tempPoint) + tempPoint;
 }
 
 template<class T, uint n>
-void Transform<T, n>::Rotate_World_Around_World_Point(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point) {
+void Transform<T, n>::rotateWorldAroundWorldPoint(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point) {
 	Vector<T, n> tempPoint =
 		(mParent == nullptr) ?
 		in_point :
-		World_To_Local_Point(in_point);
+		worldToLocalPoint(in_point);
 
 	Rotation<T, n> tempRotation =
 		(mParent == nullptr) ?
 		in_rotation :
-		World_To_Local_Rotation(in_rotation);
+		worldToLocalRotation(in_rotation);
 		
-	mRotation = mRotation.Followed_By(tempRotation);
-	mTranslation = tempRotation.Apply_To(mTranslation - tempPoint) + tempPoint;
+	mRotation = mRotation.followedBy(tempRotation);
+	mTranslation = tempRotation.applyTo(mTranslation - tempPoint) + tempPoint;
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::Get_Local_Scale() const {
+Vector<T, n> Transform<T, n>::getLocalScale() const {
 	return mScale;
 }
 
 template<class T, uint n>
-void Transform<T, n>::Set_Local_Scale(const Vector<T, n>& in_factor) {
+void Transform<T, n>::setLocalScale(const Vector<T, n>& in_factor) {
 	mScale = in_factor;
 }
 
 template<class T, uint n>
-void Transform<T, n>::Scale_Local(const Vector<T, n>& in_factor) {
-	mScale = mScale.Compwise(in_factor);
+void Transform<T, n>::scaleLocal(const Vector<T, n>& in_factor) {
+	mScale = mScale.compwise(in_factor);
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::Get_Local_Position() const {
+Vector<T, n> Transform<T, n>::getLocalPosition() const {
 	return mTranslation;
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::Get_World_Position() const {
-	return Local_To_World_Point(mTranslation);
+Vector<T, n> Transform<T, n>::getWorldPosition() const {
+	return localToWorldPoint(mTranslation);
 }
 
 template<class T, uint n>
-void Transform<T, n>::Set_Local_Position(const Vector<T, n>& in_position) {
+void Transform<T, n>::setLocalPosition(const Vector<T, n>& in_position) {
 	mTranslation = in_position;
 }
 
 template<class T, uint n>
-void Transform<T, n>::Translate_Local(const Vector<T, n>& in_translation) {
+void Transform<T, n>::translateLocal(const Vector<T, n>& in_translation) {
 	mTranslation += in_translation;
 }
 
 template<class T, uint n>
-void Transform<T, n>::Translate_World(const Vector<T, n>& in_translation) {
+void Transform<T, n>::translateWorld(const Vector<T, n>& in_translation) {
 	mTranslation +=
 		(mParent == nullptr) ?
 		in_translation :
-		World_To_Local_Vector(in_translation);
+		worldToLocalVector(in_translation);
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::Apply_To_Local_Point(const Vector<T, n>& in_point) const {
+Vector<T, n> Transform<T, n>::applyToLocalPoint(const Vector<T, n>& in_point) const {
 	Vector<T, n> tempPoint = in_point;
-	tempPoint = tempPoint.Compwise(mScale);
-	tempPoint = mRotation.Apply_To(tempPoint);
+	tempPoint = tempPoint.compwise(mScale);
+	tempPoint = mRotation.applyTo(tempPoint);
 	tempPoint += mTranslation;
 	return tempPoint;
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::Apply_To_World_Point(const Vector<T, n>& in_point) const {
-	Vector<T, n> tempPoint = World_To_Local_Point(in_point);
-	tempPoint = Apply_To_Local_Point(tempPoint);
-	return Local_To_World_Point(tempPoint);
+Vector<T, n> Transform<T, n>::applyToWorldPoint(const Vector<T, n>& in_point) const {
+	Vector<T, n> tempPoint = worldToLocalPoint(in_point);
+	tempPoint = applyToLocalPoint(tempPoint);
+	return localToWorldPoint(tempPoint);
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::Apply_To_Local_Direction(const Vector<T, n>& in_direction) const {
+Vector<T, n> Transform<T, n>::applyToLocalDirection(const Vector<T, n>& in_direction) const {
 	Vector<T, n> tempDirection = in_direction;
-	tempDirection = mRotation.Apply_To(tempDirection);
+	tempDirection = mRotation.applyTo(tempDirection);
 	return tempDirection;
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::Apply_To_World_Direction(const Vector<T, n>& in_direction) const {
-	Vector<T, n> tempDirection = World_To_Local_Direction(in_direction);
-	tempDirection = Apply_To_Local_Direction(tempDirection);
-	return Local_To_World_Direction(tempDirection);
+Vector<T, n> Transform<T, n>::applyToWorldDirection(const Vector<T, n>& in_direction) const {
+	Vector<T, n> tempDirection = worldToLocalDirection(in_direction);
+	tempDirection = applyToLocalDirection(tempDirection);
+	return localToWorldDirection(tempDirection);
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::Apply_To_Local_Vector(const Vector<T, n>& in_vector) const {
+Vector<T, n> Transform<T, n>::applyToLocalVector(const Vector<T, n>& in_vector) const {
 	Vector<T, n> tempVector = in_vector;
-	tempVector = tempVector.Compwise(mScale);
-	tempVector = mRotation.Apply_To(tempVector);
+	tempVector = tempVector.compwise(mScale);
+	tempVector = mRotation.applyTo(tempVector);
 	return tempVector;
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::Apply_To_World_Vector(const Vector<T, n>& in_vector) const {
-	Vector<T, n> tempVector = World_To_Local_Vector(in_vector);
-	tempVector = Apply_To_Local_Vector(tempVector);
-	return Local_To_World_Vector(tempVector);
+Vector<T, n> Transform<T, n>::applyToWorldVector(const Vector<T, n>& in_vector) const {
+	Vector<T, n> tempVector = worldToLocalVector(in_vector);
+	tempVector = applyToLocalVector(tempVector);
+	return localToWorldVector(tempVector);
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::World_To_Local_Point(const Vector<T, n>& in_point) const {
+Vector<T, n> Transform<T, n>::worldToLocalPoint(const Vector<T, n>& in_point) const {
 	std::vector<Transform*> chain;
 	for (Transform* transform = mParent; transform != nullptr; transform = transform->mParent) {
 		chain.push_back(transform);
@@ -217,25 +217,25 @@ Vector<T, n> Transform<T, n>::World_To_Local_Point(const Vector<T, n>& in_point)
 	Vector<T, n> tempPoint = in_point;
 	for (int i = (int)chain.size() - 1; i >= 0; i--) {
 		tempPoint -= chain[i]->mTranslation;
-		tempPoint = chain[i]->mRotation.Get_Inverse().Apply_To(tempPoint);
-		tempPoint = tempPoint.Compwise(chain[i]->mScale.Component_Inverted());
+		tempPoint = chain[i]->mRotation.getInverse().applyTo(tempPoint);
+		tempPoint = tempPoint.compwise(chain[i]->mScale.componentInverted());
 	}
 	return tempPoint;
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::Local_To_World_Point(const Vector<T, n>& in_point) const {
+Vector<T, n> Transform<T, n>::localToWorldPoint(const Vector<T, n>& in_point) const {
 	Vector<T, n> tempPoint = in_point;
 	for (Transform const* transform = mParent; transform != nullptr; transform = transform->mParent) {
-		tempPoint = tempPoint.Compwise(transform->mScale);
-		tempPoint = transform->mRotation.Apply_To(tempPoint);
+		tempPoint = tempPoint.compwise(transform->mScale);
+		tempPoint = transform->mRotation.applyTo(tempPoint);
 		tempPoint += transform->mTranslation;
 	}
 	return tempPoint;
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::World_To_Local_Direction(const Vector<T, n>& in_direction) const {
+Vector<T, n> Transform<T, n>::worldToLocalDirection(const Vector<T, n>& in_direction) const {
 	std::vector<Transform*> chain;
 	for (Transform* transform = mParent; transform != nullptr; transform = transform->mParent) {
 		chain.push_back(transform);
@@ -243,22 +243,22 @@ Vector<T, n> Transform<T, n>::World_To_Local_Direction(const Vector<T, n>& in_di
 
 	Vector<T, n> tempDirection = in_direction;
 	for (int i = (int)chain.size() - 1; i >= 0; i--) {
-		tempDirection = chain[i]->mRotation.Get_Inverse().Apply_To(tempDirection);
+		tempDirection = chain[i]->mRotation.getInverse().applyTo(tempDirection);
 	}
 	return tempDirection;
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::Local_To_World_Direction(const Vector<T, n>& in_direction) const {
+Vector<T, n> Transform<T, n>::localToWorldDirection(const Vector<T, n>& in_direction) const {
 	Vector<T, n> tempDirection = in_direction;
 	for (Transform const* transform = mParent; transform != nullptr; transform = transform->mParent) {
-		tempDirection = transform->mRotation.Apply_To(tempDirection);
+		tempDirection = transform->mRotation.applyTo(tempDirection);
 	}
 	return tempDirection;
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::World_To_Local_Vector(const Vector<T, n>& in_vector) const {
+Vector<T, n> Transform<T, n>::worldToLocalVector(const Vector<T, n>& in_vector) const {
 	std::vector<Transform*> chain;
 	for (Transform* transform = mParent; transform != nullptr; transform = transform->mParent) {
 		chain.push_back(transform);
@@ -266,65 +266,65 @@ Vector<T, n> Transform<T, n>::World_To_Local_Vector(const Vector<T, n>& in_vecto
 
 	Vector<T, n> tempVector = in_vector;
 	for (int i = (int)chain.size() - 1; i >= 0; i--) {
-		tempVector = chain[i]->mRotation.Get_Inverse().Apply_To(tempVector);
-		tempVector = tempVector.Compwise(chain[i]->mScale.Component_Inverted());
+		tempVector = chain[i]->mRotation.getInverse().applyTo(tempVector);
+		tempVector = tempVector.compwise(chain[i]->mScale.componentInverted());
 	}
 	return tempVector;
 }
 
 template<class T, uint n>
-Vector<T, n> Transform<T, n>::Local_To_World_Vector(const Vector<T, n>& in_vector) const {
+Vector<T, n> Transform<T, n>::localToWorldVector(const Vector<T, n>& in_vector) const {
 	Vector<T, n> tempVector = in_vector;
 	for (Transform const* transform = mParent; transform != nullptr; transform = transform->mParent) {
-		tempVector = tempVector.Compwise(transform->mScale);
-		tempVector = transform->mRotation.Apply_To(tempVector);
+		tempVector = tempVector.compwise(transform->mScale);
+		tempVector = transform->mRotation.applyTo(tempVector);
 	}
 	return tempVector;
 }
 
 template<class T, uint n>
-Rotation<T, n> Transform<T, n>::World_To_Local_Rotation(const Rotation<T, n>& in_rotation) const {
+Rotation<T, n> Transform<T, n>::worldToLocalRotation(const Rotation<T, n>& in_rotation) const {
 	Rotation<T, n> tempRotation = in_rotation;
 	for (Transform const* transform = mParent; transform != nullptr; transform = transform->mParent) {
-		tempRotation = tempRotation.Followed_By(transform->mRotation.Get_Inverse());
+		tempRotation = tempRotation.followedBy(transform->mRotation.getInverse());
 	}
 	return tempRotation;
 }
 
 template<class T, uint n>
-Rotation<T, n> Transform<T, n>::Local_To_World_Rotation(const Rotation<T, n>& in_rotation) const {
+Rotation<T, n> Transform<T, n>::localToWorldRotation(const Rotation<T, n>& in_rotation) const {
 	Rotation<T, n> tempRotation = in_rotation;
 	for (Transform const* transform = mParent; transform != nullptr; transform = transform->mParent) {
-		tempRotation = transform->mRotation.Followed_By(tempRotation);
+		tempRotation = transform->mRotation.followedBy(tempRotation);
 	}
 	return tempRotation;
 }
 
 template<class T, uint n>
-Matrix<T, 4, 4> Transform<T, n>::Get_Local_Matrix() const {
-	return Matrix<T, 4, 4>::Translation(Vector<T, 3>(mTranslation)) * mRotation.Get_Matrix() * Matrix<T, 4, 4>::Scale(Vector<T, 3>(mScale));
+Matrix<T, 4, 4> Transform<T, n>::getLocalMatrix() const {
+	return Matrix<T, 4, 4>::translation(Vector<T, 3>(mTranslation)) * mRotation.getMatrix() * Matrix<T, 4, 4>::scale(Vector<T, 3>(mScale));
 }
 
 template<class T, uint n>
-Matrix<T, 4, 4> Transform<T, n>::Get_World_Matrix() const {
-	Matrix<T, 4, 4> tempMatrix = Get_Local_Matrix();
+Matrix<T, 4, 4> Transform<T, n>::getWorldMatrix() const {
+	Matrix<T, 4, 4> tempMatrix = getLocalMatrix();
 	for (Transform const* transform = mParent; transform != nullptr; transform = transform->mParent) {
-		tempMatrix = transform->Get_Local_Matrix() * tempMatrix;
+		tempMatrix = transform->getLocalMatrix() * tempMatrix;
 	}
 	return tempMatrix;
 }
 
 template<class T, uint n>
-Matrix<T, 4, 4> Transform<T, n>::Get_Local_Inverse_Matrix() const {
-	return Matrix<T, 4, 4>::Translation(-Vector<T, 3>(mTranslation)) * mRotation.Get_Inverse().Get_Matrix() * 
-		Matrix<T, 4, 4>::Scale(Vector<T, 3>(mScale.Component_Inverted()));
+Matrix<T, 4, 4> Transform<T, n>::getLocalInverseMatrix() const {
+	return Matrix<T, 4, 4>::translation(-Vector<T, 3>(mTranslation)) * mRotation.getInverse().getMatrix() * 
+		Matrix<T, 4, 4>::scale(Vector<T, 3>(mScale.componentInverted()));
 }
 
 template<class T, uint n>
-Matrix<T, 4, 4> Transform<T, n>::Get_World_Inverse_Matrix() const {
-	Matrix<T, 4, 4> tempMatrix = Get_Local_Inverse_Matrix();
+Matrix<T, 4, 4> Transform<T, n>::getWorldInverseMatrix() const {
+	Matrix<T, 4, 4> tempMatrix = getLocalInverseMatrix();
 	for (Transform const* transform = mParent; transform != nullptr; transform = transform->mParent) {
-		tempMatrix = transform->Get_Local_Inverse_Matrix() * tempMatrix;
+		tempMatrix = transform->getLocalInverseMatrix() * tempMatrix;
 	}
 	return tempMatrix;
 }

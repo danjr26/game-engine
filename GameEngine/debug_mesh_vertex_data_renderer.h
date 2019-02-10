@@ -16,9 +16,9 @@ private:
 public:
 	DebugMeshVertexDataRenderer(MeshVertexData* in_meshVertexData, const ColorRGBAf& in_fillColor = ColorRGBAf(0.6, 0.6, 0.6, 1.0), 
 		const ColorRGBAf& in_wireframeColor = ColorRGBAf(1.0, 1.0, 1.0, 1.0));
-	virtual double Z() const override;
-	virtual bool Should_Cull() const override;
-	virtual void Render() override;
+	virtual double z() const override;
+	virtual bool shouldCull() const override;
+	virtual void render() override;
 };
 
 #endif

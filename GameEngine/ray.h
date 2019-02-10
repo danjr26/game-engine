@@ -12,17 +12,17 @@ private:
 	Ray(const Vector<T, n>& in_point, const Vector<T, n>& in_direction);
 
 public:
-	void Apply_Transform(const Transform<T, n>& in_transform);
+	void applyTransform(const Transform<T, n>& in_transform);
 
-	Vector<T, n> Get_Point() const;
-	Vector<T, n> Get_Direction() const;
-	T Get_Projection_Coefficient() const;
-	T Get_Projection_Coefficient(const Vector<T, n>& in_point) const;
-	Vector<T, n> Get_Projection(const Vector<T, n>& in_point) const;
+	Vector<T, n> getPoint() const;
+	Vector<T, n> getDirection() const;
+	T getProjectionCoefficient() const;
+	T getProjectionCoefficient(const Vector<T, n>& in_point) const;
+	Vector<T, n> getProjection(const Vector<T, n>& in_point) const;
 
 public:
-	static Ray<T, n> From_Point_Direction(const Vector<T, n>& in_point, const Vector<T, n>& in_direction);
-	static Ray<T, n> From_Points(const Vector<T, n>& in_point1, const Vector<T, n>& in_point2);
+	static Ray<T, n> fromPointDirection(const Vector<T, n>& in_point, const Vector<T, n>& in_direction);
+	static Ray<T, n> fromPoints(const Vector<T, n>& in_point1, const Vector<T, n>& in_point2);
 };
 
 using Ray2f = Ray<float, 2>;

@@ -27,54 +27,54 @@ public:
 		mRotation(in_other.mRotation)
 	{}
 
-	Transform<T, n>* Get_Parent();
-	Transform<T, n> const* Get_Const_Parent() const;
-	void Set_Parent(Transform<T, n>* in_parent);
+	Transform<T, n>* getParent();
+	Transform<T, n> const* getConstParent() const;
+	void setParent(Transform<T, n>* in_parent);
 
-	bool Is_Local_Identity() const;
-	bool Is_World_Identity() const;
+	bool isLocalIdentity() const;
+	bool isWorldIdentity() const;
 
-	Rotation<T, n> Get_Local_Rotation() const;
-	Rotation<T, n> Get_World_Rotation() const;
-	void Set_Local_Rotation(const Rotation<T, n>& in_rotation);
-	void Set_World_Rotation(const Rotation<T, n>& in_rotation);
-	void Rotate_Local(const Rotation<T, n>& in_rotation);
-	void Rotate_World(const Rotation<T, n>& in_rotation);
-	void Rotate_Local_Around_Local_Point(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point);
-	void Rotate_World_Around_Local_Point(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point);
-	void Rotate_Local_Around_World_Point(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point);
-	void Rotate_World_Around_World_Point(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point);
+	Rotation<T, n> getLocalRotation() const;
+	Rotation<T, n> getWorldRotation() const;
+	void setLocalRotation(const Rotation<T, n>& in_rotation);
+	void setWorldRotation(const Rotation<T, n>& in_rotation);
+	void rotateLocal(const Rotation<T, n>& in_rotation);
+	void rotateWorld(const Rotation<T, n>& in_rotation);
+	void rotateLocalAroundLocalPoint(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point);
+	void rotateWorldAroundLocalPoint(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point);
+	void rotateLocalAroundWorldPoint(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point);
+	void rotateWorldAroundWorldPoint(const Rotation<T, n>& in_rotation, const Vector<T, n>& in_point);
 
-	Vector<T, n> Get_Local_Scale() const;
-	void Set_Local_Scale(const Vector<T, n>& in_factor);
-	void Scale_Local(const Vector<T, n>& in_factor);
+	Vector<T, n> getLocalScale() const;
+	void setLocalScale(const Vector<T, n>& in_factor);
+	void scaleLocal(const Vector<T, n>& in_factor);
 
-	Vector<T, n> Get_Local_Position() const;
-	Vector<T, n> Get_World_Position() const;
-	void Set_Local_Position(const Vector<T, n>& in_position);
-	void Translate_Local(const Vector<T, n>& in_translation);
-	void Translate_World(const Vector<T, n>& in_translation);
+	Vector<T, n> getLocalPosition() const;
+	Vector<T, n> getWorldPosition() const;
+	void setLocalPosition(const Vector<T, n>& in_position);
+	void translateLocal(const Vector<T, n>& in_translation);
+	void translateWorld(const Vector<T, n>& in_translation);
 
-	Vector<T, n> Apply_To_Local_Point(const Vector<T, n>& in_point) const;
-	Vector<T, n> Apply_To_World_Point(const Vector<T, n>& in_point) const;
-	Vector<T, n> Apply_To_Local_Direction(const Vector<T, n>& in_direction) const;
-	Vector<T, n> Apply_To_World_Direction(const Vector<T, n>& in_direction) const;
-	Vector<T, n> Apply_To_Local_Vector(const Vector<T, n>& in_vector) const;
-	Vector<T, n> Apply_To_World_Vector(const Vector<T, n>& in_vector) const;
+	Vector<T, n> applyToLocalPoint(const Vector<T, n>& in_point) const;
+	Vector<T, n> applyToWorldPoint(const Vector<T, n>& in_point) const;
+	Vector<T, n> applyToLocalDirection(const Vector<T, n>& in_direction) const;
+	Vector<T, n> applyToWorldDirection(const Vector<T, n>& in_direction) const;
+	Vector<T, n> applyToLocalVector(const Vector<T, n>& in_vector) const;
+	Vector<T, n> applyToWorldVector(const Vector<T, n>& in_vector) const;
 
-	Matrix<T, 4, 4> Get_Local_Matrix() const;
-	Matrix<T, 4, 4> Get_World_Matrix() const;
-	Matrix<T, 4, 4> Get_Local_Inverse_Matrix() const;
-	Matrix<T, 4, 4> Get_World_Inverse_Matrix() const;
+	Matrix<T, 4, 4> getLocalMatrix() const;
+	Matrix<T, 4, 4> getWorldMatrix() const;
+	Matrix<T, 4, 4> getLocalInverseMatrix() const;
+	Matrix<T, 4, 4> getWorldInverseMatrix() const;
 
-	Vector<T, n> World_To_Local_Point(const Vector<T, n>& in_point) const;
-	Vector<T, n> Local_To_World_Point(const Vector<T, n>& in_point) const;
-	Vector<T, n> World_To_Local_Direction(const Vector<T, n>& in_direction) const;
-	Vector<T, n> Local_To_World_Direction(const Vector<T, n>& in_direction) const;
-	Vector<T, n> World_To_Local_Vector(const Vector<T, n>& in_vector) const;
-	Vector<T, n> Local_To_World_Vector(const Vector<T, n>& in_vector) const;
-	Rotation<T, n> World_To_Local_Rotation(const Rotation<T, n>& in_rotation) const;
-	Rotation<T, n> Local_To_World_Rotation(const Rotation<T, n>& in_rotation) const;
+	Vector<T, n> worldToLocalPoint(const Vector<T, n>& in_point) const;
+	Vector<T, n> localToWorldPoint(const Vector<T, n>& in_point) const;
+	Vector<T, n> worldToLocalDirection(const Vector<T, n>& in_direction) const;
+	Vector<T, n> localToWorldDirection(const Vector<T, n>& in_direction) const;
+	Vector<T, n> worldToLocalVector(const Vector<T, n>& in_vector) const;
+	Vector<T, n> localToWorldVector(const Vector<T, n>& in_vector) const;
+	Rotation<T, n> worldToLocalRotation(const Rotation<T, n>& in_rotation) const;
+	Rotation<T, n> localToWorldRotation(const Rotation<T, n>& in_rotation) const;
 };
 
 using Transform2f = Transform<float, 2>;

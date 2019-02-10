@@ -44,22 +44,22 @@ private:
 public:
 	TextureSettings(Texture* in_texture);
 
-	void Set_Border_Color(const ColorRGBAc& in_color);
-	void Set_Swizzle(Swizzle in_channel1, Swizzle in_channel2, Swizzle in_channel3, Swizzle in_channel4);
-	void Set_Edge_Case(EdgeCase in_sEdgeCase, EdgeCase in_tEdgeCase, EdgeCase in_rEdgeCase);
-	void Set_Minify_Filter(FilterMode in_filterMode);
-	void Set_Magnify_Filter(FilterMode in_filterMode);
+	void setBorderColor(const ColorRGBAc& in_color);
+	void setSwizzle(Swizzle in_channel1, Swizzle in_channel2, Swizzle in_channel3, Swizzle in_channel4);
+	void setEdgeCase(EdgeCase in_sEdgeCase, EdgeCase in_tEdgeCase, EdgeCase in_rEdgeCase);
+	void setMinifyFilter(FilterMode in_filterMode);
+	void setMagnifyFilter(FilterMode in_filterMode);
 
-	Texture* Get_Texture();
-	ColorRGBAc Get_Border_Color();
-	const Swizzle* Get_Swizzle();
-	EdgeCase Get_S_Edge_Case();
-	EdgeCase Get_T_Edge_Case();
-	EdgeCase Get_R_Edge_Case();
-	FilterMode Get_Minify_Filter();
-	FilterMode Get_Magnify_Filter();
+	Texture* getTexture();
+	ColorRGBAc getBorderColor();
+	const Swizzle* getSwizzle();
+	EdgeCase getSEdgeCase();
+	EdgeCase getTEdgeCase();
+	EdgeCase getREdgeCase();
+	FilterMode getMinifyFilter();
+	FilterMode getMagnifyFilter();
 
-	void Use(TextureSettings* in_currentSettings = nullptr, ubyte in_slot = 0);
+	void use(TextureSettings* in_currentSettings = nullptr, ubyte in_slot = 0);
 };
 
 #endif

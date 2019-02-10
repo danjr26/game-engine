@@ -8,17 +8,17 @@ ShaderProgramInstance::ShaderProgramInstance(ShaderProgram* in_program) :
 	}
 }
 
-void ShaderProgramInstance::Assign_Uniform(UniformType in_type, const std::string& in_name, const void* in_value) {
-	UniformData data = { in_type, mProgram->Get_Uniform_Location(in_name), in_value };
+void ShaderProgramInstance::assignUniform(UniformType in_type, const std::string& in_name, const void* in_value) {
+	UniformData data = { in_type, mProgram->getUniformLocation(in_name), in_value };
 	mUniforms.insert_or_assign(in_name, data);
 }
 
-void ShaderProgramInstance::Remove_Uniform(const std::string& in_name) {
+void ShaderProgramInstance::removeUniform(const std::string& in_name) {
 	mUniforms.erase(in_name);
 }
 
-void ShaderProgramInstance::Use() {
-	mProgram->Use();
+void ShaderProgramInstance::use() {
+	mProgram->use();
 	for (auto iter = mUniforms.begin(); iter != mUniforms.end(); iter++) {
 		UniformData& uniform = iter->second;
 		switch (uniform.mType) {

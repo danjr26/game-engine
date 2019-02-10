@@ -17,63 +17,63 @@ public:
 	template<typename = typename std::enable_if<std::is_same<uchar, T>::value, void>::type>
 	Color(const Color<float, n>& in_source) {
 		for (uint i = 0; i < n; i++) {
-			mMembers[i] = (uchar)(in_source.Get(i) * 255.0f);
+			mMembers[i] = (uchar)(in_source.get(i) * 255.0f);
 		}
 	}
 
 	template<typename = typename std::enable_if<std::is_same<float, T>::value, void>::type>
 	Color(const Color<uchar, n>& in_source) {
 		for (uint i = 0; i < n; i++) {
-			mMembers[i] = ((float)in_source.Get(i) / 255.0f);
+			mMembers[i] = ((float)in_source.get(i) / 255.0f);
 		}
 	}
 
 	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
-	T R() const {
+	T r() const {
 		return mMembers[0];
 	}
 
 	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
-	T& R() {
+	T& r() {
 		return mMembers[0];
 	}
 
 	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
-	T G() const {
+	T g() const {
 		return mMembers[1];
 	}
 
 	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
-	T& G() {
+	T& g() {
 		return mMembers[1];
 	}
 
 	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
-	T B() const {
+	T b() const {
 		return mMembers[2];
 	}
 
 	template<typename = typename std::enable_if<n == 3 || n == 4, void>::type>
-	T& B() {
+	T& b() {
 		return mMembers[2];
 	}
 
 	template<typename = typename std::enable_if<n == 4, void>::type>
-	T A() const {
+	T a() const {
 		return mMembers[3];
 	}
 
 	template<typename = typename std::enable_if<n == 4, void>::type>
-	T& A() {
+	T& a() {
 		return mMembers[3];
 	}
 
-	T Dot(const Vector<T, n>& v) const = delete;
-	T Dot_Self() const = delete;
-	T Magnitude() const = delete;
-	Vector<T, n> Normalized() const = delete;
-	void Normalize() = delete;
-	T Theta(const Vector<T, n>& v) const = delete;
+	T dot(const Vector<T, n>& v) const = delete;
+	T dotSelf() const = delete;
+	T magnitude() const = delete;
+	Vector<T, n> normalized() const = delete;
+	void normalize() = delete;
+	T theta(const Vector<T, n>& v) const = delete;
 };
 
 using ColorRGBc = Color<uchar, 3>;

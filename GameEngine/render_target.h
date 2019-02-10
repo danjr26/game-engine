@@ -6,9 +6,9 @@
 class RenderTarget {
 public:
 	void Draw_To_This();
-	virtual Vector2i Get_Dimensions() const = 0;
+	virtual Vector2i getDimensions() const = 0;
 protected:
-	virtual void _Draw_To_This() = 0;
+	virtual void _drawToThis() = 0;
 };
 
 #endif

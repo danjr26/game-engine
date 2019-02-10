@@ -7,73 +7,73 @@ inline LineSegment<T, n>::LineSegment(Vector<T, n>& in_point1, Vector<T, n>& in_
 	mPoint2(in_point2) {}
 
 template<class T, uint n>
-inline void LineSegment<T, n>::Apply_Transform(const Transform<T, n>& in_transform) {
-	mPoint1 = in_transform.Local_To_World_Point(mPoint1);
-	mPoint2 = in_transform.Local_To_World_Point(mPoint2);
+inline void LineSegment<T, n>::applyTransform(const Transform<T, n>& in_transform) {
+	mPoint1 = in_transform.localToWorldPoint(mPoint1);
+	mPoint2 = in_transform.localToWorldPoint(mPoint2);
 }
 
 template<class T, uint n>
-inline Vector<T, n> LineSegment<T, n>::Get_Point1() const {
+inline Vector<T, n> LineSegment<T, n>::getPoint1() const {
 	return mPoint1;
 }
 
 template<class T, uint n>
-inline Vector<T, n> LineSegment<T, n>::Get_Point2() const {
+inline Vector<T, n> LineSegment<T, n>::getPoint2() const {
 	return mPoint2;
 }
 
 template<class T, uint n>
-inline Vector<T, n> LineSegment<T, n>::Get_Center() const {
+inline Vector<T, n> LineSegment<T, n>::getCenter() const {
 	return (mPoint1 + mPoint2) / 2.0;
 }
 
 template<class T, uint n>
-inline Vector<T, n> LineSegment<T, n>::Get_Offset() const {
+inline Vector<T, n> LineSegment<T, n>::getOffset() const {
 	return mPoint2 - mPoint1;
 }
 
 template<class T, uint n>
-inline Vector<T, n> LineSegment<T, n>::Get_Direction() const {
-	return (mPoint2 - mPoint1).Normalized();
+inline Vector<T, n> LineSegment<T, n>::getDirection() const {
+	return (mPoint2 - mPoint1).normalized();
 }
 
 template<class T, uint n>
-inline T LineSegment<T, n>::Get_Projection_Coefficient1() const {
-	return Get_Direction().Dot(mPoint1);
+inline T LineSegment<T, n>::getProjectionCoefficient1() const {
+	return getDirection().dot(mPoint1);
 }
 
 template<class T, uint n>
-inline T LineSegment<T, n>::Get_Projection_Coefficient2() const {
-	return Get_Direction().Dot(mPoint2);
+inline T LineSegment<T, n>::getProjectionCoefficient2() const {
+	return getDirection().dot(mPoint2);
 }
 
 template<class T, uint n>
-inline T LineSegment<T, n>::Get_Projection_Coefficient(const Vector<T, n>& in_point) const {
-	return Get_Direction().Dot(in_point);
+inline T LineSegment<T, n>::getProjectionCoefficient(const Vector<T, n>& in_point) const {
+	return getDirection().dot(in_point);
 }
 
 template<class T, uint n>
-inline Vector<T, n> LineSegment<T, n>::Get_Projection(const Vector<T, n>& in_point) const {
-	return (in_point - mPoint1).Projection(Get_Direction()) + mPoint1;
+inline Vector<T, n> LineSegment<T, n>::getProjection(const Vector<T, n>& in_point) const {
+	return (in_point - mPoint1).projection(getDirection()) + mPoint1;
 }
 
 template<class T, uint n>
-inline T LineSegment<T, n>::Get_Length() {
-	return (mPoint2 - mPoint1).Magnitude();
+inline T LineSegment<T, n>::getLength() {
+	return (mPoint2 - mPoint1).magnitude();
 }
 
 template<class T, uint n>
-inline Vector<T, n> LineSegment<T, n>::Random_Point() const {
-	return mPoint1 + (mPoint2 - mPoint1) * Random<T>(1);
+inline Vector<T, n> LineSegment<T, n>::randomPoint() const {
+	return mPoint1 + (mPoint2 - mPoint1) * GEUtil::random<T>(1);
 }
 
 template<class T, uint n>
-inline LineSegment<T, n> LineSegment<T, n>::From_Points(Vector<T, n>& in_point1, Vector<T, n>& in_point2) {
+inline LineSegment<T, n> LineSegment<T, n>::fromPoints(Vector<T, n>& in_point1, Vector<T, n>& in_point2) {
 	return LineSegment<T, n>(in_point1, in_point2);
 }
 
 template<class T, uint n>
-inline LineSegment<T, n> LineSegment<T, n>::From_Point_Offset(Vector<T, n>& in_point, Vector<T, n>& in_offset) {
+inline LineSegment<T, n> LineSegment<T, n>::fromPointOffset(Vector<T, n>& in_point, Vector<T, n>& in_offset) {
 	return LineSegment<T, n>(in_point, in_point + in_offset);
 }
 

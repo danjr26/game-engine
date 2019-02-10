@@ -6,7 +6,7 @@
 #include "Texture2_instance.h"
 
 RenderableObject::RenderableObject() :
-	mCullingRectangle(AxisAlignedRectangled::From_Extrema(Vector2d(), Vector2d()))
+	mCullingRectangle(AxisAlignedRectangled::fromExtrema(Vector2d(), Vector2d()))
 {}
 
 RenderableObject::~RenderableObject() 
@@ -17,15 +17,15 @@ TestRenderableObject::TestRenderableObject(Renderer* in_renderer) :
 RenderableObject(in_renderer, 0)
 {}
 
-double TestRenderableObject::Z() {
+double TestRenderableObject::z() {
 	return 0;
 }
 
-bool TestRenderableObject::Should_Cull() {
+bool TestRenderableObject::shouldCull() {
 	return false;
 }
 
-void TestRenderableObject::Render() {
+void TestRenderableObject::render() {
 	/*glDisable(GL_CULL_FACE);
 	
 	float vertices[3][3] = {
@@ -86,9 +86,9 @@ void TestRenderableObject::Render() {
 
 	Texture2 tex = Texture2("", Vector2i(2, 2), 3, 8, (uchar*)textureColors);
 	Texture2Instance texInstance = Texture2Instance(&tex);
-	texInstance.Use();
+	texInstance.use();
 
-	Matrix<float, 4, 4> iden = Matrix<float, 4, 4>::Identity();
+	Matrix<float, 4, 4> iden = Matrix<float, 4, 4>::identity();
 	Matrix<float, 4, 4> move = {
 		1.0f, 0.0f, 0.0f, 0.5f,
 		0.0f, 1.0f, 0.0f, 0.0f,
@@ -103,19 +103,19 @@ void TestRenderableObject::Render() {
 		0.0f, 0.0f, 0.0f, 1.0f
 	};
 
-	Matrix<float, 4, 4> scale = Matrix<float, 4, 4>::Identity() * 0.5f;
-	scale.Element(3, 3, 1.0f);
+	Matrix<float, 4, 4> scale = Matrix<float, 4, 4>::identity() * 0.5f;
+	scale.getElement(3, 3, 1.0f);
 
 	GLint locations[3] = { 
-		shaderProgram.Get_Uniform_Location("modelMatrix"),
-		shaderProgram.Get_Uniform_Location("viewMatrix"),
-		shaderProgram.Get_Uniform_Location("projectionMatrix")
+		shaderProgram.getUniformLocation("modelMatrix"),
+		shaderProgram.getUniformLocation("viewMatrix"),
+		shaderProgram.getUniformLocation("projectionMatrix")
 	};
 
-	shaderProgram.Use();
-	glUniformMatrix4fv(locations[0], 1, GL_TRUE, (move * rot * scale).Pointer());
-	glUniformMatrix4fv(locations[1], 1, GL_TRUE, iden.Pointer());
-	glUniformMatrix4fv(locations[2], 1, GL_TRUE, iden.Pointer());
+	shaderProgram.use();
+	glUniformMatrix4fv(locations[0], 1, GL_TRUE, (move * rot * scale).pointer());
+	glUniformMatrix4fv(locations[1], 1, GL_TRUE, iden.pointer());
+	glUniformMatrix4fv(locations[2], 1, GL_TRUE, iden.pointer());
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }

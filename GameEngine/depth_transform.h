@@ -12,15 +12,15 @@ private:
 public:
 	DepthTransform();
 
-	DepthTransform<T, n>* Get_Parent();
-	void Set_Parent(DepthTransform<T, n>* in_parent);
+	DepthTransform<T, n>* getParent();
+	void setParent(DepthTransform<T, n>* in_parent);
 
-	T Get_Local_Depth() const;
-	T Get_World_Depth() const;
-	void Set_Local_Depth(T in_depth);
-	void Set_World_Depth(T in_depth);
-	void Translate_Local_Depth(T in_depth);
-	void Translate_World_Depth(T in_depth);
+	T getLocalDepth() const;
+	T getWorldDepth() const;
+	void setLocalDepth(T in_depth);
+	void setWorldDepth(T in_depth);
+	void translateLocalDepth(T in_depth);
+	void translateWorldDepth(T in_depth);
 };
 
 using DepthTransform2f = DepthTransform<float, 2>;

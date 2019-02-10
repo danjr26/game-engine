@@ -6,8 +6,8 @@ ForceField<n>::ForceField(CollisionMask<double, n>* in_mask) :
 	mCollisionMask(nullptr) {
 
 	if (in_mask != nullptr) {
-		mCollisionMask = in_mask->Clone();
-		mCollisionMask->Add_Filter(CollisionContext2d::force_field);
+		mCollisionMask = in_mask->clone();
+		mCollisionMask->addFilter(CollisionContext2d::force_field);
 	}
 }
 
@@ -19,18 +19,18 @@ ForceField<n>::~ForceField() {
 }
 
 template<uint n>
-CollisionMask<double, n>* ForceField<n>::Get_Collision_Mask() {
+CollisionMask<double, n>* ForceField<n>::getCollisionMask() {
 	return mCollisionMask;
 }
 
 template<uint n>
-void ForceField<n>::Set_Collision_Context(CollisionContext<double, n>* in_context) {
+void ForceField<n>::setCollisionContext(CollisionContext<double, n>* in_context) {
 	if (mCollisionContext != nullptr) {
-		mCollisionContext->Remove(mCollisionMask);
+		mCollisionContext->remove(mCollisionMask);
 	}
 	mCollisionContext = in_context;
 	if (mCollisionMask != nullptr) {
-		mCollisionContext->Add(mCollisionMask);
+		mCollisionContext->add(mCollisionMask);
 	}
 }
 

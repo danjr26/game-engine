@@ -1,6 +1,6 @@
 #ifndef CLOCK_H
 #define CLOCK_H
-#include <Windows.h>
+#include <windows.h>
 #include <chrono>
 #include <mutex>
 
@@ -18,12 +18,12 @@ public:
 	Clock();
 	Clock(const Clock& in_source);
 
-	double	Now			() const;
-	void	Set_Epoch	();
-	void	Set_Epoch	(double in_epoch);
-	void	Pause		();
-	void	Resume		();
-	bool	Is_Paused	() const;
+	double	now			() const;
+	void	setEpoch	();
+	void	setEpoch	(double in_epoch);
+	void	pause		();
+	void	resume		();
+	bool	isPaused	() const;
 };
 
 #endif

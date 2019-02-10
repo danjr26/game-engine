@@ -8,8 +8,8 @@ UniformForceField<n>::UniformForceField(Vector<double, n> in_force, CollisionMas
 {}
 
 template<uint n>
-LocatedVector<double, n> UniformForceField<n>::Calculate_Force(RigidBody<n>& in_rigidBody) {
-	return { in_rigidBody.Get_Transform().Get_World_Position(), mForce * in_rigidBody.Get_Linear_Mass() };
+LocatedVector<double, n> UniformForceField<n>::calculateForce(RigidBody<n>& in_rigidBody) {
+	return { in_rigidBody.getTransform().getWorldPosition(), mForce * in_rigidBody.getLinearMass() };
 }
 
 template class UniformForceField<2>;

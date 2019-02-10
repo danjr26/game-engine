@@ -15,19 +15,19 @@ private:
 public:
 	CollisionManager();
 
-	void Update();
+	void update();
 
-	void Add(CollisionContext<T, 2>* in_context);
-	//void Add(CollisionContext3* in_context);
+	void add(CollisionContext<T, 2>* in_context);
+	//void add(CollisionContext3* in_context);
 
-	void Remove(CollisionContext<T, 2>* in_context);
-	//void Remove(CollisionContext3* in_context);
+	void remove(CollisionContext<T, 2>* in_context);
+	//void remove(CollisionContext3* in_context);
 
-	bool Has(CollisionContext<T, 2>* in_context);
+	bool has(CollisionContext<T, 2>* in_context);
 
-	void Make_Active(CollisionContext<T, 2>* in_context);
+	void makeActive(CollisionContext<T, 2>* in_context);
 
-	CollisionContext<T, 2>* Get_Active2();
+	CollisionContext<T, 2>* getActive2();
 };
 
 using CollisionManagerf = CollisionManager<float>;

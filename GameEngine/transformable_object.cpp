@@ -5,7 +5,7 @@ TransformableObject<T, n>::TransformableObject()
 {}
 
 template<class T, uint n>
-Transform<T, n>& TransformableObject<T, n>::Get_Transform() {
+Transform<T, n>& TransformableObject<T, n>::getTransform() {
 	return mTransform;
 }
 

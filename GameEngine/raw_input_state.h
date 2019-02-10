@@ -9,7 +9,7 @@ struct RawInputState {
 	KeyboardState mKeyboard;
 	MouseState mMouse;
 
-	void Process_Raw_Event(const RawInputEvent& in_event);
+	void processRawEvent(const RawInputEvent& in_event);
 };
 
 #endif

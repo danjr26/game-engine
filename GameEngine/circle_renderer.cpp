@@ -4,33 +4,33 @@
 CircleRenderer::CircleRenderer(const Circled& in_circle, const ColorRGBAf& in_color, 
 	float in_outlineWidth, const ColorRGBAf& in_outlineColor) :
 
-	Sprite(AxisAlignedRectangled::From_Center(in_circle.Get_Center(), Vector2d(in_circle.Get_Radius(), in_circle.Get_Radius()) * 2.0), nullptr, in_color),
+	Sprite(AxisAlignedRectangled::fromCenter(in_circle.getCenter(), Vector2d(in_circle.getRadius(), in_circle.getRadius()) * 2.0), nullptr, in_color),
 	mOutlineWidth(in_outlineWidth),
 	mOutlineColor(in_outlineColor)
 {}
 
-void CircleRenderer::Render() {
-	ShaderProgram* shaderProgram = GE.Assets().Get<ShaderProgram>("EllipseShader");
+void CircleRenderer::render() {
+	ShaderProgram* shaderProgram = GE.assets().get<ShaderProgram>("EllipseShader");
 
 	GLint locations[] = {
-		shaderProgram->Get_Uniform_Location("mvpMatrix"),
-		shaderProgram->Get_Uniform_Location("fillColor"),
-		shaderProgram->Get_Uniform_Location("outlineColor"),
-		shaderProgram->Get_Uniform_Location("outlineWidth"),
-		shaderProgram->Get_Uniform_Location("pixelDimensions")
+		shaderProgram->getUniformLocation("mvpMatrix"),
+		shaderProgram->getUniformLocation("fillColor"),
+		shaderProgram->getUniformLocation("outlineColor"),
+		shaderProgram->getUniformLocation("outlineWidth"),
+		shaderProgram->getUniformLocation("pixelDimensions")
 	};
 
-	Matrix4f modelMatrix = (Matrix4f)mInnerTransform.Get_World_Matrix();
-	Matrix4f viewMatrix = (Matrix4f)GE.Cameras().mActive->Get_View_Matrix();
-	Matrix4f projectionMatrix = (Matrix4f)GE.Cameras().mActive->Get_Projection_Matrix();
+	Matrix4f modelMatrix = (Matrix4f)mInnerTransform.getWorldMatrix();
+	Matrix4f viewMatrix = (Matrix4f)GE.cameras().mActive->getViewMatrix();
+	Matrix4f projectionMatrix = (Matrix4f)GE.cameras().mActive->getProjectionMatrix();
 	Matrix4f mvpMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
-	shaderProgram->Use();
-	glUniformMatrix4fv(locations[0], 1, GL_TRUE, mvpMatrix.Pointer());
-	glUniform4fv(locations[1], 1, mColor.Pointer());
-	glUniform4fv(locations[2], 1, mOutlineColor.Pointer());
+	shaderProgram->use();
+	glUniformMatrix4fv(locations[0], 1, GL_TRUE, mvpMatrix.pointer());
+	glUniform4fv(locations[1], 1, mColor.pointer());
+	glUniform4fv(locations[2], 1, mOutlineColor.pointer());
 	glUniform1f(locations[3], mOutlineWidth);
-	glUniform2fv(locations[4], 1, ((Vector2f)mInnerTransform.Get_Local_Scale()).Pointer());
+	glUniform2fv(locations[4], 1, ((Vector2f)mInnerTransform.getLocalScale()).pointer());
 
-	mGPUPusher.Draw();
+	mGPUPusher.draw();
 }

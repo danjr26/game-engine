@@ -35,9 +35,9 @@ private:
 
 public:
 	ShaderProgramInstance(ShaderProgram* in_program);
-	void Assign_Uniform(UniformType in_type, const std::string& in_name, const void* in_value);
-	void Remove_Uniform(const std::string& in_name);
-	void Use();
+	void assignUniform(UniformType in_type, const std::string& in_name, const void* in_value);
+	void removeUniform(const std::string& in_name);
+	void use();
 };
 
 #endif

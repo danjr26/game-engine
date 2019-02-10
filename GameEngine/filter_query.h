@@ -27,26 +27,26 @@ private:
 public:
 	FilterQuery(const FilterQuery& in_source);
 	~FilterQuery();
-	FilterQuery And(const FilterQuery& in_query) const;
-	FilterQuery Or(const FilterQuery& in_query) const;
-	FilterQuery XOr(const FilterQuery& in_query) const;
-	FilterQuery Not() const;
+	FilterQuery and(const FilterQuery& in_query) const;
+	FilterQuery or(const FilterQuery& in_query) const;
+	FilterQuery xor(const FilterQuery& in_query) const;
+	FilterQuery not() const;
 
-	bool Evaluate(const FilteredObject& in_object) const;
+	bool evaluate(const FilteredObject& in_object) const;
 
-	static FilterQuery Any();
+	static FilterQuery everything();
 
-	static FilterQuery Fits(ubyte in_filter);
+	static FilterQuery fits(ubyte in_filter);
 
 	template<typename... Args>
-	static FilterQuery Fits_One_Of(Args... in_filters) {
+	static FilterQuery fitsOneOf(Args... in_filters) {
 		uint n = sizeof...(Args);
 		ubyte filters[n] = { in_filters... };
 		return FilterQuery(fit_one_of, std::vector<ubyte>(filters, filters + n));
 	}
 
 	template<typename... Args>
-	static FilterQuery Fits_All_Of(Args... in_filters) {
+	static FilterQuery fitsAllOf(Args... in_filters) {
 		uint n = sizeof...(Args);
 		ubyte filters[n] = { in_filters... };
 		return FilterQuery(fit_all_of, std::vector<ubyte>(filters, filters + n));

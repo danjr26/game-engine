@@ -8,7 +8,7 @@ mType(in_type) {
 
 	if (!file.is_open()) {
 		Log::main(std::string("error: could not open file '") + in_filename + "'");
-		GE.Exit();
+		GE.quit();
 	}
 
 	file.seekg(0, std::ios::end);
@@ -37,7 +37,7 @@ mType(in_type) {
 		glGetShaderInfoLog(mID, logLength, nullptr, log);
 		Log::main(std::string("\nerror: shader '") + in_filename + "' compilation failed:\n" + log);
 		delete[] log;
-		GE.Exit();
+		GE.quit();
 	}
 
 	delete[] buffer;
@@ -47,11 +47,11 @@ Shader::~Shader() {
 	glDeleteShader(mID);
 }
 
-Shader::Type Shader::Get_Type() {
+Shader::Type Shader::getType() {
 	return mType;
 }
 
-Shader::Type Shader::Parse_Type(const std::string& in_text) {
+Shader::Type Shader::parseType(const std::string& in_text) {
 	if (in_text == "vertex") return Type::vertex;
 	if (in_text == "fragment") return Type::fragment;
 	if (in_text == "geometry") return Type::geometry;
@@ -59,6 +59,6 @@ Shader::Type Shader::Parse_Type(const std::string& in_text) {
 	if (in_text == "tess_eval") return Type::tess_eval;
 	if (in_text == "compute") return Type::compute;
 	Log::main(std::string("invalid shader type string literal '") + in_text + "'");
-	GE.Exit();
+	GE.quit();
 }
 

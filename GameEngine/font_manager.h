@@ -13,7 +13,7 @@ private:
 public:
 	FontManager();
 	~FontManager();
-	FT_Library Get_Library();
+	FT_Library getLibrary();
 };
 
 #endif

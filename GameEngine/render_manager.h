@@ -9,7 +9,7 @@
 
 class RenderManager {
 public:
-	enum Filter : ubyte {
+	enum filter : ubyte {
 		default_opaque,
 		default_transparent
 	};
@@ -32,14 +32,14 @@ public:
 
 public:
 	RenderManager();
-	void Add(RenderableObject* in_renderable);
-	void Remove(RenderableObject* in_renderable);
-	void Render_Frame();
+	void add(RenderableObject* in_renderable);
+	void remove(RenderableObject* in_renderable);
+	void renderFrame();
 
 private:
-	void Render_Pass(RenderPass* in_pass);
+	void renderPass(RenderPass* in_pass);
 
-	static bool Z_Sorter(const RenderableWithZ& in_chunk1, const RenderableWithZ& in_chunk2);
+	static bool zSorter(const RenderableWithZ& in_chunk1, const RenderableWithZ& in_chunk2);
 };
 
 #endif

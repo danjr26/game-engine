@@ -16,18 +16,18 @@ BinaryCollisionTree<T, n>::Evaluation::Iterator::Iterator()
 {}
 
 template<class T, uint n>
-bool BinaryCollisionTree<T, n>::Evaluation::Iterator::Go_Left(uint in_dimension) {
-	if (!Get_Left(in_dimension) || mDepths[in_dimension] == mParent->mDepth) {
+bool BinaryCollisionTree<T, n>::Evaluation::Iterator::goLeft(uint in_dimension) {
+	if (!getLeft(in_dimension) || mDepths[in_dimension] == mParent->mDepth) {
 		return false;
 	}
 	else {
-		if (Get_Right(in_dimension)) {
+		if (getRight(in_dimension)) {
 			mEvals[in_dimension]++;
 			uint skipStack[maxDepth];
 			uint skipStackSize = 1;
 			skipStack[0] = mParent->mDepth - mDepths[in_dimension] + 1;
 			while (skipStackSize > 0) {
-				if (Get_Left(in_dimension) && Get_Right(in_dimension) && skipStack[skipStackSize - 1] > 1) {
+				if (getLeft(in_dimension) && getRight(in_dimension) && skipStack[skipStackSize - 1] > 1) {
 					skipStack[skipStackSize] = --skipStack[skipStackSize - 1];
 					skipStackSize++;
 				}
@@ -51,8 +51,8 @@ bool BinaryCollisionTree<T, n>::Evaluation::Iterator::Go_Left(uint in_dimension)
 }
 
 template<class T, uint n>
-bool BinaryCollisionTree<T, n>::Evaluation::Iterator::Go_Right(uint in_dimension) {
-	if (!Get_Right(in_dimension) || mDepths[in_dimension] == mParent->mDepth) {
+bool BinaryCollisionTree<T, n>::Evaluation::Iterator::goRight(uint in_dimension) {
+	if (!getRight(in_dimension) || mDepths[in_dimension] == mParent->mDepth) {
 		return false;
 	}
 	else {
@@ -63,17 +63,17 @@ bool BinaryCollisionTree<T, n>::Evaluation::Iterator::Go_Right(uint in_dimension
 }
 
 template<class T, uint n>
-ubyte BinaryCollisionTree<T, n>::Evaluation::Iterator::Get_Left(uint in_dimension) {
+ubyte BinaryCollisionTree<T, n>::Evaluation::Iterator::getLeft(uint in_dimension) {
 	return mParent->mData[in_dimension][mEvals[in_dimension] * 2 + 0];
 }
 
 template<class T, uint n>
-ubyte BinaryCollisionTree<T, n>::Evaluation::Iterator::Get_Right(uint in_dimension) {
+ubyte BinaryCollisionTree<T, n>::Evaluation::Iterator::getRight(uint in_dimension) {
 	return mParent->mData[in_dimension][mEvals[in_dimension] * 2 + 1];
 }
 
 template<class T, uint n>
-uint BinaryCollisionTree<T, n>::Evaluation::Iterator::Get_Depth(uint in_dimension) {
+uint BinaryCollisionTree<T, n>::Evaluation::Iterator::getDepth(uint in_dimension) {
 	return mDepths[in_dimension];
 }
 
@@ -89,34 +89,34 @@ BinaryCollisionTree<T, n>::Evaluation::Evaluation() :
 }
 
 template<class T, uint n>
-typename BinaryCollisionTree<T, n>::Evaluation::Iterator BinaryCollisionTree<T, n>::Evaluation::Get_Iterator() {
+typename BinaryCollisionTree<T, n>::Evaluation::Iterator BinaryCollisionTree<T, n>::Evaluation::getIterator() {
 	return Iterator(this);
 }
 
 template<class T, uint n>
-BinaryCollisionTree<T, n>* BinaryCollisionTree<T, n>::Evaluation::Get_Parent_Tree() {
+BinaryCollisionTree<T, n>* BinaryCollisionTree<T, n>::Evaluation::getParentTree() {
 	return mParentTree;
 }
 
 template<class T, uint n>
-CollisionMask<T, n>* BinaryCollisionTree<T, n>::Evaluation::Get_Parent_Mask() {
+CollisionMask<T, n>* BinaryCollisionTree<T, n>::Evaluation::getParentMask() {
 	return mParentMask;
 }
 
 template<class T, uint n>
-CollisionMask<T, n>* BinaryCollisionTree<T, n>::Evaluation::Get_Transformed_Parent_Mask() {
+CollisionMask<T, n>* BinaryCollisionTree<T, n>::Evaluation::getTransformedParentMask() {
 	return mTransformedParentMask;
 }
 
 template<class T, uint n>
-void BinaryCollisionTree<T, n>::Evaluation::Transform_Parent_Mask() {
+void BinaryCollisionTree<T, n>::Evaluation::transformParentMask() {
 	if (mTransformedParentMask != nullptr) {
 		delete mTransformedParentMask;
 	}
 
-	mTransformedParentMask = mParentMask->Clone();
-	mTransformedParentMask->Apply_Transform();
-	mTransformedParentMask->Set_Ignore_Transform(true);
+	mTransformedParentMask = mParentMask->clone();
+	mTransformedParentMask->applyTransform();
+	mTransformedParentMask->setIgnoreTransform(true);
 }
 
 template<class T, uint n>
@@ -127,18 +127,18 @@ BinaryCollisionTree<T, n>::GroupingScheme::Iterator::Iterator(GroupingScheme* in
 	mJ(1) {}
 
 template<class T, uint n>
-typename BinaryCollisionTree<T, n>::Evaluation* BinaryCollisionTree<T, n>::GroupingScheme::Iterator::Get_First() {
+typename BinaryCollisionTree<T, n>::Evaluation* BinaryCollisionTree<T, n>::GroupingScheme::Iterator::getFirst() {
 	return mIt->mEvals[mI];
 }
 
 template<class T, uint n>
-typename BinaryCollisionTree<T, n>::Evaluation* BinaryCollisionTree<T, n>::GroupingScheme::Iterator::Get_Second() {
+typename BinaryCollisionTree<T, n>::Evaluation* BinaryCollisionTree<T, n>::GroupingScheme::Iterator::getSecond() {
 	return mIt->mEvals[mJ];
 }
 
 template<class T, uint n>
 void BinaryCollisionTree<T, n>::GroupingScheme::Iterator::operator++(int a) {
-	if (Is_Done()) {
+	if (isDone()) {
 		throw InvalidArgumentException();
 	}
 
@@ -157,28 +157,28 @@ void BinaryCollisionTree<T, n>::GroupingScheme::Iterator::operator++(int a) {
 template<class T, uint n>
 void BinaryCollisionTree<T, n>::GroupingScheme::Iterator::operator+=(uint n) {
 	for (uint i = 0; i < n; i++) {
-		if (Is_Done()) break;
+		if (isDone()) break;
 		(*this)++;
 	}
 }
 
 template<class T, uint n>
-bool BinaryCollisionTree<T, n>::GroupingScheme::Iterator::Is_Done() {
+bool BinaryCollisionTree<T, n>::GroupingScheme::Iterator::isDone() {
 	return mIt == mParent->mGroupings.end();
 }
 
 template<class T, uint n>
-uint BinaryCollisionTree<T, n>::GroupingScheme::Get_Number_Groups() const {
+uint BinaryCollisionTree<T, n>::GroupingScheme::getNumberGroups() const {
 	return (uint)mGroupings.size();
 }
 
 template<class T, uint n>
-typename BinaryCollisionTree<T, n>::GroupingScheme::Iterator BinaryCollisionTree<T, n>::GroupingScheme::Get_Iterator() {
+typename BinaryCollisionTree<T, n>::GroupingScheme::Iterator BinaryCollisionTree<T, n>::GroupingScheme::getIterator() {
 	return Iterator(this);
 }
 
 template<class T, uint n>
-void BinaryCollisionTree<T, n>::GroupingScheme::Remove(const Evaluation * in_eval) {
+void BinaryCollisionTree<T, n>::GroupingScheme::remove(const Evaluation * in_eval) {
 	for (auto it = mGroupings.begin(); it != mGroupings.end(); it++) {
 		auto search = std::find(it->mEvals.begin(), it->mEvals.end(), in_eval);
 		if (search != it->mEvals.end()) {
@@ -192,7 +192,7 @@ void BinaryCollisionTree<T, n>::GroupingScheme::Remove(const Evaluation * in_eva
 }
 
 template<class T, uint n>
-void BinaryCollisionTree<T, n>::GroupingScheme::Get_Unique_Pairs(std::vector<std::pair<Evaluation*, Evaluation*>>& in_pairs) const {
+void BinaryCollisionTree<T, n>::GroupingScheme::getUniquePairs(std::vector<std::pair<Evaluation*, Evaluation*>>& in_pairs) const {
 	in_pairs.clear();
 	in_pairs.reserve(mGroupings.size());
 	for (auto groupIterator = mGroupings.begin(); groupIterator != mGroupings.end(); groupIterator++) {
@@ -216,18 +216,18 @@ BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::Iterator(PairedGroupi
 	mJ(0) {}
 
 template<class T, uint n>
-typename BinaryCollisionTree<T, n>::Evaluation* BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::Get_First() {
+typename BinaryCollisionTree<T, n>::Evaluation* BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::getFirst() {
 	return mIt->mEvals1[mI];
 }
 
 template<class T, uint n>
-typename BinaryCollisionTree<T, n>::Evaluation* BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::Get_Second() {
+typename BinaryCollisionTree<T, n>::Evaluation* BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::getSecond() {
 	return mIt->mEvals2[mJ];
 }
 
 template<class T, uint n>
 void BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::operator++(int a) {
-	if (Is_Done()) {
+	if (isDone()) {
 		throw InvalidArgumentException();
 	}
 
@@ -246,28 +246,28 @@ void BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::operator++(int a
 template<class T, uint n>
 void BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::operator+=(uint n) {
 	for (uint i = 0; i < n; i++) {
-		if (Is_Done()) break;
+		if (isDone()) break;
 		(*this)++;
 	}
 }
 
 template<class T, uint n>
-bool BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::Is_Done() {
+bool BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::isDone() {
 	return mIt == mParent->mGroupings.end();
 }
 
 template<class T, uint n>
-uint BinaryCollisionTree<T, n>::PairedGroupingScheme::Get_Number_Groups() const {
+uint BinaryCollisionTree<T, n>::PairedGroupingScheme::getNumberGroups() const {
 	return (uint)mGroupings.size();
 }
 
 template<class T, uint n>
-typename BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator BinaryCollisionTree<T, n>::PairedGroupingScheme::Get_Iterator() {
+typename BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator BinaryCollisionTree<T, n>::PairedGroupingScheme::getIterator() {
 	return Iterator(this);
 }
 
 template<class T, uint n>
-void BinaryCollisionTree<T, n>::PairedGroupingScheme::Get_Unique_Pairs(std::vector<std::pair<Evaluation*, Evaluation*>>& in_pairs) const {
+void BinaryCollisionTree<T, n>::PairedGroupingScheme::getUniquePairs(std::vector<std::pair<Evaluation*, Evaluation*>>& in_pairs) const {
 	in_pairs.clear();
 	in_pairs.reserve(mGroupings.size());
 	for (auto groupIterator = mGroupings.begin(); groupIterator != mGroupings.end(); groupIterator++) {
@@ -286,7 +286,7 @@ BinaryCollisionTree<T, n>::BinaryCollisionTree(const AxisAlignedBox<T, n>& in_bo
 	mBox(in_box) {}
 
 template<class T, uint n>
-void BinaryCollisionTree<T, n>::Evaluate(CollisionMask<T, n>* in_mask, uint in_depth, Evaluation & out_evaluation) {
+void BinaryCollisionTree<T, n>::evaluate(CollisionMask<T, n>* in_mask, uint in_depth, Evaluation & out_evaluation) {
 	using StackElement = EvaluationStackElement;
 	if (in_depth > maxDepth) {
 		throw InvalidArgumentException();
@@ -294,7 +294,7 @@ void BinaryCollisionTree<T, n>::Evaluate(CollisionMask<T, n>* in_mask, uint in_d
 
 	out_evaluation.mParentTree = this;
 	out_evaluation.mParentMask = in_mask;
-	out_evaluation.Transform_Parent_Mask();
+	out_evaluation.transformParentMask();
 
 	for (uint i = 0; i < n; i++) {
 		if (out_evaluation.mDepth != in_depth) {
@@ -308,17 +308,17 @@ void BinaryCollisionTree<T, n>::Evaluate(CollisionMask<T, n>* in_mask, uint in_d
 	out_evaluation.mDepth = in_depth;
 
 	InPlaceCollisionEvaluator evaluator;
-	evaluator.Return_Point(false);
+	evaluator.returnPoint(false);
 
 	EvaluationStackElement evaluationStacks[n][1 << (maxDepth + 1)];
 	uint stackSizes[3];
 	for (uint i = 0; i < n; i++) {
 		stackSizes[i] = 1;
-		evaluationStacks[i][0] = { i, mBox.Get_Center()[i], false, 0 };
+		evaluationStacks[i][0] = { i, mBox.getCenter()[i], false, 0 };
 	}
 
-	AxisAlignedHalfSpace<T, n> halfSpace1 = AxisAlignedHalfSpace<T, n>::From_Dimension_Value(0, 0.0, false);
-	AxisAlignedHalfSpace<T, n> halfSpace2 = AxisAlignedHalfSpace<T, n>::From_Dimension_Value(0, 0.0, false);
+	AxisAlignedHalfSpace<T, n> halfSpace1 = AxisAlignedHalfSpace<T, n>::fromDimensionValue(0, 0.0, false);
+	AxisAlignedHalfSpace<T, n> halfSpace2 = AxisAlignedHalfSpace<T, n>::fromDimensionValue(0, 0.0, false);
 	typename BinaryCollisionTree<T, n>::AxisAlignedHalfSpaceCollisionMask<> mask1(halfSpace1, true);
 	typename BinaryCollisionTree<T, n>::AxisAlignedHalfSpaceCollisionMask<> mask2(halfSpace2, true);
 
@@ -328,28 +328,28 @@ void BinaryCollisionTree<T, n>::Evaluate(CollisionMask<T, n>* in_mask, uint in_d
 			if (stackSizes[i] == 0) continue;
 			StackElement& back = evaluationStacks[i][--stackSizes[i]];
 
-			halfSpace1 = AxisAlignedHalfSpace<T, n>::From_Dimension_Value(
+			halfSpace1 = AxisAlignedHalfSpace<T, n>::fromDimensionValue(
 				back.mDimension, back.mValue, back.mIsPositive);
-			halfSpace2 = AxisAlignedHalfSpace<T, n>::From_Dimension_Value(
+			halfSpace2 = AxisAlignedHalfSpace<T, n>::fromDimensionValue(
 				back.mDimension, back.mValue, !back.mIsPositive);
 
-			mask1.Get_Basis() = halfSpace1;
-			mask2.Get_Basis() = halfSpace2;
+			mask1.getBasis() = halfSpace1;
+			mask2.getBasis() = halfSpace2;
 
-			bool didCollide1 = evaluator.Evaluate(*out_evaluation.Get_Transformed_Parent_Mask(), mask1).mDid;
-			bool didCollide2 = evaluator.Evaluate(*out_evaluation.Get_Transformed_Parent_Mask(), mask2).mDid;
+			bool didCollide1 = evaluator.evaluate(*out_evaluation.getTransformedParentMask(), mask1).mDid;
+			bool didCollide2 = evaluator.evaluate(*out_evaluation.getTransformedParentMask(), mask2).mDid;
 
 			out_evaluation.mData[i][out_evaluation.mDataSizes[i]++] = didCollide1;
 			out_evaluation.mData[i][out_evaluation.mDataSizes[i]++] = didCollide2;
 
-			T nextOffset = mBox.Get_Dimensions()[halfSpace1.Get_Dimension()] / (1 << (back.mDepth + 2));
+			T nextOffset = mBox.getDimensions()[halfSpace1.getDimension()] / (1 << (back.mDepth + 2));
 			uint lastDepth = back.mDepth;
 
 			if (lastDepth < in_depth) {
 				if (didCollide1) {
 					evaluationStacks[i][stackSizes[i]++] = {
-						halfSpace1.Get_Dimension(),
-						halfSpace1.Get_Value() + nextOffset,
+						halfSpace1.getDimension(),
+						halfSpace1.getValue() + nextOffset,
 						false,
 						lastDepth + 1
 					};
@@ -357,8 +357,8 @@ void BinaryCollisionTree<T, n>::Evaluate(CollisionMask<T, n>* in_mask, uint in_d
 
 				if (didCollide2) {
 					evaluationStacks[i][stackSizes[i]++] = {
-						halfSpace2.Get_Dimension(),
-						halfSpace2.Get_Value() - nextOffset,
+						halfSpace2.getDimension(),
+						halfSpace2.getValue() - nextOffset,
 						false,
 						lastDepth + 1
 					};
@@ -373,7 +373,7 @@ void BinaryCollisionTree<T, n>::Evaluate(CollisionMask<T, n>* in_mask, uint in_d
 }
 
 template<class T, uint n>
-bool BinaryCollisionTree<T, n>::Intersection(Evaluation & in_evaluation1, Evaluation & in_evaluation2) {
+bool BinaryCollisionTree<T, n>::intersection(Evaluation & in_evaluation1, Evaluation & in_evaluation2) {
 	using StackElement = IntersectionStackElement;
 
 	IntersectionStackElement intersectionStacks[n][1 << (maxDepth + 1)];
@@ -385,7 +385,7 @@ bool BinaryCollisionTree<T, n>::Intersection(Evaluation & in_evaluation1, Evalua
 
 	for (uint i = 0; i < n; i++) {
 		stackSizes[i] = 1;
-		intersectionStacks[i][0] = { in_evaluation1.Get_Iterator(), in_evaluation2.Get_Iterator() };
+		intersectionStacks[i][0] = { in_evaluation1.getIterator(), in_evaluation2.getIterator() };
 		didIntersect[i] = false;
 		mData[0][i] = &in_evaluation1.mData[i][0];
 		mData[1][i] = &in_evaluation2.mData[i][0];
@@ -398,22 +398,22 @@ bool BinaryCollisionTree<T, n>::Intersection(Evaluation & in_evaluation1, Evalua
 
 			StackElement element = intersectionStacks[i][--stackSizes[i]];
 
-			if (element.mIt1.Get_Left(i) && element.mIt2.Get_Left(i)) {
+			if (element.mIt1.getLeft(i) && element.mIt2.getLeft(i)) {
 				StackElement& newElement = intersectionStacks[i][stackSizes[i]++];
 				newElement.mIt1 = element.mIt1;
 				newElement.mIt2 = element.mIt2;
-				if (!newElement.mIt1.Go_Left(i) || !newElement.mIt2.Go_Left(i)) {
+				if (!newElement.mIt1.goLeft(i) || !newElement.mIt2.goLeft(i)) {
 					stackSizes[i] = 0;
 					didIntersect[i] = true;
 					continue;
 				}
 			}
 
-			if (element.mIt1.Get_Right(i) && element.mIt2.Get_Right(i)) {
+			if (element.mIt1.getRight(i) && element.mIt2.getRight(i)) {
 				StackElement& newElement = intersectionStacks[i][stackSizes[i]++];
 				newElement.mIt1 = element.mIt1;
 				newElement.mIt2 = element.mIt2;
-				if (!newElement.mIt1.Go_Right(i) || !newElement.mIt2.Go_Right(i)) {
+				if (!newElement.mIt1.goRight(i) || !newElement.mIt2.goRight(i)) {
 					stackSizes[i] = 0;
 					didIntersect[i] = true;
 					continue;
@@ -438,7 +438,7 @@ bool BinaryCollisionTree<T, n>::Intersection(Evaluation & in_evaluation1, Evalua
 }
 
 template<class T, uint n>
-void BinaryCollisionTree<T, n>::Group(Evaluation ** in_evaluations, uint in_nElements, GroupingScheme & out_groupingScheme) {
+void BinaryCollisionTree<T, n>::group(Evaluation ** in_evaluations, uint in_nElements, GroupingScheme & out_groupingScheme) {
 	using Grouping = GroupingScheme::Grouping;
 
 	if (mRecycling.size() < 1) {
@@ -489,19 +489,19 @@ void BinaryCollisionTree<T, n>::Group(Evaluation ** in_evaluations, uint in_nEle
 
 				// for each evaluation in that grouping 
 				for (auto indexIterator = parentGrouping.mEvals.begin(); indexIterator != parentGrouping.mEvals.end(); indexIterator++) {
-					auto evaluationIterator = (*indexIterator)->Get_Iterator();
+					auto evaluationIterator = (*indexIterator)->getIterator();
 
 					for (uint k = 0; k < currentDepth; k++) {
-						if (!((parentGrouping.mPath[i][k]) ? evaluationIterator.Go_Right(i) : evaluationIterator.Go_Left(i))) {
+						if (!((parentGrouping.mPath[i][k]) ? evaluationIterator.goRight(i) : evaluationIterator.goLeft(i))) {
 							throw ProcessFailureException();
 						}
 					}
 
-					if (evaluationIterator.Get_Left(i)) {
+					if (evaluationIterator.getLeft(i)) {
 						leftGrouping.mEvals.push_back(*indexIterator);
 					}
 
-					if (evaluationIterator.Get_Right(i)) {
+					if (evaluationIterator.getRight(i)) {
 						rightGrouping.mEvals.push_back(*indexIterator);
 					}
 				}
@@ -543,7 +543,7 @@ void BinaryCollisionTree<T, n>::Group(Evaluation ** in_evaluations, uint in_nEle
 }
 
 template<class T, uint n>
-void BinaryCollisionTree<T, n>::Group(Evaluation ** in_evaluations1, uint in_nElements1, Evaluation ** in_evaluations2, uint in_nElements2, PairedGroupingScheme & out_groupingScheme) {
+void BinaryCollisionTree<T, n>::group(Evaluation ** in_evaluations1, uint in_nElements1, Evaluation ** in_evaluations2, uint in_nElements2, PairedGroupingScheme & out_groupingScheme) {
 	using Grouping = PairedGroupingScheme::Grouping;
 
 	if (mPairRecycling.size() < 1) {
@@ -605,37 +605,37 @@ void BinaryCollisionTree<T, n>::Group(Evaluation ** in_evaluations1, uint in_nEl
 				rightGrouping.mEvals2.reserve(in_nElements2);
 
 				for (auto indexIterator = parentGrouping.mEvals1.begin(); indexIterator != parentGrouping.mEvals1.end(); indexIterator++) {
-					auto evaluationIterator = (*indexIterator)->Get_Iterator();
+					auto evaluationIterator = (*indexIterator)->getIterator();
 
 					for (uint k = 0; k < currentDepth; k++) {
-						if (!((parentGrouping.mPath[i][k]) ? evaluationIterator.Go_Right(i) : evaluationIterator.Go_Left(i))) {
+						if (!((parentGrouping.mPath[i][k]) ? evaluationIterator.goRight(i) : evaluationIterator.goLeft(i))) {
 							throw ProcessFailureException();
 						}
 					}
 
-					if (evaluationIterator.Get_Left(i)) {
+					if (evaluationIterator.getLeft(i)) {
 						leftGrouping.mEvals1.push_back(*indexIterator);
 					}
 
-					if (evaluationIterator.Get_Right(i)) {
+					if (evaluationIterator.getRight(i)) {
 						rightGrouping.mEvals1.push_back(*indexIterator);
 					}
 				}
 
 				for (auto indexIterator = parentGrouping.mEvals2.begin(); indexIterator != parentGrouping.mEvals2.end(); indexIterator++) {
-					auto evaluationIterator = (*indexIterator)->Get_Iterator();
+					auto evaluationIterator = (*indexIterator)->getIterator();
 
 					for (uint k = 0; k < currentDepth; k++) {
-						if (!((parentGrouping.mPath[i][k]) ? evaluationIterator.Go_Right(i) : evaluationIterator.Go_Left(i))) {
+						if (!((parentGrouping.mPath[i][k]) ? evaluationIterator.goRight(i) : evaluationIterator.goLeft(i))) {
 							throw ProcessFailureException();
 						}
 					}
 
-					if (evaluationIterator.Get_Left(i)) {
+					if (evaluationIterator.getLeft(i)) {
 						leftGrouping.mEvals2.push_back(*indexIterator);
 					}
 
-					if (evaluationIterator.Get_Right(i)) {
+					if (evaluationIterator.getRight(i)) {
 						rightGrouping.mEvals2.push_back(*indexIterator);
 					}
 				}

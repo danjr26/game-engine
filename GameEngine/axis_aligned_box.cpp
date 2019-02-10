@@ -7,7 +7,7 @@ inline AxisAlignedBox<T, n>::AxisAlignedBox(const Vector<T, n>& in_minima, const
 	mMaxima(in_maxima) {}
 
 template<class T, uint n>
-inline void AxisAlignedBox<T, n>::Get_Corners(Vector<T, n>* out_corners) const {
+inline void AxisAlignedBox<T, n>::getCorners(Vector<T, n>* out_corners) const {
 	const uint nCorners = 1 << n;
 
 	for (uint i = 0; i < nCorners; i++) {
@@ -18,14 +18,14 @@ inline void AxisAlignedBox<T, n>::Get_Corners(Vector<T, n>* out_corners) const {
 }
 
 template<class T, uint n>
-inline void AxisAlignedBox<T, n>::Apply_Transform(const Transform<T, n>& transform) {
-	if (transform.Get_World_Rotation().Is_Identity()) {
-		for (Transform<T, n> const* t = &transform; t != nullptr; t = t->Get_Const_Parent()) {
-			mMinima = mMinima.Compwise(t->Get_Local_Scale());
-			mMinima += t->Get_Local_Position();
+inline void AxisAlignedBox<T, n>::applyTransform(const Transform<T, n>& transform) {
+	if (transform.getWorldRotation().isIdentity()) {
+		for (Transform<T, n> const* t = &transform; t != nullptr; t = t->getConstParent()) {
+			mMinima = mMinima.compwise(t->getLocalScale());
+			mMinima += t->getLocalPosition();
 
-			mMaxima = mMaxima.Compwise(t->Get_Local_Scale());
-			mMaxima += t->Get_Local_Position();
+			mMaxima = mMaxima.compwise(t->getLocalScale());
+			mMaxima += t->getLocalPosition();
 		}
 		return;
 	}
@@ -33,47 +33,47 @@ inline void AxisAlignedBox<T, n>::Apply_Transform(const Transform<T, n>& transfo
 	const uint nCorners = 1 << n;
 
 	Vector<T, n> corners[nCorners];
-	Get_Corners(corners);
+	getCorners(corners);
 
 	for (uint i = 0; i < nCorners; i++) {
-		corners[i] = transform.Local_To_World_Point(corners[i]);
+		corners[i] = transform.localToWorldPoint(corners[i]);
 	}
 
-	(*this) = AxisAlignedBox<T, n>::From_Bounded_Points(nCorners, corners);
+	(*this) = AxisAlignedBox<T, n>::fromBoundedPoints(nCorners, corners);
 }
 
 template<class T, uint n>
-inline Vector<T, n> AxisAlignedBox<T, n>::Get_Center() const {
+inline Vector<T, n> AxisAlignedBox<T, n>::getCenter() const {
 	return (mMinima + mMaxima) / 2;
 }
 
 template<class T, uint n>
-inline Vector<T, n> AxisAlignedBox<T, n>::Get_Dimensions() const {
+inline Vector<T, n> AxisAlignedBox<T, n>::getDimensions() const {
 	return mMaxima - mMinima;
 }
 
 template<class T, uint n>
-inline Vector<T, n> AxisAlignedBox<T, n>::Get_Minima() const {
+inline Vector<T, n> AxisAlignedBox<T, n>::getMinima() const {
 	return mMinima;
 }
 
 template<class T, uint n>
-inline void AxisAlignedBox<T, n>::Set_Minima(const Vector<T, n>& in_minima) {
+inline void AxisAlignedBox<T, n>::setMinima(const Vector<T, n>& in_minima) {
 	mMinima = in_minima;
 }
 
 template<class T, uint n>
-inline Vector<T, n> AxisAlignedBox<T, n>::Get_Maxima() const {
+inline Vector<T, n> AxisAlignedBox<T, n>::getMaxima() const {
 	return mMaxima;
 }
 
 template<class T, uint n>
-inline void AxisAlignedBox<T, n>::Set_Maxima(const Vector<T, n>& in_maxima) {
+inline void AxisAlignedBox<T, n>::setMaxima(const Vector<T, n>& in_maxima) {
 	mMaxima = in_maxima;
 }
 
 template<class T, uint n>
-inline Range<T> AxisAlignedBox<T, n>::Get_Range(uint dimension) const {
+inline Range<T> AxisAlignedBox<T, n>::getRange(uint dimension) const {
 	if (dimension >= n) {
 		throw InvalidArgumentException();
 	}
@@ -81,15 +81,15 @@ inline Range<T> AxisAlignedBox<T, n>::Get_Range(uint dimension) const {
 }
 
 template<class T, uint n>
-inline Vector<T, n> AxisAlignedBox<T, n>::Random_Point_Boundary() const {
+inline Vector<T, n> AxisAlignedBox<T, n>::randomPointBoundary() const {
 	Vector<T, n> out;
-	uint stuckDimension = Random<uint>(n);
+	uint stuckDimension = GEUtil::random<uint>(n);
 	for (uint i = 0; i < n; i++) {
 		if (i == stuckDimension) {
-			out[i] = (Random<bool>()) ? mMinima.Get(i) : mMaxima.Get(i);
+			out[i] = (GEUtil::random<bool>()) ? mMinima.get(i) : mMaxima.get(i);
 		}
 		else {
-			out[i] = Random<T>(mMinima.Get(i), mMaxima.Get(i));
+			out[i] = GEUtil::random<T>(mMinima.get(i), mMaxima.get(i));
 		}
 	}
 	return out;
@@ -97,69 +97,69 @@ inline Vector<T, n> AxisAlignedBox<T, n>::Random_Point_Boundary() const {
 
 template<class T, uint n>
 template<typename>
-inline T AxisAlignedBox<T, n>::Get_Area() const {
-	return (mMaxima - mMinima).Component_Product();
+inline T AxisAlignedBox<T, n>::getArea() const {
+	return (mMaxima - mMinima).componentProduct();
 }
 
 template<class T, uint n>
 template<typename>
-inline T AxisAlignedBox<T, n>::Get_Perimeter() const {
-	return (mMaxima - mMinima).Component_Sum() * 2.0;
+inline T AxisAlignedBox<T, n>::getPerimeter() const {
+	return (mMaxima - mMinima).componentSum() * 2.0;
 }
 
 template<class T, uint n>
 template<typename>
-inline T AxisAlignedBox<T, n>::Get_Volume() const {
-	return (mMaxima - mMinima).Component_Product();
+inline T AxisAlignedBox<T, n>::getVolume() const {
+	return (mMaxima - mMinima).componentProduct();
 
 }
 
 template<class T, uint n>
 template<typename>
-inline T AxisAlignedBox<T, n>::Get_Surface_Area() const {
+inline T AxisAlignedBox<T, n>::getSurfaceArea() const {
 	Vector<T, n> edgeLengths = mMaxima - mMinima;
 	return (
-		edgeLengths.X() * edgeLengths.Y() +
-		edgeLengths.Y() * edgeLengths.Z() +
-		edgeLengths.Z() * edgeLengths.X()
+		edgeLengths.x() * edgeLengths.y() +
+		edgeLengths.y() * edgeLengths.z() +
+		edgeLengths.z() * edgeLengths.x()
 		) * 2.0;
 }
 
 template<class T, uint n>
 template<typename>
-inline T AxisAlignedBox<T, n>::Get_Total_Edge_Length() const {
-	return (mMaxima - mMinima).Component_Sum() * 2.0;
+inline T AxisAlignedBox<T, n>::getTotalEdgeLength() const {
+	return (mMaxima - mMinima).componentSum() * 2.0;
 }
 
 template<class T, uint n>
-inline Vector<T, n> AxisAlignedBox<T, n>::Random_Point_Inside() const {
+inline Vector<T, n> AxisAlignedBox<T, n>::randomPointInside() const {
 	Vector<T, n> out;
 	for (uint i = 0; i < n; i++) {
-		out[i] = Random<T>(mMinima.Get(i), mMaxima.Get(i));
+		out[i] = GEUtil::random<T>(mMinima.get(i), mMaxima.get(i));
 	}
 	return out;
 }
 
 template<class T, uint n>
-inline AxisAlignedBox<T, n> AxisAlignedBox<T, n>::From_Extrema(const Vector<T, n>& in_minima, const Vector<T, n>& in_maxima) {
+inline AxisAlignedBox<T, n> AxisAlignedBox<T, n>::fromExtrema(const Vector<T, n>& in_minima, const Vector<T, n>& in_maxima) {
 	return AxisAlignedBox(in_minima, in_maxima);
 }
 
 template<class T, uint n>
-inline AxisAlignedBox<T, n> AxisAlignedBox<T, n>::From_Center(const Vector<T, n>& in_center, const Vector<T, n>& in_dimensions) {
+inline AxisAlignedBox<T, n> AxisAlignedBox<T, n>::fromCenter(const Vector<T, n>& in_center, const Vector<T, n>& in_dimensions) {
 	const Vector<T, n> halfDimensions(in_dimensions / 2.0);
 	return AxisAlignedBox(in_center - halfDimensions, in_center + halfDimensions);
 }
 
 template<class T, uint n>
-inline AxisAlignedBox<T, n> AxisAlignedBox<T, n>::From_Bounded_Points(uint in_nPoints, const Vector<T, n>* in_points) {
+inline AxisAlignedBox<T, n> AxisAlignedBox<T, n>::fromBoundedPoints(uint in_nPoints, const Vector<T, n>* in_points) {
 	if (in_nPoints == 0) return AxisAlignedBox(Vector<T, n>(), Vector<T, n>());
 	Vector<T, n> minima = in_points[0];
 	Vector<T, n> maxima = in_points[0];
 	for (uint i = 1; i < in_nPoints; i++) {
 		for (uint j = 0; j < n; j++) {
-			if (in_points[i].Get(j) < minima.Get(j)) minima[j] = in_points[i].Get(j);
-			if (in_points[i].Get(j) > maxima.Get(j)) maxima[j] = in_points[i].Get(j);
+			if (in_points[i].get(j) < minima.get(j)) minima[j] = in_points[i].get(j);
+			if (in_points[i].get(j) > maxima.get(j)) maxima[j] = in_points[i].get(j);
 		}
 	}
 	return AxisAlignedBox(minima, maxima);

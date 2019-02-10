@@ -4,46 +4,46 @@
 template<class T, uint n>
 HalfSpace<T, n>::HalfSpace(const Vector<T, n>& in_point, const Vector<T, n>& in_direction) :
 	mPoint(in_point),
-	mDirection(in_direction.Normalized()) {}
+	mDirection(in_direction.normalized()) {}
 
 template<class T, uint n>
-void HalfSpace<T, n>::Apply_Transform(const Transform<T, n>& in_transform) {
-	mPoint = in_transform.Local_To_World_Point(mPoint);
-	mDirection = in_transform.Local_To_World_Direction(mDirection);
+void HalfSpace<T, n>::applyTransform(const Transform<T, n>& in_transform) {
+	mPoint = in_transform.localToWorldPoint(mPoint);
+	mDirection = in_transform.localToWorldDirection(mDirection);
 }
 
 template<class T, uint n>
-Vector<T, n> HalfSpace<T, n>::Get_Point() const {
+Vector<T, n> HalfSpace<T, n>::getPoint() const {
 	return mPoint;
 }
 
 template<class T, uint n>
-void HalfSpace<T, n>::Set_Point(const Vector<T, n>& in_point) {
+void HalfSpace<T, n>::setPoint(const Vector<T, n>& in_point) {
 	mPoint = in_point;
 }
 
 template<class T, uint n>
-Vector<T, n> HalfSpace<T, n>::Get_Direction() const {
+Vector<T, n> HalfSpace<T, n>::getDirection() const {
 	return mDirection;
 }
 
 template<class T, uint n>
-void HalfSpace<T, n>::Set_Direction(const Vector<T, n>& in_direction) {
-	mDirection = in_direction.Normalized();
+void HalfSpace<T, n>::setDirection(const Vector<T, n>& in_direction) {
+	mDirection = in_direction.normalized();
 }
 
 template<class T, uint n>
-T HalfSpace<T, n>::Get_Projection_Coefficient() const {
-	return mPoint.Dot(mDirection);
+T HalfSpace<T, n>::getProjectionCoefficient() const {
+	return mPoint.dot(mDirection);
 }
 
 template<class T, uint n>
-Vector<T, n> HalfSpace<T, n>::Get_Projection() const {
-	return mPoint.Dot(mDirection) * mDirection;
+Vector<T, n> HalfSpace<T, n>::getProjection() const {
+	return mPoint.dot(mDirection) * mDirection;
 }
 
 template<class T, uint n>
-HalfSpace<T, n> HalfSpace<T, n>::From_Point_Direction(const Vector<T, n>& in_point, const Vector<T, n>& in_direction) {
+HalfSpace<T, n> HalfSpace<T, n>::fromPointDirection(const Vector<T, n>& in_point, const Vector<T, n>& in_direction) {
 	return HalfSpace<T, n>(in_point, in_direction);
 }
 

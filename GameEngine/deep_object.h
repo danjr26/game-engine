@@ -10,7 +10,7 @@ protected:
 
 public:
 	DeepObject();
-	DepthTransform<T, n>& Get_Depth_Transform();
+	DepthTransform<T, n>& getDepthTransform();
 };
 
 using DeepObject2f = DeepObject<float, 2>;

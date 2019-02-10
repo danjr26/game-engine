@@ -1,7 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <Windows.h>
+#include <windows.h>
 #include <mutex>
 #include <vector>
 #include "render_target.h"
@@ -65,44 +65,45 @@ private:
 public:
 	Window(Params& in_params);
 	~Window();
-	void Flip_Buffers();
-	std::wstring Get_Name();
-	Vector2i Get_Position();
-	Vector2i Get_Dimensions() const;
-	bool Is_Fullscreen();
-	bool Is_Always_Front();
-	bool Has_Title_Bar();
-	bool Has_Border();
-	bool Is_Activatable();
-	bool Is_Visible();
-	bool Is_Minimized();
-	bool Is_Maximized();
-	bool Has_Close_Button();
-	bool Has_Minimize_Button();
-	bool Has_Maximize_Button();
-	bool Is_Resizable();
-	bool Has_Vertical_Scroll_Bar();
-	bool Has_Horizontal_Scroll_Bar();
-	BYTE Get_Color_Bits();
-	BYTE Get_Depth_Bits();
-	BYTE Get_Stencil_Bits();
-	HWND Get_Handle();
-	void Set_Name(const std::wstring& in_name);
-	void Set_Position(Vector2i in_position);
-	void Set_Dimensions(Vector2i in_dimensions);
-	void Set_Fullscreen(bool in_value = true);
-	void Set_Topmost(bool in_value = true);
-	void Set_Visible(bool in_value = true);
-	void Set_Activatable(bool in_value = true);
-	void Set_Minimized(bool in_value = true);
-	void Set_Maximized(bool in_value = true);
-	void Bring_To_Front();
-	void Send_To_Back();
 
-	static std::vector<DisplayMode> Get_Supported_Display_Modes();
+	void flipBuffers();
+	std::wstring getName();
+	Vector2i getPosition();
+	Vector2i getDimensions() const;
+	bool isFullscreen();
+	bool isAlwaysFront();
+	bool hasTitleBar();
+	bool hasBorder();
+	bool isActivatable();
+	bool isVisible();
+	bool isMinimized();
+	bool isMaximized();
+	bool hasCloseButton();
+	bool hasMinimizeButton();
+	bool hasMaximizeButton();
+	bool isResizable();
+	bool hasVerticalScrollBar();
+	bool hasHorizontalScrollBar();
+	BYTE getColorBits();
+	BYTE getDepthBits();
+	BYTE getStencilBits();
+	HWND getHandle();
+	void setName(const std::wstring& in_name);
+	void setPosition(Vector2i in_position);
+	void setDimensions(Vector2i in_dimensions);
+	void setFullscreen(bool in_value = true);
+	void setTopmost(bool in_value = true);
+	void setVisible(bool in_value = true);
+	void setActivatable(bool in_value = true);
+	void setMinimized(bool in_value = true);
+	void setMaximized(bool in_value = true);
+	void bringToFront();
+	void sendToBack();
+
+	static std::vector<DisplayMode> getSupportedDisplayModes();
 
 protected:
-	void _Draw_To_This() override final;
+	void _drawToThis() override final;
 };
 
 #endif

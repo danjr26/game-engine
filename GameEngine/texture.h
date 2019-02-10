@@ -61,28 +61,28 @@ public:
 	Texture(Type in_type, Vector3i in_dimensions, ColorRGBAc in_color, ubyte in_nChannels, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA = 0);
 	Texture(Type in_type, Vector3i in_dimensions, ubyte in_nChannels, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA = 0);
 
-	const ubyte* Read();
-	void Refresh_From_OpenGL();
+	const ubyte* read();
+	void refreshFromOpenGL();
 
-	void Use(ubyte in_slot = 0);
-	void Use_None(ubyte in_slot = 0);
+	void use(ubyte in_slot = 0);
+	void useNone(ubyte in_slot = 0);
 
-	Type Get_Type();
-	Vector3i Get_Dimensions();
-	ubyte Get_Number_Channels();
-	ubyte Get_Number_Bits_Per_Channel();
-	ubyte Get_Number_Samples_MSAA();
-	uint Get_Flags();
-	TextureSettings Get_Active_Settings();
+	Type getType();
+	Vector3i getDimensions();
+	ubyte getNumberChannels();
+	ubyte getNumberBitsPerChannel();
+	ubyte getNumberSamplesMSAA();
+	uint getFlags();
+	TextureSettings getActiveSettings();
 
 protected:
-	void Finish_Setup();
-	void Load_To_OpenGL();
+	void finishSetup();
+	void loadToOpenGL();
 
-	GLenum Determine_Pixel_Format();
-	GLenum Determine_Internal_Format();
-	GLenum Determine_Target();
-	ubyte Determine_Span();
+	GLenum determinePixelFormat();
+	GLenum determineInternalFormat();
+	GLenum determineTarget();
+	ubyte determineSpan();
 };
 
 #endif

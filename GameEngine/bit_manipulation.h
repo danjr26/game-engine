@@ -4,7 +4,7 @@
 #include "definitions.h"
 
 template<class T>
-void Set_Bit(T& inout_field, T in_bit, bool in_value) {
+void setBit(T& inout_field, T in_bit, bool in_value) {
 	inout_field &= ~in_bit;
 	if (in_value) {
 		inout_field |= in_bit;

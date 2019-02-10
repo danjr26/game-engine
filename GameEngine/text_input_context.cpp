@@ -4,6 +4,6 @@ TextInputContext::TextInputContext() :
 	InputContext(Action::count, 0, 0)
 {}
 
-bool TextInputContext::Process_Raw_Event(const RawInputEvent& in_event) {
-	return Auto_Update(in_event);
+bool TextInputContext::processRawEvent(const RawInputEvent& in_event) {
+	return autoUpdate(in_event);
 }

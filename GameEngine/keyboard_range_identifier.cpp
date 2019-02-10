@@ -22,7 +22,7 @@ float KeyboardRangeIdentifier::operator()(const RawInputEvent& in_event, const R
 		}
 		if (in_event.mType == RawInputEvent::Type::key_up) {
 			if (in_event.mKeyboard.mKey == mLowKey) {
-				if (in_state.mKeyboard.Is_Down(mHighKey)) {
+				if (in_state.mKeyboard.isDown(mHighKey)) {
 					return mHighValue;
 				}
 				else {
@@ -30,7 +30,7 @@ float KeyboardRangeIdentifier::operator()(const RawInputEvent& in_event, const R
 				}
 			}
 			if (in_event.mKeyboard.mKey == mHighKey) {
-				if (in_state.mKeyboard.Is_Down(mLowKey)) {
+				if (in_state.mKeyboard.isDown(mLowKey)) {
 					return mLowValue;
 				}
 				else {

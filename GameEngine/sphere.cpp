@@ -15,44 +15,44 @@ Sphere<T, n>::Sphere() :
 {}
 
 template<class T, uint n>
-inline void Sphere<T, n>::Apply_Transform(const Transform<T, n>& transform) {
+inline void Sphere<T, n>::applyTransform(const Transform<T, n>& transform) {
 	T scale = 1.0;
-	for (Transform<T, n>const* t = &transform; t != nullptr; t = t->Get_Const_Parent()) {
-		scale *= t->Get_Local_Scale().Max_Component();
+	for (Transform<T, n>const* t = &transform; t != nullptr; t = t->getConstParent()) {
+		scale *= t->getLocalScale().maxComponent();
 	}
-	(*this) = Sphere<T, n>::From_Point_Radius(
-		transform.Local_To_World_Point(mCenter),
+	(*this) = Sphere<T, n>::fromPointRadius(
+		transform.localToWorldPoint(mCenter),
 		mRadius * scale
 	);
 }
 
 template<class T, uint n>
-inline T Sphere<T, n>::Get_Radius() const {
+inline T Sphere<T, n>::getRadius() const {
 	return mRadius;
 }
 
 template<class T, uint n>
-inline void Sphere<T, n>::Set_Radius(T in_radius) {
+inline void Sphere<T, n>::setRadius(T in_radius) {
 	mRadius = in_radius;
 }
 
 template<class T, uint n>
-inline Vector<T, n> Sphere<T, n>::Get_Center() const {
+inline Vector<T, n> Sphere<T, n>::getCenter() const {
 	return mCenter;
 }
 
 template<class T, uint n>
-inline void Sphere<T, n>::Set_Center(const Vector<T, n>& in_center) {
+inline void Sphere<T, n>::setCenter(const Vector<T, n>& in_center) {
 	mCenter = in_center;
 }
 
 template<class T, uint n>
-T Sphere<T, n>::Get_Lazy_Radius() const {
+T Sphere<T, n>::getLazyRadius() const {
 	return mRadius * mRadius;
 }
 
 template<class T, uint n>
-inline Vector<T, n> Sphere<T, n>::Get_Extrema(uint in_dimension, bool in_isPositive) const {
+inline Vector<T, n> Sphere<T, n>::getExtrema(uint in_dimension, bool in_isPositive) const {
 	if (in_dimension >= n) {
 		throw InvalidArgumentException();
 	}
@@ -63,42 +63,42 @@ inline Vector<T, n> Sphere<T, n>::Get_Extrema(uint in_dimension, bool in_isPosit
 
 template<class T, uint n>
 template<typename>
-Vector<T, n> Sphere<T, n>::Random_Point_Boundary() const {
-	T angle = Random<T>((T)(2 * PI));
+Vector<T, n> Sphere<T, n>::randomPointBoundary() const {
+	T angle = GEUtil::random<T>((T)(2 * PI));
 	return Vector<T, n>(cos(angle), sin(angle)) * mRadius;
 }
 
 template<class T, uint n>
 template<typename, typename>
-Vector<T, n> Sphere<T, n>::Random_Point_Boundary() const {
-	T angle = Random<T>((T)(2 * PI));
-	T z = Random<T>(-1, 1);
+Vector<T, n> Sphere<T, n>::randomPointBoundary() const {
+	T angle = GEUtil::random<T>((T)(2 * PI));
+	T z = GEUtil::random<T>(-1, 1);
 	T u = sqrt(1 - z * z);
 	return mCenter + Vector<T, n>(u * cos(angle), u * sin(angle), z) * mRadius;
 }
 
 template<class T, uint n>
-Sphere<T, n> Sphere<T, n>::From_Bounded_Points(Vector<T, n>* in_points, uint in_nPoints) {
+Sphere<T, n> Sphere<T, n>::fromBoundedPoints(Vector<T, n>* in_points, uint in_nPoints) {
 	std::set<Vector<T, n>> points(in_points, in_points + in_nPoints);
 	std::set<Vector<T, n>> boundaryPoints;
-	return Welzl(points, boundaryPoints);
+	return welzl(points, boundaryPoints);
 }
 
 template<class T, uint n>
-Sphere<T, n> Sphere<T, n>::From_Bounded_Triangle(const Triangle<T, n>& in_triangle) {
+Sphere<T, n> Sphere<T, n>::fromBoundedTriangle(const Triangle<T, n>& in_triangle) {
 	for (uint i = 0; i < 3; i++) {
-		if (in_triangle.Get_Angle(i) >= PI / 2) {
-			Vector<T, n> center = (in_triangle.Get_Point((i + 1) % 3) + in_triangle.Get_Point((i + 2) % 3)) * (T)0.5;
-			T radius = (in_triangle.Get_Point((i + 1) % 3) - center).Magnitude();
+		if (in_triangle.getAngle(i) >= PI / 2) {
+			Vector<T, n> center = (in_triangle.getPoint((i + 1) % 3) + in_triangle.getPoint((i + 2) % 3)) * (T)0.5;
+			T radius = (in_triangle.getPoint((i + 1) % 3) - center).magnitude();
 			return Sphere<T, n>(center, radius);
 		}
 	}
 
-	return Sphere<T, n>(in_triangle.Get_Circumcenter(), in_triangle.Get_Circumradius());
+	return Sphere<T, n>(in_triangle.getCircumcenter(), in_triangle.getCircumradius());
 }
 
 template<class T, uint n>
-Sphere<T, n> Sphere<T, n>::Welzl(std::set<Vector<T, n>>& in_points, std::set<Vector<T, n>>& in_borderPoints) {
+Sphere<T, n> Sphere<T, n>::welzl(std::set<Vector<T, n>>& in_points, std::set<Vector<T, n>>& in_borderPoints) {
 	if (in_points.empty() || in_borderPoints.size() >= 3) {
 		Vector<T, n> radius;
 		auto it = in_borderPoints.begin();
@@ -109,61 +109,61 @@ Sphere<T, n> Sphere<T, n>::Welzl(std::set<Vector<T, n>>& in_points, std::set<Vec
 			return { *in_borderPoints.begin(), (T)0 };
 		case 2:
 			radius = (*in_borderPoints.end() - *in_borderPoints.begin()) * 0.5;
-			return { *in_borderPoints.begin() + radius, radius.Magnitude() };
+			return { *in_borderPoints.begin() + radius, radius.magnitude() };
 		default:
-			return Sphere<T, n>::From_Bounded_Triangle(Triangle<T, n>::From_Points(*(it++), *(it++), *(it++)));
+			return Sphere<T, n>::fromBoundedTriangle(Triangle<T, n>::fromPoints(*(it++), *(it++), *(it++)));
 		}
 	}
 	Vector<T, n> point = *in_points.begin();
 	in_points.erase(in_points.begin());
-	Sphere<T, n> lastSphere = Welzl(in_points, in_borderPoints);
-	if ((point - lastSphere.Get_Center()).Dot_Self() <= lastSphere.Get_Lazy_Radius()) {
+	Sphere<T, n> lastSphere = welzl(in_points, in_borderPoints);
+	if ((point - lastSphere.getCenter()).dotSelf() <= lastSphere.getLazyRadius()) {
 		return lastSphere;
 	}
 	in_borderPoints.insert(point);
-	Sphere<T, n> newSphere = Welzl(in_points, in_borderPoints);
+	Sphere<T, n> newSphere = welzl(in_points, in_borderPoints);
 	in_borderPoints.erase(in_borderPoints.find(point));
 	in_points.insert(point);
 	return newSphere;
 }
 
 template<class T, uint n>
-Vector<T, n> Sphere<T, n>::Random_Point_Inside() const {
-	return (Random_Point_Boundary() - mCenter) * sqrt(Random<T>(1)) + mCenter;
+Vector<T, n> Sphere<T, n>::randomPointInside() const {
+	return (randomPointBoundary() - mCenter) * sqrt(GEUtil::random<T>(1)) + mCenter;
 }
 
 template<class T, uint n>
-inline Sphere<T, n> Sphere<T, n>::From_Point_Radius(const Vector<T, n>& in_center, T in_radius) {
+inline Sphere<T, n> Sphere<T, n>::fromPointRadius(const Vector<T, n>& in_center, T in_radius) {
 	return Sphere(in_center, in_radius);
 }
 
 template<class T, uint n>
 template<typename>
-inline T Sphere<T, n>::Get_Area() const {
+inline T Sphere<T, n>::getArea() const {
 	return PI * mRadius * mRadius;
 }
 
 template<class T, uint n>
 template<typename>
-inline T Sphere<T, n>::Get_Circumference() const {
+inline T Sphere<T, n>::getCircumference() const {
 	return 2.0 * PI * mRadius;
 }
 
 template<class T, uint n>
 template<typename>
-inline T Sphere<T, n>::Get_Volume() const {
+inline T Sphere<T, n>::getVolume() const {
 	return 4.0 / 3.0 * PI * mRadius * mRadius * mRadius;
 }
 
 template<class T, uint n>
 template<typename>
-inline T Sphere<T, n>::Get_Surface_Area() const {
+inline T Sphere<T, n>::getSurfaceArea() const {
 	return 4.0 * PI * mRadius * mRadius;
 }
 
 template<class T, uint n>
 template<typename>
-inline T Sphere<T, n>::Get_Major_Circumference() const {
+inline T Sphere<T, n>::getMajorCircumference() const {
 	return 2.0 * PI * mRadius;
 }
 

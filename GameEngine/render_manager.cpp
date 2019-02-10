@@ -11,13 +11,13 @@ RenderManager::RenderManager() :
 	mMainWindow(nullptr)
 {}
 
-void RenderManager::Add(RenderableObject* in_renderable) {
-	RenderableWithZ chunk = { in_renderable, in_renderable->Z() };
-	auto position = std::lower_bound(mRenderables.begin(), mRenderables.end(), chunk, Z_Sorter);	
+void RenderManager::add(RenderableObject* in_renderable) {
+	RenderableWithZ chunk = { in_renderable, in_renderable->z() };
+	auto position = std::lower_bound(mRenderables.begin(), mRenderables.end(), chunk, zSorter);	
 	mRenderables.insert(position, chunk);
 }
 
-void RenderManager::Remove(RenderableObject* in_renderable) {
+void RenderManager::remove(RenderableObject* in_renderable) {
 	for (uint i = 0; i < mRenderables.size(); i++) {
 		if (mRenderables[i].mObject == in_renderable) {
 			mRenderables.erase(mRenderables.begin() + i);
@@ -26,31 +26,31 @@ void RenderManager::Remove(RenderableObject* in_renderable) {
 	}
 }
 
-void RenderManager::Render_Pass(RenderPass* in_pass) {
-	in_pass->Begin(mRenderPassArg);
+void RenderManager::renderPass(RenderPass* in_pass) {
+	in_pass->begin(mRenderPassArg);
 
 	RenderableObject* object = nullptr;
 
 	for (uint i = 0; i < mRenderables.size(); i++) {
 
-		object = (in_pass->Get_Sort_Order() == RenderPass::front_to_back) ?
+		object = (in_pass->getSortOrder() == RenderPass::front_to_back) ?
 			mRenderables[mRenderables.size() - i - 1].mObject :
 			mRenderables[i].mObject;
 
-		if (object->Is_Enabled() && in_pass->Get_Query().Evaluate(*object) && !object->Should_Cull()) {
-			object->Render();
+		if (object->isEnabled() && in_pass->getQuery().evaluate(*object) && !object->shouldCull()) {
+			object->render();
 		}
 
 	}
 
-	mRenderPassArg = in_pass->End();
+	mRenderPassArg = in_pass->end();
 }
 
-bool RenderManager::Z_Sorter(const RenderableWithZ& in_chunk1, const RenderableWithZ& in_chunk2) {
-	return in_chunk1.mObject->Z() < in_chunk2.mObject->Z();
+bool RenderManager::zSorter(const RenderableWithZ& in_chunk1, const RenderableWithZ& in_chunk2) {
+	return in_chunk1.mObject->z() < in_chunk2.mObject->z();
 }
 
-void RenderManager::Render_Frame() {
+void RenderManager::renderFrame() {
 	static uint c = 0;
 	//Log::main(std::string("frame ") + std::to_string(c++));
 	mRenderPassArg = nullptr;
@@ -59,6 +59,6 @@ void RenderManager::Render_Frame() {
 		if (mPasses[i] == nullptr) {
 			throw InvalidArgumentException("render pass was null");
 		}
-		Render_Pass(mPasses[i]);
+		renderPass(mPasses[i]);
 	}
 }

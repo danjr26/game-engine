@@ -34,9 +34,9 @@ private:
 public:
 	Shader(Type in_type, std::string in_filename);
 	~Shader();
-	Type Get_Type();
+	Type getType();
 
-	static Type Parse_Type(const std::string& in_text);
+	static Type parseType(const std::string& in_text);
 };
 
 

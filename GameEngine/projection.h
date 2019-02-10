@@ -19,10 +19,10 @@ public:
 	Projection(T in_near, T in_far, T in_horizontalAngle, T in_xToYRatio, Type in_type = Type::perspective);
 	Projection(Vector<T, 3> in_minima, Vector<T, 3> in_maxima, Type in_type = Type::orthographic);
 
-	T Get_View_Angle();
-	void Set_View_Angle(T in_value);
+	T getViewAngle();
+	void setViewAngle(T in_value);
 
-	Matrix<T, 4, 4> Get_Matrix();
+	Matrix<T, 4, 4> getMatrix();
 };
 
 using Projectionf = Projection<float>;

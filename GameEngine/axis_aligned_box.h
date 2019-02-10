@@ -14,35 +14,35 @@ private:
 	AxisAlignedBox(const Vector<T, n>& in_minima, const Vector<T, n>& in_maxima);
 
 public:
-	void Apply_Transform(const Transform<T, n>& transform);
+	void applyTransform(const Transform<T, n>& transform);
 
-	void Get_Corners(Vector<T, n>* out_corners) const;
-	Vector<T, n> Get_Center() const;
-	Vector<T, n> Get_Dimensions() const;
-	Vector<T, n> Get_Minima() const;
-	void Set_Minima(const Vector<T, n>& in_minima);
-	Vector<T, n> Get_Maxima() const;
-	void Set_Maxima(const Vector<T, n>& in_maxima);
-	Range<T> Get_Range(uint dimension) const;
+	void getCorners(Vector<T, n>* out_corners) const;
+	Vector<T, n> getCenter() const;
+	Vector<T, n> getDimensions() const;
+	Vector<T, n> getMinima() const;
+	void setMinima(const Vector<T, n>& in_minima);
+	Vector<T, n> getMaxima() const;
+	void setMaxima(const Vector<T, n>& in_maxima);
+	Range<T> getRange(uint dimension) const;
 
 	template<typename = typename std::enable_if_t<n == 2>>
-	T Get_Area() const;
+	T getArea() const;
 	template<typename = typename std::enable_if_t<n == 2>>
-	T Get_Perimeter() const;
+	T getPerimeter() const;
 	template<typename = typename std::enable_if_t<n == 3>>
-	T Get_Volume() const;
+	T getVolume() const;
 	template<typename = typename std::enable_if_t<n == 3>>
-	T Get_Surface_Area() const;
+	T getSurfaceArea() const;
 	template<typename = typename std::enable_if_t<n == 3>>
-	T Get_Total_Edge_Length() const;
+	T getTotalEdgeLength() const;
 
-	Vector<T, n> Random_Point_Boundary() const;
-	Vector<T, n> Random_Point_Inside() const;
+	Vector<T, n> randomPointBoundary() const;
+	Vector<T, n> randomPointInside() const;
 
 public:
-	static AxisAlignedBox<T, n> From_Extrema(const Vector<T, n>& in_minima, const Vector<T, n>& in_maxima);
-	static AxisAlignedBox<T, n> From_Center(const Vector<T, n>& in_center, const Vector<T, n>& in_dimensions);
-	static AxisAlignedBox<T, n> From_Bounded_Points(uint in_nPoints, const Vector<T, n>* in_points);
+	static AxisAlignedBox<T, n> fromExtrema(const Vector<T, n>& in_minima, const Vector<T, n>& in_maxima);
+	static AxisAlignedBox<T, n> fromCenter(const Vector<T, n>& in_center, const Vector<T, n>& in_dimensions);
+	static AxisAlignedBox<T, n> fromBoundedPoints(uint in_nPoints, const Vector<T, n>* in_points);
 };
 
 template<class T>

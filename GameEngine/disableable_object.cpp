@@ -4,14 +4,14 @@ DisableableObject::DisableableObject() :
 	mIsEnabled(true)
 {}
 
-void DisableableObject::Enable() {
+void DisableableObject::enable() {
 	mIsEnabled = true;
 }
 
-void DisableableObject::Disable() {
+void DisableableObject::disable() {
 	mIsEnabled = false;
 }
 
-bool DisableableObject::Is_Enabled() {
+bool DisableableObject::isEnabled() {
 	return mIsEnabled;
 }

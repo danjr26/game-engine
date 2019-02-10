@@ -5,11 +5,11 @@
 #include "game_engine.h"
 
 FontFace::FontFace(std::string in_filename) {
-	FT_Library library = GE.Fonts().Get_Library();
+	FT_Library library = GE.fonts().getLibrary();
 	FT_Error error = FT_New_Face(library, in_filename.c_str(), 0, &mFace);
 	if (error) {
 		Log::main(std::string("error: could not load font face '") + in_filename + "'");
-		GE.Exit();
+		GE.quit();
 	}
 }
 
@@ -17,7 +17,7 @@ FontFace::~FontFace() {
 	FT_Done_Face(mFace);
 }
 
-FontFaceRasterSet* FontFace::Rasterize(uint in_size) {
+FontFaceRasterSet* FontFace::rasterize(uint in_size) {
 	FontFaceRasterSet* rasterSet = new FontFaceRasterSet();
 	rasterSet->mFace = this;
 	rasterSet->mSize = in_size;
@@ -59,24 +59,24 @@ FontFaceRasterSet* FontFace::Rasterize(uint in_size) {
 		rasterSet->mDimensions.push_back(Vector2i(glyph->bitmap.width, glyph->bitmap.rows));
 		rasterSet->mAdvances.push_back(mFace->glyph->advance.x / (float)(1 << 6));
 
-		maxDimensions[0] = max((uint)maxDimensions[0], glyph->bitmap.width);
-		maxDimensions[1] = max((uint)maxDimensions[1], glyph->bitmap.rows);
+		maxDimensions[0] = GEUtil::max((uint)maxDimensions[0], glyph->bitmap.width);
+		maxDimensions[1] = GEUtil::max((uint)maxDimensions[1], glyph->bitmap.rows);
 	}
 
-	uchar* bitmap = new uchar[maxDimensions.Component_Product()];
+	uchar* bitmap = new uchar[maxDimensions.componentProduct()];
 
-	for (uint i = 0; i < maxDimensions.Z(); i++) {
+	for (uint i = 0; i < maxDimensions.z(); i++) {
 		if (glyphs[i]->bitmap.buffer == nullptr) {
-			for (uint x = 0; x < maxDimensions.X(); x++) {	
-				for (uint y = 0; y < maxDimensions.Y(); y++) {
-					bitmap[i * maxDimensions.X() * maxDimensions.Y() + y * maxDimensions.X() + x] = 0;
+			for (uint x = 0; x < maxDimensions.x(); x++) {	
+				for (uint y = 0; y < maxDimensions.y(); y++) {
+					bitmap[i * maxDimensions.x() * maxDimensions.y() + y * maxDimensions.x() + x] = 0;
 				}
 			}
 		}
 		else {
-			for (uint x = 0; x < maxDimensions.X(); x++) {
-				for (uint y = 0; y < maxDimensions.Y(); y++) {
-					bitmap[i * maxDimensions.X() * maxDimensions.Y() + y * maxDimensions.X() + x] =
+			for (uint x = 0; x < maxDimensions.x(); x++) {
+				for (uint y = 0; y < maxDimensions.y(); y++) {
+					bitmap[i * maxDimensions.x() * maxDimensions.y() + y * maxDimensions.x() + x] =
 						(x < glyphs[i]->bitmap.width && y < glyphs[i]->bitmap.rows) ? 
 						glyphs[i]->bitmap.buffer[y * glyphs[i]->bitmap.width + x] : 0;
 				}
@@ -85,14 +85,14 @@ FontFaceRasterSet* FontFace::Rasterize(uint in_size) {
 	}
 
 	Texture* texture = new Texture(Texture::Type::_2d_array, maxDimensions, bitmap, 1, 8, Texture::Flags::mipmaps);
-	TextureSettings settings = texture->Get_Active_Settings();
-	settings.Set_Swizzle(
+	TextureSettings settings = texture->getActiveSettings();
+	settings.setSwizzle(
 		TextureSettings::Swizzle::one, 
 		TextureSettings::Swizzle::one, 
 		TextureSettings::Swizzle::one, 
 		TextureSettings::Swizzle::channel_1
 	);
-	settings.Use(&texture->Get_Active_Settings());
+	settings.use(&texture->getActiveSettings());
 
 	delete[] bitmap;
 
@@ -101,19 +101,19 @@ FontFaceRasterSet* FontFace::Rasterize(uint in_size) {
 	return rasterSet;
 }
 
-bool FontFace::Is_Printable(uchar in_char) {
+bool FontFace::isPrintable(uchar in_char) {
 	return in_char >= ' ' && in_char <= '~';
 }
 
-bool FontFace::Is_Printable_Or_EOL(uchar in_char) {
-	return Is_Printable(in_char) || in_char == '\n';
+bool FontFace::isPrintableOrEOL(uchar in_char) {
+	return isPrintable(in_char) || in_char == '\n';
 }
 
-void FontFace::Load_XML_List(const std::string& in_filename) {
+void FontFace::loadXMLList(const std::string& in_filename) {
 	std::ifstream file(in_filename);
 	if (!file.is_open()) {
 		Log::main(std::string("error: cannot open file '") + in_filename + "'");
-		GE.Exit();
+		GE.quit();
 	}
 
 	file.seekg(0, file.end);
@@ -133,7 +133,7 @@ void FontFace::Load_XML_List(const std::string& in_filename) {
 	auto masterNode = doc.first_node("FontList");
 	if (!masterNode) {
 		Log::main(std::string("error: invalid font list file '") + in_filename + "'");
-		GE.Exit();
+		GE.quit();
 	}
 
 	for (auto node = masterNode->first_node("FontFace"); node; node = node->next_sibling("FontFace")) {
@@ -142,11 +142,11 @@ void FontFace::Load_XML_List(const std::string& in_filename) {
 
 		if (!nameAttribute || !fileAttribute) {
 			Log::main(std::string("error: invalid shader list file '") + in_filename + "'");
-			GE.Exit();
+			GE.quit();
 		}
 
 		FontFace* fontFace = new FontFace(fileAttribute->value());
-		GE.Assets().Add(nameAttribute->value(), fontFace);
+		GE.assets().add(nameAttribute->value(), fontFace);
 	}
 
 	delete[] buffer;

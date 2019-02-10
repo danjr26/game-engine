@@ -12,7 +12,7 @@ private:
 
 public:
 	UniformForceField(Vector<double, n> in_force, CollisionMask<double, n>* in_mask = nullptr);
-	LocatedVector<double, n> Calculate_Force(RigidBody<n>& in_rigidBody) override;
+	LocatedVector<double, n> calculateForce(RigidBody<n>& in_rigidBody) override;
 };
 
 using UniformForceField2 = UniformForceField<2>;

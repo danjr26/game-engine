@@ -12,13 +12,13 @@ private:
 	AxisAlignedLine(uint in_dimension, T in_value);
 
 public:
-	uint Get_Dimension() const;
-	T Get_Value() const;
-	Vector<T, n> Get_Direction() const;
-	void Apply_Transform(const Transform<T, n>& in_transform);
+	uint getDimension() const;
+	T getValue() const;
+	Vector<T, n> getDirection() const;
+	void applyTransform(const Transform<T, n>& in_transform);
 
 public:
-	static AxisAlignedLine<T, n> From_Dimension_Value(uint in_dimension, T in_value);
+	static AxisAlignedLine<T, n> fromDimensionValue(uint in_dimension, T in_value);
 };
 
 using AxisAlignedLine2f = AxisAlignedLine<float, 2>;

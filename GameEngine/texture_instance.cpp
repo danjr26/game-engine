@@ -8,15 +8,15 @@ TextureInstance::TextureInstance(Texture* in_texture) :
 	mSettings(in_texture),
 	mInfluences{ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f } {}
 
-Texture* TextureInstance::Get_Texture() {
+Texture* TextureInstance::getTexture() {
 	return mTexture;
 }
 
-TextureSettings& TextureInstance::Settings() {
+TextureSettings& TextureInstance::settings() {
 	return mSettings;
 }
 
-void TextureInstance::Set_Influence(Influence in_influence, float value) {
+void TextureInstance::setInfluence(Influence in_influence, float value) {
 	if (in_influence >= Influence::count) {
 		throw InvalidArgumentException("invalid texture influence identifier");
 	}
@@ -24,7 +24,7 @@ void TextureInstance::Set_Influence(Influence in_influence, float value) {
 	mInfluences[(uint)in_influence] = value;
 }
 
-float TextureInstance::Get_Influence(Influence in_influence) {
+float TextureInstance::getInfluence(Influence in_influence) {
 	if (in_influence >= Influence::count) {
 		throw InvalidArgumentException("invalid texture influence identifier");
 	}
@@ -32,18 +32,18 @@ float TextureInstance::Get_Influence(Influence in_influence) {
 	return mInfluences[(uint)in_influence];
 }
 
-void TextureInstance::Use(ubyte in_slot) {
+void TextureInstance::use(ubyte in_slot) {
 	if (mTexture == nullptr) {
 		throw InvalidArgumentException("texture was null");
 	}
 
-	mSettings.Use(&mTexture->Get_Active_Settings(), in_slot);
+	mSettings.use(&mTexture->getActiveSettings(), in_slot);
 }
 
-void TextureInstance::Use_None(ubyte in_slot) {
+void TextureInstance::useNone(ubyte in_slot) {
 	if (mTexture == nullptr) {
 		throw InvalidArgumentException("texture was null");
 	}
 
-	mTexture->Use_None(in_slot);
+	mTexture->useNone(in_slot);
 }

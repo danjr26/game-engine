@@ -6,6 +6,6 @@ PointerInputContext::PointerInputContext() :
 	
 }
 
-bool PointerInputContext::Process_Raw_Event(const RawInputEvent& in_event) {
-	return Auto_Update(in_event);
+bool PointerInputContext::processRawEvent(const RawInputEvent& in_event) {
+	return autoUpdate(in_event);
 }

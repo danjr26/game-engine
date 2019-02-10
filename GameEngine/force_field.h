@@ -14,9 +14,9 @@ protected:
 public:
 	ForceField(CollisionMask<double, n>* in_mask = nullptr);
 	~ForceField();
-	CollisionMask<double, n>* Get_Collision_Mask();
-	void Set_Collision_Context(CollisionContext<double, n>* in_context);
-	virtual LocatedVector<double, n> Calculate_Force(RigidBody<n>& in_rigidBody) = 0;
+	CollisionMask<double, n>* getCollisionMask();
+	void setCollisionContext(CollisionContext<double, n>* in_context);
+	virtual LocatedVector<double, n> calculateForce(RigidBody<n>& in_rigidBody) = 0;
 };
 
 using ForceField2 = ForceField<2>;

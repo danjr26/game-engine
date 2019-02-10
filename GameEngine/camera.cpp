@@ -3,28 +3,28 @@
 
 Camera::Camera() {}
 
-Projectiond Camera::Get_Projection() const {
+Projectiond Camera::getProjection() const {
 	return mProjection;
 }
 
-void Camera::Set_Projection(const Projectiond& in_projection) {
+void Camera::setProjection(const Projectiond& in_projection) {
 	mProjection = in_projection;
 }
 
-Matrix4f Camera::Get_Projection_Matrix() {
-	return mProjection.Get_Matrix();
+Matrix4f Camera::getProjectionMatrix() {
+	return mProjection.getMatrix();
 }
 
-Matrix4f Camera::Get_View_Matrix() {
-	return mTransform.Get_World_Inverse_Matrix();
+Matrix4f Camera::getViewMatrix() {
+	return mTransform.getWorldInverseMatrix();
 }
 
-Matrix4f Camera::Get_Matrix() {
-	return Get_Projection_Matrix() * Get_View_Matrix();
+Matrix4f Camera::getMatrix() {
+	return getProjectionMatrix() * getViewMatrix();
 }
 
-void Camera::Use() {
-	GE.Cameras().mActive = this;
+void Camera::use() {
+	GE.cameras().mActive = this;
 }
 
 

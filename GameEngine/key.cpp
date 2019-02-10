@@ -1,6 +1,6 @@
 #include "key.h"
 
-Key Windows_VK_To_Key(uint in_vk) {
+Key windowsVKToKey(uint in_vk) {
 	switch (in_vk) {
 	case 'A': return Key::a;
 	case 'B': return Key::b;

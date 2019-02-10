@@ -9,9 +9,9 @@ private:
 	std::string mName;
 
 private:
-	std::string Get_Name();
-	void Set_Name(std::string in_name);
-	void Clear_Name();
+	std::string getName();
+	void setName(std::string in_name);
+	void clearName();
 
 public:
 	Asset();

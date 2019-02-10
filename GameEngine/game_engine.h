@@ -17,7 +17,7 @@
 #include "async_task_manager.h"
 #include "physics_manager.h"
 
-#define GE GameEngine::Instance()
+#define GE GameEngine::getInstance()
 
 class GameEngine {
 private:
@@ -42,26 +42,26 @@ public:
 	GameEngine();
 	~GameEngine();
 
-	FrameRateManager& Frame_Rate();
-	PerFrameUpdateManager& Per_Frame_Update();
-	InputManager& Input();
-	CameraManager& Cameras();
-	AssetManager& Assets();
-	FontManager& Fonts();
-	RenderManager& Render();
-	WindowManager& Windows();
-	CollisionManagerd& Collision();
-	AsyncTaskManager& Async();
-	PhysicsManager& Physics();
-  Clock& Time();
+	FrameRateManager& frameRate();
+	PerFrameUpdateManager& perFrameUpdate();
+	InputManager& input();
+	CameraManager& cameras();
+	AssetManager& assets();
+	FontManager& fonts();
+	RenderManager& render();
+	WindowManager& windows();
+	CollisionManagerd& collision();
+	AsyncTaskManager& async();
+	PhysicsManager& physics();
+  Clock& clock();
 
-	void Begin();
-	void Exit();
+	void begin();
+	void quit();
 
-	static GameEngine& Instance();
+	static GameEngine& getInstance();
 
 private:
-	void Next_Frame();
+	void nextFrame();
 };
 
 /*

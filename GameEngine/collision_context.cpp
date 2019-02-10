@@ -12,7 +12,7 @@ CollisionContext<T, n>::~CollisionContext()
 {}
 
 template<class T, uint n>
-void CollisionContext<T, n>::Add(CollisionMask<T, n>* in_mask) {
+void CollisionContext<T, n>::add(CollisionMask<T, n>* in_mask) {
 	if (in_mask == nullptr) {
 		throw InvalidArgumentException();
 	}
@@ -20,9 +20,9 @@ void CollisionContext<T, n>::Add(CollisionMask<T, n>* in_mask) {
 }
 
 template<class T, uint n>
-void CollisionContext<T, n>::Remove(CollisionMask<T, n>* in_mask) {
+void CollisionContext<T, n>::remove(CollisionMask<T, n>* in_mask) {
 	for (auto it = mEvaluations.begin(); it < mEvaluations.end(); it++) {
-		if (it->Get_Parent_Mask() == in_mask) {
+		if (it->getParentMask() == in_mask) {
 			mEvaluations.erase(it);
 			it--;
 		}
@@ -30,15 +30,15 @@ void CollisionContext<T, n>::Remove(CollisionMask<T, n>* in_mask) {
 }
 
 template<class T, uint n>
-void CollisionContext<T, n>::Update() {
+void CollisionContext<T, n>::update() {
 	using Evaluation = BinaryCollisionTree<T, n>::Evaluation;
 	std::vector<Evaluation*> filteredEvaluations1;
 	std::vector<Evaluation*> filteredEvaluations2;
 	InPlaceCollisionEvaluator<T, n> collisionEvaluator;
 	Collision<T, n> collision;
 
-	Prepare_Data_Containers();
-	Update_Evaluations();
+	prepareDataContainers();
+	updateEvaluations();
 
 	for (auto it = mPartnersToTest.begin(); it != mPartnersToTest.end(); it++) {
 		filteredEvaluations1.clear();
@@ -49,49 +49,49 @@ void CollisionContext<T, n>::Update() {
 
 		if (filter1 == filter2) {
 			for (auto jt = mEvaluations.begin(); jt < mEvaluations.end(); jt++) {
-				if (jt->Get_Parent_Mask()->Has_Filter(filter1)) {
+				if (jt->getParentMask()->hasFilter(filter1)) {
 					filteredEvaluations1.push_back(&(*jt));
 				}
 			}
 
-			Partner_Filtered(filteredEvaluations1);
+			partnerFiltered(filteredEvaluations1);
 		}
 		else {
 			for (auto jt = mEvaluations.begin(); jt < mEvaluations.end(); jt++) {
-				if (jt->Get_Parent_Mask()->Has_Filter(filter1)) {
+				if (jt->getParentMask()->hasFilter(filter1)) {
 					filteredEvaluations1.push_back(&(*jt));
 				}
 			}
 
 			for (auto jt = mEvaluations.begin(); jt < mEvaluations.end(); jt++) {
-				if (jt->Get_Parent_Mask()->Has_Filter(filter2)) {
+				if (jt->getParentMask()->hasFilter(filter2)) {
 					filteredEvaluations2.push_back(&(*jt));
 				}
 			}
 
-			Partner_Filtered(filteredEvaluations1, filteredEvaluations2);
+			partnerFiltered(filteredEvaluations1, filteredEvaluations2);
 		}
 	}
 
-	GE.Async().Help_Until_Empty();
+	GE.async().helpUntilEmpty();
 
 	for (auto it = mTasks.begin(); it < mTasks.end(); it++) {
-		(*it)->Wait_For_Finish();
+		(*it)->waitForFinish();
 		delete *it;
 	}
 }
 
 
 template<class T, uint n>
-void CollisionContext<T, n>::Update(CollisionMask<T, n>** in_masks, uint in_nMasks) {
+void CollisionContext<T, n>::update(CollisionMask<T, n>** in_masks, uint in_nMasks) {
 	using Evaluation = BinaryCollisionTree<T, n>::Evaluation;
 	std::vector<Evaluation*> filteredEvaluations1;
 	std::vector<Evaluation*> filteredEvaluations2;
 	InPlaceCollisionEvaluator<T, n> collisionEvaluator;
 	Collision<T, n> collision;
 
-	Prepare_Data_Containers(in_masks, in_nMasks);
-	Update_Evaluations(in_masks, in_nMasks);
+	prepareDataContainers(in_masks, in_nMasks);
+	updateEvaluations(in_masks, in_nMasks);
 
 	for (auto it = mPartnersToTest.begin(); it != mPartnersToTest.end(); it++) {
 		filteredEvaluations1.clear();
@@ -102,45 +102,45 @@ void CollisionContext<T, n>::Update(CollisionMask<T, n>** in_masks, uint in_nMas
 
 		if (filter1 == filter2) {
 			for (auto jt = mEvaluations.begin(); jt < mEvaluations.end(); jt++) {
-				if (jt->Get_Parent_Mask()->Has_Filter(filter1)) {
+				if (jt->getParentMask()->hasFilter(filter1)) {
 					filteredEvaluations1.push_back(&(*jt));
 				}
 			}
 
-			Partner_Filtered(filteredEvaluations1);
+			partnerFiltered(filteredEvaluations1);
 		}
 		else {
 			for (auto jt = mEvaluations.begin(); jt < mEvaluations.end(); jt++) {
-				if (jt->Get_Parent_Mask()->Has_Filter(filter1)) {
+				if (jt->getParentMask()->hasFilter(filter1)) {
 					filteredEvaluations1.push_back(&(*jt));
 				}
 			}
 
 			for (auto jt = mEvaluations.begin(); jt < mEvaluations.end(); jt++) {
-				if (jt->Get_Parent_Mask()->Has_Filter(filter2)) {
+				if (jt->getParentMask()->hasFilter(filter2)) {
 					filteredEvaluations2.push_back(&(*jt));
 				}
 			}
 
-			Partner_Filtered(filteredEvaluations1, filteredEvaluations2);
+			partnerFiltered(filteredEvaluations1, filteredEvaluations2);
 		}
 	}
 
-	GE.Async().Help_Until_Empty();
+	GE.async().helpUntilEmpty();
 
 	for (auto it = mTasks.begin(); it < mTasks.end(); it++) {
-		(*it)->Wait_For_Finish();
+		(*it)->waitForFinish();
 		delete *it;
 	}
 }
 
 template<class T, uint n>
-uint CollisionContext<T, n>::Get_Total_Partnerings() const {
+uint CollisionContext<T, n>::getTotalPartnerings() const {
 	return (uint)mPartnering.size();
 }
 
 template<class T, uint n>
-void CollisionContext<T, n>::Get_Partners(CollisionMask<T, n>* in_mask, std::vector<CollisionPartner*>& out_partners) {
+void CollisionContext<T, n>::getPartners(CollisionMask<T, n>* in_mask, std::vector<CollisionPartner*>& out_partners) {
 	out_partners.clear();
 	auto search = mPartnering.equal_range(in_mask);
 	for (auto it = search.first; it != search.second; it++) {
@@ -149,7 +149,7 @@ void CollisionContext<T, n>::Get_Partners(CollisionMask<T, n>* in_mask, std::vec
 }
 
 template<class T, uint n>
-void CollisionContext<T, n>::Set_Partner_Test_Activation(std::pair<ubyte, ubyte> in_test, bool in_value) {
+void CollisionContext<T, n>::setPartnerTestActivation(std::pair<ubyte, ubyte> in_test, bool in_value) {
 	if (in_value) {
 		mPartnersToTest.insert(in_test);
 	}
@@ -159,12 +159,12 @@ void CollisionContext<T, n>::Set_Partner_Test_Activation(std::pair<ubyte, ubyte>
 }
 
 template<class T, uint n>
-bool CollisionContext<T, n>::Get_Partner_Test_Activation(std::pair<ubyte, ubyte> in_test) {
+bool CollisionContext<T, n>::getPartnerTestActivation(std::pair<ubyte, ubyte> in_test) {
 	return mPartnersToTest.find(in_test) != mPartnersToTest.end();
 }
 
 template<class T, uint n>
-void CollisionContext<T, n>::Update_Evaluations() {
+void CollisionContext<T, n>::updateEvaluations() {
 	std::vector<PackagedAsyncTask<void>> mTasks;
 	uint nEvaluations = (uint)mEvaluations.size();
 	uint batchSize = (uint)mEvaluations.size() / 4 + 1;
@@ -174,32 +174,32 @@ void CollisionContext<T, n>::Update_Evaluations() {
 	for (uint i = 0; i < nEvaluations; i += batchSize) {
 		auto todo = [this, i, batchSize, nEvaluations]() {
 			for (uint j = i; j < i + batchSize && j < nEvaluations; j++) {
-				mTree.Evaluate(mEvaluations[j].Get_Parent_Mask(), mDepth, mEvaluations[j]);
+				mTree.evaluate(mEvaluations[j].getParentMask(), mDepth, mEvaluations[j]);
 			}
 		};
 		mTasks.emplace_back(todo);
-		GE.Async().Add(&mTasks.back());
+		GE.async().add(&mTasks.back());
 	}
 
-	GE.Async().Help_Until_Empty();
+	GE.async().helpUntilEmpty();
 
 	for (auto it = mTasks.begin(); it < mTasks.end(); it++) {
-		it->Wait_For_Finish();
+		it->waitForFinish();
 	}
 	/*
 	for (uint i = 0; i < mEvaluations.size(); i++) {
-		mTree.Evaluate(mEvaluations[i].Get_Parent_Mask(), mDepth, mEvaluations[i]);
+		mTree.evaluate(mEvaluations[i].getParentMask(), mDepth, mEvaluations[i]);
 	}
 	*/
 	for (auto it = mMasksToAdd.begin(); it < mMasksToAdd.end(); it++) {
 		mEvaluations.push_back(BinaryCollisionTree<T, n>::Evaluation());
-		mTree.Evaluate(*it, mDepth, mEvaluations.back());
+		mTree.evaluate(*it, mDepth, mEvaluations.back());
 	}
 	mMasksToAdd.clear();
 }
 
 template<class T, uint n>
-void CollisionContext<T, n>::Update_Evaluations(CollisionMask<T, n>** in_masks, uint in_nMasks) {
+void CollisionContext<T, n>::updateEvaluations(CollisionMask<T, n>** in_masks, uint in_nMasks) {
 	std::vector<PackagedAsyncTask<void>> mTasks;
 	uint nEvaluations = in_nMasks;
 	uint batchSize = in_nMasks / 4 + 1;
@@ -210,26 +210,26 @@ void CollisionContext<T, n>::Update_Evaluations(CollisionMask<T, n>** in_masks, 
 		auto todo = [this, i, batchSize, nEvaluations, in_masks]() {
 			for (uint j = i; j < i + batchSize && j < nEvaluations; j++) {
 				for (uint k = 0; k < mEvaluations.size(); k++) {
-					if (mEvaluations[k].Get_Parent_Mask() == in_masks[j]) {
-						mTree.Evaluate(in_masks[j], mDepth, mEvaluations[k]);
+					if (mEvaluations[k].getParentMask() == in_masks[j]) {
+						mTree.evaluate(in_masks[j], mDepth, mEvaluations[k]);
 						break;
 					}
 				}
 			}
 		};
 		mTasks.emplace_back(todo);
-		GE.Async().Add(&mTasks.back());
+		GE.async().add(&mTasks.back());
 	}
 
-	GE.Async().Help_Until_Empty();
+	GE.async().helpUntilEmpty();
 
 	for (auto it = mTasks.begin(); it < mTasks.end(); it++) {
-		it->Wait_For_Finish();
+		it->waitForFinish();
 	}
 }
 
 template<class T, uint n>
-void CollisionContext<T, n>::Prepare_Data_Containers() {
+void CollisionContext<T, n>::prepareDataContainers() {
 	mPartnering.clear();
 	mTasks.clear();
 
@@ -241,7 +241,7 @@ void CollisionContext<T, n>::Prepare_Data_Containers() {
 }
 
 template<class T, uint n>
-void CollisionContext<T, n>::Prepare_Data_Containers(CollisionMask<T, n>** in_masks, uint in_nMasks) {
+void CollisionContext<T, n>::prepareDataContainers(CollisionMask<T, n>** in_masks, uint in_nMasks) {
 	mPartnering.clear();
 	mTasks.clear();
 
@@ -253,26 +253,26 @@ void CollisionContext<T, n>::Prepare_Data_Containers(CollisionMask<T, n>** in_ma
 }
 
 template<class T, uint n>
-void CollisionContext<T, n>::Partner_Filtered(std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations) {
+void CollisionContext<T, n>::partnerFiltered(std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations) {
 	if (in_filteredEvaluations.size() > 1) {
 		mGroupingSchemes.push_back(BinaryCollisionTree<T, n>::GroupingScheme());
 
-		mTree.Group(
+		mTree.group(
 			in_filteredEvaluations.data(),
 			(uint)in_filteredEvaluations.size(),
 			mGroupingSchemes.back()
 		);
 
 		uint batchSize = 10;
-		for (auto kt = mGroupingSchemes.back().Get_Iterator(); !kt.Is_Done(); kt += batchSize) {
+		for (auto kt = mGroupingSchemes.back().getIterator(); !kt.isDone(); kt += batchSize) {
 			auto todo = [this, kt, batchSize]() {
 				auto itCopy = kt;
-				for (uint i = 0; i < batchSize && !itCopy.Is_Done(); i++) {
-					Partner_If_Collide_Async(
-						itCopy.Get_First()->Get_Transformed_Parent_Mask(),
-						itCopy.Get_Second()->Get_Transformed_Parent_Mask(),
-						itCopy.Get_First()->Get_Parent_Mask(),
-						itCopy.Get_Second()->Get_Parent_Mask(),
+				for (uint i = 0; i < batchSize && !itCopy.isDone(); i++) {
+					partnerIfCollideAsync(
+						itCopy.getFirst()->getTransformedParentMask(),
+						itCopy.getSecond()->getTransformedParentMask(),
+						itCopy.getFirst()->getParentMask(),
+						itCopy.getSecond()->getParentMask(),
 						mPartnering,
 						mPartneringMutex
 					);
@@ -282,32 +282,32 @@ void CollisionContext<T, n>::Partner_Filtered(std::vector<typename BinaryCollisi
 
 			PackagedAsyncTask<void>* task = new PackagedAsyncTask<void>(todo);
 			mTasks.push_back(task);
-			GE.Async().Add(task);
+			GE.async().add(task);
 		}
 	}
 }
 
 template<class T, uint n>
-void CollisionContext<T, n>::Partner_Filtered(std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations1, std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations2) {
+void CollisionContext<T, n>::partnerFiltered(std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations1, std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations2) {
 	if (in_filteredEvaluations1.size() > 0 && in_filteredEvaluations2.size() > 0) {
 		mPairedGroupingSchemes.push_back(BinaryCollisionTree<T, n>::PairedGroupingScheme());
 
-		mTree.Group(
+		mTree.group(
 			in_filteredEvaluations1.data(), (uint)in_filteredEvaluations1.size(),
 			in_filteredEvaluations2.data(), (uint)in_filteredEvaluations2.size(),
 			mPairedGroupingSchemes.back()
 		);
 
 		uint batchSize = 10;
-		for (auto kt = mPairedGroupingSchemes.back().Get_Iterator(); !kt.Is_Done(); kt += batchSize) {
+		for (auto kt = mPairedGroupingSchemes.back().getIterator(); !kt.isDone(); kt += batchSize) {
 			auto todo = [this, kt, batchSize]() {
 				auto itCopy = kt;
-				for (uint i = 0; i < batchSize && !itCopy.Is_Done(); i++) {
-					Partner_If_Collide_Async(
-						itCopy.Get_First()->Get_Transformed_Parent_Mask(),
-						itCopy.Get_Second()->Get_Transformed_Parent_Mask(),
-						itCopy.Get_First()->Get_Parent_Mask(),
-						itCopy.Get_Second()->Get_Parent_Mask(),
+				for (uint i = 0; i < batchSize && !itCopy.isDone(); i++) {
+					partnerIfCollideAsync(
+						itCopy.getFirst()->getTransformedParentMask(),
+						itCopy.getSecond()->getTransformedParentMask(),
+						itCopy.getFirst()->getParentMask(),
+						itCopy.getSecond()->getParentMask(),
 						mPartnering,
 						mPartneringMutex
 					);
@@ -317,13 +317,13 @@ void CollisionContext<T, n>::Partner_Filtered(std::vector<typename BinaryCollisi
 
 			PackagedAsyncTask<void>* task = new PackagedAsyncTask<void>(todo);
 			mTasks.push_back(task);
-			GE.Async().Add(task);
+			GE.async().add(task);
 		}
 	}
 }
 
 template<class T, uint n>
-void CollisionContext<T, n>::Partner_If_Collide(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, Partnering& in_partnering) {
+void CollisionContext<T, n>::partnerIfCollide(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, Partnering& in_partnering) {
 	Collision<T, n> collision;
 	InPlaceCollisionEvaluator<T, n> collisionEvaluator;
 	auto search = in_partnering.equal_range(in_mask1);
@@ -336,14 +336,14 @@ void CollisionContext<T, n>::Partner_If_Collide(CollisionMask<T, n>* in_mask1, C
 		}
 	}
 
-	if (!found && (collision = collisionEvaluator.Evaluate(*in_mask1, *in_mask2)).mDid) {
+	if (!found && (collision = collisionEvaluator.evaluate(*in_mask1, *in_mask2)).mDid) {
 		in_partnering.insert(Partnering::value_type(in_mask1, { in_mask2, collision }));
 		in_partnering.insert(Partnering::value_type(in_mask2, { in_mask1, collision }));
 	}
 }
 
 template<class T, uint n>
-void CollisionContext<T, n>::Partner_If_Collide_Async(
+void CollisionContext<T, n>::partnerIfCollideAsync(
 	CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, 
 	CollisionMask<T, n>* in_maskToPartner1, CollisionMask<T, n>* in_maskToPartner2,
 	Partnering& in_partnering, std::mutex& in_mutex) {
@@ -355,7 +355,7 @@ void CollisionContext<T, n>::Partner_If_Collide_Async(
 	Collision<T, n> collision;
 	InPlaceCollisionEvaluator<T, n> collisionEvaluator;
 
-	if ((collision = collisionEvaluator.Evaluate(*in_mask1, *in_mask2)).mDid) {
+	if ((collision = collisionEvaluator.evaluate(*in_mask1, *in_mask2)).mDid) {
 		std::lock_guard<std::mutex> lock(in_mutex);
 
 		if (collision.mOwner == in_mask1) collision.mOwner = in_maskToPartner1;

@@ -11,12 +11,12 @@ private:
 	std::unordered_map<std::string, Asset*> mAssets;
 
 public:
-	void Add(const std::string& in_name, Asset* in_asset);
-	void Remove(Asset* in_asset);
-	void Remove(const std::string& in_name);
+	void add(const std::string& in_name, Asset* in_asset);
+	void remove(Asset* in_asset);
+	void remove(const std::string& in_name);
 
 	template<class T>
-	T* Get(const std::string& in_name) {
+	T* get(const std::string& in_name) {
 		auto result = mAssets.find(in_name);
 		if (result == mAssets.end()) {
 			return nullptr;
@@ -36,7 +36,7 @@ protected:
 	std::map<std::string, T*> assets;
 
 public:
-	virtual void Add(const std::string& in_name, T* in_asset) {
+	virtual void add(const std::string& in_name, T* in_asset) {
 		std::string name = (in_name == "") ?
 			std::string("___") + to_string(unnamedCount++) :
 			in_name;
@@ -44,15 +44,15 @@ public:
 		std::pair<std::string, T*> pair(name, in_asset);
 		if (!assets.insert(pair).second) {
 			Log::main("error: duplicate asset name");
-			GE.Exit();
+			GE.quit();
 		}
 	}
 
-	virtual void Remove(const std::string& in_name) {
+	virtual void remove(const std::string& in_name) {
 		assets.erase(in_name);
 	}
 
-	virtual T* Get(const std::string& in_name) {
+	virtual T* get(const std::string& in_name) {
 		std::map<std::string, T*>::iterator result = assets.find(in_name);
 		if (result == assets.end()) {
 			return nullptr;

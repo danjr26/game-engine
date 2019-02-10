@@ -16,14 +16,14 @@ public:
 	Framebuffer(std::vector<Texture*> in_colorTextures, Texture* in_depthTexture);
 	~Framebuffer();
 
-	std::vector<Texture*> Get_Color_Textures();
-	Texture* Get_Color_Texture(uint in_index = 0);
-	Texture* Get_Depth_Texture();
+	std::vector<Texture*> getColorTextures();
+	Texture* getColorTexture(uint in_index = 0);
+	Texture* getDepthTexture();
 
-	Vector2i Get_Dimensions() const override final;
+	Vector2i getDimensions() const override final;
 
 protected:
-	void _Draw_To_This() override final;
+	void _drawToThis() override final;
 };
 
 

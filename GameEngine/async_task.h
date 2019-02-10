@@ -21,13 +21,13 @@ private:
 
 public:
 	AsyncTask(double in_time = 0.0, double in_epsilon = 0.0);
-	State Get_State() const;
-	void Wait_For_Finish();
+	State getState() const;
+	void waitForFinish();
 
 private:
-	void Run();
+	void run();
 protected:
-	virtual void _Run() = 0;
+	virtual void _run() = 0;
 };
 
 /*
@@ -38,7 +38,7 @@ public:
 	TestAsyncTask(std::string in_message, double in_time = 0.0, double in_epsilon = 0.0);
 
 protected:
-	void Run() override final;
+	void run() override final;
 };
 */
 

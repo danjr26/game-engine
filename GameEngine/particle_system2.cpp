@@ -9,116 +9,116 @@ ParticleSystem2::ParticleSystem2(Texture* in_texture, Specifier* in_specifier) :
 	
 	MeshVertexData::DataType dataType = MeshVertexData::DataType::_float;
 
-	mVertexData.Add_Member(position, dataType, 3, nullptr);
-	mVertexData.Add_Member(color, dataType, 4, nullptr);
-	mVertexData.Add_Member(uv1, dataType, 2, nullptr);
-	mVertexData.Add_Member(uv2, dataType, 2, nullptr);
-	mVertexData.Add_Member(dimensions, dataType, 2, nullptr);
-	mVertexData.Add_Member(angle, dataType, 1, nullptr);
-	mVertexData.Add_Member(age, dataType, 1, nullptr);
-	mVertexData.Add_Member(linear_velocity, dataType, 3, nullptr);
-	mVertexData.Add_Member(angular_velocity, dataType, 1, nullptr);
+	mVertexData.addMember(position, dataType, 3, nullptr);
+	mVertexData.addMember(color, dataType, 4, nullptr);
+	mVertexData.addMember(uv1, dataType, 2, nullptr);
+	mVertexData.addMember(uv2, dataType, 2, nullptr);
+	mVertexData.addMember(dimensions, dataType, 2, nullptr);
+	mVertexData.addMember(angle, dataType, 1, nullptr);
+	mVertexData.addMember(age, dataType, 1, nullptr);
+	mVertexData.addMember(linear_velocity, dataType, 3, nullptr);
+	mVertexData.addMember(angular_velocity, dataType, 1, nullptr);
 
 	MeshVertexGPUPusher::ExtraParams params;
 	params.mMembersToIgnore = (1ul << age) | (1ul << linear_velocity) | (1ul << angular_velocity);
 	params.mUseCase = MeshVertexGPUPusher::UseCase::changes_often;
-	mGPUPusher.Initialize(&mVertexData, params);
+	mGPUPusher.initialize(&mVertexData, params);
 
-	mTextureInstance.Settings().Set_Magnify_Filter(TextureSettings::FilterMode::trilinear);
-	mTextureInstance.Settings().Set_Minify_Filter(TextureSettings::FilterMode::trilinear);
+	mTextureInstance.settings().setMagnifyFilter(TextureSettings::FilterMode::trilinear);
+	mTextureInstance.settings().setMinifyFilter(TextureSettings::FilterMode::trilinear);
 }
 
 ParticleSystem2::~ParticleSystem2()
 {}
 
-uint ParticleSystem2::Count() const {
-	return mVertexData.Get_Number_Vertices();
+uint ParticleSystem2::getCount() const {
+	return mVertexData.getNumberVertices();
 }
 
-uint ParticleSystem2::Add(uint in_nParticles) {
-	uint out = mVertexData.Get_Number_Vertices();
+uint ParticleSystem2::add(uint in_nParticles) {
+	uint out = mVertexData.getNumberVertices();
 	if (in_nParticles > 0) {
-		mVertexData.Add_Vertices(in_nParticles, {});
+		mVertexData.addVertices(in_nParticles, {});
 	}
 	return out;
 }
 
-void ParticleSystem2::Remove(uint in_index) {
-	mVertexData.Swap_Vertices(in_index, mVertexData.Get_Number_Vertices() - 1);
-	mVertexData.Remove_Vertex(mVertexData.Get_Number_Vertices() - 1);
+void ParticleSystem2::remove(uint in_index) {
+	mVertexData.swapVertices(in_index, mVertexData.getNumberVertices() - 1);
+	mVertexData.removeVertex(mVertexData.getNumberVertices() - 1);
 }
 
-void ParticleSystem2::Access(uint in_index, Accessor& out_accessor) {
-	out_accessor.mPosition = ((position_t*)mVertexData.Get_Member_Pointer(position)) + in_index;
-	out_accessor.mColor = ((color_t*)mVertexData.Get_Member_Pointer(color)) + in_index;
-	out_accessor.mUV1 = ((uv1_t*)mVertexData.Get_Member_Pointer(uv1)) + in_index;
-	out_accessor.mUV2 = ((uv2_t*)mVertexData.Get_Member_Pointer(uv2)) + in_index;
-	out_accessor.mDimensions = ((dimensions_t*)mVertexData.Get_Member_Pointer(dimensions)) + in_index;
-	out_accessor.mAngle = ((angle_t*)mVertexData.Get_Member_Pointer(angle)) + in_index;
-	out_accessor.mAge = ((age_t*)mVertexData.Get_Member_Pointer(age)) + in_index;
-	out_accessor.mLinearVelocity = ((linear_velocity_t*)mVertexData.Get_Member_Pointer(linear_velocity)) + in_index;
-	out_accessor.mAngularVelocity = ((angular_velocity_t*)mVertexData.Get_Member_Pointer(angular_velocity)) + in_index;
+void ParticleSystem2::access(uint in_index, Accessor& out_accessor) {
+	out_accessor.mPosition = ((position_t*)mVertexData.getMemberPointer(position)) + in_index;
+	out_accessor.mColor = ((color_t*)mVertexData.getMemberPointer(color)) + in_index;
+	out_accessor.mUV1 = ((uv1_t*)mVertexData.getMemberPointer(uv1)) + in_index;
+	out_accessor.mUV2 = ((uv2_t*)mVertexData.getMemberPointer(uv2)) + in_index;
+	out_accessor.mDimensions = ((dimensions_t*)mVertexData.getMemberPointer(dimensions)) + in_index;
+	out_accessor.mAngle = ((angle_t*)mVertexData.getMemberPointer(angle)) + in_index;
+	out_accessor.mAge = ((age_t*)mVertexData.getMemberPointer(age)) + in_index;
+	out_accessor.mLinearVelocity = ((linear_velocity_t*)mVertexData.getMemberPointer(linear_velocity)) + in_index;
+	out_accessor.mAngularVelocity = ((angular_velocity_t*)mVertexData.getMemberPointer(angular_velocity)) + in_index;
 }
 
-void ParticleSystem2::Reserve(uint in_nParticles) {
-	mGPUPusher.Reserve_Total_Vertices(in_nParticles);
+void ParticleSystem2::reserve(uint in_nParticles) {
+	mGPUPusher.reserveTotalVertices(in_nParticles);
 }
 
-void ParticleSystem2::Update(double in_dt) {
+void ParticleSystem2::update(double in_dt) {
 	if (mSpecifier != nullptr) {
 		Accessor accessor;
-		Access(0, accessor);
+		access(0, accessor);
 
-		mSpecifier->Update(*this, accessor, in_dt);
-		mSpecifier->Destroy(*this, accessor, in_dt);
-		mSpecifier->Generate(*this, accessor, in_dt);
+		mSpecifier->update(*this, accessor, in_dt);
+		mSpecifier->destroy(*this, accessor, in_dt);
+		mSpecifier->generate(*this, accessor, in_dt);
 	}
 }
 
-double ParticleSystem2::Z() const {
+double ParticleSystem2::z() const {
 	return 0.0;
 }
 
-bool ParticleSystem2::Should_Cull() const {
+bool ParticleSystem2::shouldCull() const {
 	return false;
 }
 
-void ParticleSystem2::Render() {
-	ShaderProgram* shaderProgram = GE.Assets().Get<ShaderProgram>("Particle2Shader");
+void ParticleSystem2::render() {
+	ShaderProgram* shaderProgram = GE.assets().get<ShaderProgram>("Particle2Shader");
 
-	Matrix4f modelMatrix = Matrix4f::Identity();
-	Matrix4f viewMatrix = GE.Cameras().mActive->Get_View_Matrix();
-	Matrix4f projectionMatrix = GE.Cameras().mActive->Get_Projection_Matrix();
+	Matrix4f modelMatrix = Matrix4f::identity();
+	Matrix4f viewMatrix = GE.cameras().mActive->getViewMatrix();
+	Matrix4f projectionMatrix = GE.cameras().mActive->getProjectionMatrix();
 
 	GLint locations[4] = {
-		shaderProgram->Get_Uniform_Location("modelMatrix"),
-		shaderProgram->Get_Uniform_Location("viewMatrix"),
-		shaderProgram->Get_Uniform_Location("projectionMatrix"),
-		shaderProgram->Get_Uniform_Location("colorTexture")
+		shaderProgram->getUniformLocation("modelMatrix"),
+		shaderProgram->getUniformLocation("viewMatrix"),
+		shaderProgram->getUniformLocation("projectionMatrix"),
+		shaderProgram->getUniformLocation("colorTexture")
 	};
 
-	if (mTextureInstance.Get_Texture() != nullptr) {
-		mTextureInstance.Use();
+	if (mTextureInstance.getTexture() != nullptr) {
+		mTextureInstance.use();
 	}
-	shaderProgram->Use();
+	shaderProgram->use();
 	glDepthMask(0);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-	glUniformMatrix4fv(locations[0], 1, GL_TRUE, modelMatrix.Pointer());
-	glUniformMatrix4fv(locations[1], 1, GL_TRUE, viewMatrix.Pointer());
-	glUniformMatrix4fv(locations[2], 1, GL_TRUE, projectionMatrix.Pointer());
+	glUniformMatrix4fv(locations[0], 1, GL_TRUE, modelMatrix.pointer());
+	glUniformMatrix4fv(locations[1], 1, GL_TRUE, viewMatrix.pointer());
+	glUniformMatrix4fv(locations[2], 1, GL_TRUE, projectionMatrix.pointer());
 	glUniform1i(locations[3], 0);
 
-	mGPUPusher.Push_Face_Count();
-	mGPUPusher.Push_Faces();
-	mGPUPusher.Push_Vertex_Count();
-	mGPUPusher.Push_Vertices();
-	mGPUPusher.Draw_Raw();
+	mGPUPusher.pushFaceCount();
+	mGPUPusher.pushFaces();
+	mGPUPusher.pushVertexCount();
+	mGPUPusher.pushVertices();
+	mGPUPusher.drawRaw();
 
-	if (mTextureInstance.Get_Texture() != nullptr) {
-		mTextureInstance.Use_None();
+	if (mTextureInstance.getTexture() != nullptr) {
+		mTextureInstance.useNone();
 	}
-	shaderProgram->Use_None();
+	shaderProgram->useNone();
 	glDepthMask(1);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

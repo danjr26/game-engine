@@ -58,8 +58,8 @@ class CollisionMask
 template<class T>
 class CollisionMask<T, 2> : public FilteredObject, public DisableableObject, public TransformableObject<T, 2> {
 protected:
-	bool ignoreTransform;
-	void* parent;
+	bool mIgnoreTransform;
+	void* mParent;
 
 public:
 	enum PointNormalPolicy {
@@ -71,29 +71,29 @@ public:
 public:
 	CollisionMask(bool in_ignoreTransform = false);
 
-	bool Get_Ignore_Transform() const;
-	void Set_Ignore_Transform(bool in_value);
-	void* Get_Parent() const;
-	void Set_Parent(void* in_parent);
+	bool getIgnoreTransform() const;
+	void setIgnoreTransform(bool in_value);
+	void* getParent() const;
+	void setParent(void* in_parent);
 	
-	virtual void Apply_Transform() = 0;
-	virtual CollisionMask<T, 2>* Clone() const = 0;
-	virtual Vector<T, 2> Get_Closest_Point(const Vector<T, 2>& in_point) const = 0;
-	virtual Vector<T, 2> Get_Closest_Normal(const Vector<T, 2>& in_point, PointNormalPolicy in_policy = towards_point) const = 0;
+	virtual void applyTransform() = 0;
+	virtual CollisionMask<T, 2>* clone() const = 0;
+	virtual Vector<T, 2> getClosestPoint(const Vector<T, 2>& in_point) const = 0;
+	virtual Vector<T, 2> getClosestNormal(const Vector<T, 2>& in_point, PointNormalPolicy in_policy = towards_point) const = 0;
 
-	virtual Collision<T, 2> Accept_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, CollisionMask<T, 2>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
-	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AAHalfSpace2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
-	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AALine2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
-	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, AARectangleCollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
-	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, CircleCollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
-	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, HalfSpace2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
-	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Line2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
-	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, LineSegment2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
-	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, MST2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
-	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Point2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
-	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Ray2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
-	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, RectangleCollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
-	virtual Collision<T, 2> Accept_Secondhand_Evaluator(CollisionEvaluator<T, 2>& in_evaluator, Triangle2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> acceptEvaluator(CollisionEvaluator<T, 2>& in_evaluator, CollisionMask<T, 2>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> acceptSecondhandEvaluator(CollisionEvaluator<T, 2>& in_evaluator, AAHalfSpace2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> acceptSecondhandEvaluator(CollisionEvaluator<T, 2>& in_evaluator, AALine2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> acceptSecondhandEvaluator(CollisionEvaluator<T, 2>& in_evaluator, AARectangleCollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> acceptSecondhandEvaluator(CollisionEvaluator<T, 2>& in_evaluator, CircleCollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> acceptSecondhandEvaluator(CollisionEvaluator<T, 2>& in_evaluator, HalfSpace2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> acceptSecondhandEvaluator(CollisionEvaluator<T, 2>& in_evaluator, Line2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> acceptSecondhandEvaluator(CollisionEvaluator<T, 2>& in_evaluator, LineSegment2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> acceptSecondhandEvaluator(CollisionEvaluator<T, 2>& in_evaluator, MST2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> acceptSecondhandEvaluator(CollisionEvaluator<T, 2>& in_evaluator, Point2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> acceptSecondhandEvaluator(CollisionEvaluator<T, 2>& in_evaluator, Ray2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> acceptSecondhandEvaluator(CollisionEvaluator<T, 2>& in_evaluator, RectangleCollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
+	virtual Collision<T, 2> acceptSecondhandEvaluator(CollisionEvaluator<T, 2>& in_evaluator, Triangle2CollisionMask<T>& in_other) { throw NotImplementedException(); return Collision<T, 2>(); }
 };
 
 template<class T>

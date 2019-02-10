@@ -12,16 +12,16 @@ public:
 	CircleRenderer(const Circled& in_circle, const ColorRGBAf& in_color, 
 		float in_outlineWidth = 0.0, const ColorRGBAf& in_outlineColor = ColorRGBAf(0, 0, 0, 1));
 
-	void Set_UVs(const Vector2f& in_topLeft, const Vector2f& in_bottomRight) = delete;
-	TextureInstance& Texture_Instance() = delete;
+	void setUVs(const Vector2f& in_topLeft, const Vector2f& in_bottomRight) = delete;
+	TextureInstance& getTextureInstance() = delete;
 
-	void Set_Outline_Color(const ColorRGBAf& in_color);
-	ColorRGBAf Get_Outline_Color() const;
+	void setOutlineColor(const ColorRGBAf& in_color);
+	ColorRGBAf getOutlineColor() const;
 
-	void Set_Outline_Width(float in_width);
-	float Get_Outline_Width() const;
+	void setOutlineWidth(float in_width);
+	float getOutlineWidth() const;
 
-	void Render() override;
+	void render() override;
 };
 
 #endif

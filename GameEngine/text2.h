@@ -36,39 +36,39 @@ public:
 	Text2(const std::string& in_text, FontFaceRasterSet* in_rasterSet, ColorRGBAc in_color = ColorRGBAc(255, 255, 255, 255));
 	~Text2();
 
-	std::string Get_Text() const;
+	std::string getText() const;
 
-	Vector2f Get_Local_Dimensions() const;
-	Vector2f Get_Local_Char_Position(uint in_index) const;
-	Vector2f Get_Char_Dimensions(uint in_index) const;
-	uint Get_Number_Lines() const;
-	uint Get_Line_Index(uint in_charIndex) const;
-	Rangeui Get_Line_Range(uint in_lineIndex) const;
-	float Get_Char_Height() const;
-	float Get_Newline_Height() const;
-	uint Get_Closest_Char_Index(Vector2f in_point) const;
-	Vector2f Get_Container_Dimensions() const;
+	Vector2f getLocalDimensions() const;
+	Vector2f getLocalCharPosition(uint in_index) const;
+	Vector2f getCharDimensions(uint in_index) const;
+	uint getNumberLines() const;
+	uint getLineIndex(uint in_charIndex) const;
+	Rangeui getLineRange(uint in_lineIndex) const;
+	float getCharHeight() const;
+	float getNewlineHeight() const;
+	uint getClosestCharIndex(Vector2f in_point) const;
+	Vector2f getContainerDimensions() const;
 
-	Transform2d& Get_Scroll_Transform();
-	void Set_Scroll_Position(Vector2f in_position);
-	Vector2f Get_Scroll_To_Include_Char(uint in_charIndex) const;
+	Transform2d& getScrollTransform();
+	void setScrollPosition(Vector2f in_position);
+	Vector2f getScrollToIncludeChar(uint in_charIndex) const;
 
-	void Insert(char in_char, uint in_index);
-	void Insert(const std::string& in_text, uint in_index);
-	void Delete(uint in_start, uint in_number);
-	void Replace(const std::string& in_text);
-	void Replace(const std::string& in_text, uint in_start, uint in_number);
+	void insert(char in_char, uint in_index);
+	void insert(const std::string& in_text, uint in_index);
+	void remove(uint in_start, uint in_number);
+	void replace(const std::string& in_text);
+	void replace(const std::string& in_text, uint in_start, uint in_number);
 
-	virtual double Z() const override;
-	virtual bool Should_Cull() const override;
-	virtual void Render() override;
+	virtual double z() const override;
+	virtual bool shouldCull() const override;
+	virtual void render() override;
 
 private:
-	uint Get_Number_Printable();
-	void Increment_Pen(Vector2f& inout_pen, uint in_index) const;
+	uint getNumberPrintable();
+	void incrementPen(Vector2f& inout_pen, uint in_index) const;
 
-	void Create_OpenGL();
-	void Destroy_OpenGL();
+	void createOpenGL();
+	void destroyOpenGL();
 };
 
 #endif

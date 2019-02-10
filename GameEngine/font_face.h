@@ -18,12 +18,12 @@ private:
 public:
 	FontFace(std::string in_filename);
 	~FontFace();
-	FontFaceRasterSet* Rasterize(uint in_size);
+	FontFaceRasterSet* rasterize(uint in_size);
 
-	static bool Is_Printable(uchar in_char);
-	static bool Is_Printable_Or_EOL(uchar in_char);
+	static bool isPrintable(uchar in_char);
+	static bool isPrintableOrEOL(uchar in_char);
 
-	static void Load_XML_List(const std::string& in_filename);
+	static void loadXMLList(const std::string& in_filename);
 };
 
 #endif

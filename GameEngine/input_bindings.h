@@ -33,27 +33,27 @@ public:
 
 public:
 	InputBindings(uint in_nActions, uint in_nStates, uint in_nRanges);
-	uint Get_Number_Actions() const;
-	uint Get_Number_States() const;
-	uint Get_Number_Ranges() const;
-	void Bind_Action(uint in_slot, InputActionIdentifier in_action);
-	void Bind_State(uint in_slot, InputStateIdentifier in_state);
-	void Bind_Range(uint in_slot, InputRangeIdentifier in_range);
-	void Clear_Action(uint in_slot);
-	void Clear_State(uint in_slot);
-	void Clear_Range(uint in_slot);
-	InputActionIdentifier Get_Bound_Action(uint in_slot);
-	InputStateIdentifier Get_Bound_State(uint in_slot);
-	InputRangeIdentifier Get_Bound_Range(uint in_slot);
-	bool Evaluate_Action(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state);
-	InputStateChange Evaluate_State(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state);
-	float Evaluate_Range(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state);
-	bool Evaluate_Action(const Iterator& in_iter);
-	InputStateChange Evaluate_State(const Iterator& in_iter);
-	float Evaluate_Range(const Iterator& in_iter);
-	Iterator Iterate_Actions(const RawInputEvent& in_event, const RawInputState& in_state);
-	Iterator Iterate_States(const RawInputEvent& in_event, const RawInputState& in_state);
-	Iterator Iterate_Ranges(const RawInputEvent& in_event, const RawInputState& in_state);
+	uint getNumberActions() const;
+	uint getNumberStates() const;
+	uint getNumberRanges() const;
+	void bindAction(uint in_slot, InputActionIdentifier in_action);
+	void bindState(uint in_slot, InputStateIdentifier in_state);
+	void bindRange(uint in_slot, InputRangeIdentifier in_range);
+	void clearAction(uint in_slot);
+	void clearState(uint in_slot);
+	void clearRange(uint in_slot);
+	InputActionIdentifier getBoundAction(uint in_slot);
+	InputStateIdentifier getBoundState(uint in_slot);
+	InputRangeIdentifier getBoundRange(uint in_slot);
+	bool evaluateAction(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state);
+	InputStateChange evaluateState(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state);
+	float evaluateRange(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state);
+	bool evaluateAction(const Iterator& in_iter);
+	InputStateChange evaluateState(const Iterator& in_iter);
+	float evaluateRange(const Iterator& in_iter);
+	Iterator iterateActions(const RawInputEvent& in_event, const RawInputState& in_state);
+	Iterator iterateStates(const RawInputEvent& in_event, const RawInputState& in_state);
+	Iterator iterateRanges(const RawInputEvent& in_event, const RawInputState& in_state);
 	uint operator[](Iterator in_iterator) const;
 };
 

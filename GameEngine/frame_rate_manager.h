@@ -19,16 +19,16 @@ private:
 
 public:
 	FrameRateManager(double in_fps = 60.0);
-	void Set_FPS(double in_fps);
-	double Get_FPS() const;
-	void Set_Dt(double in_dt);
-	double Get_Dt() const;
-	void Reset_Timer();
-	void Yield_Until_Next_Frame();
-	bool Is_Lean_Frame() const;
-	double Get_Real_FPS();
-	double Get_Longest_Frame_Time();
-	double Get_Last_Frame_Time();
+	void setFPS(double in_fps);
+	double getFPS() const;
+	void setDt(double in_dt);
+	double getDt() const;
+	void resetTimer();
+	void yieldUntilNextFrame();
+	bool isLeanFrame() const;
+	double getRealFPS();
+	double getLongestFrameTime();
+	double getLastFrameTime();
 };
 
 #endif

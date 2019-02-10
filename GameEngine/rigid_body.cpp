@@ -4,14 +4,14 @@
 
 template<uint n>
 RigidBody<n>::RigidBody(const CollisionMask<double, n>& in_collisionMask) :
-	mCollisionMask(in_collisionMask.Clone()),
+	mCollisionMask(in_collisionMask.clone()),
 	mLinearVelocity(),
 	mAngularVelocity(),
 	mLinearMass(1.0),
 	mAngularMass(5000.0) {
 
-	mCollisionMask->Get_Transform().Set_Parent(&Get_Transform());
-	mCollisionMask->Add_Filter(CollisionContext2d::rigid_body);
+	mCollisionMask->getTransform().setParent(&getTransform());
+	mCollisionMask->addFilter(CollisionContext2d::rigid_body);
 }
 
 template<uint n>
@@ -20,156 +20,156 @@ RigidBody<n>::~RigidBody() {
 }
 
 template<uint n>
-CollisionMask<double, n>* RigidBody<n>::Get_Collision_Mask() {
+CollisionMask<double, n>* RigidBody<n>::getCollisionMask() {
 	return mCollisionMask;
 }
 
 template<uint n>
-Vector<double, n> RigidBody<n>::Get_Linear_Velocity() const {
+Vector<double, n> RigidBody<n>::getLinearVelocity() const {
 	return mLinearVelocity;
 }
 
 template<uint n>
-URotation<double, n> RigidBody<n>::Get_Angular_Velocity() const {
+URotation<double, n> RigidBody<n>::getAngularVelocity() const {
 	return mAngularVelocity;
 }
 
-Vector2d RigidBody<2>::Get_Relative_Point_Velocity(const Vector2d& in_point) {
-	return mLinearVelocity + -in_point.Orthogonal() * mAngularVelocity.Get_Angle();// *in_point.Magnitude();
+Vector2d RigidBody<2>::getRelativePointVelocity(const Vector2d& in_point) {
+	return mLinearVelocity + -in_point.orthogonal() * mAngularVelocity.getAngle();// *in_point.magnitude();
 }
 
 template<uint n>
-Vector<double, n> RigidBody<n>::Get_Local_Point_Velocity(const Vector<double, n>& in_point) {
-	return Get_Relative_Point_Velocity(
-		in_point - mTransform.Get_Local_Position()
+Vector<double, n> RigidBody<n>::getLocalPointVelocity(const Vector<double, n>& in_point) {
+	return getRelativePointVelocity(
+		in_point - mTransform.getLocalPosition()
 	);
 }
 
 template<uint n>
-Vector<double, n> RigidBody<n>::Get_World_Point_Velocity(const Vector<double, n>& in_point) {
-	URotation2d rotation = (mTransform.Get_Parent() == nullptr) ? URotation2d() : mTransform.Get_World_Rotation().Get_Inverse();
-	return Get_Relative_Point_Velocity(
-		rotation.Apply_To(in_point - mTransform.Get_World_Position())
+Vector<double, n> RigidBody<n>::getWorldPointVelocity(const Vector<double, n>& in_point) {
+	URotation2d rotation = (mTransform.getParent() == nullptr) ? URotation2d() : mTransform.getWorldRotation().getInverse();
+	return getRelativePointVelocity(
+		rotation.applyTo(in_point - mTransform.getWorldPosition())
 	);
 }
 
 template<uint n>
-double RigidBody<n>::Get_Linear_Mass() const {
+double RigidBody<n>::getLinearMass() const {
 	return mLinearMass;
 }
 
 template<uint n>
-double RigidBody<n>::Get_Angular_Mass() const {
+double RigidBody<n>::getAngularMass() const {
 	return mAngularMass;
 }
 
 template<uint n>
-double RigidBody<n>::Get_Linear_Kinetic_Energy() const {
-	return 0.5 * mLinearMass * mLinearVelocity.Dot_Self();
+double RigidBody<n>::getLinearKineticEnergy() const {
+	return 0.5 * mLinearMass * mLinearVelocity.dotSelf();
 }
 
 template<uint n>
-double RigidBody<n>::Get_Angular_Kinetic_Energy() const {
-	return 0.5 * mAngularMass * mAngularVelocity.Get_Angle() * mAngularVelocity.Get_Angle();
+double RigidBody<n>::getAngularKineticEnergy() const {
+	return 0.5 * mAngularMass * mAngularVelocity.getAngle() * mAngularVelocity.getAngle();
 }
 
 template<uint n>
-bool RigidBody<n>::Is_Unstoppable() const {
-	return mCollisionMask->Has_Filter(CollisionContext2d::rigid_body_unstoppable);
+bool RigidBody<n>::isUnstoppable() const {
+	return mCollisionMask->hasFilter(CollisionContext2d::rigid_body_unstoppable);
 }
 
 template<uint n>
-void RigidBody<n>::Set_Linear_Velocity(const Vector<double, n>& in_velocity) {
+void RigidBody<n>::setLinearVelocity(const Vector<double, n>& in_velocity) {
 	mLinearVelocity = in_velocity;
 }
 
 template<uint n>
-void RigidBody<n>::Set_Angular_Velocity(const URotation<double, n>& in_velocity) {
+void RigidBody<n>::setAngularVelocity(const URotation<double, n>& in_velocity) {
 	mAngularVelocity = in_velocity;
 }
 
 template<uint n>
-void RigidBody<n>::Set_Linear_Mass(double in_mass) {
+void RigidBody<n>::setLinearMass(double in_mass) {
 	mLinearMass = in_mass;
 }
 
 template<uint n>
-void RigidBody<n>::Set_Angular_Mass(double in_mass) {
+void RigidBody<n>::setAngularMass(double in_mass) {
 	mAngularMass = in_mass;
 }
 
 template<uint n>
-void RigidBody<n>::Set_Unstoppable(bool in_value) {
+void RigidBody<n>::setUnstoppable(bool in_value) {
 	if (in_value) {
-		mCollisionMask->Add_Filter(CollisionContext2d::rigid_body_unstoppable);
-		mCollisionMask->Remove_Filter(CollisionContext2d::rigid_body);
+		mCollisionMask->addFilter(CollisionContext2d::rigid_body_unstoppable);
+		mCollisionMask->removeFilter(CollisionContext2d::rigid_body);
 	}
 	else {
-		mCollisionMask->Add_Filter(CollisionContext2d::rigid_body);
-		mCollisionMask->Remove_Filter(CollisionContext2d::rigid_body_unstoppable);
+		mCollisionMask->addFilter(CollisionContext2d::rigid_body);
+		mCollisionMask->removeFilter(CollisionContext2d::rigid_body_unstoppable);
 	}
 }
 
-void RigidBody<2>::Apply_Relative_Impulse(const LocatedVector<double, 2>& in_impulse) {
+void RigidBody<2>::applyRelativeImpulse(const LocatedVector<double, 2>& in_impulse) {
 	Vector2d linearAcceleration = in_impulse.mVector / mLinearMass;
 	URotation2d angularAcceleration = URotation2d(
-		in_impulse.mVector.Magnitude() * in_impulse.mPosition.Magnitude() * in_impulse.mVector.Normalized().Dot(-in_impulse.mPosition.Orthogonal().Normalized()) / mAngularMass);
+		in_impulse.mVector.magnitude() * in_impulse.mPosition.magnitude() * in_impulse.mVector.normalized().dot(-in_impulse.mPosition.orthogonal().normalized()) / mAngularMass);
 
 	mLinearVelocity += linearAcceleration;
 	mAngularVelocity += angularAcceleration;
 }
 
 template<uint n>
-void RigidBody<n>::Apply_Local_Impulse(const LocatedVector<double, n>& in_impulse) {
-	Apply_Relative_Impulse({
-		in_impulse.mPosition - mTransform.Get_Local_Position(),
+void RigidBody<n>::applyLocalImpulse(const LocatedVector<double, n>& in_impulse) {
+	applyRelativeImpulse({
+		in_impulse.mPosition - mTransform.getLocalPosition(),
 		in_impulse.mVector
 	});
 }
 
 template<uint n>
-void RigidBody<n>::Apply_World_Impulse(const LocatedVector<double, n>& in_impulse) {
-	URotation2d rotation = (mTransform.Get_Parent() == nullptr) ? URotation2d() : mTransform.Get_Parent()->Get_World_Rotation().Get_Inverse();
-	Apply_Relative_Impulse({
-		rotation.Apply_To(in_impulse.mPosition - mTransform.Get_World_Position()),
-		rotation.Apply_To(in_impulse.mVector)
+void RigidBody<n>::applyWorldImpulse(const LocatedVector<double, n>& in_impulse) {
+	URotation2d rotation = (mTransform.getParent() == nullptr) ? URotation2d() : mTransform.getParent()->getWorldRotation().getInverse();
+	applyRelativeImpulse({
+		rotation.applyTo(in_impulse.mPosition - mTransform.getWorldPosition()),
+		rotation.applyTo(in_impulse.mVector)
 	});
 }
 
-Vector2d RigidBody<2>::Impulse_To_Change_Point_Velocity(const Vector2d& in_point, const Vector2d& in_dv) {
-	if (Is_Unstoppable()) {
+Vector2d RigidBody<2>::impulseToChangePointVelocity(const Vector2d& in_point, const Vector2d& in_dv) {
+	if (isUnstoppable()) {
 		return Vector2d();
 	}
 
-	Vector2d normal = in_dv.Normalized();
-	Vector2d radius = in_point - mTransform.Get_World_Position();
+	Vector2d normal = in_dv.normalized();
+	Vector2d radius = in_point - mTransform.getWorldPosition();
 	double linearFactor = (mLinearMass == 0.0) ? 0.0 : 1.0 / mLinearMass;
-	Vector2d angularFactor = (mAngularMass == 0.0) ? Vector2d() : radius.Orthogonal() * radius.Magnitude() / mAngularMass;
-	double denominator = linearFactor + angularFactor.Dot(normal);
+	Vector2d angularFactor = (mAngularMass == 0.0) ? Vector2d() : radius.orthogonal() * radius.magnitude() / mAngularMass;
+	double denominator = linearFactor + angularFactor.dot(normal);
 
 	return (denominator == 0.0) ? Vector2d() : in_dv / denominator;
 }
 
 template<uint n>
-void RigidBody<n>::Update(double in_dt) {
-	mTransform.Translate_World(mLinearVelocity * in_dt);
-	mTransform.Rotate_World(mAngularVelocity * in_dt);
+void RigidBody<n>::update(double in_dt) {
+	mTransform.translateWorld(mLinearVelocity * in_dt);
+	mTransform.rotateWorld(mAngularVelocity * in_dt);
 }
 
 template<uint n>
-void RigidBody<n>::Update(double in_dt, const Vector<double, n>& in_normal) {
-	Vector<double, n> linearNormalComponent = mLinearVelocity.Projection(in_normal);
+void RigidBody<n>::update(double in_dt, const Vector<double, n>& in_normal) {
+	Vector<double, n> linearNormalComponent = mLinearVelocity.projection(in_normal);
 	mLinearVelocity -= linearNormalComponent;
-	Update(in_dt);
+	update(in_dt);
 	mLinearVelocity += linearNormalComponent;
 }
 
 template<uint n>
-Vector<double, n> RigidBody<n>::Get_Collision_Normal(RigidBody<n>& in_body1, RigidBody<n>& in_body2, const Collision<double, n>& in_collision) {
-	//return in_body1.Get_Collision_Mask()->Get_Closest_Normal(in_collision.point, CollisionMask2d::PointNormalPolicy::towards_point);
-	if (!in_collision.mSeparator.Is_Zero() && in_collision.mOwner != nullptr) {
-		if (in_collision.mOwner == in_body1.Get_Collision_Mask() || in_collision.mOwner == in_body2.Get_Collision_Mask()) {
-			return in_collision.mSeparator.Normalized() * ((in_collision.mOwner == in_body1.Get_Collision_Mask()) ? 1 : -1);
+Vector<double, n> RigidBody<n>::getCollisionNormal(RigidBody<n>& in_body1, RigidBody<n>& in_body2, const Collision<double, n>& in_collision) {
+	//return in_body1.getCollisionMask()->getClosestNormal(in_collision.point, CollisionMask2d::PointNormalPolicy::towards_point);
+	if (!in_collision.mSeparator.isZero() && in_collision.mOwner != nullptr) {
+		if (in_collision.mOwner == in_body1.getCollisionMask() || in_collision.mOwner == in_body2.getCollisionMask()) {
+			return in_collision.mSeparator.normalized() * ((in_collision.mOwner == in_body1.getCollisionMask()) ? 1 : -1);
 		}
 		else {
 			throw InvalidArgumentException();

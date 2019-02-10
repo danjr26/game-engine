@@ -1,7 +1,7 @@
 #ifndef KEY_H
 #define KEY_H
 
-#include <Windows.h>
+#include <windows.h>
 #include "definitions.h"
 #include <vector>
 
@@ -23,6 +23,6 @@ enum class Key : ubyte {
 	count
 };
 
-Key Windows_VK_To_Key(uint in_vk);
+Key windowsVKToKey(uint in_vk);
 
 #endif

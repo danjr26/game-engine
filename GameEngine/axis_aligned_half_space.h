@@ -13,15 +13,15 @@ private:
 	AxisAlignedHalfSpace(int in_dimension, T in_value);
 
 public:
-	uint Get_Dimension() const;
-	T Get_Value() const;
-	bool Is_Positive() const;
-	Vector<T, n> Get_Direction() const;
-	void Apply_Transform(const Transform<T, n>& in_transform);
+	uint getDimension() const;
+	T getValue() const;
+	bool isPositive() const;
+	Vector<T, n> getDirection() const;
+	void applyTransform(const Transform<T, n>& in_transform);
 
 public:
-	static AxisAlignedHalfSpace<T, n> From_Dimension_Value(uint in_dimension, T in_value, bool in_isPositive);
-	static AxisAlignedHalfSpace<T, n> From_Inverse(const AxisAlignedHalfSpace& in_inverse);
+	static AxisAlignedHalfSpace<T, n> fromDimensionValue(uint in_dimension, T in_value, bool in_isPositive);
+	static AxisAlignedHalfSpace<T, n> fromInverse(const AxisAlignedHalfSpace& in_inverse);
 };
 
 using AxisAlignedHalfSpace2f = AxisAlignedHalfSpace<float, 2>;

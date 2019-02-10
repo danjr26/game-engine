@@ -13,7 +13,7 @@ public:
 
 	PerlinNoise2f(int x, int y);
 	~PerlinNoise2f();
-	float Get(Vector2f v);
+	float get(Vector2f v);
 };
 
 class PerlinNoise3f {
@@ -23,7 +23,7 @@ public:
 
 	PerlinNoise3f(int x, int y, int z);
 	~PerlinNoise3f();
-	float Get(Vector3f v);
+	float get(Vector3f v);
 };
 
 #endif

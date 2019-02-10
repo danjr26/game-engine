@@ -30,11 +30,11 @@ public:
 		public:
 			Iterator();
 
-			bool Go_Left(uint in_dimension);
-			bool Go_Right(uint in_dimension);
-			ubyte Get_Left(uint in_dimension);
-			ubyte Get_Right(uint in_dimension);
-			uint Get_Depth(uint in_dimension);
+			bool goLeft(uint in_dimension);
+			bool goRight(uint in_dimension);
+			ubyte getLeft(uint in_dimension);
+			ubyte getRight(uint in_dimension);
+			uint getDepth(uint in_dimension);
 		};
 
 	private:
@@ -48,11 +48,11 @@ public:
 	public:
 		Evaluation();
 
-		Iterator Get_Iterator();
-		BinaryCollisionTree<T, n>* Get_Parent_Tree();
-		CollisionMask<T, n>* Get_Parent_Mask();
-		CollisionMask<T, n>* Get_Transformed_Parent_Mask();
-		void Transform_Parent_Mask();
+		Iterator getIterator();
+		BinaryCollisionTree<T, n>* getParentTree();
+		CollisionMask<T, n>* getParentMask();
+		CollisionMask<T, n>* getTransformedParentMask();
+		void transformParentMask();
 	};
 
 	class GroupingScheme {
@@ -75,11 +75,11 @@ public:
 			Iterator(GroupingScheme* in_parent);
 
 		public:
-			Evaluation* Get_First();
-			Evaluation* Get_Second();
+			Evaluation* getFirst();
+			Evaluation* getSecond();
 			void operator++(int a);
 			void operator+=(uint n);
-			bool Is_Done();
+			bool isDone();
 		};
 		friend class GroupingScheme::Iterator;
 
@@ -88,10 +88,10 @@ public:
 		std::list<Grouping> mGroupings;
 
 	public:
-		uint Get_Number_Groups() const;
-		Iterator Get_Iterator();
-		void Remove(const Evaluation* in_eval);
-		void Get_Unique_Pairs(std::vector<std::pair<Evaluation*, Evaluation*>>& in_pairs) const;
+		uint getNumberGroups() const;
+		Iterator getIterator();
+		void remove(const Evaluation* in_eval);
+		void getUniquePairs(std::vector<std::pair<Evaluation*, Evaluation*>>& in_pairs) const;
 	};
 
 	class PairedGroupingScheme {
@@ -115,11 +115,11 @@ public:
 			Iterator(PairedGroupingScheme* in_parent);
 
 		public:
-			Evaluation* Get_First();
-			Evaluation* Get_Second();
+			Evaluation* getFirst();
+			Evaluation* getSecond();
 			void operator++(int a);
 			void operator+=(uint n);
-			bool Is_Done();
+			bool isDone();
 		};
 		friend class PairedGroupingScheme::Iterator;
 
@@ -128,9 +128,9 @@ public:
 		std::list<Grouping> mGroupings;
 
 	public:
-		uint Get_Number_Groups() const;
-		Iterator Get_Iterator();
-		void Get_Unique_Pairs(std::vector<std::pair<Evaluation*, Evaluation*>>& in_pairs) const;
+		uint getNumberGroups() const;
+		Iterator getIterator();
+		void getUniquePairs(std::vector<std::pair<Evaluation*, Evaluation*>>& in_pairs) const;
 	};
 
 private:
@@ -158,10 +158,10 @@ private:
 public:
 	BinaryCollisionTree(const AxisAlignedBox<T, n>& in_box);
 
-	void Evaluate(CollisionMask<T, n>* in_mask, uint in_depth, Evaluation& out_evaluation);
-	bool Intersection(Evaluation& in_evaluation1, Evaluation& in_evaluation2);
-	void Group(Evaluation** in_evaluations, uint in_nElements, GroupingScheme& out_groupingScheme);
-	void Group(Evaluation** in_evaluations1, uint in_nElements1, Evaluation** in_evaluations2, uint in_nElements2, PairedGroupingScheme& out_groupingScheme);
+	void evaluate(CollisionMask<T, n>* in_mask, uint in_depth, Evaluation& out_evaluation);
+	bool intersection(Evaluation& in_evaluation1, Evaluation& in_evaluation2);
+	void group(Evaluation** in_evaluations, uint in_nElements, GroupingScheme& out_groupingScheme);
+	void group(Evaluation** in_evaluations1, uint in_nElements1, Evaluation** in_evaluations2, uint in_nElements2, PairedGroupingScheme& out_groupingScheme);
 
 	friend class Evaluation::Iterator;
 };

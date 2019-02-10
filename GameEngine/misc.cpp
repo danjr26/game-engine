@@ -1,80 +1,82 @@
 #include "misc.h"
 #include "exceptions.h"
 
-template<>
-bool Random<bool>() {
-	return Random<uint>(2) == 1;
-}
-
-template<>
-uint Random<uint>() {
-	static std::mt19937 engine;
-	return engine();
-}
-
-template<>
-int Random<int>() {
-	return static_cast<int>(Random<uint>());
-}
-
-template<>
-ullong Random<ullong>() {
-	static std::mt19937_64 engine;
-	return engine();
-}
-
-template<>
-llong Random<llong>() {
-	return static_cast<llong>(Random<ullong>());
-}
-
-template<>
-uint Random<uint>(uint high) {
-	return Random<uint>() % high;
-}
-
-template<>
-int Random<int>(int high) {
-	if (high <= 0) {
-		throw InvalidArgumentException();
+namespace GEUtil {
+	template<>
+	bool random<bool>() {
+		return random<uint>(2) == 1;
 	}
-	return Random<int>() % high;
-}
 
-template<>
-ullong Random<ullong>(ullong high) {
-	return Random<ullong>() % high;
-}
-
-template<>
-llong Random<llong>(llong high) {
-	if (high <= 0) {
-		throw InvalidArgumentException();
+	template<>
+	uint random<uint>() {
+		static std::mt19937 engine;
+		return engine();
 	}
-	return Random<llong>() % high;
-}
 
-template<>
-float Random<float>(float high) {
-	return (float)Random<uint>() / (float)UINT_MAX * high;
-}
-
-template<>
-double Random<double>(double high) {
-	return (double)Random<ullong>() / (double)ULLONG_MAX * high;
-}
-
-template<class T>
-T Random<T>(T low, T high) {
-	if (high <= low) {
-		throw InvalidArgumentException();
+	template<>
+	int random<int>() {
+		return static_cast<int>(random<uint>());
 	}
-	return Random<T>(high - low) + low;
-}
 
-template uint Random<uint>(uint, uint);
-template int Random<int>(int, int);
-template ullong Random<ullong>(ullong, ullong);
-template llong Random<llong>(llong, llong);
-template float Random<float>(float, float);
-template double Random<double>(double, double);
+	template<>
+	ullong random<ullong>() {
+		static std::mt19937_64 engine;
+		return engine();
+	}
+
+	template<>
+	llong random<llong>() {
+		return static_cast<llong>(random<ullong>());
+	}
+
+	template<>
+	uint random<uint>(uint high) {
+		return random<uint>() % high;
+	}
+
+	template<>
+	int random<int>(int high) {
+		if (high <= 0) {
+			throw InvalidArgumentException();
+		}
+		return random<int>() % high;
+	}
+
+	template<>
+	ullong random<ullong>(ullong high) {
+		return random<ullong>() % high;
+	}
+
+	template<>
+	llong random<llong>(llong high) {
+		if (high <= 0) {
+			throw InvalidArgumentException();
+		}
+		return random<llong>() % high;
+	}
+
+	template<>
+	float random<float>(float high) {
+		return (float)random<uint>() / (float)UINT_MAX * high;
+	}
+
+	template<>
+	double random<double>(double high) {
+		return (double)random<ullong>() / (double)ULLONG_MAX * high;
+	}
+
+	template<class T>
+	T random<T>(T low, T high) {
+		if (high <= low) {
+			throw InvalidArgumentException();
+		}
+		return random<T>(high - low) + low;
+	}
+
+	template uint random<uint>(uint, uint);
+	template int random<int>(int, int);
+	template ullong random<ullong>(ullong, ullong);
+	template llong random<llong>(llong, llong);
+	template float random<float>(float, float);
+	template double random<double>(double, double);
+};

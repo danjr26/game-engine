@@ -11,14 +11,14 @@ private:
 public:
 	Camera();
 
-	Projectiond Get_Projection() const;
-	void Set_Projection(const Projectiond& in_projection);
+	Projectiond getProjection() const;
+	void setProjection(const Projectiond& in_projection);
 
-	Matrix4f Get_Projection_Matrix();
-	Matrix4f Get_View_Matrix();
-	Matrix4f Get_Matrix();
+	Matrix4f getProjectionMatrix();
+	Matrix4f getViewMatrix();
+	Matrix4f getMatrix();
 
-	void Use();
+	void use();
 };
 
 #endif

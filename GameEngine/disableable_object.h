@@ -6,9 +6,9 @@ private:
 	bool mIsEnabled;
 public:
 	DisableableObject();
-	void Enable();
-	void Disable();
-	bool Is_Enabled();
+	void enable();
+	void disable();
+	bool isEnabled();
 };
 
 #endif

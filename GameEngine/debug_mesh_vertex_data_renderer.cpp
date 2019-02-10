@@ -6,15 +6,15 @@ DebugMeshVertexDataRenderer::DebugMeshVertexDataRenderer(MeshVertexData* in_mesh
 	meshVertexData(in_meshVertexData)
 {}
 
-double DebugMeshVertexDataRenderer::Z() const {
-	return transform.Get_World_Position().Z();
+double DebugMeshVertexDataRenderer::z() const {
+	return transform.getWorldPosition().z();
 }
 
-bool DebugMeshVertexDataRenderer::Should_Cull() const {
+bool DebugMeshVertexDataRenderer::shouldCull() const {
 	return false;
 }
 
-void DebugMeshVertexDataRenderer::Render() {
+void DebugMeshVertexDataRenderer::render() {
 	
 }
 */
@@ -25,42 +25,42 @@ DebugMeshVertexDataRenderer::DebugMeshVertexDataRenderer(MeshVertexData* in_mesh
 	mFillColor(in_fillColor),
 	mWireframeColor(in_wireframeColor) {
 	
-	mGPUPusher.Initialize(mMeshVertexData);
+	mGPUPusher.initialize(mMeshVertexData);
 }
 
-double DebugMeshVertexDataRenderer::Z() const {
+double DebugMeshVertexDataRenderer::z() const {
 	return 0;
 }
 
-bool DebugMeshVertexDataRenderer::Should_Cull() const {
+bool DebugMeshVertexDataRenderer::shouldCull() const {
 	return false;
 }
 
-void DebugMeshVertexDataRenderer::Render() {
-	ShaderProgram* shaderProgram = GE.Assets().Get<ShaderProgram>("MonoShader");
+void DebugMeshVertexDataRenderer::render() {
+	ShaderProgram* shaderProgram = GE.assets().get<ShaderProgram>("MonoShader");
 
 	GLint locations[] = {
-		shaderProgram->Get_Uniform_Location("mvpMatrix"),
-		shaderProgram->Get_Uniform_Location("color")
+		shaderProgram->getUniformLocation("mvpMatrix"),
+		shaderProgram->getUniformLocation("color")
 	};
 
 	Matrix4f mvpMatrix = 
-		GE.Cameras().mActive->Get_Projection_Matrix() * 
-		GE.Cameras().mActive->Get_View_Matrix() * 
-		(Matrix4f)mTransform.Get_World_Matrix();
+		GE.cameras().mActive->getProjectionMatrix() * 
+		GE.cameras().mActive->getViewMatrix() * 
+		(Matrix4f)mTransform.getWorldMatrix();
 
-	shaderProgram->Use();
-	glUniformMatrix4fv(locations[0], 1, GL_TRUE, mvpMatrix.Pointer());
-	glUniform4fv(locations[1], 1, mFillColor.Pointer());
+	shaderProgram->use();
+	glUniformMatrix4fv(locations[0], 1, GL_TRUE, mvpMatrix.pointer());
+	glUniform4fv(locations[1], 1, mFillColor.pointer());
 
-	mGPUPusher.Draw();
+	mGPUPusher.draw();
 
-	glUniform4fv(locations[1], 1, mWireframeColor.Pointer());
+	glUniform4fv(locations[1], 1, mWireframeColor.pointer());
 	glLineWidth(1.5f);
 //	glEnable(GL_LINE_SMOOTH);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	mGPUPusher.Draw();
+	mGPUPusher.draw();
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

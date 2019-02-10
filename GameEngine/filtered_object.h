@@ -16,10 +16,10 @@ public:
 public:
 	FilteredObject();
 	FilteredObject(ubyte in_filter);
-	void Add_Filter(ubyte in_filter);
-	void Remove_Filter(ubyte in_filter);
-	void Remove_All_Filters();
-	bool Has_Filter(ubyte in_filter);
+	void addFilter(ubyte in_filter);
+	void removeFilter(ubyte in_filter);
+	void removeAllFilters();
+	bool hasFilter(ubyte in_filter);
 };
 
 #endif

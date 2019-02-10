@@ -40,21 +40,21 @@ protected:
 public:
 	RenderPass(RenderTarget* in_target, Camera* in_camera);
 	virtual ~RenderPass();
-	RenderPass& Filter(const FilterQuery& in_query);
-	RenderPass& Sort_Order(SortOrder in_order);
-	RenderPass& Clear_Color(const ColorRGBAf& in_value);
-	RenderPass& Clear_Depth(GLfloat in_value);
-	RenderPass& Clear_Stencil(GLint in_value);
-	RenderPass& Cancel_Clear_Color();
-	RenderPass& Cancel_Clear_Depth();
-	RenderPass& Cancel_Clear_Stencil();
+	RenderPass& filter(const FilterQuery& in_query);
+	RenderPass& sortOrder(SortOrder in_order);
+	RenderPass& clearColor(const ColorRGBAf& in_value);
+	RenderPass& clearDepth(GLfloat in_value);
+	RenderPass& clearStencil(GLint in_value);
+	RenderPass& cancelClearColor();
+	RenderPass& cancelClearDepth();
+	RenderPass& cancelClearStencil();
 
-	void Begin(void* in_params);
-	void* End();
+	void begin(void* in_params);
+	void* end();
 
-	RenderTarget* Get_Render_Target();
-	const FilterQuery& Get_Query() const;
-	SortOrder Get_Sort_Order() const;
+	RenderTarget* getRenderTarget();
+	const FilterQuery& getQuery() const;
+	SortOrder getSortOrder() const;
 };
 
 #endif

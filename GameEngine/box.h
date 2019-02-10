@@ -16,31 +16,31 @@ private:
 	Box(const Vector<T, n>& in_origin, const Vector<T, n>* in_axes);
 
 public:
-	Vector<T, n> Get_Origin() const;
-	Vector<T, n> Get_Center() const;
-	void Get_Axes(Vector<T, n>* out_axes) const;
-	void Get_Corners(Vector<T, n>* out_corners) const;
-	void Apply_Transform(const Transform<T, n>& transform);
+	Vector<T, n> getOrigin() const;
+	Vector<T, n> getCenter() const;
+	void getAxes(Vector<T, n>* out_axes) const;
+	void getCorners(Vector<T, n>* out_corners) const;
+	void applyTransform(const Transform<T, n>& transform);
 
 	template<typename = typename std::enable_if_t<n == 2>>
-	T Get_Area() const;
+	T getArea() const;
 	template<typename = typename std::enable_if_t<n == 2>>
-	T Get_Perimeter() const;
+	T getPerimeter() const;
 	template<typename = typename std::enable_if_t<n == 3>>
-	T Get_Volume() const;
+	T getVolume() const;
 	template<typename = typename std::enable_if_t<n == 3>>
-	T Get_Surface_Area() const;
+	T getSurfaceArea() const;
 	template<typename = typename std::enable_if_t<n == 3>>
-	T Get_Total_Edge_Length() const;
+	T getTotalEdgeLength() const;
 
-	Vector<T, n> Random_Point_Boundary() const;
-	Vector<T, n> Random_Point_Inside() const;
+	Vector<T, n> randomPointBoundary() const;
+	Vector<T, n> randomPointInside() const;
 
 public:
-	static Box<T, n> From_Center_Axes(const Vector<T, n>& in_center, const Vector<T, n>* in_axes);
-	static Box<T, n> From_Center_Axes(const Vector<T, n>& in_center, std::initializer_list<Vector<T, n>> in_axes);
-	static Box<T, n> From_Origin_Axes(const Vector<T, n>& in_origin, const Vector<T, n>* in_axes);
-	static Box<T, n> From_Origin_Axes(const Vector<T, n>& in_origin, std::initializer_list<Vector<T, n>> in_axes);
+	static Box<T, n> fromCenterAxes(const Vector<T, n>& in_center, const Vector<T, n>* in_axes);
+	static Box<T, n> fromCenterAxes(const Vector<T, n>& in_center, std::initializer_list<Vector<T, n>> in_axes);
+	static Box<T, n> fromOriginAxes(const Vector<T, n>& in_origin, const Vector<T, n>* in_axes);
+	static Box<T, n> fromOriginAxes(const Vector<T, n>& in_origin, std::initializer_list<Vector<T, n>> in_axes);
 };
 
 using Rectanglef = Box<float, 2>;

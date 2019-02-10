@@ -25,9 +25,9 @@ public:
 	UnclampedRotation(const UnclampedRotation<T, 2>& in_from, const UnclampedRotation<T, 2>& in_to);
 	UnclampedRotation(const Rotation<T, 2>& in_rotation);
 
-	bool Is_Identity() const;
-	void Invert();
-	UnclampedRotation<T, 2> Get_Inverse() const;
+	bool isIdentity() const;
+	void invert();
+	UnclampedRotation<T, 2> getInverse() const;
 	UnclampedRotation<T, 2> operator+(const UnclampedRotation<T, 2>& in_rotation) const;
 	UnclampedRotation<T, 2> operator-(const UnclampedRotation<T, 2>& in_rotation) const;
 	UnclampedRotation<T, 2> operator*(T in_scalar) const;
@@ -36,9 +36,9 @@ public:
 	void operator-=(const UnclampedRotation<T, 2>& in_rotation);
 	void operator*=(T in_scalar);
 	void operator/=(T in_scalar);
-	UnclampedRotation<T, 2> Lerp(const UnclampedRotation<T, 2>& in_rotation, T t) const;
-	T Get_Angle() const;
-	Vector<T, 2> Apply_To(const Vector<T, 2>& in_point) const;
+	UnclampedRotation<T, 2> lerp(const UnclampedRotation<T, 2>& in_rotation, T t) const;
+	T getAngle() const;
+	Vector<T, 2> applyTo(const Vector<T, 2>& in_point) const;
 };
 
 template<class T>
@@ -54,9 +54,9 @@ public:
 	UnclampedRotation(const Vector<T, 3>& in_from, const Vector<T, 3>& in_to);
 	UnclampedRotation(const Rotation<T, 3>& in_rotation);
 
-	bool Is_Identity() const;
-	void Invert();
-	UnclampedRotation<T, 3> Get_Inverse() const;
+	bool isIdentity() const;
+	void invert();
+	UnclampedRotation<T, 3> getInverse() const;
 	UnclampedRotation<T, 3> operator+(const UnclampedRotation<T, 3>& in_rotation) const;
 	UnclampedRotation<T, 3> operator-(const UnclampedRotation<T, 3>& in_rotation) const;
 	UnclampedRotation<T, 3> operator*(T in_scalar) const;
@@ -65,12 +65,12 @@ public:
 	void operator-=(const UnclampedRotation<T, 3>& in_rotation);
 	void operator*=(T in_scalar);
 	void operator/=(T in_scalar);
-	UnclampedRotation<T, 3> Lerp(const UnclampedRotation<T, 3>& in_rotation, T t) const;
-	T Get_Angle() const;
-	UnclampedRotation<T, 3> With_Angle(T in_angle) const;
-	Vector<T, 3> Get_Axis() const;
-	UnclampedRotation<T, 3> With_Axis(const Vector<T, 3>& in_axis) const;
-	Vector<T, 3> Apply_To(const Vector<T, 3>& in_point) const;
+	UnclampedRotation<T, 3> lerp(const UnclampedRotation<T, 3>& in_rotation, T t) const;
+	T getAngle() const;
+	UnclampedRotation<T, 3> withAngle(T in_angle) const;
+	Vector<T, 3> getAxis() const;
+	UnclampedRotation<T, 3> withAxis(const Vector<T, 3>& in_axis) const;
+	Vector<T, 3> applyTo(const Vector<T, 3>& in_point) const;
 };
 
 template<class T, uint n>

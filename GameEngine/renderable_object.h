@@ -15,18 +15,18 @@ private:
 public:
 	RenderableObject();
 	virtual ~RenderableObject();
-	virtual double Z() const = 0;
-	virtual bool Should_Cull() const = 0;
-	virtual void Render() = 0;
+	virtual double z() const = 0;
+	virtual bool shouldCull() const = 0;
+	virtual void render() = 0;
 };
 
 /*
 class TestRenderableObject : public RenderableObject {
 public:
 	TestRenderableObject(Renderer* in_renderer);
-	double Z() const override final;
-	bool Should_Cull() const override final;
-	void Render() override final;
+	double z() const override final;
+	bool shouldCull() const override final;
+	void render() override final;
 };
 */
 #endif

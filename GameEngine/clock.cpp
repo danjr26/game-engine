@@ -11,7 +11,7 @@ mStartTime(in_source.mStartTime),
 mPauseTime(in_source.mPauseTime)
 {}
 
-double Clock::Now() const {
+double Clock::now() const {
 	std::lock_guard<std::mutex> lock(mMutex);
 	if (mPauseTime.time_since_epoch().count() != 0)
 		return std::chrono::duration_cast<std::chrono::duration<double>>(mPauseTime - mStartTime).count();
@@ -19,28 +19,28 @@ double Clock::Now() const {
 		return std::chrono::duration_cast<std::chrono::duration<double>>(SysClock::now() - mStartTime).count();
 }
 
-void Clock::Set_Epoch() {
+void Clock::setEpoch() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	mStartTime = SysClock::now();
 }
 
-void Clock::Set_Epoch(double t) {
+void Clock::setEpoch(double t) {
 	std::lock_guard<std::mutex> lock(mMutex);
 	mStartTime += std::chrono::duration_cast<ExactTime>(std::chrono::duration<double>(t));
 }
 
-void Clock::Pause() {
+void Clock::pause() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	mPauseTime = SysClock::now();
 }
 
-void Clock::Resume() {
+void Clock::resume() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	mStartTime += SysClock::now() - mPauseTime;
 	mPauseTime = SysTimePoint();
 }
 
-bool Clock::Is_Paused() const {
+bool Clock::isPaused() const {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return mPauseTime == SysTimePoint();
 }

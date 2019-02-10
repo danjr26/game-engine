@@ -18,12 +18,12 @@ public:
 		mFunc(in_other.mFunc) 
 	{}
 	
-	bool Is_Valid() {
+	bool isValid() {
 		return bool(mFunc);
 	}
 
 protected:
-	void _Run() override final {
+	void _run() override final {
 		if (!mFunc) {
 			throw InvalidArgumentException();
 		}

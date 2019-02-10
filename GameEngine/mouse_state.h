@@ -11,9 +11,9 @@ private:
 
 public:
 	MouseState();
-	bool Is_Down(MouseButton in_button);
-	void Set_Button(MouseButton in_button, bool in_value);
-	void Process_Raw_Event(RawInputEvent in_event);
+	bool isDown(MouseButton in_button);
+	void setButton(MouseButton in_button, bool in_value);
+	void processRawEvent(RawInputEvent in_event);
 };
 
 #endif

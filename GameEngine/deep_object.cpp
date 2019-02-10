@@ -5,7 +5,7 @@ inline DeepObject<T, n>::DeepObject()
 {}
 
 template<class T, uint n>
-inline DepthTransform<T, n>& DeepObject<T, n>::Get_Depth_Transform() {
+inline DepthTransform<T, n>& DeepObject<T, n>::getDepthTransform() {
 	return mDepthTransform;
 }
 

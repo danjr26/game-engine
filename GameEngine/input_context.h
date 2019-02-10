@@ -19,31 +19,31 @@ protected:
 protected:
 	InputContext(uint in_nActions, uint in_nStates, uint in_nRanges);
 
-	InputEvent Auto_Translate_Action(InputBindings::Iterator& in_iter);
-	InputEvent Auto_Translate_State(InputBindings::Iterator& in_iter, bool in_newValue);
-	InputEvent Auto_Translate_Range(InputBindings::Iterator& in_iter, float in_newValue);
+	InputEvent autoTranslateAction(InputBindings::Iterator& in_iter);
+	InputEvent autoTranslateState(InputBindings::Iterator& in_iter, bool in_newValue);
+	InputEvent autoTranslateRange(InputBindings::Iterator& in_iter, float in_newValue);
 
-	bool Auto_Process_Action(InputBindings::Iterator& in_iter);
-	bool Auto_Process_State(InputBindings::Iterator& in_iter);
-	bool Auto_Process_Range(InputBindings::Iterator& in_iter);
+	bool autoProcessAction(InputBindings::Iterator& in_iter);
+	bool autoProcessState(InputBindings::Iterator& in_iter);
+	bool autoProcessRange(InputBindings::Iterator& in_iter);
 
-	bool Auto_Update_Actions(const RawInputEvent& in_event);
-	bool Auto_Update_States(const RawInputEvent& in_event);
-	bool Auto_Update_Ranges(const RawInputEvent& in_event);
+	bool autoUpdateActions(const RawInputEvent& in_event);
+	bool autoUpdateStates(const RawInputEvent& in_event);
+	bool autoUpdateRanges(const RawInputEvent& in_event);
 
-	bool Auto_Update(const RawInputEvent& in_event);
+	bool autoUpdate(const RawInputEvent& in_event);
 
-	virtual bool Distribute_Event(const InputEvent& in_event);
+	virtual bool distributeEvent(const InputEvent& in_event);
 
 public:
-	virtual bool Process_Raw_Event(const RawInputEvent& in_event);
+	virtual bool processRawEvent(const RawInputEvent& in_event);
 
-	bool Get_State(uint in_index);
-	float Get_Range(uint in_index);
+	bool getState(uint in_index);
+	float getRange(uint in_index);
 
-	void Add(InputListener* in_listener);
-	void Remove(InputListener* in_listener);
-	void Sort();
+	void add(InputListener* in_listener);
+	void remove(InputListener* in_listener);
+	void sort();
 };
 
 #endif

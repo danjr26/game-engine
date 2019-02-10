@@ -9,10 +9,10 @@ InputListener::InputListener(InputContext* in_context, uint in_level, double in_
 	mReceiver([](const InputEvent& in_event) -> Reception {return { true, false }; })
 {
 	if (in_context == nullptr) throw InvalidArgumentException("input mContext was null");
-	in_context->Add(this);
+	in_context->add(this);
 }
 
-bool InputListener::Post_Event(const InputEvent& in_event) {
+bool InputListener::postEvent(const InputEvent& in_event) {
 	Reception reception = mReceiver(in_event);
 	if (reception.mTaken) {
 		mEventQueue.insert(mEventQueue.begin(), in_event);
@@ -20,58 +20,58 @@ bool InputListener::Post_Event(const InputEvent& in_event) {
 	return reception.mEaten;
 }
 
-InputEvent InputListener::Pop_Event() {
+InputEvent InputListener::popEvent() {
 	InputEvent _event = mEventQueue.back();
 	mEventQueue.pop_back();
 	return _event;
 }
 
-uint InputListener::Get_Number_Events() {
+uint InputListener::getNumberEvents() {
 	return (uint)mEventQueue.size();
 }
 
-void InputListener::Clear_Events() {
+void InputListener::clearEvents() {
 	mEventQueue.clear();
 }
 
-uint InputListener::Get_Level() const {
+uint InputListener::getLevel() const {
 	return mLevel;
 }
 
-void InputListener::Set_Level(uint in_level) {
+void InputListener::setLevel(uint in_level) {
 	mLevel = in_level;
-	mContext->Sort();
+	mContext->sort();
 }
 
-double InputListener::Get_Depth() const {
+double InputListener::getDepth() const {
 	return mDepth;
 }
 
-void InputListener::Set_Depth(double in_depth) {
+void InputListener::setDepth(double in_depth) {
 	mDepth = in_depth;
-	mContext->Sort();
+	mContext->sort();
 }
 
-void InputListener::Set_Receiver(const std::function<Reception(const InputEvent&)>& in_receiver) {
+void InputListener::setReceiver(const std::function<Reception(const InputEvent&)>& in_receiver) {
 	mReceiver = in_receiver;
 }
 
-bool InputListener::Compare(const InputListener& in_listener1, const InputListener& in_listener2) {
-	if (in_listener1.Get_Level() > in_listener2.Get_Level()) {
+bool InputListener::compare(const InputListener& in_listener1, const InputListener& in_listener2) {
+	if (in_listener1.getLevel() > in_listener2.getLevel()) {
 		return true;
 	}
-	else if (in_listener1.Get_Level() < in_listener2.Get_Level()) {
+	else if (in_listener1.getLevel() < in_listener2.getLevel()) {
 		return false;
 	}
 	else {
-		return in_listener1.Get_Depth() > in_listener2.Get_Depth();
+		return in_listener1.getDepth() > in_listener2.getDepth();
 	}
 }
 
-bool InputListener::Compare_Pointers(const InputListener* in_listener1, const InputListener* in_listener2) {
-	return Compare(*in_listener1, *in_listener2);
+bool InputListener::comparePointers(const InputListener* in_listener1, const InputListener* in_listener2) {
+	return compare(*in_listener1, *in_listener2);
 }
 
-InputContext* InputListener::Get_Context() {
+InputContext* InputListener::getContext() {
 	return mContext;
 }

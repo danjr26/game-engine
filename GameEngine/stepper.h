@@ -11,8 +11,8 @@ public:
 	Stepper(double in_step);
 	Stepper(double in_step, double in_accumulation);
 	~Stepper();
-	int	Step_Number(double in_newAccumulation);
-	double Step_Total(double in_newAccumulation);
+	int	stepNumber(double in_newAccumulation);
+	double stepTotal(double in_newAccumulation);
 };
 
 #endif

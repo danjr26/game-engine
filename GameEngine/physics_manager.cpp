@@ -5,73 +5,73 @@
 #include <unordered_map>
 
 PhysicsManager::PhysicsManager() :
-	collisionContext(AxisAlignedRectangled::From_Extrema(Vector2d(0, 0), Vector2d(800, 600)), 2),
+	collisionContext(AxisAlignedRectangled::fromExtrema(Vector2d(0, 0), Vector2d(800, 600)), 2),
 	collisionNarrowSteps(3),
 	maxStepRepeat(10),
 	slidingEpsilon(2.0),
 	restingEpsilon(1.0) {
 
-	collisionContext.Set_Partner_Test_Activation(std::pair<ubyte, ubyte>(CollisionContext2d::rigid_body, CollisionContext2d::rigid_body), true);
-	collisionContext.Set_Partner_Test_Activation(std::pair<ubyte, ubyte>(CollisionContext2d::rigid_body, CollisionContext2d::rigid_body_unstoppable), true);
-	collisionContext.Set_Partner_Test_Activation(std::pair<ubyte, ubyte>(CollisionContext2d::rigid_body, CollisionContext2d::force_field), true);
+	collisionContext.setPartnerTestActivation(std::pair<ubyte, ubyte>(CollisionContext2d::rigid_body, CollisionContext2d::rigid_body), true);
+	collisionContext.setPartnerTestActivation(std::pair<ubyte, ubyte>(CollisionContext2d::rigid_body, CollisionContext2d::rigid_body_unstoppable), true);
+	collisionContext.setPartnerTestActivation(std::pair<ubyte, ubyte>(CollisionContext2d::rigid_body, CollisionContext2d::force_field), true);
 }
 
-void PhysicsManager::Update(double in_dt) {
-	Prepare_Data_Containers(in_dt);
-	//Exclude_Preembedded(in_dt);
+void PhysicsManager::update(double in_dt) {
+	prepareDataContainers(in_dt);
+	//excludePreembedded(in_dt);
 
-	collisionContext.Update();
+	collisionContext.update();
 
-	Step_All(in_dt);
-	Apply_Force_Fields_To_Rigid_Bodies(in_dt);
-	Apply_Rigid_Bodies_To_Rigid_Bodies(in_dt);
-	//collisionContext.Update();
-	//Calculate_Force_Field_Effects(in_dt);
-	//Calculate_Rigid_Body_Effects(in_dt);
-	//Apply_Effects_To_Rigid_Bodies(in_dt);
+	stepAll(in_dt);
+	applyForceFieldsToRigidBodies(in_dt);
+	applyRigidBodiesToRigidBodies(in_dt);
+	//collisionContext.update();
+	//calculateForceFieldEffects(in_dt);
+	//calculateRigidBodyEffects(in_dt);
+	//applyEffectsToRigidBodies(in_dt);
 }
 
-void PhysicsManager::Add(RigidBody2* in_rigidBody) {
+void PhysicsManager::add(RigidBody2* in_rigidBody) {
 	if (in_rigidBody == nullptr) {
 		throw InvalidArgumentException();
 	}
 	rigidBody2s.push_back(in_rigidBody);
-	collisionContext.Add(in_rigidBody->Get_Collision_Mask());
+	collisionContext.add(in_rigidBody->getCollisionMask());
 }
 
-void PhysicsManager::Add(ForceField2* in_forceField) {
+void PhysicsManager::add(ForceField2* in_forceField) {
 	if (in_forceField == nullptr) {
 		throw InvalidArgumentException();
 	}
 	forceField2s.push_back(in_forceField);
-	in_forceField->Set_Collision_Context(&collisionContext);
+	in_forceField->setCollisionContext(&collisionContext);
 }
 
-void PhysicsManager::Remove(RigidBody2* in_rigidBody) {
+void PhysicsManager::remove(RigidBody2* in_rigidBody) {
 	auto position = std::find(rigidBody2s.begin(), rigidBody2s.end(), in_rigidBody);
 	if (position != rigidBody2s.end()) {
 		rigidBody2s.erase(position);
 	}
-	collisionContext.Remove(in_rigidBody->Get_Collision_Mask());
+	collisionContext.remove(in_rigidBody->getCollisionMask());
 }
 
-void PhysicsManager::Remove(ForceField2* in_forceField) {
+void PhysicsManager::remove(ForceField2* in_forceField) {
 	auto position = std::find(forceField2s.begin(), forceField2s.end(), in_forceField);
 	if (position != forceField2s.end()) {
 		forceField2s.erase(position);
 	}
-	in_forceField->Set_Collision_Context(nullptr);
+	in_forceField->setCollisionContext(nullptr);
 }
 
-bool PhysicsManager::Has(RigidBody2* in_rigidBody) {
+bool PhysicsManager::has(RigidBody2* in_rigidBody) {
 	return std::find(rigidBody2s.begin(), rigidBody2s.end(), in_rigidBody) != rigidBody2s.end();
 }
 
-bool PhysicsManager::Has(ForceField2* in_forceField) {
+bool PhysicsManager::has(ForceField2* in_forceField) {
 	return std::find(forceField2s.begin(), forceField2s.end(), in_forceField) != forceField2s.end();
 }
 
-void PhysicsManager::Prepare_Data_Containers(double in_dt) {
+void PhysicsManager::prepareDataContainers(double in_dt) {
 	rigidBody2UpdateInfo.clear();
 	for (auto it = rigidBody2s.begin(); it != rigidBody2s.end(); it++) {
 		rigidBody2UpdateInfo[*it] = RigidBodyUpdateInfo2();
@@ -79,39 +79,39 @@ void PhysicsManager::Prepare_Data_Containers(double in_dt) {
 	}
 }
 
-void PhysicsManager::Exclude_Preembedded(double in_dt) {
+void PhysicsManager::excludePreembedded(double in_dt) {
 	std::vector<CollisionContext2d::CollisionPartner*> partners;
 	std::vector<CollisionMask2d const*> tried;
-	collisionContext.Update();
-	for (uint i = 0; i < 5 && collisionContext.Get_Total_Partnerings() != 0; i++) {
+	collisionContext.update();
+	for (uint i = 0; i < 5 && collisionContext.getTotalPartnerings() != 0; i++) {
 		tried.clear();
 		for (auto it = rigidBody2s.begin(); it < rigidBody2s.end(); it++) {
-			collisionContext.Get_Partners((*it)->Get_Collision_Mask(), partners);
+			collisionContext.getPartners((*it)->getCollisionMask(), partners);
 			for (auto jt = partners.begin(); jt < partners.end(); jt++) {
 				for (auto kt = rigidBody2s.begin(); kt < rigidBody2s.end(); kt++) {
-					if ((*kt)->Get_Collision_Mask() == (*jt)->mMask) {
-						if (std::find(tried.begin(), tried.end(), (*kt)->Get_Collision_Mask()) != tried.end()) break;
+					if ((*kt)->getCollisionMask() == (*jt)->mMask) {
+						if (std::find(tried.begin(), tried.end(), (*kt)->getCollisionMask()) != tried.end()) break;
 
 						Collision2d collision = (*jt)->mCollision;
-						Vector2d normal = RigidBody2::Get_Collision_Normal(**it, **kt, collision);
+						Vector2d normal = RigidBody2::getCollisionNormal(**it, **kt, collision);
 
-						tried.push_back((*kt)->Get_Collision_Mask());
+						tried.push_back((*kt)->getCollisionMask());
 						break;
 					}
 				}
 			}
 		}
-		collisionContext.Update();
+		collisionContext.update();
 	}
 }
 
-void PhysicsManager::Step_All(double in_dt) {
+void PhysicsManager::stepAll(double in_dt) {
 	for (auto it = rigidBody2s.begin(); it < rigidBody2s.end(); it++) {
-		(*it)->Update(in_dt);
+		(*it)->update(in_dt);
 	}
 }
 
-void PhysicsManager::Apply_Rigid_Bodies_To_Rigid_Bodies(double in_dt) {
+void PhysicsManager::applyRigidBodiesToRigidBodies(double in_dt) {
 	std::vector<CollisionContext2d::CollisionPartner*> partners;
 
 	double t = 0.0;
@@ -126,23 +126,23 @@ void PhysicsManager::Apply_Rigid_Bodies_To_Rigid_Bodies(double in_dt) {
 	};
 	std::vector<ProcessedPartnering> minPartners;
 
-	collisionContext.Update();
+	collisionContext.update();
 
 	uint repeatCount = 0;
-	while (collisionContext.Get_Total_Partnerings() > 0 && repeatCount < maxStepRepeat) {
+	while (collisionContext.getTotalPartnerings() > 0 && repeatCount < maxStepRepeat) {
 		minPartners.clear();
 		minInterval = Ranged(in_dt, in_dt);
 
 		// find min partners
 		for (auto it = rigidBody2s.begin(); it < rigidBody2s.end(); it++) {
 			RigidBody2* rigidBody1 = *it;
-			collisionContext.Get_Partners(rigidBody1->Get_Collision_Mask(), partners);
+			collisionContext.getPartners(rigidBody1->getCollisionMask(), partners);
 
 			for (auto jt = partners.begin(); jt < partners.end(); jt++) {
 				CollisionContext2d::CollisionPartner* partner = *jt;
 
 				auto kt = std::find_if(rigidBody2s.begin(), rigidBody2s.end(),
-					[partner](RigidBody2* rigidBody) {return rigidBody->Get_Collision_Mask() == partner->mMask; });
+					[partner](RigidBody2* rigidBody) {return rigidBody->getCollisionMask() == partner->mMask; });
 
 				if (kt == rigidBody2s.end()) break;
 				RigidBody2* rigidBody2 = *kt;
@@ -159,43 +159,43 @@ void PhysicsManager::Apply_Rigid_Bodies_To_Rigid_Bodies(double in_dt) {
 				processed.collision = partner->mCollision;
 
 				int skipSteps = (int)(-log2((in_dt - t) / in_dt));
-				int steps = Max(0, (int)collisionNarrowSteps - skipSteps);
+				int steps = GEUtil::max(0, (int)collisionNarrowSteps - skipSteps);
 
 				Ranged interval(t, in_dt);
-				Narrow_Collision_Interval(
+				narrowCollisionInterval(
 					*rigidBody1, *rigidBody2, 
 					processed.collision, interval, steps, 
 					&processed.transform1, &processed.transform2
 				);
 
-				if (interval.Get_Low() == t) {
+				if (interval.getLow() == t) {
 					InPlaceCollisionEvaluator2d evaluator;
-					evaluator.Return_Point(true);
-					evaluator.Return_Separator(true);
+					evaluator.returnPoint(true);
+					evaluator.returnSeparator(true);
 
-					Transform2d transform1 = rigidBody1->Get_Transform();
-					Transform2d transform2 = rigidBody2->Get_Transform();
+					Transform2d transform1 = rigidBody1->getTransform();
+					Transform2d transform2 = rigidBody2->getTransform();
 
-					rigidBody1->Update(t - in_dt);
-					rigidBody2->Update(t - in_dt);
+					rigidBody1->update(t - in_dt);
+					rigidBody2->update(t - in_dt);
 
-					Collision2d collision = evaluator.Evaluate(*rigidBody1->Get_Collision_Mask(), *rigidBody2->Get_Collision_Mask());
+					Collision2d collision = evaluator.evaluate(*rigidBody1->getCollisionMask(), *rigidBody2->getCollisionMask());
 					processed.collision.mSeparator = collision.mSeparator;
 					processed.collision.mOwner = collision.mOwner;
 
-					rigidBody1->Get_Transform() = transform1;
-					rigidBody2->Get_Transform() = transform2;
+					rigidBody1->getTransform() = transform1;
+					rigidBody2->getTransform() = transform2;
 				}
 
 				if (processed.collision.mOwner == nullptr) {
 					Log::main("err");
 				}
 
-				if (interval.Get_Low() < minInterval.Get_Low()) {
+				if (interval.getLow() < minInterval.getLow()) {
 					minInterval = interval;
 					minPartners.assign(1, processed);
 				}
-				else if (interval.Get_Low() == minInterval.Get_Low()) {
+				else if (interval.getLow() == minInterval.getLow()) {
 					minPartners.push_back(processed);
 				}
 			}
@@ -206,25 +206,25 @@ void PhysicsManager::Apply_Rigid_Bodies_To_Rigid_Bodies(double in_dt) {
 		for (auto it = minPartners.begin(); it != minPartners.end(); it++) {
 			if (uniqueBodies.find(it->body1) == uniqueBodies.end()) {
 				uniqueBodies.insert(std::pair<RigidBody2*, Transform2d>(it->body1, it->transform1));
-				it->body1->Update(minInterval.Get_High() - in_dt);
+				it->body1->update(minInterval.getHigh() - in_dt);
 			}
 
 			if (uniqueBodies.find(it->body2) == uniqueBodies.end()) {
 				uniqueBodies.insert(std::pair<RigidBody2*, Transform2d>(it->body2, it->transform2));
-				it->body2->Update(minInterval.Get_High() - in_dt);
+				it->body2->update(minInterval.getHigh() - in_dt);
 			}
 
 			LocatedVector2d impulse;
 			Vector2d friction;
 
-			Evaluate_Collision(*it->body1, *it->body2, it->collision, impulse.mVector, friction);
+			evaluateCollision(*it->body1, *it->body2, it->collision, impulse.mVector, friction);
 
 			impulse.mPosition = it->collision.mPoint;
 			impulse.mVector += friction;
 
 			for (auto body : { it->body1, it->body2 }) {
-				if (!body->Is_Unstoppable()) {
-					body->Apply_World_Impulse(impulse);
+				if (!body->isUnstoppable()) {
+					body->applyWorldImpulse(impulse);
 				}
 				impulse.mVector = -impulse.mVector;
 			}
@@ -233,89 +233,89 @@ void PhysicsManager::Apply_Rigid_Bodies_To_Rigid_Bodies(double in_dt) {
 
 		// return to end of frame with impulses applied
 		for (auto it = uniqueBodies.begin(); it != uniqueBodies.end(); it++) {
-			it->first->Get_Transform() = it->second;
+			it->first->getTransform() = it->second;
 		}
 
 		for (auto it = uniqueBodies.begin(); it != uniqueBodies.end(); it++) {
-			it->first->Update(in_dt - minInterval.Get_Low());
+			it->first->update(in_dt - minInterval.getLow());
 		}
 
 		// update repeat tracker
-		if (t >= minInterval.Get_Low()) {
+		if (t >= minInterval.getLow()) {
 			repeatCount++;
 		}
 		else {
 			repeatCount = 0;
 		}
-		t = minInterval.Get_Low();
+		t = minInterval.getLow();
 
-		collisionContext.Update();
+		collisionContext.update();
 	}
 
 	/*
 	if (repeatCount >= maxStepRepeat) {
 		Log::main("unable to resolve");
 		for (auto it = rigidBody2s.begin(); it < rigidBody2s.end(); it++) {
-			(*it)->Update(t - in_dt);
+			(*it)->update(t - in_dt);
 		}
 	}
 	*/
 }
 
-void PhysicsManager::Apply_Force_Fields_To_Rigid_Bodies(double in_dt) {
-	collisionContext.Update();
+void PhysicsManager::applyForceFieldsToRigidBodies(double in_dt) {
+	collisionContext.update();
 
 	std::vector<CollisionContext2d::CollisionPartner*> partners;
 	for (auto it = forceField2s.begin(); it < forceField2s.end(); it++) {
 		ForceField2* forceField = *it;
-		if (forceField->Get_Collision_Mask() == nullptr) {
+		if (forceField->getCollisionMask() == nullptr) {
 			for (auto jt = rigidBody2s.begin(); jt < rigidBody2s.end(); jt++) {
 
 				RigidBody2* rigidBody = *jt;
-				if (rigidBody->Is_Unstoppable()) continue;
+				if (rigidBody->isUnstoppable()) continue;
 
-				LocatedVector2d impulse = forceField->Calculate_Force(*rigidBody);
+				LocatedVector2d impulse = forceField->calculateForce(*rigidBody);
 				impulse.mVector *= in_dt;
 
-				rigidBody->Apply_World_Impulse(impulse);
+				rigidBody->applyWorldImpulse(impulse);
 			}
 		}
 		else {
-			collisionContext.Get_Partners(forceField->Get_Collision_Mask(), partners);
+			collisionContext.getPartners(forceField->getCollisionMask(), partners);
 			for (auto jt = partners.begin(); jt < partners.end(); jt++) {
 				CollisionContext2d::CollisionPartner* partner = *jt;
 				auto kt = std::find_if(rigidBody2s.begin(), rigidBody2s.end(), 
-					[partner](RigidBody2* rigidBody) {return rigidBody->Get_Collision_Mask() == partner->mMask; });
+					[partner](RigidBody2* rigidBody) {return rigidBody->getCollisionMask() == partner->mMask; });
 
 				if (kt == rigidBody2s.end()) continue;
 
 				RigidBody2* rigidBody = *kt;
-				if (rigidBody->Is_Unstoppable()) continue;
+				if (rigidBody->isUnstoppable()) continue;
 
-				LocatedVector2d impulse = forceField->Calculate_Force(*rigidBody);
+				LocatedVector2d impulse = forceField->calculateForce(*rigidBody);
 				impulse.mVector *= in_dt;
 
-				rigidBody->Apply_World_Impulse(impulse);
+				rigidBody->applyWorldImpulse(impulse);
 			}
 		}
 	}
 }
 
 /*
-void PhysicsManager::Calculate_Force_Field_Effects(double in_dt) {
+void PhysicsManager::calculateForceFieldEffects(double in_dt) {
 	using EffectInfo2 = typename RigidBodyUpdateInfo<2>::ForceFieldEffectInfo;
 	std::vector<CollisionContext2d::CollisionPartner*> partners;
 
 	for (auto it = forceField2s.begin(); it < forceField2s.end(); it++) {
-		if ((*it)->Get_Collision_Mask() == nullptr) { 
+		if ((*it)->getCollisionMask() == nullptr) { 
 			for (auto jt = rigidBody2s.begin(); jt < rigidBody2s.end(); jt++) {
-				if (!(*jt)->Is_Unstoppable()) {
+				if (!(*jt)->isUnstoppable()) {
 
-					LocatedVector2d impulse = (*it)->Calculate_Force(**jt);
+					LocatedVector2d impulse = (*it)->calculateForce(**jt);
 					impulse.mVector *= in_dt;
 
 					EffectInfo2 effectInfo;
-					effectInfo.transform = (*jt)->Get_Transform();
+					effectInfo.transform = (*jt)->getTransform();
 					effectInfo.field = *it;
 					effectInfo.impulse = impulse;
 					rigidBody2UpdateInfo[*jt].forceFieldInfo.push_back(effectInfo);
@@ -323,17 +323,17 @@ void PhysicsManager::Calculate_Force_Field_Effects(double in_dt) {
 			}
 		}
 		else {
-			collisionContext.Get_Partners((*it)->Get_Collision_Mask(), partners);
+			collisionContext.getPartners((*it)->getCollisionMask(), partners);
 			for (auto jt = partners.begin(); jt < partners.end(); jt++) {
 				for (auto kt = rigidBody2s.begin(); kt < rigidBody2s.end(); kt++) {
-					if ((*kt)->Get_Collision_Mask() == (*jt)->mask) {
-						if (!(*kt)->Is_Unstoppable()) {
+					if ((*kt)->getCollisionMask() == (*jt)->mask) {
+						if (!(*kt)->isUnstoppable()) {
 
-							LocatedVector2d impulse = (*it)->Calculate_Force(**kt);
+							LocatedVector2d impulse = (*it)->calculateForce(**kt);
 							impulse.mVector *= in_dt;
 
 							EffectInfo2 effectInfo;
-							effectInfo.transform = (*kt)->Get_Transform();
+							effectInfo.transform = (*kt)->getTransform();
 							effectInfo.field = *it;
 							effectInfo.impulse = impulse;
 							rigidBody2UpdateInfo[*kt].forceFieldInfo.push_back(effectInfo);
@@ -347,15 +347,15 @@ void PhysicsManager::Calculate_Force_Field_Effects(double in_dt) {
 	}
 }
 
-void PhysicsManager::Calculate_Rigid_Body_Effects(double in_dt) {
+void PhysicsManager::calculateRigidBodyEffects(double in_dt) {
 	using EffectInfo2 = typename RigidBodyUpdateInfo<2>::RigidBodyEffectInfo;
 	using Status2 = typename EffectInfo2::Status;
 	std::vector<CollisionContext2d::CollisionPartner*> partners;
 	for (auto it = rigidBody2s.begin(); it < rigidBody2s.end(); it++) {
-		collisionContext.Get_Partners((*it)->Get_Collision_Mask(), partners);
+		collisionContext.getPartners((*it)->getCollisionMask(), partners);
 		for (auto jt = partners.begin(); jt < partners.end(); jt++) {
 			for (auto kt = rigidBody2s.begin(); kt < rigidBody2s.end(); kt++) {
-				if ((*kt)->Get_Collision_Mask() == (*jt)->mask) {
+				if ((*kt)->getCollisionMask() == (*jt)->mask) {
 					RigidBodyUpdateInfo2& info1 = rigidBody2UpdateInfo[*it];
 					RigidBodyUpdateInfo2& info2 = rigidBody2UpdateInfo[*kt];
 
@@ -363,18 +363,18 @@ void PhysicsManager::Calculate_Rigid_Body_Effects(double in_dt) {
 
 					Ranged interval(0, in_dt);
 					Collision2d collision = (*jt)->collision;
-					Narrow_Collision_Interval(**it, **kt, collision, interval, collisionNarrowSteps);
+					narrowCollisionInterval(**it, **kt, collision, interval, collisionNarrowSteps);
 
-					LocatedVector2d impulse = { collision.mPoint, Evaluate_Collision(**it, **kt, collision, interval.Get_High() - in_dt) };
+					LocatedVector2d impulse = { collision.mPoint, evaluateCollision(**it, **kt, collision, interval.getHigh() - in_dt) };
 					LocatedVector2d reverseImpulse = impulse;
 					reverseImpulse.vector = -reverseImpulse.vector;
-					Vector2d normal = RigidBody2::Get_Collision_Normal(**it, **kt, collision, interval.Get_High() - in_dt);
+					Vector2d normal = RigidBody2::getCollisionNormal(**it, **kt, collision, interval.getHigh() - in_dt);
 
-					if (!(*it)->Is_Unstoppable() && (info1.rigidBodyInfo.body == nullptr || info1.rigidBodyInfo.interval.Get_Low() > interval.Get_Low())) {
+					if (!(*it)->isUnstoppable() && (info1.rigidBodyInfo.body == nullptr || info1.rigidBodyInfo.interval.getLow() > interval.getLow())) {
 						EffectInfo2 effectInfo;
-						(*it)->Update(interval.Get_High() - in_dt);
-						effectInfo.transform = (*it)->Get_Transform();
-						(*it)->Update(in_dt - interval.Get_High());
+						(*it)->update(interval.getHigh() - in_dt);
+						effectInfo.transform = (*it)->getTransform();
+						(*it)->update(in_dt - interval.getHigh());
 						effectInfo.body = *kt;
 						effectInfo.impulse = impulse;
 						effectInfo.normal = normal;
@@ -383,11 +383,11 @@ void PhysicsManager::Calculate_Rigid_Body_Effects(double in_dt) {
 						info1.rigidBodyInfo = effectInfo;
 					}
 
-					if (!(*kt)->Is_Unstoppable() && (info2.rigidBodyInfo.body == nullptr || info2.rigidBodyInfo.interval.Get_Low() > interval.Get_Low())) {
+					if (!(*kt)->isUnstoppable() && (info2.rigidBodyInfo.body == nullptr || info2.rigidBodyInfo.interval.getLow() > interval.getLow())) {
 						EffectInfo2 effectInfo;
-						(*kt)->Update(interval.Get_High() - in_dt);
-						effectInfo.transform = (*kt)->Get_Transform();
-						(*kt)->Update(in_dt - interval.Get_High());
+						(*kt)->update(interval.getHigh() - in_dt);
+						effectInfo.transform = (*kt)->getTransform();
+						(*kt)->update(in_dt - interval.getHigh());
 						effectInfo.body = *it;
 						effectInfo.impulse = reverseImpulse;
 						effectInfo.normal = normal;
@@ -403,39 +403,39 @@ void PhysicsManager::Calculate_Rigid_Body_Effects(double in_dt) {
 	}
 }
 
-void PhysicsManager::Apply_Effects_To_Rigid_Bodies(double in_dt) {
+void PhysicsManager::applyEffectsToRigidBodies(double in_dt) {
 	for (auto it = rigidBody2s.begin(); it != rigidBody2s.end(); it++) {
 		RigidBodyUpdateInfo2& updateInfo = rigidBody2UpdateInfo[*it];
 		if (updateInfo.rigidBodyInfo.body != nullptr) {
-			(*it)->Update(updateInfo.rigidBodyInfo.interval.Get_Low() - in_dt);
+			(*it)->update(updateInfo.rigidBodyInfo.interval.getLow() - in_dt);
 		}
 	}
 
-	collisionContext.Update();
-	if (collisionContext.Get_Total_Partnerings()) {
+	collisionContext.update();
+	if (collisionContext.getTotalPartnerings()) {
 		Log::main("");
 	}
 
 	for (auto it = rigidBody2s.begin(); it != rigidBody2s.end(); it++) {
 		RigidBodyUpdateInfo2& updateInfo = rigidBody2UpdateInfo[*it];
 		if (updateInfo.rigidBodyInfo.body != nullptr) {
-			auto t = (*it)->Get_Transform();
-			(*it)->Get_Transform() = updateInfo.rigidBodyInfo.transform;
-			(*it)->Apply_World_Impulse(updateInfo.rigidBodyInfo.impulse);
-			(*it)->Get_Transform() = t;
+			auto t = (*it)->getTransform();
+			(*it)->getTransform() = updateInfo.rigidBodyInfo.transform;
+			(*it)->applyWorldImpulse(updateInfo.rigidBodyInfo.impulse);
+			(*it)->getTransform() = t;
 		}
 	}
 
 	/*
 	for (auto it = rigidBody2s.begin(); it != rigidBody2s.end(); it++) {
 		RigidBodyUpdateInfo2& updateInfo = rigidBody2UpdateInfo[*it];
-		//(*it)->Update(in_dt - updateInfo.rigidBodyInfo.interval.Get_Low());
+		//(*it)->update(in_dt - updateInfo.rigidBodyInfo.interval.getLow());
 	}
 
-	collisionContext.Update();
+	collisionContext.update();
 	std::vector<CollisionContext2d::CollisionPartner*> partners;
 	for (auto it = rigidBody2s.begin(); it < rigidBody2s.end(); it++) {
-		collisionContext.Get_Partners((*it)->Get_Collision_Mask(), partners);
+		collisionContext.getPartners((*it)->getCollisionMask(), partners);
 		for (auto jt = partners.begin(); jt < partners.end(); jt++) {
 			for (auto kt = rigidBody2s.begin(); kt < rigidBody2s.end(); kt++) {
 				RigidBodyUpdateInfo2& info1 = rigidBody2UpdateInfo[*it];
@@ -443,16 +443,16 @@ void PhysicsManager::Apply_Effects_To_Rigid_Bodies(double in_dt) {
 
 				if (std::find(rigidBody2s.begin(), it, *kt) != it) break;
 
-				Ranged interval(Min(info1.rigidBodyInfo.interval.Get_Low(), info2.rigidBodyInfo.interval.Get_Low()), in_dt);
+				Ranged interval(min(info1.rigidBodyInfo.interval.getLow(), info2.rigidBodyInfo.interval.getLow()), in_dt);
 				Collision2d collision = (*jt)->collision;
-				Narrow_Collision_Interval(**it, **kt, collision, interval, collisionNarrowSteps);
+				narrowCollisionInterval(**it, **kt, collision, interval, collisionNarrowSteps);
 
-				if (interval.Get_Low() < info1.rigidBodyInfo.finishTime) {
-					info1.rigidBodyInfo.finishTime = interval.Get_Low();
+				if (interval.getLow() < info1.rigidBodyInfo.finishTime) {
+					info1.rigidBodyInfo.finishTime = interval.getLow();
 				}
 
-				if (interval.Get_Low() < info2.rigidBodyInfo.finishTime) {
-					info2.rigidBodyInfo.finishTime = interval.Get_Low();
+				if (interval.getLow() < info2.rigidBodyInfo.finishTime) {
+					info2.rigidBodyInfo.finishTime = interval.getLow();
 				}
 			}
 		}
@@ -461,7 +461,7 @@ void PhysicsManager::Apply_Effects_To_Rigid_Bodies(double in_dt) {
 	for (auto it = rigidBody2s.begin(); it < rigidBody2s.end(); it++) {
 		RigidBodyUpdateInfo2& updateInfo = rigidBody2UpdateInfo[*it];
 		if (updateInfo.rigidBodyInfo.finishTime < in_dt) {
-			//(*it)->Update(Max(updateInfo.rigidBodyInfo.finishTime, updateInfo.rigidBodyInfo.interval.Get_Low()) - in_dt);
+			//(*it)->update(max(updateInfo.rigidBodyInfo.finishTime, updateInfo.rigidBodyInfo.interval.getLow()) - in_dt);
 		}
 	}
 	
@@ -470,114 +470,114 @@ void PhysicsManager::Apply_Effects_To_Rigid_Bodies(double in_dt) {
 	for (auto it = rigidBody2s.begin(); it != rigidBody2s.end(); it++) {
 		RigidBodyUpdateInfo2& updateInfo = rigidBody2UpdateInfo[*it];
 		for (auto jt = updateInfo.forceFieldInfo.begin(); jt != updateInfo.forceFieldInfo.end(); jt++) {
-			auto t = (*it)->Get_Transform();
-			(*it)->Get_Transform() = jt->transform;
-			(*it)->Apply_World_Impulse(jt->impulse);
-			(*it)->Get_Transform() = t;
+			auto t = (*it)->getTransform();
+			(*it)->getTransform() = jt->transform;
+			(*it)->applyWorldImpulse(jt->impulse);
+			(*it)->getTransform() = t;
 		}
 	}
 
-	collisionContext.Update();
-	if (collisionContext.Get_Total_Partnerings()) {
+	collisionContext.update();
+	if (collisionContext.getTotalPartnerings()) {
 		Log::main("");
 	}
 }*/
 
-void PhysicsManager::Narrow_Collision_Interval(RigidBody2& in_body1, RigidBody2& in_body2, Collision2d& inout_collision, Ranged& inout_range, uint in_nIterations,
+void PhysicsManager::narrowCollisionInterval(RigidBody2& in_body1, RigidBody2& in_body2, Collision2d& inout_collision, Ranged& inout_range, uint in_nIterations,
 	Transform2d* out_transform1, Transform2d* out_transform2) {
 	// assume current rigid body state is at t = in_range.high
 	Collision2d collision; 
 
 	InPlaceCollisionEvaluator2d collisionEvaluator;
-	collisionEvaluator.Return_Point(true);
-	collisionEvaluator.Return_Separator(true);
+	collisionEvaluator.returnPoint(true);
+	collisionEvaluator.returnSeparator(true);
 
-	Transform2d transform1 = in_body1.Get_Transform();
-	Transform2d transform2 = in_body2.Get_Transform();
+	Transform2d transform1 = in_body1.getTransform();
+	Transform2d transform2 = in_body2.getTransform();
 
 	if (out_transform1 != nullptr) {
-		in_body1.Update(-inout_range.Get_Span());
-		*out_transform1 = in_body1.Get_Transform();
-		in_body1.Get_Transform() = transform1;
+		in_body1.update(-inout_range.getSpan());
+		*out_transform1 = in_body1.getTransform();
+		in_body1.getTransform() = transform1;
 	}
 
 	if (out_transform2 != nullptr) {
-		in_body2.Update(-inout_range.Get_Span());
-		*out_transform2 = in_body2.Get_Transform();
-		in_body2.Get_Transform() = transform2;
+		in_body2.update(-inout_range.getSpan());
+		*out_transform2 = in_body2.getTransform();
+		in_body2.getTransform() = transform2;
 	}
 
-	double t = inout_range.Get_High();
-	double dt = -inout_range.Get_Span() / 2;
+	double t = inout_range.getHigh();
+	double dt = -inout_range.getSpan() / 2;
 	for (uint i = 0; i < in_nIterations; i++) {
-		in_body1.Update(dt);
-		in_body2.Update(dt);
+		in_body1.update(dt);
+		in_body2.update(dt);
 		t += dt;
-		collision = collisionEvaluator.Evaluate(*in_body1.Get_Collision_Mask(), *in_body2.Get_Collision_Mask());
+		collision = collisionEvaluator.evaluate(*in_body1.getCollisionMask(), *in_body2.getCollisionMask());
 		if (collision.mDid) {
-			inout_range.Set_High(t);
-			dt = -inout_range.Get_Span() / 2;
+			inout_range.setHigh(t);
+			dt = -inout_range.getSpan() / 2;
 			inout_collision.mDid = collision.mDid;
 			inout_collision.mPoint = collision.mPoint;
 		}
 		else {
-			inout_range.Set_Low(t);
-			dt = inout_range.Get_Span() / 2;
+			inout_range.setLow(t);
+			dt = inout_range.getSpan() / 2;
 			inout_collision.mSeparator = collision.mSeparator;
 			inout_collision.mOwner = collision.mOwner;
-			if (out_transform1 != nullptr) *out_transform1 = in_body1.Get_Transform();
-			if (out_transform2 != nullptr) *out_transform2 = in_body2.Get_Transform();
+			if (out_transform1 != nullptr) *out_transform1 = in_body1.getTransform();
+			if (out_transform2 != nullptr) *out_transform2 = in_body2.getTransform();
 		}
 	}
 
-	in_body1.Get_Transform() = transform1;
-	in_body2.Get_Transform() = transform2;
+	in_body1.getTransform() = transform1;
+	in_body2.getTransform() = transform2;
 }
 
-void PhysicsManager::Evaluate_Collision(RigidBody2& in_body1, RigidBody2& in_body2, const Collision2d& in_collision, Vector2d& out_bounce, Vector2d& out_friction) {
+void PhysicsManager::evaluateCollision(RigidBody2& in_body1, RigidBody2& in_body2, const Collision2d& in_collision, Vector2d& out_bounce, Vector2d& out_friction) {
 	Vector2d point = in_collision.mPoint;
-	Vector2d normal = RigidBody2::Get_Collision_Normal(in_body1, in_body2, in_collision);
+	Vector2d normal = RigidBody2::getCollisionNormal(in_body1, in_body2, in_collision);
 
-	double restitution = Calculate_Restitution_Coefficient(in_body1, in_body2);
+	double restitution = calculateRestitutionCoefficient(in_body1, in_body2);
 
-	Vector2d approachVelocity1 = in_body1.Get_World_Point_Velocity(point);
-	Vector2d approachVelocity2 = in_body2.Get_World_Point_Velocity(point);
+	Vector2d approachVelocity1 = in_body1.getWorldPointVelocity(point);
+	Vector2d approachVelocity2 = in_body2.getWorldPointVelocity(point);
 	Vector2d approachVelocity = approachVelocity2 - approachVelocity1;
 
-	double linearMass1 = in_body1.Get_Linear_Mass();
-	double linearMass2 = in_body2.Get_Linear_Mass();
+	double linearMass1 = in_body1.getLinearMass();
+	double linearMass2 = in_body2.getLinearMass();
 
-	double angularMass1 = in_body1.Get_Angular_Mass();
-	double angularMass2 = in_body2.Get_Angular_Mass();
+	double angularMass1 = in_body1.getAngularMass();
+	double angularMass2 = in_body2.getAngularMass();
 
-	Vector2d radius1 = point - in_body1.Get_Transform().Get_World_Position();
-	Vector2d radius2 = point - in_body2.Get_Transform().Get_World_Position();
+	Vector2d radius1 = point - in_body1.getTransform().getWorldPosition();
+	Vector2d radius2 = point - in_body2.getTransform().getWorldPosition();
 
-	if (approachVelocity.Dot(normal) >= 0) {
+	if (approachVelocity.dot(normal) >= 0) {
 		normal = -normal;
 	}
 
 	double linearFactor1 = (linearMass1 == 0.0) ? 0.0 : 1.0 / linearMass1;
 	double linearFactor2 = (linearMass2 == 0.0) ? 0.0 : 1.0 / linearMass2;
 
-	Vector2d angularFactor1 = (angularMass1 == 0.0) ? Vector2d(0, 0) : radius1.Orthogonal() * radius1.Magnitude() / angularMass1;
-	Vector2d angularFactor2 = (angularMass2 == 0.0) ? Vector2d(0, 0) : radius2.Orthogonal() * radius2.Magnitude() / angularMass2;
+	Vector2d angularFactor1 = (angularMass1 == 0.0) ? Vector2d(0, 0) : radius1.orthogonal() * radius1.magnitude() / angularMass1;
+	Vector2d angularFactor2 = (angularMass2 == 0.0) ? Vector2d(0, 0) : radius2.orthogonal() * radius2.magnitude() / angularMass2;
 	Vector2d angularFactor = angularFactor1 + angularFactor2;
 
-	double numerator = (1.0 + restitution) * approachVelocity.Dot(normal);
-	double denominator = linearFactor1 + linearFactor2 + abs(angularFactor.Dot(normal));
+	double numerator = (1.0 + restitution) * approachVelocity.dot(normal);
+	double denominator = linearFactor1 + linearFactor2 + abs(angularFactor.dot(normal));
 
 	Vector2d impulse = (denominator == 0.0) ? Vector2d(0, 0) : normal * (-2.0 + (numerator / denominator));
 
-	Vector2d parallelVelocity = approachVelocity - normal * approachVelocity.Dot(normal);
-	double frictionCoeff = (parallelVelocity.Magnitude() <= slidingEpsilon) ?
-		Calculate_Static_Friction_Coefficient(in_body1, in_body2) :
-		Calculate_Kinetic_Friction_Coefficient(in_body1, in_body2);
+	Vector2d parallelVelocity = approachVelocity - normal * approachVelocity.dot(normal);
+	double frictionCoeff = (parallelVelocity.magnitude() <= slidingEpsilon) ?
+		calculateStaticFrictionCoefficient(in_body1, in_body2) :
+		calculateKineticFrictionCoefficient(in_body1, in_body2);
 
-	Vector2d friction = parallelVelocity.Normalized() * impulse.Magnitude() * frictionCoeff;
-	Vector2d maxFriction = parallelVelocity / (linearFactor1 + linearFactor2 + abs(angularFactor.Dot(parallelVelocity.Normalized()))) * 0.99;
+	Vector2d friction = parallelVelocity.normalized() * impulse.magnitude() * frictionCoeff;
+	Vector2d maxFriction = parallelVelocity / (linearFactor1 + linearFactor2 + abs(angularFactor.dot(parallelVelocity.normalized()))) * 0.99;
 
-	if (friction.Dot_Self() > maxFriction.Dot_Self()) {
+	if (friction.dotSelf() > maxFriction.dotSelf()) {
 		friction = maxFriction;
 	}
 
@@ -585,19 +585,19 @@ void PhysicsManager::Evaluate_Collision(RigidBody2& in_body1, RigidBody2& in_bod
 	out_friction = friction;
 }
 
-typename PhysicsManager::RigidBodyUpdateInfo2::RigidBodyEffectInfo::Status PhysicsManager::Evaluate_Status(RigidBody2& in_body1, RigidBody2& in_body2, 
+typename PhysicsManager::RigidBodyUpdateInfo2::RigidBodyEffectInfo::Status PhysicsManager::evaluateStatus(RigidBody2& in_body1, RigidBody2& in_body2, 
 	const Collision2d& in_collision) {
 
 	Vector2d point = in_collision.mPoint;
-	Vector2d normal = RigidBody2::Get_Collision_Normal(in_body1, in_body2, in_collision);
-	Vector2d velocity1 = in_body1.Get_World_Point_Velocity(point);
-	Vector2d velocity2 = in_body2.Get_World_Point_Velocity(point);
+	Vector2d normal = RigidBody2::getCollisionNormal(in_body1, in_body2, in_collision);
+	Vector2d velocity1 = in_body1.getWorldPointVelocity(point);
+	Vector2d velocity2 = in_body2.getWorldPointVelocity(point);
 	Vector2d velocity = velocity2 - velocity1;
-	Vector2d normalVelocity = velocity.Projection(normal);
+	Vector2d normalVelocity = velocity.projection(normal);
 	Vector2d tangentVelocity = velocity - normalVelocity;
 
-	if (normalVelocity.Magnitude() <= slidingEpsilon) {
-		if (tangentVelocity.Magnitude() <= restingEpsilon) {
+	if (normalVelocity.magnitude() <= slidingEpsilon) {
+		if (tangentVelocity.magnitude() <= restingEpsilon) {
 			return RigidBodyUpdateInfo2::RigidBodyEffectInfo::Status::resting;
 		}
 		else {
@@ -608,21 +608,21 @@ typename PhysicsManager::RigidBodyUpdateInfo2::RigidBodyEffectInfo::Status Physi
 	return RigidBodyUpdateInfo2::RigidBodyEffectInfo::Status::bouncing;
 }
 
-void PhysicsManager::Conform_To_Status(RigidBody2& in_body1, RigidBody2& in_body2, const Collision2d& in_collision, RigidBodyUpdateInfo2::RigidBodyEffectInfo::Status in_status) {
+void PhysicsManager::conformToStatus(RigidBody2& in_body1, RigidBody2& in_body2, const Collision2d& in_collision, RigidBodyUpdateInfo2::RigidBodyEffectInfo::Status in_status) {
 	Vector2d point = in_collision.mPoint;
-	Vector2d velocity1 = in_body1.Get_World_Point_Velocity(point);
-	Vector2d velocity2 = in_body2.Get_World_Point_Velocity(point);
+	Vector2d velocity1 = in_body1.getWorldPointVelocity(point);
+	Vector2d velocity2 = in_body2.getWorldPointVelocity(point);
 }
 
-double PhysicsManager::Calculate_Restitution_Coefficient(RigidBody2& in_body1, RigidBody2& in_body2) {
+double PhysicsManager::calculateRestitutionCoefficient(RigidBody2& in_body1, RigidBody2& in_body2) {
 	return 0.4;
 }
 
-double PhysicsManager::Calculate_Kinetic_Friction_Coefficient(RigidBody2& in_body1, RigidBody2& in_body2) {
+double PhysicsManager::calculateKineticFrictionCoefficient(RigidBody2& in_body1, RigidBody2& in_body2) {
 	return 0.5;
 }
 
-double PhysicsManager::Calculate_Static_Friction_Coefficient(RigidBody2& in_body1, RigidBody2& in_body2) {
+double PhysicsManager::calculateStaticFrictionCoefficient(RigidBody2& in_body1, RigidBody2& in_body2) {
 	return 0.6;
 }
 

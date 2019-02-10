@@ -220,14 +220,14 @@ mDepthTexture(in_depthTexture) {
 		throw InvalidArgumentException("no color textures passed to framebuffer");
 	}
 
-	Vector3i dimensions = mColorTextures[0]->Get_Dimensions();
+	Vector3i dimensions = mColorTextures[0]->getDimensions();
 	for (uint i = 1; i < mColorTextures.size(); i++) {
-		if (mColorTextures[i] == nullptr || mColorTextures[i]->Get_Dimensions() != dimensions) {
+		if (mColorTextures[i] == nullptr || mColorTextures[i]->getDimensions() != dimensions) {
 			throw InvalidArgumentException("invalid color texture passed to framebuffer");
 		}
 	}
 
-	if(mDepthTexture != nullptr && mDepthTexture->Get_Dimensions() != dimensions) {
+	if(mDepthTexture != nullptr && mDepthTexture->getDimensions() != dimensions) {
 		throw InvalidArgumentException("invalid depth texture passed to framebuffer");
 	}
 
@@ -253,26 +253,26 @@ Framebuffer::~Framebuffer() {
 	glDeleteFramebuffers(1, &mID);
 }
 
-std::vector<Texture*> Framebuffer::Get_Color_Textures() {
+std::vector<Texture*> Framebuffer::getColorTextures() {
 	return mColorTextures;
 }
 
-Texture* Framebuffer::Get_Color_Texture(uint in_index) {
+Texture* Framebuffer::getColorTexture(uint in_index) {
 	return mColorTextures[in_index];
 }
 
-Texture* Framebuffer::Get_Depth_Texture() {
+Texture* Framebuffer::getDepthTexture() {
 	return mDepthTexture;
 }
 
-Vector2i Framebuffer::Get_Dimensions() const {
-	return (Vector2i)mColorTextures[0]->Get_Dimensions();
+Vector2i Framebuffer::getDimensions() const {
+	return (Vector2i)mColorTextures[0]->getDimensions();
 }
 
-void Framebuffer::_Draw_To_This() {
-	Vector3i dimensions = mColorTextures[0]->Get_Dimensions();
+void Framebuffer::_drawToThis() {
+	Vector3i dimensions = mColorTextures[0]->getDimensions();
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mID);
-	glViewport(0, 0, dimensions.X(), dimensions.Y());
+	glViewport(0, 0, dimensions.x(), dimensions.y());
 }
 
 

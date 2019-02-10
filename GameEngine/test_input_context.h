@@ -40,7 +40,7 @@ public:
 	};
 
 	TestInputContext();
-	bool Process_Raw_Event(const RawInputEvent& in_event) override;
+	bool processRawEvent(const RawInputEvent& in_event) override;
 };
 
 class TestSpriteMover : public PerFrameUpdateableObject {
@@ -50,7 +50,7 @@ private:
 
 public:
 	TestSpriteMover(Sprite* in_sprite, CollisionMask2d& in_mask);
-	void Update(double in_dt) override;
+	void update(double in_dt) override;
 };
 
 class TestSpriteMover2 : public PerFrameUpdateableObject {
@@ -61,7 +61,7 @@ private:
 
 public:
 	TestSpriteMover2(Sprite* in_sprite);
-	void Update(double in_dt) override;
+	void update(double in_dt) override;
 };
 
 #endif

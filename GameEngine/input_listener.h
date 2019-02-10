@@ -27,23 +27,23 @@ private:
 public:
 	InputListener(InputContext* in_context, uint in_level = 0, double in_depth = 0.0);
 
-	InputContext* Get_Context();
+	InputContext* getContext();
 
-	bool Post_Event(const InputEvent& in_event);
-	InputEvent Pop_Event();
-	uint Get_Number_Events();
-	void Clear_Events();
+	bool postEvent(const InputEvent& in_event);
+	InputEvent popEvent();
+	uint getNumberEvents();
+	void clearEvents();
 
-	uint Get_Level() const;
-	void Set_Level(uint in_level);
+	uint getLevel() const;
+	void setLevel(uint in_level);
 
-	double Get_Depth() const;
-	void Set_Depth(double in_depth);
+	double getDepth() const;
+	void setDepth(double in_depth);
 
-	void Set_Receiver(const std::function<Reception(const InputEvent&)>& in_receiver);
+	void setReceiver(const std::function<Reception(const InputEvent&)>& in_receiver);
 
-	static bool Compare(const InputListener& in_listener1, const InputListener& in_listener2);
-	static bool Compare_Pointers(const InputListener* in_listener1, const InputListener* in_listener2);
+	static bool compare(const InputListener& in_listener1, const InputListener& in_listener2);
+	static bool comparePointers(const InputListener* in_listener1, const InputListener* in_listener2);
 };
 
 #endif

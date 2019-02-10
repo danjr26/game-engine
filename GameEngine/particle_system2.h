@@ -35,9 +35,9 @@ public:
 
 	class Specifier {
 	public:
-		virtual void Update(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) = 0;
-		virtual void Destroy(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) = 0;
-		virtual void Generate(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) = 0;
+		virtual void update(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) = 0;
+		virtual void destroy(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) = 0;
+		virtual void generate(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) = 0;
 	};
 
 	enum SortOrder {
@@ -68,20 +68,20 @@ public:
 	ParticleSystem2(Texture* in_texture, Specifier* in_specifier);
 	~ParticleSystem2();
 
-	uint Count() const;
+	uint getCount() const;
 
-	uint Add(uint in_nParticles);
-	void Remove(uint in_index);
-	void Access(uint in_index, Accessor& out_accessor);
+	uint add(uint in_nParticles);
+	void remove(uint in_index);
+	void access(uint in_index, Accessor& out_accessor);
 
-	void Reserve(uint in_nParticles);
+	void reserve(uint in_nParticles);
 
-	void Sort(SortOrder in_order);
+	void sort(SortOrder in_order);
 
-	void Update(double in_dt) override;
-	double Z() const override;
-	bool Should_Cull() const override;
-	void Render() override;
+	void update(double in_dt) override;
+	double z() const override;
+	bool shouldCull() const override;
+	void render() override;
 
 protected:
 

@@ -12,16 +12,16 @@ private:
 	HalfSpace(const Vector<T, n>& in_point, const Vector<T, n>& in_direction);
 
 public:
-	void Apply_Transform(const Transform<T, n>& in_transform);
-	Vector<T, n> Get_Point() const;
-	void Set_Point(const Vector<T, n>& in_point);
-	Vector<T, n> Get_Direction() const;
-	void Set_Direction(const Vector<T, n>& in_direction);
-	T Get_Projection_Coefficient() const;
-	Vector<T, n> Get_Projection() const;
+	void applyTransform(const Transform<T, n>& in_transform);
+	Vector<T, n> getPoint() const;
+	void setPoint(const Vector<T, n>& in_point);
+	Vector<T, n> getDirection() const;
+	void setDirection(const Vector<T, n>& in_direction);
+	T getProjectionCoefficient() const;
+	Vector<T, n> getProjection() const;
 
 public:
-	static HalfSpace<T, n> From_Point_Direction(const Vector<T, n>& in_point, const Vector<T, n>& in_direction);
+	static HalfSpace<T, n> fromPointDirection(const Vector<T, n>& in_point, const Vector<T, n>& in_direction);
 };
 
 using HalfSpace2f = HalfSpace<float, 2>;

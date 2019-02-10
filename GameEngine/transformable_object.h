@@ -9,7 +9,7 @@ protected:
 	Transform<T, n> mTransform;
 public:
 	TransformableObject();
-	Transform<T, n>& Get_Transform();
+	Transform<T, n>& getTransform();
 };
 
 using TransformableObject2f = TransformableObject<float, 2>;

@@ -12,6 +12,6 @@ FontManager::~FontManager() {
 	FT_Done_FreeType(mLibrary);
 }
 
-FT_Library FontManager::Get_Library() {
+FT_Library FontManager::getLibrary() {
 	return mLibrary;
 }

@@ -7,12 +7,12 @@
 
 template<class ValT, uint n, class TimeT = double>
 struct HermiteTransitioner : Transitioner<LocatedVector<ValT, n>, TimeT> {
-	LocatedVector<ValT, n> Evaluate(TimeT in_time) override {
+	LocatedVector<ValT, n> evaluate(TimeT in_time) override {
 		if (mKeys.empty()) {
 			throw ProcessFailureException();
 		}
 
-		in_time = Clamp_Floor<TimeT>(in_time, 0);
+		in_time = GEUtil::clampFloor<TimeT>(in_time, 0);
 
 		TimeT t = 0;
 		for (uint i = 0; i < mKeys.size() - 1; i++) {
@@ -43,25 +43,25 @@ struct HermiteTransitioner : Transitioner<LocatedVector<ValT, n>, TimeT> {
 		return mKeys.back().mValue;
 	}
 
-	void Fill_Uniform_Durations(TimeT in_val = (TimeT)1) {
+	void fillUniformDurations(TimeT in_val = (TimeT)1) {
 		for (auto it = mKeys.begin(); it != mKeys.end(); it++) {
 			it->mDuration = in_val;
 		}
 	}
 
-	void Fill_Distance_Durations() {
+	void fillDistanceDurations() {
 		for (uint i = 0; i < mKeys.size() - 1; i++) {
-			mKeys[i].mDuration = (mKeys[i + 1].mValue.mPosition - mKeys[i].mValue.mPosition).Magnitude();
+			mKeys[i].mDuration = (mKeys[i + 1].mValue.mPosition - mKeys[i].mValue.mPosition).magnitude();
 		}
 		mKeys[mKeys.size() - 1].mDuration = (TimeT)0;
 	}
 
-	void Fill_Basic_Tangents() {
+	void fillBasicTangents() {
 		if (mKeys.empty()) return;
-		Fill_Basic_Tangents(mKeys.front().mValue.mPosition, mKeys.back().mValue.mPosition);
+		fillBasicTangents(mKeys.front().mValue.mPosition, mKeys.back().mValue.mPosition);
 	}
 
-	void Fill_Basic_Tangents(const Vector<ValT, n>& in_control1, const Vector<ValT, n>& in_control2) {
+	void fillBasicTangents(const Vector<ValT, n>& in_control1, const Vector<ValT, n>& in_control2) {
 		if (mKeys.size() == 0) {
 			return;
 		}
@@ -80,12 +80,12 @@ struct HermiteTransitioner : Transitioner<LocatedVector<ValT, n>, TimeT> {
 		}
 	}
 
-	void Fill_Cardinal_Tangents(TimeT in_tension = (TimeT)0) {
+	void fillCardinalTangents(TimeT in_tension = (TimeT)0) {
 		if (mKeys.empty()) return;
-		Fill_Cardinal_Tangents(mKeys.front().mValue.mPosition, mKeys.back().mValue.mPosition, in_tension);
+		fillCardinalTangents(mKeys.front().mValue.mPosition, mKeys.back().mValue.mPosition, in_tension);
 	}
 
-	void Fill_Cardinal_Tangents(const Vector<ValT, n>& in_control1, const Vector<ValT, n>& in_control2, TimeT in_tension = (TimeT)0) {
+	void fillCardinalTangents(const Vector<ValT, n>& in_control1, const Vector<ValT, n>& in_control2, TimeT in_tension = (TimeT)0) {
 		if (mKeys.size() == 0) {
 			return;
 		}

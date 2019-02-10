@@ -6,38 +6,38 @@ inline AxisAlignedLine<T, n>::AxisAlignedLine(uint in_dimension, T in_value) :
 	mDimension(in_dimension),
 	mValue(in_value) {
 
-	if (!Between_Inc(mDimension, (uint)0, (uint)n - 1)) {
+	if (!GEUtil::betwInc(mDimension, (uint)0, (uint)n - 1)) {
 		throw InvalidArgumentException();
 	}
 }
 
 template<class T, uint n>
-inline uint AxisAlignedLine<T, n>::Get_Dimension() const {
+inline uint AxisAlignedLine<T, n>::getDimension() const {
 	return mDimension;
 }
 
 template<class T, uint n>
-inline T AxisAlignedLine<T, n>::Get_Value() const {
+inline T AxisAlignedLine<T, n>::getValue() const {
 	return mValue;
 }
 
 template<class T, uint n>
-inline Vector<T, n> AxisAlignedLine<T, n>::Get_Direction() const {
+inline Vector<T, n> AxisAlignedLine<T, n>::getDirection() const {
 	Vector<T, n> out;
-	out[mDimension] = Sign(mValue);
+	out[mDimension] = GEUtil::sign(mValue);
 	return out;
 }
 
 template<class T, uint n>
-inline void AxisAlignedLine<T, n>::Apply_Transform(const Transform<T, n>& in_transform) {
-	for (Transform<T, n> const* t = &in_transform; t != nullptr; t = t->Get_Const_Parent()) {
-		mValue *= t->Get_Local_Scale()[mDimension];
-		mValue += t->Get_Local_Position()[mDimension];
+inline void AxisAlignedLine<T, n>::applyTransform(const Transform<T, n>& in_transform) {
+	for (Transform<T, n> const* t = &in_transform; t != nullptr; t = t->getConstParent()) {
+		mValue *= t->getLocalScale()[mDimension];
+		mValue += t->getLocalPosition()[mDimension];
 	}
 }
 
 template<class T, uint n>
-inline AxisAlignedLine<T, n> AxisAlignedLine<T, n>::From_Dimension_Value(uint in_dimension, T in_value) {
+inline AxisAlignedLine<T, n> AxisAlignedLine<T, n>::fromDimensionValue(uint in_dimension, T in_value) {
 	return AxisAlignedLine<T, n>(in_dimension, in_value);
 }
 

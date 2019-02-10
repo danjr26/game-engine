@@ -11,55 +11,55 @@ InputBindings::InputBindings(uint in_nActions, uint in_nStates, uint in_nRanges)
 	for (uint i = 0; i < in_nRanges; i++) { ranges[i] = nullptr; }
 }
 
-uint InputBindings::Get_Number_Actions() const {
+uint InputBindings::getNumberActions() const {
 	return (uint)actions.size();
 }
 
-uint InputBindings::Get_Number_States() const {
+uint InputBindings::getNumberStates() const {
 	return (uint)states.size();
 }
 
-uint InputBindings::Get_Number_Ranges() const {
+uint InputBindings::getNumberRanges() const {
 	return (uint)ranges.size();
 }
 
-void InputBindings::Bind_Action(uint in_slot, InputActionIdentifier in_action) {
+void InputBindings::bindAction(uint in_slot, InputActionIdentifier in_action) {
 	actions[in_slot] = in_action;
 }
 
-void InputBindings::Bind_State(uint in_slot, InputStateIdentifier in_state) {
+void InputBindings::bindState(uint in_slot, InputStateIdentifier in_state) {
 	states[in_slot] = in_state;
 }
 
-void InputBindings::Bind_Range(uint in_slot, InputRangeIdentifier in_range) {
+void InputBindings::bindRange(uint in_slot, InputRangeIdentifier in_range) {
 	ranges[in_slot] = in_range;
 }
 
-void InputBindings::Clear_Action(uint in_slot) {
+void InputBindings::clearAction(uint in_slot) {
 	actions[in_slot] = nullptr;
 }
 
-void InputBindings::Clear_State(uint in_slot) {
+void InputBindings::clearState(uint in_slot) {
 	states[in_slot] = nullptr;
 }
 
-void InputBindings::Clear_Range(uint in_slot) {
+void InputBindings::clearRange(uint in_slot) {
 	ranges[in_slot] = nullptr;
 }
 
-InputActionIdentifier InputBindings::Get_Bound_Action(uint in_slot) {
+InputActionIdentifier InputBindings::getBoundAction(uint in_slot) {
 	return actions[in_slot];
 }
 
-InputStateIdentifier InputBindings::Get_Bound_State(uint in_slot) {
+InputStateIdentifier InputBindings::getBoundState(uint in_slot) {
 	return states[in_slot];
 }
 
-InputRangeIdentifier InputBindings::Get_Bound_Range(uint in_slot) {
+InputRangeIdentifier InputBindings::getBoundRange(uint in_slot) {
 	return ranges[in_slot];
 }
 
-bool InputBindings::Evaluate_Action(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state) {
+bool InputBindings::evaluateAction(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state) {
 	if (actions[in_slot] == nullptr) {
 		return false;
 	}
@@ -68,7 +68,7 @@ bool InputBindings::Evaluate_Action(uint in_slot, const RawInputEvent& in_event,
 	}
 }
 
-InputStateChange InputBindings::Evaluate_State(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state) {
+InputStateChange InputBindings::evaluateState(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state) {
 	if (states[in_slot] == nullptr) {
 		return InputStateChange::no_change;
 	}
@@ -77,7 +77,7 @@ InputStateChange InputBindings::Evaluate_State(uint in_slot, const RawInputEvent
 	}
 }
 
-float InputBindings::Evaluate_Range(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state) {
+float InputBindings::evaluateRange(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state) {
 	if (ranges[in_slot] == nullptr) {
 		return NAN;
 	}
@@ -86,27 +86,27 @@ float InputBindings::Evaluate_Range(uint in_slot, const RawInputEvent& in_event,
 	}
 }
 
-bool InputBindings::Evaluate_Action(const Iterator& in_iter) {
-	return Evaluate_Action(in_iter.mIndex, in_iter.mEvent, in_iter.mState);
+bool InputBindings::evaluateAction(const Iterator& in_iter) {
+	return evaluateAction(in_iter.mIndex, in_iter.mEvent, in_iter.mState);
 }
 
-InputStateChange InputBindings::Evaluate_State(const Iterator& in_iter) {
-	return Evaluate_State(in_iter.mIndex, in_iter.mEvent, in_iter.mState);
+InputStateChange InputBindings::evaluateState(const Iterator& in_iter) {
+	return evaluateState(in_iter.mIndex, in_iter.mEvent, in_iter.mState);
 }
 
-float InputBindings::Evaluate_Range(const Iterator& in_iter) {
-	return Evaluate_Range(in_iter.mIndex, in_iter.mEvent, in_iter.mState);
+float InputBindings::evaluateRange(const Iterator& in_iter) {
+	return evaluateRange(in_iter.mIndex, in_iter.mEvent, in_iter.mState);
 }
 
-InputBindings::Iterator InputBindings::Iterate_Actions(const RawInputEvent& in_event, const RawInputState& in_state) {
+InputBindings::Iterator InputBindings::iterateActions(const RawInputEvent& in_event, const RawInputState& in_state) {
 	return Iterator(Iterator::Mode::action, *this, in_event, in_state);
 }
 
-InputBindings::Iterator InputBindings::Iterate_States(const RawInputEvent& in_event, const RawInputState& in_state) {
+InputBindings::Iterator InputBindings::iterateStates(const RawInputEvent& in_event, const RawInputState& in_state) {
 	return Iterator(Iterator::Mode::state, *this, in_event, in_state);
 }
 
-InputBindings::Iterator InputBindings::Iterate_Ranges(const RawInputEvent& in_event, const RawInputState& in_state) {
+InputBindings::Iterator InputBindings::iterateRanges(const RawInputEvent& in_event, const RawInputState& in_state) {
 	return Iterator(Iterator::Mode::range, *this, in_event, in_state);
 }
 
@@ -127,13 +127,13 @@ InputBindings::Iterator::Iterator(Mode in_mode, InputBindings& in_parent, const 
 InputBindings::Iterator::operator bool() {
 	switch (mMode) {
 	case Mode::action:
-		return mIndex < (int)mParent.Get_Number_Actions();
+		return mIndex < (int)mParent.getNumberActions();
 		break;
 	case Mode::state:
-		return mIndex < (int)mParent.Get_Number_States();
+		return mIndex < (int)mParent.getNumberStates();
 		break;
 	case Mode::range:
-		return mIndex < (int)mParent.Get_Number_Ranges();
+		return mIndex < (int)mParent.getNumberRanges();
 		break;
 	}
 	return false;
@@ -142,13 +142,13 @@ InputBindings::Iterator::operator bool() {
 InputBindings::Iterator& InputBindings::Iterator::operator++() {
 	switch (mMode) {
 	case Mode::action:
-		do { mIndex++; } while (mIndex < (int)mParent.Get_Number_Actions() && !mParent.Evaluate_Action(mIndex, mEvent, mState));
+		do { mIndex++; } while (mIndex < (int)mParent.getNumberActions() && !mParent.evaluateAction(mIndex, mEvent, mState));
 		break;
 	case Mode::state:
-		do { mIndex++; } while (mIndex < (int)mParent.Get_Number_States() && mParent.Evaluate_State(mIndex, mEvent, mState) == InputStateChange::no_change);
+		do { mIndex++; } while (mIndex < (int)mParent.getNumberStates() && mParent.evaluateState(mIndex, mEvent, mState) == InputStateChange::no_change);
 		break;
 	case Mode::range:
-		do { mIndex++; } while (mIndex < (int)mParent.Get_Number_Ranges() && std::isnan(mParent.Evaluate_Range(mIndex, mEvent, mState)));
+		do { mIndex++; } while (mIndex < (int)mParent.getNumberRanges() && std::isnan(mParent.evaluateRange(mIndex, mEvent, mState)));
 		break;
 	}
 	return *this;

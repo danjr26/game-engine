@@ -1,4 +1,4 @@
-#include <Windows.h>
+#include <windows.h>
 #include <iostream>
 #include "async_task_manager.h"
 #include "log.h"
@@ -32,43 +32,43 @@ void Test_Render(Window* window) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	FontFace::Load_XML_List("fonts/font_list.xml");
-	ShaderProgram::Load_XML_List("shaders/shader_list.xml");
+	FontFace::loadXMLList("fonts/font_list.xml");
+	ShaderProgram::loadXMLList("shaders/shader_list.xml");
 
 	Texture arrow(Texture::Type::_2d, "img/test_arrow.png", 8, Texture::Flags::mipmaps);
 	Texture spark(Texture::Type::_2d, "img/spark.png", 8, Texture::Flags::mipmaps);
 	Texture ship(Texture::Type::_2d, "img/ship.png", 8, Texture::Flags::mipmaps);
 
-	Sprite shipRenderer(AxisAlignedRectangled::From_Center(Vector2d(0, 0), Vector2d(Vector2i(ship.Get_Dimensions())) / 4), &ship);
-	shipRenderer.Get_Transform().Translate_World(Vector2d(500, 400));
-	GE.Render().Add(&shipRenderer);
+	Sprite shipRenderer(AxisAlignedRectangled::fromCenter(Vector2d(0, 0), Vector2d(Vector2i(ship.getDimensions())) / 4), &ship);
+	shipRenderer.getTransform().translateWorld(Vector2d(500, 400));
+	GE.render().add(&shipRenderer);
 
-	shipRenderer.Texture_Instance().Settings().Set_Magnify_Filter(TextureSettings::FilterMode::trilinear);
-	shipRenderer.Texture_Instance().Settings().Set_Minify_Filter(TextureSettings::FilterMode::trilinear);
+	shipRenderer.getTextureInstance().settings().setMagnifyFilter(TextureSettings::FilterMode::trilinear);
+	shipRenderer.getTextureInstance().settings().setMinifyFilter(TextureSettings::FilterMode::trilinear);
 
 	Clock c;
 	uint n = 10000;
-	double t1 = c.Now();
+	double t1 = c.now();
 	for (uint i = 0; i < n; i++) {
 		
 	}
-	double t2 = c.Now();
+	double t2 = c.now();
 	double averageT = (t2 - t1) / n;
 	Log::main(std::to_string(averageT * 1000000) + " us");
 
 	Camera camera1;
-	camera1.Set_Projection(Projectiond(Vector3d(0, window->Get_Dimensions().Y(), 0), Vector3d(window->Get_Dimensions().X(), 0, -1)));
+	camera1.setProjection(Projectiond(Vector3d(0, window->getDimensions().y(), 0), Vector3d(window->getDimensions().x(), 0, -1)));
 
 	RenderPass testPass =
 		RenderPass(window, &camera1)
-		.Clear_Color(ColorRGBAf(0.08f, 0.05f, 0.1f, 1.0f))
-		.Sort_Order(RenderPass::SortOrder::back_to_front);
+		.clearColor(ColorRGBAf(0.08f, 0.05f, 0.1f, 1.0f))
+		.sortOrder(RenderPass::SortOrder::back_to_front);
 
-	GE.Render().mPasses.push_back(&testPass);
+	GE.render().mPasses.push_back(&testPass);
 
-	window->Set_Visible(true);
+	window->setVisible(true);
 
-	GE.Begin();
+	GE.begin();
 }
 
 int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nArgs) {
@@ -86,8 +86,8 @@ int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nA
 		
 	wglSwapIntervalEXT(0);
 
-	GE.Render().mMainTarget = &window;
-	GE.Render().mMainWindow = &window;
+	GE.render().mMainTarget = &window;
+	GE.render().mMainWindow = &window;
 
 	Test_Render(&window);
 

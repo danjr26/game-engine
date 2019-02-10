@@ -26,14 +26,14 @@ private:
 public:
 	TextureInstance(Texture* in_texture);
 
-	Texture* Get_Texture();
-	TextureSettings& Settings();
+	Texture* getTexture();
+	TextureSettings& settings();
 
-	void Set_Influence(Influence in_influence, float value);
-	float Get_Influence(Influence in_influence);
+	void setInfluence(Influence in_influence, float value);
+	float getInfluence(Influence in_influence);
 
-	void Use(ubyte in_slot = 0);
-	void Use_None(ubyte in_slot = 0);
+	void use(ubyte in_slot = 0);
+	void useNone(ubyte in_slot = 0);
 };
 
 #endif

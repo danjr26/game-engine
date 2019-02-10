@@ -12,12 +12,12 @@ private:
 public:
 	ShaderProgram(std::vector<Shader*> in_shaders);
 	~ShaderProgram();
-	void Use();
-	GLint Get_Uniform_Location(std::string in_name);
+	void use();
+	GLint getUniformLocation(std::string in_name);
 
-	static void Use_None();
+	static void useNone();
 
-	static void Load_XML_List(std::string in_filename);
+	static void loadXMLList(std::string in_filename);
 };
 
 #endif

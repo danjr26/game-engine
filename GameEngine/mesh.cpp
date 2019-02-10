@@ -23,10 +23,10 @@ blendSettings	(in_blendSettings)
 {}
 /*
 void Material::Apply() {
-	RenderContext& context = GEngine::Get().Render().Context();
+	RenderContext& context = GEngine::get().render().Context();
 	context.Set_Blend_Settings(blendSettings);
 	if (blendSettings.useBlending) {
-		GEngine::G
+		GEngine::g
 	}
 
 	if (texture != nullptr)
@@ -126,7 +126,7 @@ SphereTree::SphereTree(Vector3f* tris, int ntris) {
 		//find the farthest point from c to get the outer radius
 		farthest = 0;
 		for (int i = posbuffer[0]; i < posbuffer[0] + lenbuffer[0]; i++) {
-			newfarthest = (triscpy[i] - c).Magnitude();
+			newfarthest = (triscpy[i] - c).magnitude();
 			if (newfarthest > farthest) {
 				farthestv = triscpy[i];
 				farthest = newfarthest;
@@ -135,7 +135,7 @@ SphereTree::SphereTree(Vector3f* tris, int ntris) {
 
 		//create outer sphere
 		sbuffer[0]->localCenter = c;
-		sbuffer[0]->radius = (farthestv - c).Magnitude();
+		sbuffer[0]->radius = (farthestv - c).magnitude();
 		sbuffer[0]->tri = nullptr;
 
 		sbuffer		[0]->child1 = nullptr;
@@ -179,7 +179,7 @@ SphereTree::SphereTree(Vector3f* tris, int ntris) {
 			Vector3f rad = farthestv - sbuffer[0]->localCenter;
 			float mid = 0;
 			for (int i = posbuffer[0]; i < posbuffer[0] + lenbuffer[0]; i++) {
-				mid += rad.Dot(triscpy[i]);
+				mid += rad.dot(triscpy[i]);
 			}
 			mid /= lenbuffer[0];
 			float proj;
@@ -189,7 +189,7 @@ SphereTree::SphereTree(Vector3f* tris, int ntris) {
 				for (int j = 0; j < 3; j++)
 					m += triscpy[i + j];
 				m *= 0.333333333333f;
-				proj = rad.Dot(m);
+				proj = rad.dot(m);
 				if (proj >= mid) {
 					for (int j = 0; j < 3; j++) {
 						std::swap(triscpy[i + j], triscpy[posbuffer[0] + nleft + j]);
@@ -331,7 +331,7 @@ SubMesh::~SubMesh() {
 	glDeleteVertexArrays(1, &id);
 }
 
-void SubMesh::Render(Flags callflags) {
+void SubMesh::render(Flags callflags) {
 	Matrix4f viewmat, projmat, modelmat;
 	switch(callflags) {
 	case RenderType::shadow:
@@ -608,8 +608,8 @@ void Mesh::Load_OBJ() {
 		}
 		if (length > 7 && s.substr(0, 7) == "map_Kd ") {
 			s = s.substr(7, length - 7);
-			if (GEngine::Get().Resource().Get_Resource(s) != nullptr)
-				currentmatl->texture = (Texture2*)(GEngine::Get().Resource().Get_Resource(s));
+			if (GEngine::get().Resource().Get_Resource(s) != nullptr)
+				currentmatl->texture = (Texture2*)(GEngine::get().Resource().Get_Resource(s));
 			else {
 				currentmatl->texture = new Texture2("img/", s, GL_RGBA8, 0);
 				currentmatl->texture->Load_TGA();
@@ -716,10 +716,10 @@ Mesh::~Mesh() {
 		delete[] rawtexcoords;
 }
 
-void Mesh::Render(Flags callflags) {
-	glUseProgram(((ShaderProgram*)GEngine::Get().Resource().Get_Resource("default_shader"))->id);
+void Mesh::render(Flags callflags) {
+	glUseProgram(((ShaderProgram*)GEngine::get().Resource().Get_Resource("default_shader"))->id);
 	for (int i = 0; i < nsubmeshes; i++)
-		submeshes[i]->Render(callflags);
+		submeshes[i]->render(callflags);
 	glUseProgram(0);
 }
 
@@ -737,7 +737,7 @@ RawMesh Ico_Sphere(int nsubdiv, float radius, bool calcnorms, bool calcuvs) {
 		Vector3f(-1, 1, -1)
 	};
 	for (int i = 0; i < 4; i++)
-		origpts[i].Normalize();
+		origpts[i].normalize();
 
 	Vector3f* vertices = new Vector3f[pow(4, nsubdiv + 1) * 3];
 	vertices[0] = origpts[0]; vertices[1] = origpts[1]; vertices[2] = origpts[2];
@@ -747,7 +747,7 @@ RawMesh Ico_Sphere(int nsubdiv, float radius, bool calcnorms, bool calcuvs) {
 
 	for (int i = 0; i < nsubdiv; i++) {
 		for (int j = 0; j < cntris * 3; j += 3) {
-			Vector3f norm = (vertices[j + 1] - vertices[j]).Cross(vertices[j + 2] - vertices[j]);
+			Vector3f norm = (vertices[j + 1] - vertices[j]).cross(vertices[j + 2] - vertices[j]);
 			Vector3f oldtri[3] = { vertices[j], vertices[j + 1], vertices[j + 2] };
 			Vector3f newtri[3] = {
 				(vertices[j] + vertices[j + 1]) * 0.5f,
@@ -774,7 +774,7 @@ RawMesh Ico_Sphere(int nsubdiv, float radius, bool calcnorms, bool calcuvs) {
 	}
 
 	for (int i = 0; i < ntris * 3; i++) {
-		vertices[i].Normalize();
+		vertices[i].normalize();
 		vertices[i] *= radius;
 	}
 
@@ -851,7 +851,7 @@ end				({ {} }) {
 	end.leaf.worldTriangle = in_triangle;
 }
 
-bool SphereNode::Is_Leaf() const {
+bool SphereNode::isLeaf() const {
 	return isLeaf;
 }
 
@@ -924,12 +924,12 @@ CustomArray<SphereNode> SphereNode::Create_Tree(CompressedTriangleArray3f& in_tr
 	case 0:
 		return tree;
 	case 1:
-		tree.Add(SphereNode((Triangle3f)in_triangles.Triple_At(0)));
+		tree.add(SphereNode((Triangle3f)in_triangles.Triple_At(0)));
 		return tree;
 	}
 
-	segments.Add({0, nTriangles});
-	tree.Add(SphereNode());
+	segments.add({0, nTriangles});
+	tree.add(SphereNode());
 
 	while (segments.Size() > 0) {
 		// processing and production of both segments and spheres parallel with each other, 
@@ -939,7 +939,7 @@ CustomArray<SphereNode> SphereNode::Create_Tree(CompressedTriangleArray3f& in_tr
 		// get bounding sphere of all points
 		CustomArray<Vector3f> points = triangles.Sub_Value_Array(segment, true);
 		CustomArray<Vector3f> boundaryPoints(3);
-		Spheref boundingSphere = SphereNode::Welzl(points, boundaryPoints);
+		Spheref boundingSphere = SphereNode::welzl(points, boundaryPoints);
 		if (boundaryPoints.Size() != 3) {
 			throw MismatchException("SphereNode:CreateTree:boundaryPoints.size != 3; degenerate triangle");
 		}
@@ -950,14 +950,14 @@ CustomArray<SphereNode> SphereNode::Create_Tree(CompressedTriangleArray3f& in_tr
 
 		// if is leaf, finish
 		if (segment.length == 1) {
-			*node = SphereNode(Triangle3f(points.Pointer()));
-			segments.Remove(0, true);
+			*node = SphereNode(Triangle3f(points.pointer()));
+			segments.remove(0, true);
 			continue;
 		}
 
 		// otherwise, create two empty spheres to be assigned as children
-		tree.Add(SphereNode());
-		tree.Add(SphereNode());
+		tree.add(SphereNode());
+		tree.add(SphereNode());
 		*node = SphereNode(boundingSphere, &tree[tree.Size() - 2], &tree[tree.Size() - 1]);
 
 		// divide triangles into two child "front" and "back" groups via a simple plane test,
@@ -986,9 +986,9 @@ CustomArray<SphereNode> SphereNode::Create_Tree(CompressedTriangleArray3f& in_tr
 		ArraySegment frontSegment = { segment.offset, frontIndex };
 		ArraySegment backSegment = { segment.offset + frontIndex, segment.length - frontIndex };
 
-		segments.Remove(0, true);
-		segments.Add(frontSegment);
-		segments.Add(backSegment);
+		segments.remove(0, true);
+		segments.add(frontSegment);
+		segments.add(backSegment);
 	}
 
 	if (sphereIndex != tree.Size()) {
@@ -998,8 +998,8 @@ CustomArray<SphereNode> SphereNode::Create_Tree(CompressedTriangleArray3f& in_tr
 	return tree;
 }
 
-Spheref SphereNode::Welzl(CustomArray<Vector3f>& in_points, CustomArray<Vector3f>& in_borderPoints) {
-	// Welzl's magical algorithm; recursive, linear time
+Spheref SphereNode::welzl(CustomArray<Vector3f>& in_points, CustomArray<Vector3f>& in_borderPoints) {
+	// welzl's magical algorithm; recursive, linear clock
 	if (in_points.Size() == 0 || in_borderPoints.Size() >= 3) {
 		Vector3f v;
 		Spheref  s;
@@ -1010,29 +1010,29 @@ Spheref SphereNode::Welzl(CustomArray<Vector3f>& in_points, CustomArray<Vector3f
 			return { in_borderPoints[0], 0.0 };
 		case 2:
 			v = (in_borderPoints[1] - in_borderPoints[0]) * 0.5;
-			return { in_borderPoints[0] + v, v.Magnitude() };
+			return { in_borderPoints[0] + v, v.magnitude() };
 		case 3:
-			return Triangle3f(in_borderPoints.Pointer()).Bounding_Sphere();
+			return Triangle3f(in_borderPoints.pointer()).Bounding_Sphere();
 		default:
-			s = Triangle3f(in_borderPoints.Pointer()).Bounding_Sphere();
+			s = Triangle3f(in_borderPoints.pointer()).Bounding_Sphere();
 			for (int i = 0; i < in_borderPoints.Size() - 3; i++) {
-				if ((in_borderPoints[i] - s.center).Dot_Self() != (s.radius * s.radius)) {
-					throw InvalidParameterException("SphereNode:Welzl:in_borderPoints not co-spherical");
+				if ((in_borderPoints[i] - s.center).dotSelf() != (s.radius * s.radius)) {
+					throw InvalidParameterException("SphereNode:welzl:in_borderPoints not co-spherical");
 				}
 			}
 			return s;
 		}
 	}
 	Vector3f point = in_points[in_points.Size() - 1];
-	in_points.Remove(in_points.Size() - 1, false);
-	Spheref lastSphere = Welzl(in_points, in_borderPoints);
-	if ((point - lastSphere.center).Dot_Self() <= (lastSphere.radius * lastSphere.radius)) {
+	in_points.remove(in_points.Size() - 1, false);
+	Spheref lastSphere = welzl(in_points, in_borderPoints);
+	if ((point - lastSphere.center).dotSelf() <= (lastSphere.radius * lastSphere.radius)) {
 		return lastSphere;
 	}
-	in_borderPoints.Add(point);
-	Spheref newSphere = Welzl(in_points, in_borderPoints);
-	in_borderPoints.Remove(in_borderPoints.Size() - 1, false);
-	in_points.Add(point);
+	in_borderPoints.add(point);
+	Spheref newSphere = welzl(in_points, in_borderPoints);
+	in_borderPoints.remove(in_borderPoints.Size() - 1, false);
+	in_points.add(point);
 	return newSphere;
 }
 
@@ -1151,27 +1151,27 @@ materials(in_materials) {
 	glGenBuffers(Buffers::count, &vertexBufferID);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * in_vertices.Size(), in_vertices.Pointer(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * in_vertices.Size(), in_vertices.pointer(), GL_STATIC_DRAW);
 	glEnableVertexAttribArray(Shader::AttributeIndex::vertex);
 	glVertexAttribPointer(Shader::AttributeIndex::vertex, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, normalBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * in_normals.Size(), in_normals.Pointer(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * in_normals.Size(), in_normals.pointer(), GL_STATIC_DRAW);
 	glEnableVertexAttribArray(Shader::AttributeIndex::normal);
 	glVertexAttribPointer(Shader::AttributeIndex::normal, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, uvBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * in_uvs.Size(), in_uvs.Pointer(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * in_uvs.Size(), in_uvs.pointer(), GL_STATIC_DRAW);
 	glEnableVertexAttribArray(Shader::AttributeIndex::uv);
 	glVertexAttribPointer(Shader::AttributeIndex::uv, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, materialIndexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uchar) * in_materialIndices.Size(), in_materialIndices.Pointer(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(uchar) * in_materialIndices.Size(), in_materialIndices.pointer(), GL_STATIC_DRAW);
 	glEnableVertexAttribArray(Shader::AttributeIndex::materialIndex);
 	glVertexAttribPointer(Shader::AttributeIndex::materialIndex, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, 0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ushort) * in_indices.Size(), in_indices.Pointer(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ushort) * in_indices.Size(), in_indices.pointer(), GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
 }

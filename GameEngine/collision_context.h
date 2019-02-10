@@ -53,32 +53,32 @@ public:
 	CollisionContext(const AxisAlignedBox<T, n>& in_box, uint in_depth);
 	~CollisionContext();
 
-	void Add(CollisionMask<T, n>* in_mask);
-	void Remove(CollisionMask<T, n>* in_mask);
-	void Update();
-	void Update(CollisionMask<T, n>** in_masks, uint in_nMasks);
-	uint Get_Total_Partnerings() const;
-	void Get_Partners(CollisionMask<T, n>* in_mask, std::vector<CollisionPartner*>& out_partners);
-	void Set_Partner_Test_Activation(std::pair<ubyte, ubyte> in_test, bool in_value);
-	bool Get_Partner_Test_Activation(std::pair<ubyte, ubyte> in_test);
+	void add(CollisionMask<T, n>* in_mask);
+	void remove(CollisionMask<T, n>* in_mask);
+	void update();
+	void update(CollisionMask<T, n>** in_masks, uint in_nMasks);
+	uint getTotalPartnerings() const;
+	void getPartners(CollisionMask<T, n>* in_mask, std::vector<CollisionPartner*>& out_partners);
+	void setPartnerTestActivation(std::pair<ubyte, ubyte> in_test, bool in_value);
+	bool getPartnerTestActivation(std::pair<ubyte, ubyte> in_test);
 
 private:
-	void Update_Evaluations();
-	void Update_Evaluations(CollisionMask<T, n>** in_masks, uint in_nMasks);
+	void updateEvaluations();
+	void updateEvaluations(CollisionMask<T, n>** in_masks, uint in_nMasks);
 
-	void Prepare_Data_Containers();
-	void Prepare_Data_Containers(CollisionMask<T, n>** in_masks, uint in_nMasks);
+	void prepareDataContainers();
+	void prepareDataContainers(CollisionMask<T, n>** in_masks, uint in_nMasks);
 
-	void Partner_Filtered(
+	void partnerFiltered(
 		std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations
 	);
-	void Partner_Filtered(
+	void partnerFiltered(
 		std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations1, 
 		std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations2
 	);
 
-	static void Partner_If_Collide(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, Partnering& in_partnering);
-	static void Partner_If_Collide_Async(
+	static void partnerIfCollide(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, Partnering& in_partnering);
+	static void partnerIfCollideAsync(
 		CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2,
 		CollisionMask<T, n>* in_maskToPartner1, CollisionMask<T, n>* in_maskToPartner2,
 		Partnering& in_partnering, std::mutex& in_mutex

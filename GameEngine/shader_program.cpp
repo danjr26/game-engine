@@ -32,23 +32,23 @@ ShaderProgram::~ShaderProgram() {
 	glDeleteProgram(mID);
 }
 
-void ShaderProgram::Use() {
+void ShaderProgram::use() {
 	glUseProgram(mID);
 }
 
-GLint ShaderProgram::Get_Uniform_Location(std::string in_name) {
+GLint ShaderProgram::getUniformLocation(std::string in_name) {
 	return glGetUniformLocation(mID, in_name.c_str());
 }
 
-void ShaderProgram::Use_None() {
+void ShaderProgram::useNone() {
 	glUseProgram(0);
 }
 
-void ShaderProgram::Load_XML_List(std::string in_filename) {
+void ShaderProgram::loadXMLList(std::string in_filename) {
 	std::ifstream file(in_filename);
 	if (!file.is_open()) {
 		Log::main(std::string("error: cannot open file '") + in_filename + "'");
-		GE.Exit();
+		GE.quit();
 	}
 
 	file.seekg(0, file.end);
@@ -70,7 +70,7 @@ void ShaderProgram::Load_XML_List(std::string in_filename) {
 	auto masterNode = doc.first_node("ShaderList");
 	if (!masterNode) {
 		Log::main(std::string("error: invalid shader list file '") + in_filename + "'");
-		GE.Exit();
+		GE.quit();
 	}
 	
 	for (auto node = masterNode->first_node("ShaderProgram"); node; node = node->next_sibling("ShaderProgram")) {
@@ -78,7 +78,7 @@ void ShaderProgram::Load_XML_List(std::string in_filename) {
 
 		if (!nameAttribute) {
 			Log::main(std::string("error: invalid shader list file '") + in_filename + "'");
-			GE.Exit();
+			GE.quit();
 		}
 
 		std::vector<Shader> myShaders;
@@ -88,15 +88,15 @@ void ShaderProgram::Load_XML_List(std::string in_filename) {
 
 			if (!typeAttribute || !fileAttribute) {
 				Log::main(std::string("error: invalid shader list file '") + in_filename + "'");
-				GE.Exit();
+				GE.quit();
 			}
 
-			Shader* shader = new Shader(Shader::Parse_Type(typeAttribute->value()), fileAttribute->value());
+			Shader* shader = new Shader(Shader::parseType(typeAttribute->value()), fileAttribute->value());
 			shaders.push_back(shader);
 		}
 
 		ShaderProgram* shaderProgram = new ShaderProgram(shaders);
-		GE.Assets().Add(nameAttribute->value(), shaderProgram);
+		GE.assets().add(nameAttribute->value(), shaderProgram);
 
 
 		for (uint i = 0; i < shaders.size(); i++) {

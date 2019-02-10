@@ -27,17 +27,17 @@ mParams(in_params) {
 	mWindowClass.hbrBackground = (HBRUSH)COLOR_WINDOW;
 
 	if (!RegisterClassEx(&mWindowClass)) {
-		throw ProcessFailureException(std::string("failed to create window class with error message:\n") + Get_Windows_Error_Message());
+		throw ProcessFailureException(std::string("failed to create window class with error message:\n") + getWindowsErrorMessage());
 	}
 
 	DWORD style = (mParams.mFullscreen) ?
 		WS_POPUP | (mParams.mStyle & WS_VISIBLE) | (mParams.mStyle & WS_MINIMIZE) :
 		mParams.mStyle;
 
-	RECT rect = { 0, 0, mParams.mDimensions.X(), mParams.mDimensions.Y() };
+	RECT rect = { 0, 0, mParams.mDimensions.x(), mParams.mDimensions.y() };
 	
 	if (/*!params.fullscreen && */!AdjustWindowRectEx((LPRECT)&rect, style, false, mParams.mExStyle)) {
-		throw ProcessFailureException(std::string("failed to create window with error message:\n") + Get_Windows_Error_Message());
+		throw ProcessFailureException(std::string("failed to create window with error message:\n") + getWindowsErrorMessage());
 	}
 
 	mWindowHandle = CreateWindowEx(
@@ -45,8 +45,8 @@ mParams(in_params) {
 		mWindowClass.lpszClassName,
 		mParams.mName.c_str(),
 		style,
-		mParams.mPosition.X(),       
-		mParams.mPosition.Y(),       
+		mParams.mPosition.x(),       
+		mParams.mPosition.y(),       
 		rect.right - rect.left,                
 		rect.bottom - rect.top,                 
 		HWND_DESKTOP,        
@@ -55,7 +55,7 @@ mParams(in_params) {
 		nullptr		// no extra data
 	);
 
-	Set_Fullscreen(mParams.mFullscreen);
+	setFullscreen(mParams.mFullscreen);
 
 	mDeviceContextHandle = GetDC(mWindowHandle);
 
@@ -90,138 +90,138 @@ mParams(in_params) {
 
 	glewInit();
 
-	GE.Windows().Add(this);
+	GE.windows().add(this);
 }
 
 Window::~Window() {
 	std::lock_guard<std::mutex> lock(mMutex);
-	GE.Windows().Remove(this);
+	GE.windows().remove(this);
 	DestroyWindow(mWindowHandle);
-	Set_Fullscreen(false);
+	setFullscreen(false);
 }
 
-void Window::Flip_Buffers() {
+void Window::flipBuffers() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	SwapBuffers(mDeviceContextHandle);
 }
 
-std::wstring Window::Get_Name() {
+std::wstring Window::getName() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return mParams.mName;
 }
 
-Vector2i Window::Get_Position() {
+Vector2i Window::getPosition() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	RECT rect;
 	GetClientRect(mWindowHandle, &rect);
 	return Vector2i(rect.left, rect.top);
 }
 
-Vector2i Window::Get_Dimensions() const {
+Vector2i Window::getDimensions() const {
 	std::lock_guard<std::mutex> lock(mMutex);
 	RECT rect;
 	GetClientRect(mWindowHandle, &rect);
 	return Vector2i(rect.right - rect.left, rect.bottom - rect.top);
 }
 
-bool Window::Is_Fullscreen() {
+bool Window::isFullscreen() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return mParams.mFullscreen;
 }
 
-bool Window::Is_Always_Front() {
+bool Window::isAlwaysFront() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return mParams.mExStyle & WS_EX_TOPMOST;
 }
 
-bool Window::Has_Title_Bar() {
+bool Window::hasTitleBar() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return mParams.mStyle & WS_CAPTION;
 }
 
-bool Window::Has_Border() {
+bool Window::hasBorder() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return mParams.mStyle & WS_BORDER;
 }
 
-bool Window::Is_Activatable() {
+bool Window::isActivatable() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return !(mParams.mExStyle & WS_EX_NOACTIVATE);
 }
 
-bool Window::Is_Visible() {
+bool Window::isVisible() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return mParams.mStyle & WS_VISIBLE;
 }
 
-bool Window::Is_Minimized() {
+bool Window::isMinimized() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return mParams.mStyle & WS_MINIMIZE;
 }
 
-bool Window::Is_Maximized() {
+bool Window::isMaximized() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return mParams.mStyle & WS_MAXIMIZE;
 }
 
-bool Window::Has_Close_Button() {
+bool Window::hasCloseButton() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return mParams.mStyle & WS_SYSMENU;
 }
 
-bool Window::Has_Minimize_Button() {
+bool Window::hasMinimizeButton() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return mParams.mStyle & WS_MINIMIZEBOX;
 }
 
-bool Window::Has_Maximize_Button() {
+bool Window::hasMaximizeButton() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return mParams.mStyle & WS_MAXIMIZEBOX;
 }
 
-bool Window::Is_Resizable() {
+bool Window::isResizable() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return mParams.mStyle & WS_SIZEBOX;
 }
 
-bool Window::Has_Vertical_Scroll_Bar() {
+bool Window::hasVerticalScrollBar() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return mParams.mStyle & WS_VSCROLL;
 }
 
-bool Window::Has_Horizontal_Scroll_Bar() {
+bool Window::hasHorizontalScrollBar() {
 	return mParams.mStyle & WS_HSCROLL;
 }
 
-BYTE Window::Get_Color_Bits() {
+BYTE Window::getColorBits() {
 	return mParams.mColorBits;
 }
 
-BYTE Window::Get_Depth_Bits() {
+BYTE Window::getDepthBits() {
 	return mParams.mDepthBits;
 }
 
-BYTE Window::Get_Stencil_Bits() {
+BYTE Window::getStencilBits() {
 	return mParams.mStencilBits;
 }
 
-void Window::Set_Position(Vector2i in_position) {
+void Window::setPosition(Vector2i in_position) {
 	std::lock_guard<std::mutex> lock(mMutex);
-	SetWindowPos(mWindowHandle, 0, in_position.X(), in_position.Y(), 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+	SetWindowPos(mWindowHandle, 0, in_position.x(), in_position.y(), 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 }
 
-void Window::Set_Dimensions(Vector2i in_dimensions) {
+void Window::setDimensions(Vector2i in_dimensions) {
 	std::lock_guard<std::mutex> lock(mMutex);
-	SetWindowPos(mWindowHandle, 0, 0, 0, in_dimensions.X(), in_dimensions.Y(), SWP_NOMOVE | SWP_NOZORDER);
+	SetWindowPos(mWindowHandle, 0, 0, 0, in_dimensions.x(), in_dimensions.y(), SWP_NOMOVE | SWP_NOZORDER);
 }
 
-void Window::Set_Fullscreen(bool in_value) {
+void Window::setFullscreen(bool in_value) {
 	mParams.mFullscreen = in_value;
 	if (mParams.mFullscreen) {
 		DEVMODE deviceMode;
 		deviceMode.dmSize = sizeof(DEVMODE);
-		deviceMode.dmPelsWidth = mParams.mDimensions.X();
-		deviceMode.dmPelsHeight = mParams.mDimensions.Y();
+		deviceMode.dmPelsWidth = mParams.mDimensions.x();
+		deviceMode.dmPelsHeight = mParams.mDimensions.y();
 		deviceMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFIXEDOUTPUT;
 		deviceMode.dmDisplayFixedOutput = DMDFO_DEFAULT;
 
@@ -232,19 +232,19 @@ void Window::Set_Fullscreen(bool in_value) {
 	}
 }
 
-void Window::Set_Topmost(bool in_value) {}
+void Window::setTopmost(bool in_value) {}
 
-void Window::Set_Visible(bool in_value) {
+void Window::setVisible(bool in_value) {
 	std::lock_guard<std::mutex> lock(mMutex);
 	ShowWindow(mWindowHandle, (in_value) ? SW_SHOW : SW_HIDE);
 }
 
-HWND Window::Get_Handle() {
+HWND Window::getHandle() {
 	std::lock_guard<std::mutex> lock(mMutex);
 	return mWindowHandle;
 }
 
-void Window::Set_Name(const std::wstring& in_name) {
+void Window::setName(const std::wstring& in_name) {
 	std::lock_guard<std::mutex> lock(mMutex);
 	SetWindowText(mWindowHandle, in_name.c_str());
 }
@@ -283,57 +283,57 @@ Window::Params& Window::Params::Fullscreen(bool in_value) {
 }
 
 Window::Params& Window::Params::Always_Front(bool in_value) {
-	Set_Bit<DWORD>(mExStyle, WS_EX_TOPMOST, in_value);
+	setBit<DWORD>(mExStyle, WS_EX_TOPMOST, in_value);
 	return (*this);
 }
 
 Window::Params& Window::Params::Title_Bar(bool in_value) {
-	Set_Bit<DWORD>(mStyle, WS_CAPTION, in_value);
+	setBit<DWORD>(mStyle, WS_CAPTION, in_value);
 	return (*this);
 }
 
 Window::Params& Window::Params::Border(bool in_value) {
-	Set_Bit<DWORD>(mStyle, WS_BORDER, in_value);
+	setBit<DWORD>(mStyle, WS_BORDER, in_value);
 	return (*this);
 }
 
 Window::Params& Window::Params::Activatable(bool in_value) {
-	Set_Bit<DWORD>(mExStyle, WS_EX_NOACTIVATE, !in_value);
+	setBit<DWORD>(mExStyle, WS_EX_NOACTIVATE, !in_value);
 	return (*this);
 }
 
 Window::Params& Window::Params::Visible(bool in_value) {
-	Set_Bit<DWORD>(mStyle, WS_VISIBLE, in_value);
+	setBit<DWORD>(mStyle, WS_VISIBLE, in_value);
 	return (*this);
 }
 
 Window::Params& Window::Params::Minimized(bool in_value) {
-	Set_Bit<DWORD>(mStyle, WS_MINIMIZE, in_value);
+	setBit<DWORD>(mStyle, WS_MINIMIZE, in_value);
 	return (*this);
 }
 
 Window::Params& Window::Params::Maximized(bool in_value) {
-	Set_Bit<DWORD>(mStyle, WS_MAXIMIZE, in_value);
+	setBit<DWORD>(mStyle, WS_MAXIMIZE, in_value);
 	return (*this);
 }
 
 Window::Params& Window::Params::Close_Button(bool in_value) {
-	Set_Bit<DWORD>(mStyle, WS_SYSMENU, in_value);
+	setBit<DWORD>(mStyle, WS_SYSMENU, in_value);
 	return (*this);
 }
 
 Window::Params& Window::Params::Minimize_Button(bool in_value) {
-	Set_Bit<DWORD>(mStyle, WS_MINIMIZEBOX, in_value);
+	setBit<DWORD>(mStyle, WS_MINIMIZEBOX, in_value);
 	return (*this);
 }
 
 Window::Params& Window::Params::Maximize_Button(bool in_value) {
-	Set_Bit<DWORD>(mStyle, WS_MAXIMIZEBOX, in_value);
+	setBit<DWORD>(mStyle, WS_MAXIMIZEBOX, in_value);
 	return (*this);
 }
 
 Window::Params& Window::Params::Resizable(bool in_value) {
-	Set_Bit<DWORD>(mStyle, WS_SIZEBOX, in_value);
+	setBit<DWORD>(mStyle, WS_SIZEBOX, in_value);
 	return (*this);
 }
 
@@ -352,7 +352,7 @@ Window::Params& Window::Params::Stencil_Bits(BYTE in_value) {
 	return (*this);
 }
 
-std::vector<Window::DisplayMode> Window::Get_Supported_Display_Modes() {
+std::vector<Window::DisplayMode> Window::getSupportedDisplayModes() {
 	std::vector<DisplayMode> displayModes;
 	DEVMODE deviceMode;
 	DisplayMode displayMode;
@@ -365,7 +365,7 @@ std::vector<Window::DisplayMode> Window::Get_Supported_Display_Modes() {
 	return displayModes;
 }
 
-void Window::_Draw_To_This() {
+void Window::_drawToThis() {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-	glViewport(0, 0, mParams.mDimensions.X(), mParams.mDimensions.Y());
+	glViewport(0, 0, mParams.mDimensions.x(), mParams.mDimensions.y());
 }

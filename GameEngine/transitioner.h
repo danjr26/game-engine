@@ -13,9 +13,9 @@ struct Transitioner {
 
 	std::vector<Key> mKeys;
 
-	virtual ValT Evaluate(TimeT in_time) = 0;
+	virtual ValT evaluate(TimeT in_time) = 0;
 
-	TimeT Get_Total_Duration() {
+	TimeT getTotalDuration() {
 		TimeT sum = 0;
 		for (auto it = mKeys.begin(); it != mKeys.end(); it++) {
 			sum += it->duration;

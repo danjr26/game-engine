@@ -34,7 +34,7 @@ public:
 };
 
 
-void Handle_Fatal_Exception(const std::exception& in_exception);
-void Handle_Fatal_Exception();
+void handleFatalException(const std::exception& in_exception);
+void handleFatalException();
 
 #endif

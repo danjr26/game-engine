@@ -8,19 +8,19 @@ FilteredObject::FilteredObject(ubyte in_filter) :
 	mFilter(1ull << in_filter)
 {}
 
-void FilteredObject::Add_Filter(ubyte in_filter) {
-	Set_Bit<ullong>(mFilter, 1ull << in_filter, true);
+void FilteredObject::addFilter(ubyte in_filter) {
+	setBit<ullong>(mFilter, 1ull << in_filter, true);
 }
 
-void FilteredObject::Remove_Filter(ubyte in_filter) {
-	Set_Bit<ullong>(mFilter, 1ull << in_filter, false);
+void FilteredObject::removeFilter(ubyte in_filter) {
+	setBit<ullong>(mFilter, 1ull << in_filter, false);
 }
 
-void FilteredObject::Remove_All_Filters() {
+void FilteredObject::removeAllFilters() {
 	mFilter = 0ull;
 }
 
-bool FilteredObject::Has_Filter(ubyte in_filter) {
+bool FilteredObject::hasFilter(ubyte in_filter) {
 	return mFilter & (1ull << in_filter);
 }
 

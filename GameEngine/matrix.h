@@ -48,7 +48,7 @@ public:
 	template<typename = typename std::enable_if<n == 1, void>::type>
 	Matrix(const Vector<T, m>& vec) {
 		for (uint i = 0; i < m; i++) {
-			mData[i][0] = vec.Get(i);
+			mData[i][0] = vec.get(i);
 		}
 	}
 
@@ -78,26 +78,26 @@ public:
 		return vOut;
 	}
 
-	T Element(uint i, uint j) const {
+	T getElement(uint i, uint j) const {
 		return mData[i][j];
 	}
 
-	Vector<T, n> Row(uint i) const {
+	Vector<T, n> getRow(uint i) const {
 		return Vector<T, n>(&mData[i][0]);
 	}
 
-	Vector<T, m> Column(uint j) const {
+	Vector<T, m> getColumn(uint j) const {
 		Vector<T, n> vOut();
 		for (uint i = 0; i < m; i++) {
 			vOut[i] = mData[i][j];
 		}
 	} 
 
-	bool Element_Is_Zero(uint i, uint j) const {
+	bool isElementZero(uint i, uint j) const {
 		return mData[i][j] == 0;
 	}
 
-	bool Row_Is_Zero(uint i) {
+	bool isRowZero(uint i) {
 		for (uint j = 0; j < n; j++) {
 			if (mData[i][j] != 0) {
 				return false;
@@ -106,7 +106,7 @@ public:
 		return true;
 	}
 
-	bool Column_Is_Zero(uint j) const {
+	bool isColumnZero(uint j) const {
 		for (uint i = 0; i < m; i++) {
 			if (mData[i][j] != 0) {
 				return false;
@@ -115,7 +115,7 @@ public:
 		return true;
 	}
 
-	bool Submatrix_Is_Zero(uint i1, uint j1, uint i2, uint j2) const {
+	bool isSubmatrixZero(uint i1, uint j1, uint i2, uint j2) const {
 		for (uint i = i1; i <= i2; i++) {
 			for (uint j = j1; j < j2; j++) {
 				if (mData[i][j] != 0) {
@@ -126,19 +126,19 @@ public:
 		return true;
 	}
 
-	void Element(uint i, uint j, T value) {
+	void getElement(uint i, uint j, T value) {
 		mData[i][j] = value;
 	}
 
-	void Row(uint i, const Vector<T, n>& values) {
+	void getRow(uint i, const Vector<T, n>& values) {
 		for (uint j = 0; j < n; j++) {
 			mData[i][j] = values[j];
 		}
 	}
 	
-	void Column(uint j, const Vector<T, m>& values) {
+	void getColumn(uint j, const Vector<T, m>& values) {
 		for (uint i = 0; i < m; i++) {
-			mData[i][j] = values.Get(i);
+			mData[i][j] = values.get(i);
 		}
 	}
 
@@ -222,7 +222,7 @@ public:
 		}
 	}
 
-	void Transpose() {
+	void transpose() {
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < n; j++) {
 				if (i != j) {
@@ -232,7 +232,7 @@ public:
 		}
 	}
 
-	static Matrix<T, m, n> Identity() {
+	static Matrix<T, m, n> identity() {
 		Matrix<T, m, n> matOut = Matrix<T, m, n>();
 		for (uint i = 0; i < m; i++) {
 			for (uint j = 0; j < n; j++) {
@@ -248,13 +248,13 @@ public:
 	}
 
 	template<typename = typename std::enable_if<m == 4 && n == 4, void>::type>
-	static Matrix<T, m, n> Rotation(const Vector<T, 3>& in_axis, T in_angle) {
+	static Matrix<T, m, n> rotation(const Vector<T, 3>& in_axis, T in_angle) {
 		T s = sin(in_angle);
 		T c = cos(in_angle);
 		T omc = 1 - c;
-		T x = in_axis.X();
-		T y = in_axis.Y();
-		T z = in_axis.Z();
+		T x = in_axis.x();
+		T y = in_axis.y();
+		T z = in_axis.z();
 		return {
 			x * x * omc + c, x * y * omc - z * s, x * z * omc + y * s, (T)0,
 			x * y * omc + z * s, y * y * omc + c, y * z * omc - x * s, (T)0,
@@ -264,27 +264,27 @@ public:
 	}
 
 	template<typename = typename std::enable_if<m == 4 && n == 4, void>::type>
-	static Matrix<T, m, n> Scale(const Vector<T, 3>& in_factor) {
+	static Matrix<T, m, n> scale(const Vector<T, 3>& in_factor) {
 		return {
-			in_factor.X(), (T)0, (T)0, (T)0,
-			(T)0, in_factor.Y(), (T)0, (T)0,
-			(T)0, (T)0, in_factor.Z(), (T)0,
+			in_factor.x(), (T)0, (T)0, (T)0,
+			(T)0, in_factor.y(), (T)0, (T)0,
+			(T)0, (T)0, in_factor.z(), (T)0,
 			(T)0, (T)0, (T)0, (T)1
 		};
 	}
 
 	template<typename = typename std::enable_if<m == 4 && n == 4, void>::type>
-	static Matrix<T, m, n> Translation(const Vector<T, 3>& in_translation) {
+	static Matrix<T, m, n> translation(const Vector<T, 3>& in_translation) {
 		return {
-			(T)1, (T)0, (T)0, in_translation.X(),
-			(T)0, (T)1, (T)0, in_translation.Y(),
-			(T)0, (T)0, (T)1, in_translation.Z(),
+			(T)1, (T)0, (T)0, in_translation.x(),
+			(T)0, (T)1, (T)0, in_translation.y(),
+			(T)0, (T)0, (T)1, in_translation.z(),
 			(T)0, (T)0, (T)0, (T)1
 		};
 	}
 
 	template<typename = typename std::enable_if<m == 4 && n == 4, void>::type>
-	static Matrix<T, m, n> Orthographic(Vector3f in_minima, Vector3f in_maxima) {
+	static Matrix<T, m, n> orthographic(Vector3f in_minima, Vector3f in_maxima) {
 		return {
 			2.0f / (in_maxima[0] - in_minima[0]), 0.0f, 0.0f, -(in_maxima[0] + in_minima[0]) / (in_maxima[0] - in_minima[0]),
 			0.0f, 2.0f / (in_maxima[1] - in_minima[1]), 0.0f, -(in_maxima[1] + in_minima[1]) / (in_maxima[1] - in_minima[1]),
@@ -294,7 +294,7 @@ public:
 	}
 
 	template<typename = typename std::enable_if<m == 4 && n == 4, void>::type>
-	static Matrix<T, m, n> Perspective(float in_near, float in_far, float in_horizontalAngle, float aspectRatio) {
+	static Matrix<T, m, n> perspective(float in_near, float in_far, float in_horizontalAngle, float aspectRatio) {
 		float right = tanf(in_horizontalAngle) * in_near;
 		float left = -right;
 		float top = right / aspectRatio;
@@ -308,7 +308,7 @@ public:
 	}
 
 	template<typename = typename std::enable_if<m == 4 && n == 4, void>::type>
-	static Matrix<T, m, n> Perspective(Vector3f in_minima, Vector3f in_maxima) {
+	static Matrix<T, m, n> perspective(Vector3f in_minima, Vector3f in_maxima) {
 		return {
 			2.0f * in_minima[2] / (in_maxima[0] - in_minima[0]), 0.0f, (in_maxima[0] + in_minima[0]) / (in_maxima[0] - in_minima[0]), 0.0f,
 			0.0f, 2.0f * in_minima[2] / (in_maxima[1] - in_minima[1]), (in_maxima[1] + in_minima[1]) / (in_maxima[1] - in_minima[1]), 0.0f,
@@ -374,7 +374,7 @@ public:
 
 	}
 
-	std::string To_String() const {
+	std::string toString() const {
 		std::stringstream ss;
 		ss << "Matrix (" << m << ", " << n << ")\n";
 		for (uint i = 0; i < m; i++) {
@@ -386,7 +386,7 @@ public:
 		return ss.str();
 	}
 
-	const T* Pointer() {
+	const T* pointer() {
 		return &mData[0][0];
 	}
 };

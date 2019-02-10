@@ -1,6 +1,6 @@
 #include "windows_error.h"
 
-std::string Get_Windows_Error_Message() {
+std::string getWindowsErrorMessage() {
 	LPVOID messageBuffer;
 	DWORD errorCode = GetLastError();
 

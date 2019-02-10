@@ -31,23 +31,23 @@ FilterQuery::FilterQuery(const FilterQuery& in_source) :
 FilterQuery::~FilterQuery()
 {}
 
-FilterQuery FilterQuery::And(const FilterQuery& in_query) const {
+FilterQuery FilterQuery::and(const FilterQuery& in_query) const {
 	return FilterQuery(combine_and, this, &in_query);
 }
 
-FilterQuery FilterQuery::Or(const FilterQuery& in_query) const {
+FilterQuery FilterQuery::or(const FilterQuery& in_query) const {
 	return FilterQuery(combine_or, this, &in_query);
 }
 
-FilterQuery FilterQuery::XOr(const FilterQuery& in_query) const {
+FilterQuery FilterQuery::xor(const FilterQuery& in_query) const {
 	return FilterQuery(combine_xor, this, &in_query);
 }
 
-FilterQuery FilterQuery::Not() const {
+FilterQuery FilterQuery::not() const {
 	return FilterQuery(combine_xor, this, nullptr);
 }
 
-bool FilterQuery::Evaluate(const FilteredObject& in_object) const {
+bool FilterQuery::evaluate(const FilteredObject& in_object) const {
 	switch (mType) {
 	case any:
 		return true;
@@ -68,22 +68,22 @@ bool FilterQuery::Evaluate(const FilteredObject& in_object) const {
 		}
 		return true;
 	case combine_and:
-		return mQuery1->Evaluate(in_object) && mQuery2->Evaluate(in_object);
+		return mQuery1->evaluate(in_object) && mQuery2->evaluate(in_object);
 	case combine_or:
-		return mQuery1->Evaluate(in_object) || mQuery2->Evaluate(in_object);
+		return mQuery1->evaluate(in_object) || mQuery2->evaluate(in_object);
 	case combine_xor:
-		return mQuery1->Evaluate(in_object) ^ mQuery2->Evaluate(in_object);
+		return mQuery1->evaluate(in_object) ^ mQuery2->evaluate(in_object);
 	case combine_not:
-		return !mQuery1->Evaluate(in_object);
+		return !mQuery1->evaluate(in_object);
 	}
 	return false;
 }
 
-FilterQuery FilterQuery::Any() {
+FilterQuery FilterQuery::everything() {
 	return FilterQuery(any);
 }
 
-FilterQuery FilterQuery::Fits(ubyte in_filter) {
+FilterQuery FilterQuery::fits(ubyte in_filter) {
 	std::vector<ubyte> filters(1);
 	filters[0] = in_filter;
 	return FilterQuery(fit_one, filters);

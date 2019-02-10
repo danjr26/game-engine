@@ -8,8 +8,8 @@ MeshVertexGPUPusher::ExtraParams::ExtraParams() :
 	mMembersToIgnore(0ul)
 {}
 
-ubyte MeshVertexGPUPusher::Member::Get_Vertex_Size() const {
-	return mDepth * MeshVertexData::Get_Data_Type_Size(mType);
+ubyte MeshVertexGPUPusher::Member::getVertexSize() const {
+	return mDepth * MeshVertexData::getDataTypeSize(mType);
 }
 
 MeshVertexGPUPusher::MeshVertexGPUPusher() :
@@ -32,8 +32,8 @@ MeshVertexGPUPusher::~MeshVertexGPUPusher() {
 	}
 }
 
-void MeshVertexGPUPusher::Initialize(MeshVertexData* in_data, const ExtraParams& in_params) {
-	if (Is_Initialized()) {
+void MeshVertexGPUPusher::initialize(MeshVertexData* in_data, const ExtraParams& in_params) {
+	if (isInitialized()) {
 		throw InvalidArgumentException("gpu pusher already initialized");
 	}
 
@@ -43,50 +43,50 @@ void MeshVertexGPUPusher::Initialize(MeshVertexData* in_data, const ExtraParams&
 
 	mData = in_data;
 	mUseCase = in_params.mUseCase;
-	mUsedVertices = mData->Get_Number_Vertices();
-	mUsedFaceElements = mData->Get_Number_Face_Elements();
-	mReservedVertices = Max(in_params.mNVerticesToReserve, mUsedVertices);
-	mReservedFaceElements = Max(in_params.mNFacesToReserve, mUsedFaceElements);
+	mUsedVertices = mData->getNumberVertices();
+	mUsedFaceElements = mData->getNumberFaceElements();
+	mReservedVertices = GEUtil::max(in_params.mNVerticesToReserve, mUsedVertices);
+	mReservedFaceElements = GEUtil::max(in_params.mNFacesToReserve, mUsedFaceElements);
 
 	glGenVertexArrays(1, &mVertexArrayID);
 	glBindVertexArray(mVertexArrayID);
 
 	std::vector<ubyte> ids;
-	mData->Get_Member_IDs(ids);
+	mData->getMemberIDs(ids);
 
 	for (auto it = ids.begin(); it < ids.end(); it++) {
 		if (!(in_params.mMembersToIgnore & 1ul << (*it))) {
-			Add_Member(*it);
+			addMember(*it);
 		}
 	}
 
-	uint faceElementSize = mData->Get_Face_Element_Size();
+	uint faceElementSize = mData->getFaceElementSize();
 
 	glGenBuffers(1, &mIndexBufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mReservedFaceElements * faceElementSize, nullptr, (GLenum)mUseCase);
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, mUsedFaceElements * faceElementSize, mData->Get_Face_Pointer());
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, mUsedFaceElements * faceElementSize, mData->getFacePointer());
 
 	glBindVertexArray(0);
 }
 
-MeshVertexData* MeshVertexGPUPusher::Get_Data() {
+MeshVertexData* MeshVertexGPUPusher::getData() {
 	return mData;
 }
 
-uint MeshVertexGPUPusher::Get_Number_Vertices() const {
+uint MeshVertexGPUPusher::getNumberVertices() const {
 	return mUsedVertices;
 }
 
-uint MeshVertexGPUPusher::Get_Number_Faces() const {
-	return mData->Element_To_Face_Count(0, mUsedFaceElements);
+uint MeshVertexGPUPusher::getNumberFaces() const {
+	return mData->elementToFaceCount(0, mUsedFaceElements);
 }
 
-uint MeshVertexGPUPusher::Get_Number_Face_Elements() const {
+uint MeshVertexGPUPusher::getNumberFaceElements() const {
 	return mUsedFaceElements;
 }
 
-void MeshVertexGPUPusher::Reserve_Total_Vertices(uint in_nVertices) {
+void MeshVertexGPUPusher::reserveTotalVertices(uint in_nVertices) {
 	glBindVertexArray(mVertexArrayID);
 	GLuint newBufferID = 0;
 	if (in_nVertices > mReservedVertices) {
@@ -94,9 +94,9 @@ void MeshVertexGPUPusher::Reserve_Total_Vertices(uint in_nVertices) {
 			glCreateBuffers(1, &newBufferID);
 			if (mReservedVertices != 0) {
 				glBindBuffer(GL_COPY_WRITE_BUFFER, newBufferID);
-				glBufferData(GL_COPY_WRITE_BUFFER, in_nVertices * it->second.Get_Vertex_Size(), nullptr, (GLuint)mUseCase);
+				glBufferData(GL_COPY_WRITE_BUFFER, in_nVertices * it->second.getVertexSize(), nullptr, (GLuint)mUseCase);
 				glBindBuffer(GL_COPY_READ_BUFFER, it->second.mBufferID);
-				glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, mUsedVertices * it->second.Get_Vertex_Size());
+				glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, mUsedVertices * it->second.getVertexSize());
 			}
 			glDeleteBuffers(1, &it->second.mBufferID);
 			it->second.mBufferID = newBufferID;
@@ -112,12 +112,12 @@ void MeshVertexGPUPusher::Reserve_Total_Vertices(uint in_nVertices) {
 	glBindVertexArray(0);
 }
 
-void MeshVertexGPUPusher::Reserve_Total_Faces(uint in_nFaces) {
-	Reserve_Total_Face_Elements(mData->Face_To_Element_Count(0, in_nFaces));
+void MeshVertexGPUPusher::reserveTotalFaces(uint in_nFaces) {
+	reserveTotalFaceElements(mData->faceToElementCount(0, in_nFaces));
 }
 
-void MeshVertexGPUPusher::Reserve_Total_Face_Elements(uint in_nElements) {
-	uint faceElementSize = mData->Get_Face_Element_Size();
+void MeshVertexGPUPusher::reserveTotalFaceElements(uint in_nElements) {
+	uint faceElementSize = mData->getFaceElementSize();
 
 	glBindVertexArray(mVertexArrayID);
 	GLuint newBufferID = 0;
@@ -141,8 +141,8 @@ void MeshVertexGPUPusher::Reserve_Total_Face_Elements(uint in_nElements) {
 	glBindVertexArray(0);
 }
 
-void MeshVertexGPUPusher::Add_Member(uint in_id) {
-	if (!mData->Has_Member(in_id)) {
+void MeshVertexGPUPusher::addMember(uint in_id) {
+	if (!mData->hasMember(in_id)) {
 		throw InvalidArgumentException("invalid vertex data member id");
 	}
 
@@ -151,18 +151,18 @@ void MeshVertexGPUPusher::Add_Member(uint in_id) {
 	}
 
 	Member& newMember = mMembers[in_id];
-	newMember.mType = mData->Get_Member_Type(in_id);
-	newMember.mDepth = mData->Get_Member_Depth(in_id);
+	newMember.mType = mData->getMemberType(in_id);
+	newMember.mDepth = mData->getMemberDepth(in_id);
 
 	glBindVertexArray(mVertexArrayID);
 
 	glGenBuffers(1, &newMember.mBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, newMember.mBufferID);
-	glBufferData(GL_ARRAY_BUFFER, mReservedVertices * newMember.Get_Vertex_Size(), nullptr, (GLenum)mUseCase);
+	glBufferData(GL_ARRAY_BUFFER, mReservedVertices * newMember.getVertexSize(), nullptr, (GLenum)mUseCase);
 	glBufferSubData(
 		GL_ARRAY_BUFFER,
-		0, mUsedVertices * newMember.Get_Vertex_Size(),
-		mData->Get_Member_Pointer(in_id)
+		0, mUsedVertices * newMember.getVertexSize(),
+		mData->getMemberPointer(in_id)
 	);
 	glEnableVertexAttribArray(in_id);
 	glVertexAttribPointer(in_id, newMember.mDepth, newMember.mType, GL_FALSE, 0, nullptr);
@@ -170,7 +170,7 @@ void MeshVertexGPUPusher::Add_Member(uint in_id) {
 	glBindVertexArray(0);
 }
 
-void MeshVertexGPUPusher::Remove_Member(uint in_id) {
+void MeshVertexGPUPusher::removeMember(uint in_id) {
 	Member& member = mMembers[in_id];
 
 	glBindVertexArray(mVertexArrayID);
@@ -181,71 +181,71 @@ void MeshVertexGPUPusher::Remove_Member(uint in_id) {
 	mMembers.erase(in_id);
 }
 
-bool MeshVertexGPUPusher::Has_Member(uint in_id) {
+bool MeshVertexGPUPusher::hasMember(uint in_id) {
 	return mMembers.find(in_id) != mMembers.end();
 }
 
-void MeshVertexGPUPusher::Push_Vertex_Count() {
-	const uint nVertices = mData->Get_Number_Vertices();
+void MeshVertexGPUPusher::pushVertexCount() {
+	const uint nVertices = mData->getNumberVertices();
 	if (nVertices > mReservedVertices) {
-		Reserve_Total_Vertices(nVertices);
+		reserveTotalVertices(nVertices);
 	}
 	mUsedVertices = nVertices;
 }
 
-void MeshVertexGPUPusher::Push_Face_Count() {
-	const uint nFaceElements = mData->Get_Number_Face_Elements();
+void MeshVertexGPUPusher::pushFaceCount() {
+	const uint nFaceElements = mData->getNumberFaceElements();
 	if (nFaceElements > mReservedFaceElements) {
-		Reserve_Total_Face_Elements(nFaceElements);
+		reserveTotalFaceElements(nFaceElements);
 	}
 	mUsedFaceElements = nFaceElements;
 }
 
-void MeshVertexGPUPusher::Push_Vertices() {
-	Push_Vertices(0, mUsedVertices);
+void MeshVertexGPUPusher::pushVertices() {
+	pushVertices(0, mUsedVertices);
 }
 
-void MeshVertexGPUPusher::Push_Vertices(uint in_start, uint in_length) {
+void MeshVertexGPUPusher::pushVertices(uint in_start, uint in_length) {
 	for (auto it = mMembers.begin(); it != mMembers.end(); it++) {
-		Push_Member(it->first, in_start, in_length);
+		pushMember(it->first, in_start, in_length);
 	}
 }
 
-void MeshVertexGPUPusher::Push_Member(uint in_id) {
-	Push_Member(in_id, 0, mUsedVertices);
+void MeshVertexGPUPusher::pushMember(uint in_id) {
+	pushMember(in_id, 0, mUsedVertices);
 }
 
-void MeshVertexGPUPusher::Push_Member(uint in_id, uint in_start, uint in_length) {
+void MeshVertexGPUPusher::pushMember(uint in_id, uint in_start, uint in_length) {
 	if (in_start + in_length > mUsedVertices) {
 		throw InvalidArgumentException("invalid vertex indices");
 	}
 	const Member& member = mMembers[in_id];
-	const uint vertexSize = member.Get_Vertex_Size();
+	const uint vertexSize = member.getVertexSize();
 	glBindVertexArray(mVertexArrayID);
 	glBindBuffer(GL_ARRAY_BUFFER, member.mBufferID);
 	glBufferSubData(
 		GL_ARRAY_BUFFER, 
 		in_start * vertexSize, 
 		in_length * vertexSize, 
-		mData->Get_Member_Pointer(in_id)
+		mData->getMemberPointer(in_id)
 	);
 	glBindVertexArray(0);
 }
 
-void MeshVertexGPUPusher::Push_Faces() {
-	Push_Face_Elements();
+void MeshVertexGPUPusher::pushFaces() {
+	pushFaceElements();
 }
 
-void MeshVertexGPUPusher::Push_Faces(uint in_start, uint in_length) {
-	Push_Face_Elements(mData->Face_To_Element_Index(in_start), mData->Face_To_Element_Count(0, in_length));
+void MeshVertexGPUPusher::pushFaces(uint in_start, uint in_length) {
+	pushFaceElements(mData->faceToElementIndex(in_start), mData->faceToElementCount(0, in_length));
 }
 
-void MeshVertexGPUPusher::Push_Face_Elements() {
-	Push_Face_Elements(0, mUsedFaceElements);
+void MeshVertexGPUPusher::pushFaceElements() {
+	pushFaceElements(0, mUsedFaceElements);
 }
 
-void MeshVertexGPUPusher::Push_Face_Elements(uint in_start, uint in_length) {
-	uint faceElementSize = mData->Get_Face_Element_Size();
+void MeshVertexGPUPusher::pushFaceElements(uint in_start, uint in_length) {
+	uint faceElementSize = mData->getFaceElementSize();
 
 	glBindVertexArray(mVertexArrayID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferID);
@@ -253,32 +253,32 @@ void MeshVertexGPUPusher::Push_Face_Elements(uint in_start, uint in_length) {
 		GL_ELEMENT_ARRAY_BUFFER,
 		in_start * faceElementSize,
 		in_length * faceElementSize,
-		mData->Get_Face_Pointer()
+		mData->getFacePointer()
 	);
 	glBindVertexArray(0);
 }
 
-bool MeshVertexGPUPusher::Is_Initialized() const {
+bool MeshVertexGPUPusher::isInitialized() const {
 	return mData != nullptr;
 }
 
-void MeshVertexGPUPusher::Draw() {
-	Draw(0, mUsedFaceElements);
+void MeshVertexGPUPusher::draw() {
+	draw(0, mUsedFaceElements);
 }
 
-void MeshVertexGPUPusher::Draw(uint in_elementIndex, uint in_nElements) {
+void MeshVertexGPUPusher::draw(uint in_elementIndex, uint in_nElements) {
 	glBindVertexArray(mVertexArrayID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferID);
-	glDrawElements(mData->Get_Face_Mode(), in_nElements, mData->Get_Face_Type(), (const void*)(in_elementIndex * mData->Get_Face_Element_Size()));
+	glDrawElements(mData->getFaceMode(), in_nElements, mData->setFaceType(), (const void*)(in_elementIndex * mData->getFaceElementSize()));
 	glBindVertexArray(0);
 }
 
-void MeshVertexGPUPusher::Draw_Raw() {
-	Draw_Raw(0, mUsedVertices);
+void MeshVertexGPUPusher::drawRaw() {
+	drawRaw(0, mUsedVertices);
 }
 
-void MeshVertexGPUPusher::Draw_Raw(uint in_elementIndex, uint in_nElements) {
+void MeshVertexGPUPusher::drawRaw(uint in_elementIndex, uint in_nElements) {
 	glBindVertexArray(mVertexArrayID);
-	glDrawArrays(mData->Get_Face_Mode(), in_elementIndex, in_nElements);
+	glDrawArrays(mData->getFaceMode(), in_elementIndex, in_nElements);
 	glBindVertexArray(0);
 }

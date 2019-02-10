@@ -1,6 +1,6 @@
 #ifndef EVENTS_H
 #define EVENTS_H
-#include <Windows.h>
+#include <windows.h>
 #include <windowsx.h>
 #include "component.h"
 #include "trq.h"
@@ -46,7 +46,7 @@ public:
 	void	Remove_Context			(InputContext* in_context);
 	void	Handle_Keyboard_Input	(uint in_message, ulong in_key);
 	void	Handle_Mouse_Input		(uint in_message, Vector2i in_position, float in_wheelDelta);
-	bool	Is_Down					(uint in_key);
+	bool	isDown					(uint in_key);
 };
 
 Vector2i Get_Mouse_Coords_Pixel		();

@@ -7,7 +7,7 @@
 
 template<class ValT, uint n, class TimeT = double>
 struct CatmullRomTransitioner : Transitioner<Vector<ValT, n>, TimeT> {
-	Vector<ValT, n> Evaluate(TimeT in_time) override {
+	Vector<ValT, n> evaluate(TimeT in_time) override {
 		if (keys.empty()) {
 			throw ProcessFailureException();
 		}
@@ -32,24 +32,24 @@ struct CatmullRomTransitioner : Transitioner<Vector<ValT, n>, TimeT> {
 				TimeT ts[4];
 				ts[0] = (TimeT)0;
 				for (uint j = 1; j < 4; j++) {
-					ts[j] = ts[j - 1] + sqrt((vectors[j] - vectors[j - 1]).Magnitude());
+					ts[j] = ts[j - 1] + sqrt((vectors[j] - vectors[j - 1]).magnitude());
 				}
 
 				interT = (interT * (ts[2] - ts[1])) + ts[1];
 
 				Vector<ValT, n> reduced1[3] = {
-					vectors[0] * Inv_Lerp(ts[1], ts[0], t) + vectors[1] * Inv_Lerp(ts[0], ts[1], t),
-					vectors[1] * Inv_Lerp(ts[2], ts[1], t) + vectors[2] * Inv_Lerp(ts[1], ts[2], t),
-					vectors[2] * Inv_Lerp(ts[3], ts[2], t) + vectors[3] * Inv_Lerp(ts[2], ts[3], t)
+					vectors[0] * invLerp(ts[1], ts[0], t) + vectors[1] * invLerp(ts[0], ts[1], t),
+					vectors[1] * invLerp(ts[2], ts[1], t) + vectors[2] * invLerp(ts[1], ts[2], t),
+					vectors[2] * invLerp(ts[3], ts[2], t) + vectors[3] * invLerp(ts[2], ts[3], t)
 				};
 
 				Vector<ValT, n> reduced2[2] = {
-					reduced1[0] * Inv_Lerp(ts[2], ts[0], t) + reduced1[1] * Inv_Lerp(ts[0], ts[2], t),
-					reduced1[1] * Inv_Lerp(ts[3], ts[1], t) + reduced1[2] * Inv_Lerp(ts[1], ts[3], t)
+					reduced1[0] * invLerp(ts[2], ts[0], t) + reduced1[1] * invLerp(ts[0], ts[2], t),
+					reduced1[1] * invLerp(ts[3], ts[1], t) + reduced1[2] * invLerp(ts[1], ts[3], t)
 				};
 
 				Vector<ValT, n> reduced3 = 
-					reduced2[0] * Inv_Lerp(ts[2], ts[1], t) + reduced2[1] * Inv_Lerp(ts[1], ts[2], t);
+					reduced2[0] * invLerp(ts[2], ts[1], t) + reduced2[1] * invLerp(ts[1], ts[2], t);
 
 				return reduced3;
 			}

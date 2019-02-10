@@ -15,10 +15,10 @@ struct CollisionBasisWrapper<AxisAlignedHalfSpace<T, 2>, T> {
 
 	basis_t mBasis;
 
-	void Apply_Transform(const Transform<T, 2>& in_transform);
-	static Vector<T, 2> Get_Closest_Point(
+	void applyTransform(const Transform<T, 2>& in_transform);
+	static Vector<T, 2> getClosestPoint(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
-	static Vector<T, 2> Get_Closest_Normal(
+	static Vector<T, 2> getClosestNormal(
 		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
@@ -29,10 +29,10 @@ struct CollisionBasisWrapper<AxisAlignedLine<T, 2>, T> {
 
 	basis_t mBasis;
 
-	void Apply_Transform(const Transform<T, 2>& in_transform);
-	static Vector<T, 2> Get_Closest_Point(
+	void applyTransform(const Transform<T, 2>& in_transform);
+	static Vector<T, 2> getClosestPoint(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
-	static Vector<T, 2> Get_Closest_Normal(
+	static Vector<T, 2> getClosestNormal(
 		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
@@ -43,10 +43,10 @@ struct CollisionBasisWrapper<AxisAlignedBox<T, 2>, T> {
 
 	basis_t mBasis;
 
-	void Apply_Transform(const Transform<T, 2>& in_transform);
-	static Vector<T, 2> Get_Closest_Point(
+	void applyTransform(const Transform<T, 2>& in_transform);
+	static Vector<T, 2> getClosestPoint(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
-	static Vector<T, 2> Get_Closest_Normal(
+	static Vector<T, 2> getClosestNormal(
 		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
@@ -57,10 +57,10 @@ struct CollisionBasisWrapper<Sphere<T, 2>, T> {
 
 	basis_t mBasis;
 
-	void Apply_Transform(const Transform<T, 2>& in_transform);
-	static Vector<T, 2> Get_Closest_Point(
+	void applyTransform(const Transform<T, 2>& in_transform);
+	static Vector<T, 2> getClosestPoint(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
-	static Vector<T, 2> Get_Closest_Normal(
+	static Vector<T, 2> getClosestNormal(
 		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
@@ -71,10 +71,10 @@ struct CollisionBasisWrapper<HalfSpace<T, 2>, T> {
 
 	basis_t mBasis;
 
-	void Apply_Transform(const Transform<T, 2>& in_transform);
-	static Vector<T, 2> Get_Closest_Point(
+	void applyTransform(const Transform<T, 2>& in_transform);
+	static Vector<T, 2> getClosestPoint(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
-	static Vector<T, 2> Get_Closest_Normal(
+	static Vector<T, 2> getClosestNormal(
 		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
@@ -85,10 +85,10 @@ struct CollisionBasisWrapper<LineSegment<T, 2>, T> {
 
 	basis_t mBasis;
 
-	void Apply_Transform(const Transform<T, 2>& in_transform);
-	static Vector<T, 2> Get_Closest_Point(
+	void applyTransform(const Transform<T, 2>& in_transform);
+	static Vector<T, 2> getClosestPoint(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
-	static Vector<T, 2> Get_Closest_Normal(
+	static Vector<T, 2> getClosestNormal(
 		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
@@ -99,10 +99,10 @@ struct CollisionBasisWrapper<Line<T, 2>, T> {
 
 	basis_t mBasis;
 
-	void Apply_Transform(const Transform<T, 2>& in_transform);
-	static Vector<T, 2> Get_Closest_Point(
+	void applyTransform(const Transform<T, 2>& in_transform);
+	static Vector<T, 2> getClosestPoint(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
-	static Vector<T, 2> Get_Closest_Normal(
+	static Vector<T, 2> getClosestNormal(
 		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
@@ -113,10 +113,10 @@ struct CollisionBasisWrapper<MeshSphereTree<T, 2>, T> {
 
 	basis_t mBasis;
 
-	void Apply_Transform(const Transform<T, 2>& in_transform);
-	static Vector<T, 2> Get_Closest_Point(
+	void applyTransform(const Transform<T, 2>& in_transform);
+	static Vector<T, 2> getClosestPoint(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
-	static Vector<T, 2> Get_Closest_Normal(
+	static Vector<T, 2> getClosestNormal(
 		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
@@ -127,10 +127,10 @@ struct CollisionBasisWrapper<Vector<T, 2>, T> {
 
 	basis_t mBasis;
 
-	void Apply_Transform(const Transform<T, 2>& in_transform);
-	static Vector<T, 2> Get_Closest_Point(
+	void applyTransform(const Transform<T, 2>& in_transform);
+	static Vector<T, 2> getClosestPoint(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
-	static Vector<T, 2> Get_Closest_Normal(
+	static Vector<T, 2> getClosestNormal(
 		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
@@ -141,10 +141,10 @@ struct CollisionBasisWrapper<Ray<T, 2>, T> {
 
 	basis_t mBasis;
 
-	void Apply_Transform(const Transform<T, 2>& in_transform);
-	static Vector<T, 2> Get_Closest_Point(
+	void applyTransform(const Transform<T, 2>& in_transform);
+	static Vector<T, 2> getClosestPoint(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
-	static Vector<T, 2> Get_Closest_Normal(
+	static Vector<T, 2> getClosestNormal(
 		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
@@ -155,10 +155,10 @@ struct CollisionBasisWrapper<Box<T, 2>, T> {
 
 	basis_t mBasis;
 
-	void Apply_Transform(const Transform<T, 2>& in_transform);
-	static Vector<T, 2> Get_Closest_Point(
+	void applyTransform(const Transform<T, 2>& in_transform);
+	static Vector<T, 2> getClosestPoint(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
-	static Vector<T, 2> Get_Closest_Normal(
+	static Vector<T, 2> getClosestNormal(
 		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 
@@ -169,10 +169,10 @@ struct CollisionBasisWrapper<Triangle<T, 2>, T> {
 
 	basis_t mBasis;
 
-	void Apply_Transform(const Transform<T, 2>& in_transform);
-	static Vector<T, 2> Get_Closest_Point(
+	void applyTransform(const Transform<T, 2>& in_transform);
+	static Vector<T, 2> getClosestPoint(
 		const basis_t& in_basis, const Vector<T, 2>& in_point);
-	static Vector<T, 2> Get_Closest_Normal(
+	static Vector<T, 2> getClosestNormal(
 		const basis_t& in_basis, const Vector<T, 2>& in_point, pnp_t in_policy = pnp_t::towards_point);
 };
 

@@ -5,7 +5,7 @@
 
 template<class ValT, class TimeT = double>
 struct CubicTransitioner : Transitioner<ValT, TimeT> {
-	ValT Evaluate(TimeT in_time) override {
+	ValT evaluate(TimeT in_time) override {
 		if (mKeys.empty()) {
 			throw ProcessFailureException();
 		}

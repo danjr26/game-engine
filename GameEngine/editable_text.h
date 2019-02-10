@@ -20,19 +20,19 @@ private:
 
 public:
 	EditableText(TextInputContext* in_context, FontFaceRasterSet* in_rasterSet);
-	void Set_Cursor_Position(uint in_cursorPos);
-	void Increment_Cursor();
-	void Decrement_Cursor();
-	void Lower_Cursor();
-	void Raise_Cursor();
-	void Update(double in_dt) override;
+	void setCursorPosition(uint in_cursorPos);
+	void incrementCursor();
+	void decrementCursor();
+	void lowerCursor();
+	void raiseCursor();
+	void update(double in_dt) override;
 
-	virtual double Z() const override;
-	virtual bool Should_Cull() const override;
-	virtual void Render() override;
+	virtual double z() const override;
+	virtual bool shouldCull() const override;
+	virtual void render() override;
 
 private:
-	void Update_Cursor_Sprite();
+	void updateCursorSprite();
 };
 
 #endif

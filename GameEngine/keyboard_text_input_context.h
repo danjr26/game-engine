@@ -6,7 +6,7 @@
 class KeyboardTextInputContext : public TextInputContext {
 public:
 	KeyboardTextInputContext();
-	bool Process_Raw_Event(const RawInputEvent& in_event) override;
+	bool processRawEvent(const RawInputEvent& in_event) override;
 };
 
 #endif

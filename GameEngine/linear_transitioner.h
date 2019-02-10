@@ -6,7 +6,7 @@
 
 template<class ValT, class TimeT = double>
 struct LinearTransitioner : Transitioner<ValT, TimeT> {
-	ValT Evaluate(TimeT in_time) override {
+	ValT evaluate(TimeT in_time) override {
 		if (keys.empty()) {
 			throw ProcessFailureException();
 		}

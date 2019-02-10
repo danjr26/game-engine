@@ -11,41 +11,41 @@ FrameRateManager::FrameRateManager(double in_fps) :
 
 	mLastFrameTimes.reserve(mNTrackedFrames);
 
-	mLastFrame = mClock.Now();
+	mLastFrame = mClock.now();
 }
 
-void FrameRateManager::Set_FPS(double in_fps) {
+void FrameRateManager::setFPS(double in_fps) {
 	mTimeStepper.mStep = 1.0 / in_fps;
 }
 
-double FrameRateManager::Get_FPS() const {
+double FrameRateManager::getFPS() const {
 	return 1.0 / mTimeStepper.mStep;
 }
 
-void FrameRateManager::Set_Dt(double in_dt) {
+void FrameRateManager::setDt(double in_dt) {
 	mTimeStepper.mStep = in_dt;
 }
 
-double FrameRateManager::Get_Dt() const {
+double FrameRateManager::getDt() const {
 	return mTimeStepper.mStep;
 }
 
-void FrameRateManager::Reset_Timer() {
-	mLastFrame = mClock.Now();
+void FrameRateManager::resetTimer() {
+	mLastFrame = mClock.now();
 }
 
-void FrameRateManager::Yield_Until_Next_Frame() {
-	double now = mClock.Now();
-	uint nFrames = mTimeStepper.Step_Number(now - mLastFrame) + mNBackedUp;
+void FrameRateManager::yieldUntilNextFrame() {
+	double now = mClock.now();
+	uint nFrames = mTimeStepper.stepNumber(now - mLastFrame) + mNBackedUp;
 
 	while (nFrames == 0) {
-		now = mClock.Now();
+		now = mClock.now();
 		std::this_thread::sleep_for(std::chrono::microseconds(100));
-		nFrames = mTimeStepper.Step_Number(mClock.Now() - now);
+		nFrames = mTimeStepper.stepNumber(mClock.now() - now);
 	}
 	mNBackedUp = nFrames - 1;
 
-	now = mClock.Now();
+	now = mClock.now();
 	double thisFrameTime = now - mLastFrame;
 	mLastFrame = now;
 
@@ -60,11 +60,11 @@ void FrameRateManager::Yield_Until_Next_Frame() {
 	}
 }
 
-bool FrameRateManager::Is_Lean_Frame() const {
+bool FrameRateManager::isLeanFrame() const {
 	return mNBackedUp >= mMaxBackedUp;
 }
 
-double FrameRateManager::Get_Real_FPS() {
+double FrameRateManager::getRealFPS() {
 	if (mLastFrameTimes.size() == 0) {
 		return 0.0;
 	}
@@ -75,14 +75,14 @@ double FrameRateManager::Get_Real_FPS() {
 	return mLastFrameTimes.size() / total;
 }
 
-double FrameRateManager::Get_Longest_Frame_Time() {
+double FrameRateManager::getLongestFrameTime() {
 	if (mLastFrameTimes.size() == 0) {
 		return 0.0;
 	}
-	return Max(mLastFrameTimes);
+	return GEUtil::max(mLastFrameTimes);
 }
 
-double FrameRateManager::Get_Last_Frame_Time() {
+double FrameRateManager::getLastFrameTime() {
 	if (mLastFrameTimes.size() == 0) {
 		return 0.0;
 	}

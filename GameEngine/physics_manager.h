@@ -56,35 +56,35 @@ private:
 public:
 	PhysicsManager();
 
-	void Update(double in_dt);
+	void update(double in_dt);
 
-	void Add(RigidBody2* in_rigidBody);
-	void Add(ForceField2* in_forceField);
-	void Remove(RigidBody2* in_rigidBody);
-	void Remove(ForceField2* in_forceField);
-	bool Has(RigidBody2* in_rigidBody);
-	bool Has(ForceField2* in_forceField);
+	void add(RigidBody2* in_rigidBody);
+	void add(ForceField2* in_forceField);
+	void remove(RigidBody2* in_rigidBody);
+	void remove(ForceField2* in_forceField);
+	bool has(RigidBody2* in_rigidBody);
+	bool has(ForceField2* in_forceField);
 
 private:
-	void Prepare_Data_Containers(double in_dt);
-	void Exclude_Preembedded(double in_dt);
-	void Step_All(double in_dt);
+	void prepareDataContainers(double in_dt);
+	void excludePreembedded(double in_dt);
+	void stepAll(double in_dt);
 
-	void Apply_Rigid_Bodies_To_Rigid_Bodies(double in_dt);
-	void Apply_Force_Fields_To_Rigid_Bodies(double in_dt);
+	void applyRigidBodiesToRigidBodies(double in_dt);
+	void applyForceFieldsToRigidBodies(double in_dt);
 
-	void Calculate_Force_Field_Effects(double in_dt);
-	void Calculate_Rigid_Body_Effects(double in_dt);
-	void Apply_Effects_To_Rigid_Bodies(double in_dt);
-	void Narrow_Collision_Interval(RigidBody2& in_body1, RigidBody2& in_body2, Collision2d& inout_collision, Ranged& inout_range, uint in_nIterations, 
+	void calculateForceFieldEffects(double in_dt);
+	void calculateRigidBodyEffects(double in_dt);
+	void applyEffectsToRigidBodies(double in_dt);
+	void narrowCollisionInterval(RigidBody2& in_body1, RigidBody2& in_body2, Collision2d& inout_collision, Ranged& inout_range, uint in_nIterations, 
 		Transform2d* out_transform1 = nullptr, Transform2d* out_transform2 = nullptr);
-	void Evaluate_Collision(RigidBody2& in_body1, RigidBody2& in_body2, const Collision2d& in_collision, Vector2d& out_bounce, Vector2d& out_friction);
+	void evaluateCollision(RigidBody2& in_body1, RigidBody2& in_body2, const Collision2d& in_collision, Vector2d& out_bounce, Vector2d& out_friction);
 
-	RigidBodyUpdateInfo2::RigidBodyEffectInfo::Status Evaluate_Status(RigidBody2& in_body1, RigidBody2& in_body2, const Collision2d& in_collision);
-	void Conform_To_Status(RigidBody2& in_body1, RigidBody2& in_body2, const Collision2d& in_collision, RigidBodyUpdateInfo2::RigidBodyEffectInfo::Status in_status);
-	static double Calculate_Restitution_Coefficient(RigidBody2& in_body1, RigidBody2& in_body2);
-	static double Calculate_Kinetic_Friction_Coefficient(RigidBody2& in_body1, RigidBody2& in_body2);
-	static double Calculate_Static_Friction_Coefficient(RigidBody2& in_body1, RigidBody2& in_body2);
+	RigidBodyUpdateInfo2::RigidBodyEffectInfo::Status evaluateStatus(RigidBody2& in_body1, RigidBody2& in_body2, const Collision2d& in_collision);
+	void conformToStatus(RigidBody2& in_body1, RigidBody2& in_body2, const Collision2d& in_collision, RigidBodyUpdateInfo2::RigidBodyEffectInfo::Status in_status);
+	static double calculateRestitutionCoefficient(RigidBody2& in_body1, RigidBody2& in_body2);
+	static double calculateKineticFrictionCoefficient(RigidBody2& in_body1, RigidBody2& in_body2);
+	static double calculateStaticFrictionCoefficient(RigidBody2& in_body1, RigidBody2& in_body2);
 };
 
 #endif

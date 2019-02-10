@@ -2,27 +2,27 @@
 
 template<class T>
 CollisionMask<T, 2>::CollisionMask(bool in_ignoreTransform) :
-	ignoreTransform(in_ignoreTransform),
-	parent(nullptr) {}
+	mIgnoreTransform(in_ignoreTransform),
+	mParent(nullptr) {}
 
 template<class T>
-bool CollisionMask<T, 2>::Get_Ignore_Transform() const {
-	return ignoreTransform;
+bool CollisionMask<T, 2>::getIgnoreTransform() const {
+	return mIgnoreTransform;
 }
 
 template<class T>
-void CollisionMask<T, 2>::Set_Ignore_Transform(bool in_value) {
-	ignoreTransform = in_value;
+void CollisionMask<T, 2>::setIgnoreTransform(bool in_value) {
+	mIgnoreTransform = in_value;
 }
 
 template<class T>
-void CollisionMask<T, 2>::Set_Parent(void* in_parent) {
-	parent = in_parent;
+void CollisionMask<T, 2>::setParent(void* in_parent) {
+	mParent = in_parent;
 }
 
 template<class T>
-void* CollisionMask<T, 2>::Get_Parent() const {
-	return parent;
+void* CollisionMask<T, 2>::getParent() const {
+	return mParent;
 }
 
 template class CollisionMask<float, 2>;

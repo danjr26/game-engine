@@ -24,25 +24,25 @@ struct DisplayDistance {
 
 	Vector<double, n> As_Displacement(const RenderTarget& in_target) {
 		Vector<double, n> output;
-		Vector2i dimensions = in_target.Get_Dimensions();
+		Vector2i dimensions = in_target.getDimensions();
 		switch (units) {
 		case percent:
-			for (uint i = 0; i < Min(n, 2U); i++) {
+			for (uint i = 0; i < min(n, 2U); i++) {
 				output[i] = value[i] / 100.0 * 2.0;
 			}
 			break;
 		case percent_x:
-			for (uint i = 0; i < Min(n, 2U); i++) {
+			for (uint i = 0; i < min(n, 2U); i++) {
 				output[i] = value[i] * dimensions[i] / dimensions[0] / 100.0 * 2.0;
 			}
 			break;
 		case percent_y:
-			for (uint i = 0; i < Min(n, 2U); i++) {
+			for (uint i = 0; i < min(n, 2U); i++) {
 				output[i] = value[i] * dimensions[i] / dimensions[1] / 100.0 * 2.0;
 			}
 			break;
 		case pixels:
-			for (uint i = 0; i < Min(n, 2U); i++) {
+			for (uint i = 0; i < min(n, 2U); i++) {
 				output[i] = value[i] / dimensions[i] * 2.0f;
 			}
 			break;
@@ -53,7 +53,7 @@ struct DisplayDistance {
 
 	Vector<double, n> As_Position(const RenderTarget& in_target) {
 		Vector<double, n> output = As_Displacement(in_target);
-		for (uint i = 0; i < Min(n, 2U); i++) {
+		for (uint i = 0; i < min(n, 2U); i++) {
 			output[i] -= 1.0;
 		}
 
@@ -78,92 +78,92 @@ private:
 	{}
 
 public:
-	Vector<T, n> Percent() {
+	Vector<T, n> percent() {
 		Vector<T, n> output = mValue;
-		for (uint i = 0; i < Min(n, 2U); i++) {
+		for (uint i = 0; i < min(n, 2U); i++) {
 			output[i] = mValue[i] * 100.0f;
 		}
 		return output;
 	}
 
-	Vector<T, n> Percent_X(Vector2i in_targetDimensions) {
+	Vector<T, n> percentX(Vector2i in_targetDimensions) {
 		Vector<T, n> output = mValue;
 		output[0] = output[0] * 100.0f;
 		output[1] = output[1] * 100.0f * in_targetDimensions[0] / in_targetDimensions[1];
 		return output;
 	}
 
-	Vector<T, n> Percent_Y(Vector2i in_targetDimensions) {
+	Vector<T, n> percentY(Vector2i in_targetDimensions) {
 		Vector<T, n> output = mValue;
 		output[0] = output[0] * 100.0f * in_targetDimensions[1] / in_targetDimensions[0];
 		output[1] = output[1] * 100.0f;
 		return output;
 	}
 
-	Vector<T, n> Pixels(Vector2i in_targetDimensions) {
+	Vector<T, n> pixels(Vector2i in_targetDimensions) {
 		Vector<T, n> output = mValue;
-		for (uint i = 0; i < Min(n, 2U); i++) {
+		for (uint i = 0; i < min(n, 2U); i++) {
 			output[i] = output[i] * in_targetDimensions[i];
 		}
 		return output;
 	}
 
-	Vector<T, n> OpenGL_Position() {
+	Vector<T, n> openGLPosition() {
 		Vector<T, n> output = mValue;
-		for (uint i = 0; i < Min(n, 2U); i++) {
+		for (uint i = 0; i < GEUtil::min(n, 2U); i++) {
 			output[i] = output[i] * 2.0f - 1.0f;
 		}
 		return output;
 	}
 
-	Vector<T, n> OpenGL_Displacement() {
+	Vector<T, n> openGLDisplacement() {
 		Vector<T, n> output = mValue;
-		for (uint i = 0; i < Min(n, 2U); i++) {
+		for (uint i = 0; i < min(n, 2U); i++) {
 			output[i] = output[i] * 2.0f;
 		}
 		return output;
 	}
 
-	static DisplayUnits Percent(Vector<T, n> in_value) {
+	static DisplayUnits percent(Vector<T, n> in_value) {
 		Vector<T, n> output = in_value;
 		output[0] = output[0] / 100.0f;
 		output[1] = output[1] / 100.0f;
 		return output;
 	}
 
-	static DisplayUnits Percent_X(Vector<T, n> in_value, Vector2i in_targetDimensions) {
+	static DisplayUnits percentX(Vector<T, n> in_value, Vector2i in_targetDimensions) {
 		Vector<T, n> output = in_value;
 		output[0] = output[0] / 100.0f;
 		output[1] = output[1] / 100.0f / in_targetDimensions[0] * in_targetDimensions[1];
 		return output;
 	}
 
-	static DisplayUnits Percent_Y(Vector<T, n> in_value, Vector2i in_targetDimensions) {
+	static DisplayUnits percentY(Vector<T, n> in_value, Vector2i in_targetDimensions) {
 		Vector<T, n> output = in_value;
 		output[0] = output[0] / 100.0f / in_targetDimensions[1] * in_targetDimensions[0];
 		output[1] = output[1] / 100.0f;
 		return output;
 	}
 
-	static DisplayUnits Pixels(Vector<T, n> in_value, Vector2i in_targetDimensions) {
+	static DisplayUnits pixels(Vector<T, n> in_value, Vector2i in_targetDimensions) {
 		Vector<T, n> output = in_value;
-		for (uint i = 0; i < Min(n, 2U); i++) {
+		for (uint i = 0; i < GEUtil::min(n, 2U); i++) {
 			output[i] = output[i] / in_targetDimensions[i];
 		}
 		return output;
 	}
 
-	static DisplayUnits OpenGL_Position(Vector<T, n> in_value) {
+	static DisplayUnits openGLPosition(Vector<T, n> in_value) {
 		Vector<T, n> output = in_value;
-		for (uint i = 0; i < Min(n, 2U); i++) {
+		for (uint i = 0; i < min(n, 2U); i++) {
 			output[i] = (output[i] + 1.0f) / 2.0f;
 		}
 		return output;
 	}
 
-	static DisplayUnits OpenGL_Displacement(Vector<T, n> in_value) {
+	static DisplayUnits openGLDisplacement(Vector<T, n> in_value) {
 		Vector<T, n> output = in_value;
-		for (uint i = 0; i < Min(n, 2U); i++) {
+		for (uint i = 0; i < min(n, 2U); i++) {
 			output[i] = output[i] / 2.0f;
 		}
 		return output;

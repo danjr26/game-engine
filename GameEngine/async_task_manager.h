@@ -25,16 +25,16 @@ private:
 public:
 	AsyncTaskManager(const Clock& in_clock, uint in_nThreads = 0);
 	~AsyncTaskManager();
-	bool Thread_Entry();
-	void Add(AsyncTask* in_task);
-	void Remove(TaskIterator in_it);
-	AsyncTask* Get(TaskIterator in_it);
-	void Terminate();
-	bool Is_Terminating() const;
-	void Help_Until_Empty();
-	void Help_Until(const std::function<bool()>& in_whenFinished);
+	bool threadEntry();
+	void add(AsyncTask* in_task);
+	void remove(TaskIterator in_it);
+	AsyncTask* get(TaskIterator in_it);
+	void terminate();
+	bool isTerminating() const;
+	void helpUntilEmpty();
+	void helpUntil(const std::function<bool()>& in_whenFinished);
 
-	static void Call_Thread_Entry(AsyncTaskManager& in_handler);
+	static void callThreadEntry(AsyncTaskManager& in_handler);
 };
 
 #endif

@@ -27,20 +27,20 @@ public:
 	Rotation(const Rotation<T, 2>& in_from, const Rotation<T, 2>& in_to);
 	Rotation(const UnclampedRotation<T, 2>& in_rotation);
 
-	bool Is_Identity() const;
-	void Invert();
-	Rotation<T, 2> Get_Inverse() const;
-	Rotation<T, 2> Followed_By(const Rotation<T, 2>& in_rotation) const;
-	Rotation<T, 2> Lerp(const Rotation<T, 2>& in_rotation, T t) const;
-	Rotation<T, 2> Reflect_Over(const Rotation<T, 2>& in_rotation) const;
-	T Get_Angle() const;
-	Vector<T, 2> Apply_To(const Vector<T, 2>& in_point) const;
-	Matrix<T, 4, 4> Get_Matrix() const;
+	bool isIdentity() const;
+	void invert();
+	Rotation<T, 2> getInverse() const;
+	Rotation<T, 2> followedBy(const Rotation<T, 2>& in_rotation) const;
+	Rotation<T, 2> lerp(const Rotation<T, 2>& in_rotation, T t) const;
+	Rotation<T, 2> reflectOver(const Rotation<T, 2>& in_rotation) const;
+	T getAngle() const;
+	Vector<T, 2> applyTo(const Vector<T, 2>& in_point) const;
+	Matrix<T, 4, 4> getMatrix() const;
 
 private:
-	void Clamp();
+	void clamp();
 
-	static T Short_Difference(T angle1, T angle2);
+	static T shortDifference(T angle1, T angle2);
 };
 
 template<class T>
@@ -61,19 +61,19 @@ public:
 	Rotation(const Rotation<T, 3>& in_from, const Rotation<T, 3>& in_to);
 	Rotation(const UnclampedRotation<T, 3>& in_rotation);
 
-	bool Is_Identity() const;
-	void Invert();
-	Rotation<T, 3> Get_Inverse() const;
-	Rotation<T, 3> Followed_By(const Rotation<T, 3>& in_rotation) const;
-	Rotation<T, 3> Lerp(const Rotation<T, 3>& in_rotation, T t) const;
-	Rotation<T, 3> Slerp(const Rotation<T, 3>& in_rotation, T t) const;
-	Rotation<T, 3> Reflect_Over(const Rotation<T, 3>& in_rotation) const;
-	T Get_Angle() const;
-	Rotation<T, 3> With_Angle(T in_angle);
-	Vector<T, 3> Get_Axis() const;
-	Rotation<T, 3> With_Axis(const Vector<T, 3>& in_axis) const;
-	Vector<T, 3> Apply_To(const Vector<T, 3>& in_point) const;
-	Matrix<T, 4, 4> Get_Matrix() const;
+	bool isIdentity() const;
+	void invert();
+	Rotation<T, 3> getInverse() const;
+	Rotation<T, 3> followedBy(const Rotation<T, 3>& in_rotation) const;
+	Rotation<T, 3> lerp(const Rotation<T, 3>& in_rotation, T t) const;
+	Rotation<T, 3> slerp(const Rotation<T, 3>& in_rotation, T t) const;
+	Rotation<T, 3> reflectOver(const Rotation<T, 3>& in_rotation) const;
+	T getAngle() const;
+	Rotation<T, 3> withAngle(T in_angle);
+	Vector<T, 3> getAxis() const;
+	Rotation<T, 3> withAxis(const Vector<T, 3>& in_axis) const;
+	Vector<T, 3> applyTo(const Vector<T, 3>& in_point) const;
+	Matrix<T, 4, 4> getMatrix() const;
 };
 
 using Rotation2f = Rotation<float, 2>;

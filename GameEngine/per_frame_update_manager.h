@@ -11,9 +11,9 @@ private:
 
 public:
 	PerFrameUpdateManager();
-	void Update(double in_dt);
-	void Add(PerFrameUpdateableObject* in_updateable);
-	void Remove(PerFrameUpdateableObject* in_updateable);
+	void update(double in_dt);
+	void add(PerFrameUpdateableObject* in_updateable);
+	void remove(PerFrameUpdateableObject* in_updateable);
 };
 
 #endif
