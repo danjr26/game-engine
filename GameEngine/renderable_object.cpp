@@ -1,5 +1,4 @@
 #include "renderable_object.h"
-#include "renderer.h"
 #include "log.h"
 #include "matrix.h"
 #include "Texture2.h"

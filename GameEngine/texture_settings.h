@@ -44,6 +44,7 @@ private:
 public:
 	TextureSettings(Texture* in_texture);
 
+	void setTexture(Texture* in_texture);
 	void setBorderColor(const ColorRGBAc& in_color);
 	void setSwizzle(Swizzle in_channel1, Swizzle in_channel2, Swizzle in_channel3, Swizzle in_channel4);
 	void setEdgeCase(EdgeCase in_sEdgeCase, EdgeCase in_tEdgeCase, EdgeCase in_rEdgeCase);

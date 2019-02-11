@@ -16,6 +16,8 @@ private:
 	Box(const Vector<T, n>& in_origin, const Vector<T, n>* in_axes);
 
 public:
+	Box();
+
 	Vector<T, n> getOrigin() const;
 	Vector<T, n> getCenter() const;
 	void getAxes(Vector<T, n>* out_axes) const;

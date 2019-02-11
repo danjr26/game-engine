@@ -12,6 +12,12 @@ inline AxisAlignedLine<T, n>::AxisAlignedLine(uint in_dimension, T in_value) :
 }
 
 template<class T, uint n>
+AxisAlignedLine<T, n>::AxisAlignedLine() :
+	mDimension(0),
+	mValue(0)
+{}
+
+template<class T, uint n>
 inline uint AxisAlignedLine<T, n>::getDimension() const {
 	return mDimension;
 }

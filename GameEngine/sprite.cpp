@@ -8,8 +8,7 @@ Sprite::Sprite(const AxisAlignedRectangled& in_rectangle, Texture* in_texture, c
 	mColor(in_color),
 	mTextureInstance(in_texture) {
 
-	mInnerTransform.setLocalPosition(in_rectangle.getMinima());
-	mInnerTransform.scaleLocal(in_rectangle.getDimensions());
+	setRectangle(in_rectangle);
 	mInnerTransform.setParent(&mTransform);
 
 	Vector3f positions[] = {
@@ -41,6 +40,15 @@ Sprite::Sprite(const AxisAlignedRectangled& in_rectangle, Texture* in_texture, c
 
 Sprite::~Sprite() 
 {}
+
+void Sprite::setRectangle(const AxisAlignedRectangled& in_rectangle) {
+	mInnerTransform.setLocalPosition(in_rectangle.getMinima());
+	mInnerTransform.setLocalScale(in_rectangle.getDimensions());
+}
+
+void Sprite::setTexture(Texture* in_texture) {
+	mTextureInstance.setTexture(in_texture);
+}
 
 void Sprite::setUVs(const Vector2f& in_topLeft, const Vector2f& in_bottomRight) {
 	Vector2f uvs[] = {

@@ -8,6 +8,12 @@ inline Box<T, n>::Box(const Vector<T, n>& in_origin, const Vector<T, n>* in_axes
 }
 
 template<class T, uint n>
+Box<T, n>::Box() :
+	mOrigin(),
+	mAxes()
+{}
+
+template<class T, uint n>
 inline Vector<T, n> Box<T, n>::getOrigin() const {
 	return mOrigin;
 }

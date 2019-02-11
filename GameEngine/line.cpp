@@ -7,6 +7,12 @@ inline Line<T, n>::Line(const Vector<T, n>& in_point, const Vector<T, n> in_dire
 	mDirection(in_direction.normalized()) {}
 
 template<class T, uint n>
+Line<T, n>::Line() :
+	mPoint(),
+	mDirection()
+{}
+
+template<class T, uint n>
 inline void Line<T, n>::applyTransform(const Transform<T, n>& in_transform) {
 	mPoint = in_transform.localToWorldPoint(mPoint);
 	mDirection = in_transform.localToWorldDirection(mDirection);

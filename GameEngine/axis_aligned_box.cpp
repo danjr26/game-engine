@@ -18,6 +18,12 @@ inline void AxisAlignedBox<T, n>::getCorners(Vector<T, n>* out_corners) const {
 }
 
 template<class T, uint n>
+AxisAlignedBox<T, n>::AxisAlignedBox() :
+	mMinima(),
+	mMaxima()
+{}
+
+template<class T, uint n>
 inline void AxisAlignedBox<T, n>::applyTransform(const Transform<T, n>& transform) {
 	if (transform.getWorldRotation().isIdentity()) {
 		for (Transform<T, n> const* t = &transform; t != nullptr; t = t->getConstParent()) {

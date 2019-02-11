@@ -5,7 +5,6 @@
 #include "clock.h"
 #include "bit_manipulation.h"
 #include "packaged_async_task.h"
-#include "renderer.h"
 #include "matrix.h"
 #include "window.h"
 #include "color.h"
@@ -25,6 +24,7 @@
 #include "basic_collision_mask.h"
 #include "particle_system2_specifiers.h"
 #include "mesh_sphere_tree.h"
+#include "player_ship.h"
 #include <exception>
 #include <set>
 
@@ -38,13 +38,10 @@ void Test_Render(Window* window) {
 	Texture arrow(Texture::Type::_2d, "img/test_arrow.png", 8, Texture::Flags::mipmaps);
 	Texture spark(Texture::Type::_2d, "img/spark.png", 8, Texture::Flags::mipmaps);
 	Texture ship(Texture::Type::_2d, "img/ship.png", 8, Texture::Flags::mipmaps);
+	GE.assets().add("PlayerShipSpriteTexture", &ship);
 
-	Sprite shipRenderer(AxisAlignedRectangled::fromCenter(Vector2d(0, 0), Vector2d(Vector2i(ship.getDimensions())) / 4), &ship);
-	shipRenderer.getTransform().translateWorld(Vector2d(500, 400));
-	GE.render().add(&shipRenderer);
-
-	shipRenderer.getTextureInstance().settings().setMagnifyFilter(TextureSettings::FilterMode::trilinear);
-	shipRenderer.getTextureInstance().settings().setMinifyFilter(TextureSettings::FilterMode::trilinear);
+	PlayerShip playerShip;
+	playerShip.getTransform().translateWorld(Vector2d(400, 300));
 
 	Clock c;
 	uint n = 10000;

@@ -7,6 +7,12 @@ inline LineSegment<T, n>::LineSegment(Vector<T, n>& in_point1, Vector<T, n>& in_
 	mPoint2(in_point2) {}
 
 template<class T, uint n>
+LineSegment<T, n>::LineSegment() :
+	mPoint1(),
+	mPoint2()
+{}
+
+template<class T, uint n>
 inline void LineSegment<T, n>::applyTransform(const Transform<T, n>& in_transform) {
 	mPoint1 = in_transform.localToWorldPoint(mPoint1);
 	mPoint2 = in_transform.localToWorldPoint(mPoint2);

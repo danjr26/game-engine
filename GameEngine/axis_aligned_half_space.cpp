@@ -11,6 +11,12 @@ inline AxisAlignedHalfSpace<T, n>::AxisAlignedHalfSpace(int in_dimension, T in_v
 }
 
 template<class T, uint n>
+AxisAlignedHalfSpace<T, n>::AxisAlignedHalfSpace() :
+	mDimension(0),
+	mValue((T)0)
+{}
+
+template<class T, uint n>
 inline uint AxisAlignedHalfSpace<T, n>::getDimension() const {
 	return (mDimension < 0) ? -(mDimension + 1) : mDimension;
 }

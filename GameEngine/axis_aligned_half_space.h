@@ -13,6 +13,8 @@ private:
 	AxisAlignedHalfSpace(int in_dimension, T in_value);
 
 public:
+	AxisAlignedHalfSpace();
+
 	uint getDimension() const;
 	T getValue() const;
 	bool isPositive() const;

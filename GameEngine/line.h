@@ -13,6 +13,8 @@ private:
 	Line(const Vector<T, n>& in_point, const Vector<T, n> in_direction);
 
 public:
+	Line();
+
 	void applyTransform(const Transform<T, n>& in_transform);
 	Vector<T, n> getPoint() const;
 	Vector<T, n> getDirection() const;

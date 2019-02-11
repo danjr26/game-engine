@@ -154,6 +154,12 @@
     <Filter Include="Source Files\render\renderable">
       <UniqueIdentifier>{52cb7446-38cf-49b7-85d6-8464a8addfbd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\objects\player ship">
+      <UniqueIdentifier>{098f22f3-aa85-4132-8781-3fe7ec794f37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\objects\player ship">
+      <UniqueIdentifier>{5f0dd5b3-1517-440b-8183-deaa168a8aaa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="transform.h">
@@ -429,9 +435,6 @@
     <ClInclude Include="rigid_body.h">
       <Filter>Header Files\physics\rigid body</Filter>
     </ClInclude>
-    <ClInclude Include="circle_rigid_body.h">
-      <Filter>Header Files\physics\rigid body</Filter>
-    </ClInclude>
     <ClInclude Include="projection_overlap.h">
       <Filter>Header Files\collision</Filter>
     </ClInclude>
@@ -527,6 +530,15 @@
     </ClInclude>
     <ClInclude Include="mesh_sphere_tree.h">
       <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="player_ship.h">
+      <Filter>Header Files\objects\player ship</Filter>
+    </ClInclude>
+    <ClInclude Include="player_ship_renderer.h">
+      <Filter>Header Files\objects\player ship</Filter>
+    </ClInclude>
+    <ClInclude Include="player_ship_mover.h">
+      <Filter>Header Files\objects\player ship</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -820,6 +832,15 @@
     </ClCompile>
     <ClCompile Include="mesh_sphere_tree.cpp">
       <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="player_ship_renderer.cpp">
+      <Filter>Source Files\objects\player ship</Filter>
+    </ClCompile>
+    <ClCompile Include="player_ship.cpp">
+      <Filter>Source Files\objects\player ship</Filter>
+    </ClCompile>
+    <ClCompile Include="player_ship_mover.cpp">
+      <Filter>Source Files\objects\player ship</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,7 +5,6 @@
 #include "renderable_object.h"
 #include "deep_transformable_object.h"
 #include "texture_instance.h"
-#include "renderer.h"
 #include "range.h"
 
 class Text2 : public RenderableObject, public DeepTransformableObject2d {

@@ -13,6 +13,10 @@ mMinifyFilter(GL_NEAREST),
 mMagnifyFilter(GL_NEAREST)
 {}
 
+void TextureSettings::setTexture(Texture* in_texture) {
+	mTexture = in_texture;
+}
+
 void TextureSettings::setBorderColor(const ColorRGBAc& in_color) {
 	mBorderColor = in_color;
 }

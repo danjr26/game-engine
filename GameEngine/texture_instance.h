@@ -26,7 +26,10 @@ private:
 public:
 	TextureInstance(Texture* in_texture);
 
+	bool isNull() const;
+
 	Texture* getTexture();
+	void setTexture(Texture* in_texture);
 	TextureSettings& settings();
 
 	void setInfluence(Influence in_influence, float value);

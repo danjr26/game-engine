@@ -12,6 +12,8 @@ private:
 	Ray(const Vector<T, n>& in_point, const Vector<T, n>& in_direction);
 
 public:
+	Ray();
+
 	void applyTransform(const Transform<T, n>& in_transform);
 
 	Vector<T, n> getPoint() const;

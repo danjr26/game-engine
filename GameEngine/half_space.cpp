@@ -7,6 +7,12 @@ HalfSpace<T, n>::HalfSpace(const Vector<T, n>& in_point, const Vector<T, n>& in_
 	mDirection(in_direction.normalized()) {}
 
 template<class T, uint n>
+HalfSpace<T, n>::HalfSpace() :
+	mPoint(),
+	mDirection()
+{}
+
+template<class T, uint n>
 void HalfSpace<T, n>::applyTransform(const Transform<T, n>& in_transform) {
 	mPoint = in_transform.localToWorldPoint(mPoint);
 	mDirection = in_transform.localToWorldDirection(mDirection);

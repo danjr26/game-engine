@@ -12,6 +12,8 @@ private:
 	AxisAlignedLine(uint in_dimension, T in_value);
 
 public:
+	AxisAlignedLine();
+
 	uint getDimension() const;
 	T getValue() const;
 	Vector<T, n> getDirection() const;
