@@ -6,6 +6,7 @@
 #include "input_context.h"
 #include "window.h"
 #include <windows.h>
+#include <vector>
 
 class InputManager {
 	friend LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPARAM in_lParam);
@@ -15,12 +16,14 @@ class InputManager {
 
 public:
 	InputManager();
-	void addBefore(InputContext* in_beforeWhat, InputContext* in_context);
-	void addAfter(InputContext* in_afterWhat, InputContext* in_context);
+	void add(InputContext* in_context);
 	void remove(InputContext* in_context);
 	void update();
 	void processRawEvent(const RawInputEvent& in_event);
 	const RawInputState& getRawState();
+
+private:
+	static bool compareContexts(InputContext* in_context1, InputContext* in_context2);
 };
 
 #endif

@@ -199,6 +199,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="frame_rate_manager.h" />
+    <ClInclude Include="game.h" />
     <ClInclude Include="game_engine.h" />
     <ClInclude Include="hard_transitioner.h" />
     <ClInclude Include="hermite_transitioner.h" />
@@ -208,6 +209,7 @@
     <ClInclude Include="particle_system2.h" />
     <ClInclude Include="particle_system2_specifiers.h" />
     <ClInclude Include="player_ship.h" />
+    <ClInclude Include="player_ship_input_context.h" />
     <ClInclude Include="player_ship_mover.h" />
     <ClInclude Include="player_ship_renderer.h" />
     <ClInclude Include="transitioner.h" />
@@ -352,6 +354,7 @@
     <ClCompile Include="particle_system2.cpp" />
     <ClCompile Include="particle_system2_specifiers.cpp" />
     <ClCompile Include="player_ship.cpp" />
+    <ClCompile Include="player_ship_input_context.cpp" />
     <ClCompile Include="player_ship_mover.cpp" />
     <ClCompile Include="player_ship_renderer.cpp" />
     <ClCompile Include="uniform_force_field.cpp" />

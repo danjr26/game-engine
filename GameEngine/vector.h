@@ -224,6 +224,9 @@ public:
 		if (mag == 0) {
 			return;
 		}
+		else if (mag < -s) {
+			*this = Vector<T, n>();
+		}
 		else {
 			*this *= 1 + (s / mag);
 		}
@@ -303,6 +306,12 @@ public:
 			}
 		}
 		return result;
+	}
+
+	void clamp(const Vector<T, n>& low, const Vector<T, n> high) {
+		for (uint i = 0; i < n; i++) {
+			mMembers[i] = GEUtil::clamp(mMembers[i], low.mMembers[i], high.mMembers[i]);
+		}
 	}
 
 	T theta(const Vector<T, n>& v) const {

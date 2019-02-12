@@ -54,7 +54,7 @@ void Test_Render(Window* window) {
 	Log::main(std::to_string(averageT * 1000000) + " us");
 
 	Camera camera1;
-	camera1.setProjection(Projectiond(Vector3d(0, window->getDimensions().y(), 0), Vector3d(window->getDimensions().x(), 0, -1)));
+	camera1.setProjection(Projectiond(Vector3d(0, window->getDimensions().y(), 1), Vector3d(window->getDimensions().x(), 0, -1)));
 
 	RenderPass testPass =
 		RenderPass(window, &camera1)
@@ -72,7 +72,7 @@ int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nA
 	new GameEngine();
 
 	Window::Params params =
-		Window::Params(in_hInst)
+		Window::Params(GetModuleHandle(nullptr))
 		.Name(L"Test")
 		.Dimensions(Vector2i(800, 600))
 		.Fullscreen(false)

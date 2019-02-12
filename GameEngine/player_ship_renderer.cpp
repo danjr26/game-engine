@@ -16,6 +16,8 @@ PlayerShipRenderer::PlayerShipRenderer(PlayerShip& in_parent) :
 	mSprite.getTransform().setParent(&mParent.getTransform());
 	mSprite.getDepthTransform().setParent(&mParent.getDepthTransform());
 
+	mSprite.getTextureInstance().settings().setMinifyFilter(TextureSettings::FilterMode::trilinear);
+
 	GE.render().add(&mSprite);
 }
 

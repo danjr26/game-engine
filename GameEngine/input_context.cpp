@@ -5,8 +5,17 @@
 InputContext::InputContext(uint in_nActions, uint in_nStates, uint in_nRanges) :
 	mBindings(in_nActions, in_nStates, in_nRanges),
 	mStates(in_nStates),
-	mRanges(in_nRanges)
+	mRanges(in_nRanges),
+	mPriority(0.0f)
 {}
+
+float InputContext::getPriority() const {
+	return mPriority;
+}
+
+void InputContext::setPriority(float in_priority) {
+	mPriority = in_priority;
+}
 
 InputEvent InputContext::autoTranslateAction(InputBindings::Iterator & in_iter) {
 	InputEvent _event;

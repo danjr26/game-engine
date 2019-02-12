@@ -16,6 +16,8 @@ protected:
 
 	std::vector<InputListener*> mListeners;
 
+	float mPriority;
+
 protected:
 	InputContext(uint in_nActions, uint in_nStates, uint in_nRanges);
 
@@ -40,6 +42,9 @@ public:
 
 	bool getState(uint in_index);
 	float getRange(uint in_index);
+
+	float getPriority() const;
+	void setPriority(float in_priority);
 
 	void add(InputListener* in_listener);
 	void remove(InputListener* in_listener);

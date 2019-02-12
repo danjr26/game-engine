@@ -1,39 +1,19 @@
 #include "input_manager.h"
 #include "game_engine.h"
 
-InputManager::InputManager()
+InputManager::InputManager() :
+	mContexts()
 {}
 
-void InputManager::addBefore(InputContext* in_beforeWhat, InputContext* in_context) {
-	if (in_beforeWhat == nullptr) {
-		mContexts.insert(mContexts.begin(), in_context);
-	}
-	else {
-		auto position = std::find(mContexts.begin(), mContexts.end(), in_beforeWhat);
-		if (position == mContexts.end()) {
-			throw InvalidArgumentException("could not find reference input context for insertion");
-		}
-		mContexts.insert(position, in_context);
-	}
-}
-
-void InputManager::addAfter(InputContext* in_afterWhat, InputContext* in_context) {
-	if (in_afterWhat == nullptr) {
-		mContexts.insert(mContexts.end(), in_context);
-	}
-	else {
-		auto position = std::find(mContexts.begin(), mContexts.end(), in_afterWhat);
-		if (position == mContexts.end()) {
-			throw InvalidArgumentException("could not find reference input context for insertion");
-		}
-		mContexts.insert(position + 1, in_context);
-	}
+void InputManager::add(InputContext* in_context) {
+	mContexts.push_back(in_context);
+	std::sort(mContexts.begin(), mContexts.end(), compareContexts);
 }
 
 void InputManager::remove(InputContext* in_context) {
-	auto position = std::find(mContexts.begin(), mContexts.end(), in_context);
-	if (position != mContexts.end()) {
-		mContexts.erase(position);
+	auto search = std::find(mContexts.begin(), mContexts.end(), in_context);
+	if (search != mContexts.end()) {
+		mContexts.erase(search);
 	}
 }
 
@@ -50,9 +30,13 @@ void InputManager::update() {
 
 void InputManager::processRawEvent(const RawInputEvent& in_event) {
 	mRawState.processRawEvent(in_event);
-	for (uint i = 0; i < mContexts.size() && !mContexts[i]->processRawEvent(in_event); i++);
+	for (auto it = mContexts.begin(); it != mContexts.end() && !(*it)->processRawEvent(in_event); it++);
 }
 
 const RawInputState& InputManager::getRawState() {
 	return mRawState;
+}
+
+bool InputManager::compareContexts(InputContext* in_context1, InputContext* in_context2) {
+	return in_context1->getPriority() > in_context2->getPriority();
 }
