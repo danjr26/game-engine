@@ -24,7 +24,7 @@ Matrix4f Camera::getMatrix() {
 }
 
 void Camera::use() {
-	GE.cameras().mActive = this;
+	GE.cameras().setActive(this);
 }
 
 

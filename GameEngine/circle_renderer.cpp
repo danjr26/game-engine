@@ -21,8 +21,8 @@ void CircleRenderer::render() {
 	};
 
 	Matrix4f modelMatrix = (Matrix4f)mInnerTransform.getWorldMatrix();
-	Matrix4f viewMatrix = (Matrix4f)GE.cameras().mActive->getViewMatrix();
-	Matrix4f projectionMatrix = (Matrix4f)GE.cameras().mActive->getProjectionMatrix();
+	Matrix4f viewMatrix = (Matrix4f)GE.cameras().getActive()->getViewMatrix();
+	Matrix4f projectionMatrix = (Matrix4f)GE.cameras().getActive()->getProjectionMatrix();
 	Matrix4f mvpMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
 	shaderProgram->use();

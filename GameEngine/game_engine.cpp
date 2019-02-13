@@ -65,8 +65,15 @@ Clock& GameEngine::clock() {
     return mClock;
 }
 
+Game& GameEngine::game() {
+	return *mGame;
+}
+
 void GameEngine::begin() {
 	try {
+		mGame = new Game();
+		mGame->Init();
+
 		if (mHasBegun) {
 			throw ProcessFailureException("game engine already started");
 		}

@@ -3,11 +3,9 @@
 
 PlayerShip::PlayerShip() :
 	mRenderer(*this),
-	mMover(*this),
-	mInput(*this) {
+	mMover(*this) {
 
 	GE.perFrameUpdate().add(&mMover);
-	GE.input().add(&mInput);
 }
 
 PlayerShipRenderer& PlayerShip::getRenderer() {
@@ -18,6 +16,4 @@ PlayerShipMover& PlayerShip::getMover() {
 	return mMover;
 }
 
-PlayerShipInputContext& PlayerShip::getInput() {
-	return mInput;
-}
+

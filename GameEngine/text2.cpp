@@ -222,7 +222,7 @@ void Text2::render() {
 	// glDisable(GL_CULL_FACE);
 
 	Matrix4f modelMatrix = mScrollTransform.getWorldMatrix();
-	Matrix4f viewMatrix = GE.cameras().mActive->getMatrix();
+	Matrix4f viewMatrix = GE.cameras().getActive()->getMatrix();
 	Matrix4f modelviewMatrix = viewMatrix * modelMatrix;
 
 	GLint locations[1] = {
@@ -268,9 +268,9 @@ void Text2::incrementPen(Vector2f& inout_pen, uint in_index) const {
 }
 
 void Text2::createOpenGL() {
-	mBitmapArray.settings().setMagnifyFilter(TextureSettings::FilterMode::none);
-	mBitmapArray.settings().setMinifyFilter(TextureSettings::FilterMode::none);
-	mBitmapArray.settings().setSwizzle(
+	mBitmapArray.getSettings().setMagnifyFilter(TextureSettings::FilterMode::none);
+	mBitmapArray.getSettings().setMinifyFilter(TextureSettings::FilterMode::none);
+	mBitmapArray.getSettings().setSwizzle(
 		TextureSettings::Swizzle::one,
 		TextureSettings::Swizzle::one,
 		TextureSettings::Swizzle::one,

@@ -16,7 +16,7 @@ Rotation<T, 2>::Rotation(T in_angle) :
 
 template<class T>
 Rotation<T, 2>::Rotation(const Vector<T, 2>& in_vec) :
-	mAngle(in_vec.theta(Vector2d(1, 0)))
+	mAngle(in_vec.theta(Vector2d(1, 0)) * ((in_vec.y() < 0) ? -1 : 1))
 {}
 
 template<class T>

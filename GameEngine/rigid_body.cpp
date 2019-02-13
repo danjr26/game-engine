@@ -115,8 +115,8 @@ void RigidBody<2>::applyRelativeImpulse(const LocatedVector<double, 2>& in_impul
 	URotation2d angularAcceleration = URotation2d(
 		in_impulse.mVector.magnitude() * in_impulse.mPosition.magnitude() * in_impulse.mVector.normalized().dot(-in_impulse.mPosition.orthogonal().normalized()) / mAngularMass);
 
-	mLinearVelocity += linearAcceleration;
-	mAngularVelocity += angularAcceleration;
+	if(mLinearMass != 0.0) mLinearVelocity += linearAcceleration;
+	if(mAngularMass != 0.0) mAngularVelocity += angularAcceleration;
 }
 
 template<uint n>

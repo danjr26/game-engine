@@ -9,14 +9,14 @@ PlayerShipRenderer::PlayerShipRenderer(PlayerShip& in_parent) :
 	Texture* tex = GE.assets().get<Texture>("PlayerShipSpriteTexture");
 	mSprite.setTexture(tex);
 
-	Vector2d dimensions = Vector2d(Vector3d(tex->getDimensions())) / 5.0;
+	Vector2d dimensions = Vector2d(Vector3d(tex->getDimensions())) / 400.0;
 	AxisAlignedRectangled rect = AxisAlignedRectangled::fromCenter(Vector2d(0, 0), dimensions);
 	mSprite.setRectangle(rect);
 
 	mSprite.getTransform().setParent(&mParent.getTransform());
 	mSprite.getDepthTransform().setParent(&mParent.getDepthTransform());
 
-	mSprite.getTextureInstance().settings().setMinifyFilter(TextureSettings::FilterMode::trilinear);
+	mSprite.getTextureInstance().getSettings().setMinifyFilter(TextureSettings::FilterMode::trilinear);
 
 	GE.render().add(&mSprite);
 }

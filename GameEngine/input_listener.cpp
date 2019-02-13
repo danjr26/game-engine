@@ -12,6 +12,10 @@ InputListener::InputListener(InputContext* in_context, uint in_level, double in_
 	in_context->add(this);
 }
 
+InputListener::~InputListener() {
+	mContext->remove(this);
+}
+
 bool InputListener::postEvent(const InputEvent& in_event) {
 	Reception reception = mReceiver(in_event);
 	if (reception.mTaken) {

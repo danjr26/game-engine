@@ -30,7 +30,7 @@ public:
 
 	Texture* getTexture();
 	void setTexture(Texture* in_texture);
-	TextureSettings& settings();
+	TextureSettings& getSettings();
 
 	void setInfluence(Influence in_influence, float value);
 	float getInfluence(Influence in_influence);

@@ -25,6 +25,7 @@
 #include "particle_system2_specifiers.h"
 #include "mesh_sphere_tree.h"
 #include "player_ship.h"
+#include "pointer_input_context.h"
 #include <exception>
 #include <set>
 
@@ -40,8 +41,8 @@ void Test_Render(Window* window) {
 	Texture ship(Texture::Type::_2d, "img/ship.png", 8, Texture::Flags::mipmaps);
 	GE.assets().add("PlayerShipSpriteTexture", &ship);
 
-	PlayerShip playerShip;
-	playerShip.getTransform().translateWorld(Vector2d(400, 300));
+	PointerInputContext pointerInput;
+	GE.input().add(&pointerInput);
 
 	Clock c;
 	uint n = 10000;
@@ -53,8 +54,11 @@ void Test_Render(Window* window) {
 	double averageT = (t2 - t1) / n;
 	Log::main(std::to_string(averageT * 1000000) + " us");
 
+	double aspectRatio = (double)window->getDimensions().x() / (double)window->getDimensions().y();
+
 	Camera camera1;
-	camera1.setProjection(Projectiond(Vector3d(0, window->getDimensions().y(), 1), Vector3d(window->getDimensions().x(), 0, -1)));
+	camera1.setProjection(Projectiond(Vector3d(0.0, 10.0, 1.0), Vector3d(10.0 * aspectRatio, 0.0, -1.0)));
+	GE.cameras().add(CameraManager::ID::main, &camera1);
 
 	RenderPass testPass =
 		RenderPass(window, &camera1)
@@ -72,7 +76,7 @@ int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nA
 	new GameEngine();
 
 	Window::Params params =
-		Window::Params(GetModuleHandle(nullptr))
+		Window::Params()
 		.Name(L"Test")
 		.Dimensions(Vector2i(800, 600))
 		.Fullscreen(false)

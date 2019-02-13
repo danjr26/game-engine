@@ -21,7 +21,7 @@ void TextureInstance::setTexture(Texture* in_texture) {
 	mSettings.setTexture(in_texture);
 }
 
-TextureSettings& TextureInstance::settings() {
+TextureSettings& TextureInstance::getSettings() {
 	return mSettings;
 }
 

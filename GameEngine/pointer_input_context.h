@@ -25,8 +25,12 @@ public:
 
 	struct Range {
 		enum {
+			fraction_x,
+			fraction_y,
 			pixel_x,
 			pixel_y,
+			main_x,
+			main_y,
 			count
 		};
 	};

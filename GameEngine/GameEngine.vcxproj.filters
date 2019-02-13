@@ -851,6 +851,9 @@
     <ClCompile Include="player_ship_input_context.cpp">
       <Filter>Source Files\objects\player ship</Filter>
     </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameEngine.rc">

@@ -18,6 +18,7 @@ void InputManager::remove(InputContext* in_context) {
 }
 
 void InputManager::update() {
+	std::sort(mContexts.begin(), mContexts.end(), compareContexts);
 	MSG message;
 	while (PeekMessageW(&message, GE.render().mMainWindow->getHandle(), 0, 0, PM_REMOVE)) {
 		TranslateMessage(&message);

@@ -28,11 +28,8 @@ public:
 		};
 	};
 
-private:
-	PlayerShip& mParent;
-
 public:
-	PlayerShipInputContext(PlayerShip& in_parent);
+	PlayerShipInputContext();
 };
 
 #endif

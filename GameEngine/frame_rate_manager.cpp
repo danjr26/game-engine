@@ -7,7 +7,7 @@ FrameRateManager::FrameRateManager(double in_fps) :
 	mTimeStepper(1.0 / in_fps),
 	mNTrackedFrames(60),
 	mNBackedUp(0),
-	mMaxBackedUp(6) {
+	mMaxBackedUp(0) {
 
 	mLastFrameTimes.reserve(mNTrackedFrames);
 
@@ -61,7 +61,7 @@ void FrameRateManager::yieldUntilNextFrame() {
 }
 
 bool FrameRateManager::isLeanFrame() const {
-	return mNBackedUp >= mMaxBackedUp;
+	return mNBackedUp > mMaxBackedUp;
 }
 
 double FrameRateManager::getRealFPS() {

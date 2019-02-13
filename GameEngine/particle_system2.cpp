@@ -24,8 +24,8 @@ ParticleSystem2::ParticleSystem2(Texture* in_texture, Specifier* in_specifier) :
 	params.mUseCase = MeshVertexGPUPusher::UseCase::changes_often;
 	mGPUPusher.initialize(&mVertexData, params);
 
-	mTextureInstance.settings().setMagnifyFilter(TextureSettings::FilterMode::trilinear);
-	mTextureInstance.settings().setMinifyFilter(TextureSettings::FilterMode::trilinear);
+	mTextureInstance.getSettings().setMagnifyFilter(TextureSettings::FilterMode::trilinear);
+	mTextureInstance.getSettings().setMinifyFilter(TextureSettings::FilterMode::trilinear);
 }
 
 ParticleSystem2::~ParticleSystem2()
@@ -87,8 +87,8 @@ void ParticleSystem2::render() {
 	ShaderProgram* shaderProgram = GE.assets().get<ShaderProgram>("Particle2Shader");
 
 	Matrix4f modelMatrix = Matrix4f::identity();
-	Matrix4f viewMatrix = GE.cameras().mActive->getViewMatrix();
-	Matrix4f projectionMatrix = GE.cameras().mActive->getProjectionMatrix();
+	Matrix4f viewMatrix = GE.cameras().getActive()->getViewMatrix();
+	Matrix4f projectionMatrix = GE.cameras().getActive()->getProjectionMatrix();
 
 	GLint locations[4] = {
 		shaderProgram->getUniformLocation("modelMatrix"),

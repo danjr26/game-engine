@@ -84,8 +84,8 @@ void Sprite::render() {
 	ShaderProgram* shaderProgram;
 
 	Matrix4f modelMatrix = mInnerTransform.getWorldMatrix();
-	Matrix4f viewMatrix = GE.cameras().mActive->getViewMatrix();
-	Matrix4f projectionMatrix = GE.cameras().mActive->getProjectionMatrix();
+	Matrix4f viewMatrix = GE.cameras().getActive()->getViewMatrix();
+	Matrix4f projectionMatrix = GE.cameras().getActive()->getProjectionMatrix();
 
 	if (mTextureInstance.getTexture() == nullptr) {
 		shaderProgram = GE.assets().get<ShaderProgram>("MonoShader");

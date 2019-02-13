@@ -11,7 +11,6 @@ public:
 	class Params {
 		friend class Window;
 	private:
-		HINSTANCE mInstanceHandle;
 		Vector2i mPosition;
 		Vector2i mDimensions;
 		std::wstring mName;
@@ -23,7 +22,7 @@ public:
 		bool mFullscreen;
 
 	public:
-		Params(HINSTANCE in_instance);
+		Params();
 		Params& Name(const std::wstring& in_name);
 		Params& Position(const Vector2i& in_position);
 		Params& Dimensions(const Vector2i& in_dimensions);

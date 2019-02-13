@@ -6,6 +6,7 @@
 LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPARAM in_lParam) {
 	RawInputEvent inputEvent;
 	ubyte xButton;
+	POINT cursorPos;
 	switch (in_message) {
 	case WM_DESTROY:
 		GE.quit();

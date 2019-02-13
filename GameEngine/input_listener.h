@@ -26,6 +26,7 @@ private:
 
 public:
 	InputListener(InputContext* in_context, uint in_level = 0, double in_depth = 0.0);
+	~InputListener();
 
 	InputContext* getContext();
 

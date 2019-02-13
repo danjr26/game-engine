@@ -13,13 +13,15 @@ mParams(in_params) {
 	std::lock_guard<std::mutex> lock(mMutex);
 	std::wstring className = std::wstring(L"class") + std::to_wstring(classIndex++);
 
-	mWindowClass.hInstance = mParams.mInstanceHandle;
+	HINSTANCE instanceHandle = GetModuleHandle(nullptr);
+
+	mWindowClass.hInstance = instanceHandle;
 	mWindowClass.lpszClassName = className.c_str();
 	mWindowClass.lpfnWndProc = WindowProc;
 	mWindowClass.style = CS_DBLCLKS | CS_OWNDC;
 	mWindowClass.cbSize = sizeof(WNDCLASSEX);
-	mWindowClass.hIcon = LoadIcon(mParams.mInstanceHandle, MAKEINTRESOURCE(IDI_ICON1));
-	mWindowClass.hIconSm = LoadIcon(mParams.mInstanceHandle, MAKEINTRESOURCE(IDI_ICON1));
+	mWindowClass.hIcon = LoadIcon(instanceHandle, MAKEINTRESOURCE(IDI_ICON1));
+	mWindowClass.hIconSm = LoadIcon(instanceHandle, MAKEINTRESOURCE(IDI_ICON1));
 	mWindowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	mWindowClass.lpszMenuName =	nullptr;
 	mWindowClass.cbClsExtra = 0;
@@ -51,7 +53,7 @@ mParams(in_params) {
 		rect.bottom - rect.top,                 
 		HWND_DESKTOP,        
 		nullptr,	// no menu            
-		mParams.mInstanceHandle,      
+		instanceHandle,      
 		nullptr		// no extra data
 	);
 
@@ -249,8 +251,7 @@ void Window::setName(const std::wstring& in_name) {
 	SetWindowText(mWindowHandle, in_name.c_str());
 }
 
-Window::Params::Params(HINSTANCE in_instance) :
-	mInstanceHandle(in_instance),
+Window::Params::Params() :
 	mDimensions(800, 600),
 	mPosition(CW_USEDEFAULT, CW_USEDEFAULT),
 	mName(L"Window"),

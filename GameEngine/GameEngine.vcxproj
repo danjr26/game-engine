@@ -350,6 +350,7 @@
     <ClCompile Include="font_face_raster_set.cpp" />
     <ClCompile Include="font_manager.cpp" />
     <ClCompile Include="force_field.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="mesh_sphere_tree.cpp" />
     <ClCompile Include="particle_system2.cpp" />
     <ClCompile Include="particle_system2_specifiers.cpp" />

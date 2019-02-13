@@ -45,8 +45,8 @@ void DebugMeshVertexDataRenderer::render() {
 	};
 
 	Matrix4f mvpMatrix = 
-		GE.cameras().mActive->getProjectionMatrix() * 
-		GE.cameras().mActive->getViewMatrix() * 
+		GE.cameras().getActive()->getProjectionMatrix() * 
+		GE.cameras().getActive()->getViewMatrix() * 
 		(Matrix4f)mTransform.getWorldMatrix();
 
 	shaderProgram->use();
