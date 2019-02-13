@@ -160,6 +160,12 @@
     <Filter Include="Source Files\objects\player ship">
       <UniqueIdentifier>{5f0dd5b3-1517-440b-8183-deaa168a8aaa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\objects\test enemy">
+      <UniqueIdentifier>{5d475a96-7c3b-40b5-bc2d-3dd56964ccb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\objects\test enemy">
+      <UniqueIdentifier>{501d5091-79c4-4da7-b469-d229bc8fcf2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="transform.h">
@@ -546,6 +552,15 @@
     <ClInclude Include="game.h">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
+    <ClInclude Include="test_enemy.h">
+      <Filter>Header Files\objects\test enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="test_enemy_renderer.h">
+      <Filter>Header Files\objects\test enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="test_enemy_mover.h">
+      <Filter>Header Files\objects\test enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clock.cpp">
@@ -852,7 +867,16 @@
       <Filter>Source Files\objects\player ship</Filter>
     </ClCompile>
     <ClCompile Include="game.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="test_enemy_renderer.cpp">
+      <Filter>Source Files\objects\test enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="test_enemy.cpp">
+      <Filter>Source Files\objects\test enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="test_enemy_mover.cpp">
+      <Filter>Source Files\objects\test enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

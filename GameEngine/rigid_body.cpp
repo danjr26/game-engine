@@ -3,20 +3,30 @@
 #include "log.h"
 
 template<uint n>
+RigidBody<n>::RigidBody() : 
+	mCollisionMask(nullptr),
+	mLinearVelocity(),
+	mAngularVelocity(),
+	mLinearMass(0.0),
+	mAngularMass(0.0)
+{}
+
+template<uint n>
 RigidBody<n>::RigidBody(const CollisionMask<double, n>& in_collisionMask) :
-	mCollisionMask(in_collisionMask.clone()),
+	mCollisionMask(nullptr),
 	mLinearVelocity(),
 	mAngularVelocity(),
 	mLinearMass(1.0),
 	mAngularMass(5000.0) {
 
-	mCollisionMask->getTransform().setParent(&getTransform());
-	mCollisionMask->addFilter(CollisionContext2d::rigid_body);
+	setCollisionMask(in_collisionMask);
 }
 
 template<uint n>
 RigidBody<n>::~RigidBody() {
-	delete mCollisionMask;
+	if (mCollisionMask != nullptr) {
+		delete mCollisionMask;
+	}
 }
 
 template<uint n>
@@ -76,6 +86,16 @@ double RigidBody<n>::getAngularKineticEnergy() const {
 template<uint n>
 bool RigidBody<n>::isUnstoppable() const {
 	return mCollisionMask->hasFilter(CollisionContext2d::rigid_body_unstoppable);
+}
+
+template<uint n>
+void RigidBody<n>::setCollisionMask(const CollisionMask<double, n>& in_collisionMask) {
+	if (mCollisionMask != nullptr) {
+		delete mCollisionMask;
+	}
+	mCollisionMask = in_collisionMask.clone();
+	mCollisionMask->getTransform().setParent(&getTransform());
+	mCollisionMask->addFilter(CollisionContext2d::rigid_body);
 }
 
 template<uint n>

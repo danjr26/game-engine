@@ -17,6 +17,7 @@ private:
 	double mAngularMass;
 
 public:
+	RigidBody();
 	RigidBody(const CollisionMask<double, n>& in_collisionMask);
 	~RigidBody();
 
@@ -32,6 +33,7 @@ public:
 	double getAngularKineticEnergy() const;
 	bool isUnstoppable() const;
 
+	void setCollisionMask(const CollisionMask<double, n>& in_collisionMask);
 	void setLinearVelocity(const Vector<double, n>& in_velocity);
 	void setAngularVelocity(const URotation<double, n>& in_velocity);
 	void setLinearMass(double in_mass);

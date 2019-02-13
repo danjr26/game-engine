@@ -4,7 +4,8 @@ GameEngine* GameEngine::instance = nullptr;
 
 GameEngine::GameEngine() :
 mHasBegun(false),
-mAsyncTaskManager(mClock) {
+mAsyncTaskManager(mClock),
+mFrameRateManager(100) {
 	if (instance != nullptr) {
 		throw ProcessFailureException("game engine already created");
 	}
