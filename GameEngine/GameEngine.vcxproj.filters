@@ -561,6 +561,9 @@
     <ClInclude Include="sprite.h">
       <Filter>Header Files\render\renderable</Filter>
     </ClInclude>
+    <ClInclude Include="player_ship_camera_mover.h">
+      <Filter>Header Files\objects\player ship</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clock.cpp">
@@ -711,9 +714,6 @@
       <Filter>Source Files\framework\input\identifiers</Filter>
     </ClCompile>
     <ClCompile Include="raw_input_state.cpp">
-      <Filter>Source Files\framework\input</Filter>
-    </ClCompile>
-    <ClCompile Include="pointer_input_context.cpp">
       <Filter>Source Files\framework\input</Filter>
     </ClCompile>
     <ClCompile Include="collision_manager.cpp">
@@ -877,6 +877,12 @@
     </ClCompile>
     <ClCompile Include="sprite.cpp">
       <Filter>Source Files\render\renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="player_ship_camera_mover.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pointer_input_context.cpp">
+      <Filter>Source Files\framework\input\contexts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

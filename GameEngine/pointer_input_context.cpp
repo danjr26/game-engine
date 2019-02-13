@@ -22,13 +22,13 @@ bool PointerInputContext::processRawEvent(const RawInputEvent& in_event) {
 
 	_event.mMessage = Range::main_x;
 	_event.mRange.oldValue = mRanges[Range::main_x];
-	mRanges[Range::main_x] = mRanges[Range::fraction_x] * mainOffset.x() + mainProjection.mMinima.x();
+	mRanges[Range::main_x] = mRanges[Range::fraction_x] * mainOffset.x();
 	_event.mRange.newValue = mRanges[Range::main_x];
 	distributeEvent(_event);
 
 	_event.mMessage = Range::main_y;
 	_event.mRange.oldValue = mRanges[Range::main_y];
-	mRanges[Range::main_y] = -mRanges[Range::fraction_y] * mainOffset.y() + mainProjection.mMaxima.y();
+	mRanges[Range::main_y] = mRanges[Range::fraction_y] * -mainOffset.y();
 	_event.mRange.newValue = mRanges[Range::main_y];
 	distributeEvent(_event);
 

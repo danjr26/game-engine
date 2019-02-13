@@ -5,9 +5,11 @@
 PlayerShip::PlayerShip() :
 	mRenderer(*this),
 	mMover(*this),
+	mCameraMover(*this),
 	mRigidBody() {
 
 	GE.perFrameUpdate().add(&mMover);
+	GE.perFrameUpdate().add(&mCameraMover);
 
 	CircleCollisionMask<double> mask(Circled::fromPointRadius(Vector2d(), 1.0));
 	mask.getTransform().setParent(&mTransform);
@@ -20,6 +22,10 @@ PlayerShipRenderer& PlayerShip::getRenderer() {
 
 PlayerShipMover& PlayerShip::getMover() {
 	return mMover;
+}
+
+PlayerShipCameraMover& PlayerShip::getCameraMover() {
+	return mCameraMover;
 }
 
 RigidBody<2>& PlayerShip::getRigidBody() {

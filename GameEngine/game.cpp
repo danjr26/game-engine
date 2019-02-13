@@ -14,8 +14,8 @@ Game::Game() :
 
 void Game::Init() {
 	mPlayerShip = new PlayerShip();
-	mPlayerShip->getTransform().translateWorld(Vector2d(3, 3));
-	mPlayerShip->getTransform().rotateLocal(Rotation2d(PI / 4));
+	//mPlayerShip->getTransform().translateWorld(Vector2d(3, 3));
+	//mPlayerShip->getTransform().rotateLocal(Rotation2d(PI / 4));
 
 	TestEnemy* testEnemy = new TestEnemy();
 	testEnemy->getTransform().setLocalPosition(Vector2d(4, 4));
