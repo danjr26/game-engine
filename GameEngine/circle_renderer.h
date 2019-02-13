@@ -9,11 +9,13 @@ private:
 	float mOutlineWidth;
 	ColorRGBAf mOutlineColor;
 public:
-	CircleRenderer(const Circled& in_circle, const ColorRGBAf& in_color, 
+	CircleRenderer(const Circled& in_circle = Circled(), const ColorRGBAf& in_color = ColorRGBAf(1, 1, 1, 1), 
 		float in_outlineWidth = 0.0, const ColorRGBAf& in_outlineColor = ColorRGBAf(0, 0, 0, 1));
 
 	void setUVs(const Vector2f& in_topLeft, const Vector2f& in_bottomRight) = delete;
 	TextureInstance& getTextureInstance() = delete;
+
+	void setCircle(const Circled& in_circle);
 
 	void setOutlineColor(const ColorRGBAf& in_color);
 	ColorRGBAf getOutlineColor() const;

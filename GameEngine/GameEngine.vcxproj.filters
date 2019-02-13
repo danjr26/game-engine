@@ -237,9 +237,6 @@
     <ClInclude Include="box.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="sprite.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
     <ClInclude Include="game_engine.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
@@ -561,6 +558,9 @@
     <ClInclude Include="test_enemy_mover.h">
       <Filter>Header Files\objects\test enemy</Filter>
     </ClInclude>
+    <ClInclude Include="sprite.h">
+      <Filter>Header Files\render\renderable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clock.cpp">
@@ -592,9 +592,6 @@
     </ClCompile>
     <ClCompile Include="transformable_object.cpp">
       <Filter>Source Files\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="sprite.cpp">
-      <Filter>Source Files\objects</Filter>
     </ClCompile>
     <ClCompile Include="game_engine.cpp">
       <Filter>Source Files\framework</Filter>
@@ -877,6 +874,9 @@
     </ClCompile>
     <ClCompile Include="test_enemy_mover.cpp">
       <Filter>Source Files\objects\test enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite.cpp">
+      <Filter>Source Files\render\renderable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

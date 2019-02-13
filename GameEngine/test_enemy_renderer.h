@@ -1,14 +1,14 @@
 #ifndef TEST_ENEMY_RENDERER_H
 #define TEST_ENEMY_RENDERER_H
 
-#include "sprite.h"
+#include "circle_renderer.h"
 
 class TestEnemy;
 
 class TestEnemyRenderer {
 private:
 	TestEnemy& mParent;
-	Sprite mSprite;
+	CircleRenderer mSprite;
 
 public:
 	TestEnemyRenderer(TestEnemy& in_parent);
