@@ -12,9 +12,17 @@ void PlayerShipCameraMover::update(double in_dt) {
 	Vector2d centerOffset = Vector2d((camera.getProjection().mMaxima - camera.getProjection().mMinima) / 2.0);
 	centerOffset.y() = -centerOffset.y();
 
+	Vector2d current = Vector2d(camera.getTransform().getLocalPosition());
+	Vector2d target = mParent.getTransform().getWorldPosition() - centerOffset;
+	Vector2d step = (target - current);
+	double distance = step.magnitude();
+	if (distance > 0.01) {
+		step = step.normalized() * GEUtil::min(exp(distance), 10.0) * in_dt;
+	}
+
 	camera.getTransform().setLocalPosition(
 		Vector3d(
-			mParent.getTransform().getWorldPosition() - centerOffset, 
+			current + step,
 			camera.getTransform().getLocalPosition().z()
 		)
 	);
