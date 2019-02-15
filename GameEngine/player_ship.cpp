@@ -11,9 +11,12 @@ PlayerShip::PlayerShip() :
 	GE.perFrameUpdate().add(&mMover);
 	GE.perFrameUpdate().add(&mCameraMover);
 
-	CircleCollisionMask<double> mask(Circled::fromPointRadius(Vector2d(), 1.0));
-	mask.getTransform().setParent(&mTransform);
+	CircleCollisionMask<double> mask(Circled::fromPointRadius(Vector2d(), 0.25));
 	mRigidBody.setCollisionMask(mask);
+
+	mRigidBody.getTransform().setParent(&mTransform);
+	getCollisionMask().addFilter(Game::MainCollisionContextFilters::player_ship);
+	GE.game().getMainCollisionContext().add(&getCollisionMask());
 }
 
 PlayerShipRenderer& PlayerShip::getRenderer() {
