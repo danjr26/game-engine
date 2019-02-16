@@ -9,7 +9,7 @@
 
 class PlayerShip;
 
-class PlayerShipMover : public PerFrameUpdateableObject {
+class PlayerShipMover {
 private:
 	PlayerShip& mParent;
 	Vector2d mVelocity;
@@ -19,7 +19,7 @@ private:
 public:
 	PlayerShipMover(PlayerShip& in_parent);
 
-	void update(double in_dt) override;
+	void update(double in_dt);
 };
 
 #endif

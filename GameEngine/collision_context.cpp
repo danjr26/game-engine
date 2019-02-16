@@ -164,6 +164,18 @@ bool CollisionContext<T, n>::getPartnerTestActivation(std::pair<ubyte, ubyte> in
 }
 
 template<class T, uint n>
+void CollisionContext<T, n>::getTriggeredTests(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, std::vector<std::pair<ubyte, ubyte>>& out_tests) {
+	for (auto it = mPartnersToTest.begin(); it != mPartnersToTest.begin(); it++) {
+		if (in_mask1->hasFilter(it->first) && in_mask2->hasFilter(it->second)) {
+			out_tests.push_back(*it);
+		}
+		else if (in_mask1->hasFilter(it->second) && in_mask2->hasFilter(it->first)) {
+			out_tests.push_back(std::pair<ubyte, ubyte>(it->second, it->first));
+		}
+	}
+}
+
+template<class T, uint n>
 void CollisionContext<T, n>::updateEvaluations() {
 	std::vector<PackagedAsyncTask<void>> mTasks;
 	uint nEvaluations = (uint)mEvaluations.size();

@@ -166,6 +166,9 @@
     <Filter Include="Source Files\objects\test enemy">
       <UniqueIdentifier>{501d5091-79c4-4da7-b469-d229bc8fcf2b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\objects\collision">
+      <UniqueIdentifier>{edd05411-056f-4c83-abe4-616a1a365aea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="transform.h">
@@ -564,6 +567,24 @@
     <ClInclude Include="player_ship_camera_mover.h">
       <Filter>Header Files\objects\player ship</Filter>
     </ClInclude>
+    <ClInclude Include="player_ship_weapons_system.h">
+      <Filter>Header Files\objects\player ship</Filter>
+    </ClInclude>
+    <ClInclude Include="test_bullet.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_responder.h">
+      <Filter>Header Files\objects\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_packet.h">
+      <Filter>Header Files\objects\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="player_ship_collision_responder.h">
+      <Filter>Header Files\objects\player ship</Filter>
+    </ClInclude>
+    <ClInclude Include="weapon.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clock.cpp">
@@ -878,11 +899,17 @@
     <ClCompile Include="sprite.cpp">
       <Filter>Source Files\render\renderable</Filter>
     </ClCompile>
-    <ClCompile Include="player_ship_camera_mover.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="pointer_input_context.cpp">
       <Filter>Source Files\framework\input\contexts</Filter>
+    </ClCompile>
+    <ClCompile Include="player_ship_camera_mover.cpp">
+      <Filter>Source Files\objects\player ship</Filter>
+    </ClCompile>
+    <ClCompile Include="player_ship_collision_responder.cpp">
+      <Filter>Source Files\objects\player ship</Filter>
+    </ClCompile>
+    <ClCompile Include="player_ship_weapons_system.cpp">
+      <Filter>Source Files\objects\player ship</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

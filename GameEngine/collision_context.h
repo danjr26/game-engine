@@ -61,6 +61,7 @@ public:
 	void getPartners(CollisionMask<T, n>* in_mask, std::vector<CollisionPartner*>& out_partners);
 	void setPartnerTestActivation(std::pair<ubyte, ubyte> in_test, bool in_value);
 	bool getPartnerTestActivation(std::pair<ubyte, ubyte> in_test);
+	void getTriggeredTests(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, std::vector<std::pair<ubyte, ubyte>>& out_tests);
 
 private:
 	void updateEvaluations();

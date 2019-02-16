@@ -177,6 +177,8 @@
     <ClInclude Include="collision_evaluator.h" />
     <ClInclude Include="collision_manager.h" />
     <ClInclude Include="collision_mask.h" />
+    <ClInclude Include="collision_packet.h" />
+    <ClInclude Include="collision_responder.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="cubic_transitioner.h" />
     <ClInclude Include="debug_mesh_vertex_data_renderer.h" />
@@ -210,9 +212,12 @@
     <ClInclude Include="particle_system2_specifiers.h" />
     <ClInclude Include="player_ship.h" />
     <ClInclude Include="player_ship_camera_mover.h" />
+    <ClInclude Include="player_ship_collision_responder.h" />
     <ClInclude Include="player_ship_input_context.h" />
     <ClInclude Include="player_ship_mover.h" />
     <ClInclude Include="player_ship_renderer.h" />
+    <ClInclude Include="player_ship_weapons_system.h" />
+    <ClInclude Include="test_bullet.h" />
     <ClInclude Include="test_enemy.h" />
     <ClInclude Include="test_enemy_mover.h" />
     <ClInclude Include="test_enemy_renderer.h" />
@@ -268,6 +273,7 @@
     <ClInclude Include="transformable_object.h" />
     <ClInclude Include="per_frame_updateable_object.h" />
     <ClInclude Include="unclamped_rotation.h" />
+    <ClInclude Include="weapon.h" />
     <ClInclude Include="windows_error.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="collision.h">
@@ -360,9 +366,11 @@
     <ClCompile Include="particle_system2_specifiers.cpp" />
     <ClCompile Include="player_ship.cpp" />
     <ClCompile Include="player_ship_camera_mover.cpp" />
+    <ClCompile Include="player_ship_collision_responder.cpp" />
     <ClCompile Include="player_ship_input_context.cpp" />
     <ClCompile Include="player_ship_mover.cpp" />
     <ClCompile Include="player_ship_renderer.cpp" />
+    <ClCompile Include="player_ship_weapons_system.cpp" />
     <ClCompile Include="test_enemy.cpp" />
     <ClCompile Include="test_enemy_mover.cpp" />
     <ClCompile Include="test_enemy_renderer.cpp" />

@@ -1,7 +1,7 @@
 #include "input_bindings.h"
 #include <cmath>
 
-InputBindings::InputBindings(uint in_nActions, uint in_nStates, uint in_nRanges) :
+InputBindings::InputBindings() :
 	actions(in_nActions),
 	states(in_nStates),
 	ranges(in_nRanges) {

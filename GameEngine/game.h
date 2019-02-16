@@ -16,7 +16,8 @@ private:
 public:
 	enum MainCollisionContextFilters {
 		player_ship = CollisionContext2d::Filters::user_defined,
-		enemy
+		enemy,
+		player_bullet
 	};
 
 public:

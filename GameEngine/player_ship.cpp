@@ -6,16 +6,18 @@ PlayerShip::PlayerShip() :
 	mRenderer(*this),
 	mMover(*this),
 	mCameraMover(*this),
+	mWeaponsSystem(*this),
+	mCollisionResponder(*this),
 	mRigidBody() {
 
-	GE.perFrameUpdate().add(&mMover);
-	GE.perFrameUpdate().add(&mCameraMover);
+	GE.perFrameUpdate().add(this);
 
 	CircleCollisionMask<double> mask(Circled::fromPointRadius(Vector2d(), 0.25));
 	mRigidBody.setCollisionMask(mask);
 
 	mRigidBody.getTransform().setParent(&mTransform);
 	getCollisionMask().addFilter(Game::MainCollisionContextFilters::player_ship);
+	getCollisionMask().setParent((CollisionResponder*)&mCollisionResponder);
 	GE.game().getMainCollisionContext().add(&getCollisionMask());
 }
 
@@ -39,6 +41,20 @@ CollisionMask2d& PlayerShip::getCollisionMask() {
 	CollisionMask2d* mask = mRigidBody.getCollisionMask();
 	if (mask == nullptr) throw InvalidArgumentException();
 	return *mask;
+}
+
+PlayerShipWeaponsSystem& PlayerShip::getWeaponsSystem() {
+	return mWeaponsSystem;
+}
+
+PlayerShipCollisionResponder& PlayerShip::getCollisionResponder() {
+	return mCollisionResponder;
+}
+
+void PlayerShip::update(double in_dt) {
+	mMover.update(in_dt);
+	mCameraMover.update(in_dt);
+	mWeaponsSystem.update(in_dt);
 }
 
 

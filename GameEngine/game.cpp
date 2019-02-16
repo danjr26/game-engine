@@ -13,7 +13,15 @@ Game::Game() :
 	GE.input().add(&mPlayerShipInput);
 	GE.collision().add(&mMainCollisionContext);
 
-	mMainCollisionContext.setPartnerTestActivation(std::pair<ubyte, ubyte>(Game::MainCollisionContextFilters::player_ship, Game::MainCollisionContextFilters::enemy), true);
+	mMainCollisionContext.setPartnerTestActivation(std::pair<ubyte, ubyte>(
+		Game::MainCollisionContextFilters::player_ship, 
+		Game::MainCollisionContextFilters::enemy
+		), true);
+
+	mMainCollisionContext.setPartnerTestActivation(std::pair<ubyte, ubyte>(
+		Game::MainCollisionContextFilters::player_bullet,
+		Game::MainCollisionContextFilters::enemy
+		), true);
 }
 
 void Game::Init() {

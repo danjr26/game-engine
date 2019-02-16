@@ -5,14 +5,14 @@
 
 class PlayerShip;
 
-class PlayerShipCameraMover : public PerFrameUpdateableObject {
+class PlayerShipCameraMover {
 private:
 	PlayerShip& mParent;
 
 public:
 	PlayerShipCameraMover(PlayerShip& in_parent);
 
-	void update(double in_dt) override;
+	void update(double in_dt);
 };
 
 #endif

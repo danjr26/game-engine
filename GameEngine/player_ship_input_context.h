@@ -16,6 +16,9 @@ public:
 
 	struct States {
 		enum {
+			fire_1,
+			fire_2,
+			fire_3,
 			count
 		};
 	};
