@@ -588,6 +588,12 @@
     <ClInclude Include="test_weapon.h">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
+    <ClInclude Include="destructable_object.h">
+      <Filter>Header Files\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="destruction_manager.h">
+      <Filter>Header Files\framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clock.cpp">
@@ -918,6 +924,9 @@
       <Filter>Source Files\objects</Filter>
     </ClCompile>
     <ClCompile Include="test_bullet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="destruction_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

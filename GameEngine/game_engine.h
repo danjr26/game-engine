@@ -17,6 +17,7 @@
 #include "async_task_manager.h"
 #include "physics_manager.h"
 #include "game.h"
+#include "destruction_manager.h"
 
 #define GE GameEngine::getInstance()
 
@@ -38,6 +39,7 @@ private:
 	CollisionManagerd mCollisionManager;
 	AsyncTaskManager mAsyncTaskManager;
 	PhysicsManager mPhysicsManager;
+	DestructionManager mDestructionManager;
 	Game* mGame;
 
 public:
@@ -55,6 +57,7 @@ public:
 	CollisionManagerd& collision();
 	AsyncTaskManager& async();
 	PhysicsManager& physics();
+	DestructionManager& destruction();
   Clock& clock();
 	Game& game();
 

@@ -19,8 +19,17 @@ TestBullet::TestBullet() :
 	GE.perFrameUpdate().add(this);
 }
 
+TestBullet::~TestBullet() {
+	GE.render().remove(&mSprite);
+	GE.perFrameUpdate().remove(this);
+}
+
 void TestBullet::update(double in_dt) {
 	age += in_dt;
+	if (age >= 5.0) {
+		GE.destruction().add(this);
+	}
+
 	Vector2d direction = getTransform().localToWorldDirection(Vector2d(5, 0));
 	getTransform().translateWorld(direction * in_dt);
 }

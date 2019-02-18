@@ -62,6 +62,10 @@ PhysicsManager& GameEngine::physics() {
 	return mPhysicsManager;
 }
 
+DestructionManager& GameEngine::destruction() {
+	return mDestructionManager;
+}
+
 Clock& GameEngine::clock() {
     return mClock;
 }
@@ -135,7 +139,7 @@ void GameEngine::nextFrame() {
 		mRenderManager.mMainWindow->flipBuffers();
 		mRenderManager.renderFrame();
 	}
-
+	mDestructionManager.update();
 	double t3 = GE.clock().now();
 
 	//Log::main(std::string("Calc: ") + std::to_string((t2 - t1) * 1000.0));

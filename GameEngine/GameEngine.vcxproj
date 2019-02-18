@@ -185,6 +185,8 @@
     <ClInclude Include="deep_object.h" />
     <ClInclude Include="deep_transformable_object.h" />
     <ClInclude Include="depth_transform.h" />
+    <ClInclude Include="destructable_object.h" />
+    <ClInclude Include="destruction_manager.h" />
     <ClInclude Include="disableable_object.h" />
     <ClInclude Include="display_units.h" />
     <ClInclude Include="editable_text.h" />
@@ -352,6 +354,7 @@
     <ClCompile Include="debug_mesh_vertex_data_renderer.cpp" />
     <ClCompile Include="deep_object.cpp" />
     <ClCompile Include="depth_transform.cpp" />
+    <ClCompile Include="destruction_manager.cpp" />
     <ClCompile Include="disableable_object.cpp" />
     <ClCompile Include="editable_text.cpp" />
     <ClCompile Include="exceptions.cpp" />
