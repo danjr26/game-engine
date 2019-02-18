@@ -1,8 +1,7 @@
 #include "test_input_context.h"
 #include "game_engine.h"
 
-TestInputContext::TestInputContext() :
-	InputContext(Action::count, State::count, Range::count) {
+TestInputContext::TestInputContext() {
 
 	mBindings.bindRange(Range::pointer_x, MouseRangeIdentifier(MouseRangeIdentifier::MouseAxis::x));
 	mBindings.bindRange(Range::pointer_y, MouseRangeIdentifier(MouseRangeIdentifier::MouseAxis::y));

@@ -585,6 +585,9 @@
     <ClInclude Include="weapon.h">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
+    <ClInclude Include="test_weapon.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clock.cpp">
@@ -910,6 +913,12 @@
     </ClCompile>
     <ClCompile Include="player_ship_weapons_system.cpp">
       <Filter>Source Files\objects\player ship</Filter>
+    </ClCompile>
+    <ClCompile Include="test_weapon.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="test_bullet.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

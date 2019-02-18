@@ -12,6 +12,7 @@ private:
 	PlayerShip& mParent;
 	Weapon* mActivePrimary;
 	Weapon* mActiveSecondary;
+	InputListener mShipInput;
 
 public:
 	PlayerShipWeaponsSystem(PlayerShip& in_parent);

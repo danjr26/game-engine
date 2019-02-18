@@ -11,15 +11,15 @@ class InputContext {
 protected:
 	InputBindings mBindings;
 
-	std::vector<bool> mStates;
-	std::vector<float> mRanges;
+	std::map<uint, bool> mStates;
+	std::map<uint, float> mRanges;
 
 	std::vector<InputListener*> mListeners;
 
 	float mPriority;
 
 protected:
-	InputContext(uint in_nActions, uint in_nStates, uint in_nRanges);
+	InputContext();
 
 	InputEvent autoTranslateAction(InputBindings::Iterator& in_iter);
 	InputEvent autoTranslateState(InputBindings::Iterator& in_iter, bool in_newValue);

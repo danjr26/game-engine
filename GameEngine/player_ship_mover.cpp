@@ -33,5 +33,4 @@ void PlayerShipMover::update(double in_dt) {
 	mousePosition += Vector2d(GE.cameras().get(CameraManager::ID::main)->getTransform().getLocalPosition());
 
 	mParent.getTransform().setLocalRotation(Rotation2d(mousePosition - mParent.getTransform().getLocalPosition()));
-	mParent.getTransform().rotateLocal(Rotation2d(PI / 2));
 }

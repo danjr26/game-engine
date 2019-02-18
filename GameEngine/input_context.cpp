@@ -2,10 +2,10 @@
 #include "game_engine.h"
 #include <algorithm>
 
-InputContext::InputContext(uint in_nActions, uint in_nStates, uint in_nRanges) :
-	mBindings(in_nActions, in_nStates, in_nRanges),
-	mStates(in_nStates),
-	mRanges(in_nRanges),
+InputContext::InputContext() :
+	mBindings(),
+	mStates(),
+	mRanges(),
 	mPriority(0.0f)
 {}
 
@@ -17,7 +17,7 @@ void InputContext::setPriority(float in_priority) {
 	mPriority = in_priority;
 }
 
-InputEvent InputContext::autoTranslateAction(InputBindings::Iterator & in_iter) {
+InputEvent InputContext::autoTranslateAction(InputBindings::Iterator& in_iter) {
 	InputEvent _event;
 	_event.mContext = this;
 	_event.mType = InputEvent::Type::action;
@@ -103,11 +103,11 @@ bool InputContext::autoUpdateRanges(const RawInputEvent& in_event) {
 }
 
 bool InputContext::autoUpdate(const RawInputEvent& in_event) {
-	return (
-		autoUpdateActions(in_event) || 
-		autoUpdateStates(in_event) ||
-		autoUpdateRanges(in_event)
-	);
+	bool out = false;
+	out = out || autoUpdateActions(in_event);
+	out = out || autoUpdateStates(in_event);
+	out = out || autoUpdateRanges(in_event);
+	return out;
 }
 
 bool InputContext::distributeEvent(const InputEvent& in_event) {

@@ -1,14 +1,26 @@
 #ifndef INPUT_ACTION_BINDING_H
 #define INPUT_ACTION_BINDING_H
 
-#include <vector>
+#include <map>
 #include "input_identifiers.h"
 
 class InputBindings {
+public:
+	using action_t = InputActionIdentifier;
+	using state_t = InputStateIdentifier;
+	using range_t = InputRangeIdentifier;
+	using key_t = uint;
+	using actions_t = std::multimap<key_t, action_t>;
+	using states_t = std::multimap<key_t, state_t>;
+	using ranges_t = std::multimap<key_t, range_t>;
+	using actions_it_t = typename actions_t::iterator;
+	using states_it_t = typename states_t::iterator;
+	using ranges_it_t = typename ranges_t::iterator;
+
 private:
-	std::vector<InputActionIdentifier> actions;
-	std::vector<InputStateIdentifier> states;
-	std::vector<InputRangeIdentifier> ranges;
+	actions_t mActions;
+	states_t mStates;
+	ranges_t mRanges;
 
 public:
 	class Iterator {
@@ -22,7 +34,11 @@ public:
 		InputBindings& mParent;
 		const RawInputEvent& mEvent;
 		const RawInputState& mState;
-		int mIndex;
+		union {
+			actions_it_t mActionIt;
+			states_it_t mStateIt;
+			ranges_it_t mRangeIt;
+		};
 
 	private:
 		Iterator(Mode in_mode, InputBindings& in_parent, const RawInputEvent& in_event, const RawInputState& in_state);
@@ -32,29 +48,33 @@ public:
 	};
 
 public:
-	InputBindings(uint in_nActions, uint in_nStates, uint in_nRanges);
+	InputBindings();
+
 	uint getNumberActions() const;
 	uint getNumberStates() const;
 	uint getNumberRanges() const;
-	void bindAction(uint in_slot, InputActionIdentifier in_action);
-	void bindState(uint in_slot, InputStateIdentifier in_state);
-	void bindRange(uint in_slot, InputRangeIdentifier in_range);
-	void clearAction(uint in_slot);
-	void clearState(uint in_slot);
-	void clearRange(uint in_slot);
-	InputActionIdentifier getBoundAction(uint in_slot);
-	InputStateIdentifier getBoundState(uint in_slot);
-	InputRangeIdentifier getBoundRange(uint in_slot);
-	bool evaluateAction(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state);
-	InputStateChange evaluateState(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state);
-	float evaluateRange(uint in_slot, const RawInputEvent& in_event, const RawInputState& in_state);
+
+	void bindAction(key_t in_slot, action_t in_action);
+	void bindState(key_t in_slot, state_t in_state);
+	void bindRange(key_t in_slot, range_t in_range);
+
+	void clearAction(key_t in_slot);
+	void clearState(key_t in_slot);
+	void clearRange(key_t in_slot);
+
+	bool evaluateAction(key_t in_slot, const RawInputEvent& in_event, const RawInputState& in_state);
+	InputStateChange evaluateState(key_t in_slot, const RawInputEvent& in_event, const RawInputState& in_state);
+	float evaluateRange(key_t in_slot, const RawInputEvent& in_event, const RawInputState& in_state);
+
 	bool evaluateAction(const Iterator& in_iter);
 	InputStateChange evaluateState(const Iterator& in_iter);
 	float evaluateRange(const Iterator& in_iter);
+
 	Iterator iterateActions(const RawInputEvent& in_event, const RawInputState& in_state);
 	Iterator iterateStates(const RawInputEvent& in_event, const RawInputState& in_state);
 	Iterator iterateRanges(const RawInputEvent& in_event, const RawInputState& in_state);
-	uint operator[](Iterator in_iterator) const;
+
+	key_t operator[](const Iterator& in_iterator) const;
 };
 
 #endif

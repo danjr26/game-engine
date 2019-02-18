@@ -4,8 +4,9 @@
 #include <functional>
 #include "raw_input_event.h"
 #include "raw_input_state.h"
+#include "definitions.h"
 
-enum class InputStateChange {
+enum class InputStateChange : uint {
 	no_change,
 	turn_on,
 	turn_off,

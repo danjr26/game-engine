@@ -16,7 +16,6 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 		inputEvent.mType = RawInputEvent::Type::mouse_down;
 		inputEvent.mMouse.mButton = MouseButton::left;
 		inputEvent.mMouse.mPosition = Vector2i(GET_X_LPARAM(in_lParam), GET_Y_LPARAM(in_lParam));
-		inputEvent.mMouse.mWheelValue = 0;
 		GE.input().processRawEvent(inputEvent);
 		return 0;
 	case WM_LBUTTONUP:
@@ -24,7 +23,6 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 		inputEvent.mType = RawInputEvent::Type::mouse_up;
 		inputEvent.mMouse.mButton = MouseButton::left;
 		inputEvent.mMouse.mPosition = Vector2i(GET_X_LPARAM(in_lParam), GET_Y_LPARAM(in_lParam));
-		inputEvent.mMouse.mWheelValue = 0;
 		GE.input().processRawEvent(inputEvent);
 		return 0;
 	case WM_MBUTTONDOWN:
@@ -32,7 +30,6 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 		inputEvent.mType = RawInputEvent::Type::mouse_down;
 		inputEvent.mMouse.mButton = MouseButton::middle;
 		inputEvent.mMouse.mPosition = Vector2i(GET_X_LPARAM(in_lParam), GET_Y_LPARAM(in_lParam));
-		inputEvent.mMouse.mWheelValue = 0;
 		GE.input().processRawEvent(inputEvent);
 		return 0;
 	case WM_MBUTTONUP:
@@ -40,14 +37,13 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 		inputEvent.mType = RawInputEvent::Type::mouse_up;
 		inputEvent.mMouse.mButton = MouseButton::middle;
 		inputEvent.mMouse.mPosition = Vector2i(GET_X_LPARAM(in_lParam), GET_Y_LPARAM(in_lParam));
-		inputEvent.mMouse.mWheelValue = 0;
 		GE.input().processRawEvent(inputEvent);
 		return 0;
-	case WM_RBUTTONDOWN:inputEvent.mWindowHandle = in_hwnd;
+	case WM_RBUTTONDOWN:
+		inputEvent.mWindowHandle = in_hwnd;
 		inputEvent.mType = RawInputEvent::Type::mouse_down;
 		inputEvent.mMouse.mButton = MouseButton::right;
 		inputEvent.mMouse.mPosition = Vector2i(GET_X_LPARAM(in_lParam), GET_Y_LPARAM(in_lParam));
-		inputEvent.mMouse.mWheelValue = 0;
 		GE.input().processRawEvent(inputEvent);
 		return 0;
 	case WM_RBUTTONUP:
@@ -55,7 +51,6 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 		inputEvent.mType = RawInputEvent::Type::mouse_up;
 		inputEvent.mMouse.mButton = MouseButton::right;
 		inputEvent.mMouse.mPosition = Vector2i(GET_X_LPARAM(in_lParam), GET_Y_LPARAM(in_lParam));
-		inputEvent.mMouse.mWheelValue = 0;
 		GE.input().processRawEvent(inputEvent);
 		return 0;
 	case WM_XBUTTONDOWN:
@@ -65,7 +60,6 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 			inputEvent.mType = RawInputEvent::Type::mouse_down;
 			inputEvent.mMouse.mButton = MouseButton::extra1;
 			inputEvent.mMouse.mPosition = Vector2i(GET_X_LPARAM(in_lParam), GET_Y_LPARAM(in_lParam));
-			inputEvent.mMouse.mWheelValue = 0;
 			GE.input().processRawEvent(inputEvent);
 			return 0;
 		}
@@ -74,7 +68,6 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 			inputEvent.mType = RawInputEvent::Type::mouse_down;
 			inputEvent.mMouse.mButton = MouseButton::extra2;
 			inputEvent.mMouse.mPosition = Vector2i(GET_X_LPARAM(in_lParam), GET_Y_LPARAM(in_lParam));
-			inputEvent.mMouse.mWheelValue = 0;
 			GE.input().processRawEvent(inputEvent);
 			return 0;
 		}
@@ -86,7 +79,6 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 			inputEvent.mType = RawInputEvent::Type::mouse_up;
 			inputEvent.mMouse.mButton = MouseButton::extra1;
 			inputEvent.mMouse.mPosition = Vector2i(GET_X_LPARAM(in_lParam), GET_Y_LPARAM(in_lParam));
-			inputEvent.mMouse.mWheelValue = 0;
 			GE.input().processRawEvent(inputEvent);
 			return 0;
 		}
@@ -95,7 +87,6 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 			inputEvent.mType = RawInputEvent::Type::mouse_up;
 			inputEvent.mMouse.mButton = MouseButton::extra2;
 			inputEvent.mMouse.mPosition = Vector2i(GET_X_LPARAM(in_lParam), GET_Y_LPARAM(in_lParam));
-			inputEvent.mMouse.mWheelValue = 0;
 			GE.input().processRawEvent(inputEvent);
 			return 0;
 		}
@@ -105,13 +96,11 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 		inputEvent.mType = RawInputEvent::Type::mouse_move;
 		inputEvent.mMouse.mButton = MouseButton::none;
 		inputEvent.mMouse.mPosition = Vector2i(GET_X_LPARAM(in_lParam), GET_Y_LPARAM(in_lParam));
-		inputEvent.mMouse.mWheelValue = 0;
 		GE.input().processRawEvent(inputEvent);
 		return 0;
 	case WM_MOUSEHWHEEL:
 		inputEvent.mWindowHandle = in_hwnd;
 		inputEvent.mType = RawInputEvent::Type::mouse_wheel_x;
-		inputEvent.mMouse.mButton = MouseButton::none;
 		inputEvent.mMouse.mPosition = Vector2i(GET_X_LPARAM(in_lParam), GET_Y_LPARAM(in_lParam));
 		inputEvent.mMouse.mWheelValue = (float)GET_WHEEL_DELTA_WPARAM(in_wParam) / WHEEL_DELTA;;
 		GE.input().processRawEvent(inputEvent);
@@ -119,7 +108,6 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 	case WM_MOUSEWHEEL:
 		inputEvent.mWindowHandle = in_hwnd;
 		inputEvent.mType = RawInputEvent::Type::mouse_wheel_y;
-		inputEvent.mMouse.mButton = MouseButton::none;
 		inputEvent.mMouse.mPosition = Vector2i(GET_X_LPARAM(in_lParam), GET_Y_LPARAM(in_lParam));
 		inputEvent.mMouse.mWheelValue = (float)GET_WHEEL_DELTA_WPARAM(in_wParam) / WHEEL_DELTA;;
 		GE.input().processRawEvent(inputEvent);

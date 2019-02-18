@@ -2,8 +2,7 @@
 #include "game_engine.h"
 #include "mouse_range_identifier.h"
 
-PointerInputContext::PointerInputContext() :
-	InputContext(Action::count, State::count, Range::count) {
+PointerInputContext::PointerInputContext() {
 	
 	mBindings.bindRange(Range::fraction_x, MouseRangeIdentifier(MouseRangeIdentifier::MouseAxis::x));
 	mBindings.bindRange(Range::fraction_y, MouseRangeIdentifier(MouseRangeIdentifier::MouseAxis::y));

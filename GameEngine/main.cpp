@@ -40,6 +40,7 @@ void Test_Render(Window* window) {
 	Texture spark(Texture::Type::_2d, "img/spark.png", 8, Texture::Flags::mipmaps);
 	Texture ship(Texture::Type::_2d, "img/ship.png", 8, Texture::Flags::mipmaps);
 	GE.assets().add("PlayerShipSpriteTexture", &ship);
+	GE.assets().add("SparkSpriteTexture", &spark);
 
 	PointerInputContext pointerInput;
 	GE.input().add(&pointerInput);

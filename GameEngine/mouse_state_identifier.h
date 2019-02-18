@@ -4,7 +4,7 @@
 #include "input_identifiers.h"
 #include "mouse_button.h"
 
-class MouseStateIdentifier {
+struct MouseStateIdentifier {
 	RawInputEvent::Type mType;
 	MouseButton mButton;
 	InputStateChange mStateChange;

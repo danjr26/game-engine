@@ -221,6 +221,7 @@
     <ClInclude Include="test_enemy.h" />
     <ClInclude Include="test_enemy_mover.h" />
     <ClInclude Include="test_enemy_renderer.h" />
+    <ClInclude Include="test_weapon.h" />
     <ClInclude Include="transitioner.h" />
     <ClInclude Include="uniform_force_field.h" />
     <ClInclude Include="half_space.h" />
@@ -371,9 +372,11 @@
     <ClCompile Include="player_ship_mover.cpp" />
     <ClCompile Include="player_ship_renderer.cpp" />
     <ClCompile Include="player_ship_weapons_system.cpp" />
+    <ClCompile Include="test_bullet.cpp" />
     <ClCompile Include="test_enemy.cpp" />
     <ClCompile Include="test_enemy_mover.cpp" />
     <ClCompile Include="test_enemy_renderer.cpp" />
+    <ClCompile Include="test_weapon.cpp" />
     <ClCompile Include="uniform_force_field.cpp" />
     <ClCompile Include="framebuffer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
