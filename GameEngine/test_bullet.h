@@ -11,7 +11,7 @@ class TestBullet : public DeepTransformableObject2d, public PerFrameUpdateableOb
 
 private:
 	Sprite mSprite;
-	double age;
+	double mAge;
 
 public:
 	TestBullet();

@@ -134,14 +134,10 @@ void GameEngine::nextFrame() {
 	mPerFrameUpdateManager.update(dt);
 	double t2 = GE.clock().now();
 	if (!mFrameRateManager.isLeanFrame()) {
-		//glFinish();
 		rCount++;
 		mRenderManager.mMainWindow->flipBuffers();
 		mRenderManager.renderFrame();
 	}
 	mDestructionManager.update();
 	double t3 = GE.clock().now();
-
-	//Log::main(std::string("Calc: ") + std::to_string((t2 - t1) * 1000.0));
-	//Log::main(std::string("Rend: ") + std::to_string((t3 - t2) * 1000.0));
 }

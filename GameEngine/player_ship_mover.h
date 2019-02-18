@@ -6,13 +6,15 @@
 #include "per_frame_updateable_object.h"
 #include "cubic_transitioner.h"
 #include "vector.h"
+#include "unclamped_rotation.h"
 
 class PlayerShip;
 
 class PlayerShipMover {
 private:
 	PlayerShip& mParent;
-	Vector2d mVelocity;
+	Vector2d mLinearVelocity;
+	URotation2d mAngularVelocity;
 	InputListener mPointerInput;
 	InputListener mShipInput;
 

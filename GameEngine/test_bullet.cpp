@@ -3,7 +3,7 @@
 
 TestBullet::TestBullet() :
 	mSprite(),
-	age(0) {
+	mAge(0) {
 	
 	Texture* tex = GE.assets().get<Texture>("SparkSpriteTexture");
 	mSprite.setTexture(tex);
@@ -25,11 +25,11 @@ TestBullet::~TestBullet() {
 }
 
 void TestBullet::update(double in_dt) {
-	age += in_dt;
-	if (age >= 5.0) {
+	mAge += in_dt;
+	if (mAge >= 5.0) {
 		GE.destruction().add(this);
 	}
 
-	Vector2d direction = getTransform().localToWorldDirection(Vector2d(5, 0));
-	getTransform().translateWorld(direction * in_dt);
+	Vector2d direction = getTransform().applyToLocalDirection(Vector2d(1, 0));
+	getTransform().translateLocal(direction * 15.0 * in_dt);
 }

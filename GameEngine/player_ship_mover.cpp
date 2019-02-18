@@ -1,10 +1,12 @@
 #include "player_ship_mover.h"
 #include "player_ship.h"
 #include "game_engine.h"
+#include "misc.h"
 
 PlayerShipMover::PlayerShipMover(PlayerShip& in_parent) :
 	mParent(in_parent),
-	mVelocity(),
+	mLinearVelocity(),
+	mAngularVelocity(),
 	mPointerInput(&GE.game().getPointerInput()),
 	mShipInput(&GE.game().getPlayerShipInput())
 {}
@@ -15,11 +17,11 @@ void PlayerShipMover::update(double in_dt) {
 		mShipInput.getContext()->getRange(PlayerShipInputContext::Ranges::move_y) * -1
 	);
 
-	mVelocity.addToMagnitude(-15.0 * in_dt);
-	mVelocity += direction * 30.0 * in_dt;
-	mVelocity = mVelocity.normalized() * GEUtil::min(mVelocity.magnitude(), 8.0);
+	mLinearVelocity.addToMagnitude(-15.0 * in_dt);
+	mLinearVelocity += direction * 30.0 * in_dt;
+	mLinearVelocity = mLinearVelocity.normalized() * GEUtil::min(mLinearVelocity.magnitude(), 8.0);
 
-	mParent.getTransform().translateWorld(mVelocity * in_dt);
+	mParent.getTransform().translateWorld(mLinearVelocity * in_dt);
 
 	InputEvent _event;
 	mShipInput.clearEvents();
@@ -32,5 +34,10 @@ void PlayerShipMover::update(double in_dt) {
 
 	mousePosition += Vector2d(GE.cameras().get(CameraManager::ID::main)->getTransform().getLocalPosition());
 
-	mParent.getTransform().setLocalRotation(Rotation2d(mousePosition - mParent.getTransform().getLocalPosition()));
+	Rotation2d targetRotation(mousePosition - mParent.getTransform().getLocalPosition());
+	URotation2d rotationDiff = Rotation2d(mParent.getTransform().getLocalRotation(), targetRotation);
+
+	mAngularVelocity = URotation2d(-GEUtil::sign(rotationDiff.getAngle()) * GEUtil::min(exp(abs(rotationDiff.getAngle())), 2 * PI));
+
+	mParent.getTransform().rotateLocal(mAngularVelocity * in_dt);
 }

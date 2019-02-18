@@ -4,7 +4,7 @@
 #include "input_identifiers.h"
 #include "key.h"
 
-class KeyboardStateIdentifier {
+struct KeyboardStateIdentifier {
 	RawInputEvent::Type mType;
 	Key mKey;
 	InputStateChange mStateChange;

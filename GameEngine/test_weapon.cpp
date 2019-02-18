@@ -5,13 +5,15 @@
 TestWeapon::TestWeapon() :
 	mIsFiring(false),
 	mAccum(0),
-	mReloadTime(0.5)
+	mReloadTime(0.2)
 {}
 
 void TestWeapon::update(double in_dt) {
 	mAccum += in_dt;
 	if (mIsFiring && mAccum >= mReloadTime) {
-		Log::main("fire");
+		TestBullet* bullet = new TestBullet;
+		bullet->getTransform().setLocalPosition(getTransform().localToWorldPoint(Vector2d()));
+		bullet->getTransform().setLocalRotation(getTransform().localToWorldRotation(Rotation2d()));
 		mAccum = 0;
 	}
 }
