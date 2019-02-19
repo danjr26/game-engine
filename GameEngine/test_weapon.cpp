@@ -1,6 +1,7 @@
 #include "test_weapon.h"
 #include "test_bullet.h"
 #include "log.h"
+#include "game_engine.h"
 
 TestWeapon::TestWeapon() :
 	mIsFiring(false),
@@ -8,13 +9,29 @@ TestWeapon::TestWeapon() :
 	mReloadTime(0.2)
 {}
 
-void TestWeapon::update(double in_dt) {
+void TestWeapon::update(double in_dt, Feedback* out_feedback) {
 	mAccum += in_dt;
+
+	if (out_feedback != nullptr) {
+		out_feedback->impulse = Vector2d();
+	}
+
 	if (mIsFiring && mAccum >= mReloadTime) {
 		TestBullet* bullet = new TestBullet;
-		bullet->getTransform().setLocalPosition(getTransform().localToWorldPoint(Vector2d()));
-		bullet->getTransform().setLocalRotation(getTransform().localToWorldRotation(Rotation2d()));
+
+		Vector2d bulletPosition;
+		bulletPosition = getTransform().localToWorldPoint(bulletPosition);
+		bullet->getTransform().setLocalPosition(bulletPosition);
+
+		Rotation2d bulletRotation(GEUtil::random<double>(-0.1, 0.1));
+		bulletRotation = getTransform().localToWorldRotation(bulletRotation);
+		bullet->getTransform().setLocalRotation(bulletRotation);
+
 		mAccum = 0;
+
+		if (out_feedback != nullptr) {
+			out_feedback->impulse = bulletRotation.applyTo(Vector2d(-2, 0));
+		}
 	}
 }
 

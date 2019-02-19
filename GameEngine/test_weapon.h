@@ -12,7 +12,7 @@ private:
 public:
 	TestWeapon();
 
-	void update(double in_dt);
+	void update(double in_dt, Feedback* out_feedback);
 	void startFire() override;
 	void endFire() override;
 };

@@ -24,8 +24,13 @@ void PlayerShipWeaponsSystem::update(double in_dt) {
 	}
 	mShipInput.clearEvents();
 
-	if (mActivePrimary != nullptr) mActivePrimary->update(in_dt);
-	if (mActiveSecondary != nullptr) mActiveSecondary->update(in_dt);
+	Weapon::Feedback feedback;
+
+	if (mActivePrimary != nullptr) mActivePrimary->update(in_dt, &feedback);
+
+	mParent.getRigidBody().applyLocalImpulse({ mParent.getTransform().getLocalPosition(), feedback.impulse });
+
+	if (mActiveSecondary != nullptr) mActiveSecondary->update(in_dt, &feedback);
 }
 
 Weapon* PlayerShipWeaponsSystem::getPrimary() {

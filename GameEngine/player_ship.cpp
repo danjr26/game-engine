@@ -15,6 +15,9 @@ PlayerShip::PlayerShip() :
 	CircleCollisionMask<double> mask(Circled::fromPointRadius(Vector2d(), 0.25));
 	mRigidBody.setCollisionMask(mask);
 
+	mRigidBody.setAngularMass(0);
+	mRigidBody.setLinearMass(1.0);
+
 	mRigidBody.getTransform().setParent(&mTransform);
 	getCollisionMask().addFilter(Game::MainCollisionContextFilters::player_ship);
 	getCollisionMask().setParent((CollisionResponder*)&mCollisionResponder);

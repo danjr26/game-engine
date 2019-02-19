@@ -5,7 +5,7 @@ TestBullet::TestBullet() :
 	mSprite(),
 	mAge(0) {
 	
-	Texture* tex = GE.assets().get<Texture>("SparkSpriteTexture");
+	Texture* tex = GE.assets().get<Texture>("LaserSpriteTexture");
 	mSprite.setTexture(tex);
 
 	mSprite.setRectangle(AxisAlignedRectangled::fromCenter(Vector2d(), Vector2d(0.5, 0.5)));

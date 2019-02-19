@@ -109,10 +109,15 @@ void ParticleSystem2::render() {
 	glUniformMatrix4fv(locations[2], 1, GL_TRUE, projectionMatrix.pointer());
 	glUniform1i(locations[3], 0);
 
+	///
+
+	///
+
 	mGPUPusher.pushFaceCount();
 	mGPUPusher.pushFaces();
 	mGPUPusher.pushVertexCount();
 	mGPUPusher.pushVertices();
+
 	mGPUPusher.drawRaw();
 
 	if (mTextureInstance.getTexture() != nullptr) {

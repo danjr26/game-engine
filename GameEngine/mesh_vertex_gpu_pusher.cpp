@@ -98,6 +98,10 @@ void MeshVertexGPUPusher::reserveTotalVertices(uint in_nVertices) {
 				glBindBuffer(GL_COPY_READ_BUFFER, it->second.mBufferID);
 				glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, mUsedVertices * it->second.getVertexSize());
 			}
+			else {
+				glBindBuffer(GL_ARRAY_BUFFER, newBufferID);
+				glBufferData(GL_ARRAY_BUFFER, in_nVertices * it->second.getVertexSize(), nullptr, (GLuint)mUseCase);
+			}
 			glDeleteBuffers(1, &it->second.mBufferID);
 			it->second.mBufferID = newBufferID;
 			glBindBuffer(GL_ARRAY_BUFFER, newBufferID);
@@ -128,6 +132,10 @@ void MeshVertexGPUPusher::reserveTotalFaceElements(uint in_nElements) {
 			glBufferData(GL_COPY_WRITE_BUFFER, in_nElements * faceElementSize, nullptr, (GLuint)mUseCase);
 			glBindBuffer(GL_COPY_READ_BUFFER, mIndexBufferID);
 			glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, mUsedFaceElements * faceElementSize);
+		}
+		else {
+			glBindBuffer(GL_ARRAY_BUFFER, newBufferID);
+			glBufferData(GL_ARRAY_BUFFER, in_nElements * faceElementSize, nullptr, (GLuint)mUseCase);
 		}
 		glDeleteBuffers(1, &mIndexBufferID);
 		mIndexBufferID = newBufferID;
@@ -223,12 +231,14 @@ void MeshVertexGPUPusher::pushMember(uint in_id, uint in_start, uint in_length) 
 	const uint vertexSize = member.getVertexSize();
 	glBindVertexArray(mVertexArrayID);
 	glBindBuffer(GL_ARRAY_BUFFER, member.mBufferID);
+	Log::main(std::string((const char*)glewGetErrorString(glGetError())) + " 1");
 	glBufferSubData(
 		GL_ARRAY_BUFFER, 
 		in_start * vertexSize, 
 		in_length * vertexSize, 
 		mData->getMemberPointer(in_id)
 	);
+	Log::main(std::to_string(glGetError()));
 	glBindVertexArray(0);
 }
 

@@ -923,11 +923,11 @@
     <ClCompile Include="test_weapon.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
-    <ClCompile Include="test_bullet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="destruction_manager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="test_bullet.cpp">
+      <Filter>Source Files\objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

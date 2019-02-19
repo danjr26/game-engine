@@ -19,4 +19,16 @@ public:
 	void generate(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) override;
 };
 
+class AmbientDustSpecifier : public ParticleSystem2::Specifier {
+	using Accessor = ParticleSystem2::Accessor;
+	CubicTransitioner<ColorRGBAf> mColorTransition;
+
+public:
+	AmbientDustSpecifier();
+
+	void update(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) override;
+	void destroy(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) override;
+	void generate(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) override;
+};
+
 #endif

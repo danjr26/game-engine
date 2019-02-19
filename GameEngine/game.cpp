@@ -4,6 +4,8 @@
 #include "test_enemy.h"
 #include "test_weapon.h"
 #include "test_bullet.h"
+#include "particle_system2.h"
+#include "particle_system2_specifiers.h"
 
 Game::Game() :
 	mPointerInput(),
@@ -33,6 +35,11 @@ void Game::Init() {
 	TestEnemy* testEnemy = new TestEnemy();
 	testEnemy->getTransform().setLocalPosition(Vector2d(4, 4));
 
+	Texture* dustTex = GE.assets().get<Texture>("SparkSpriteTexture");
+	AmbientDustSpecifier* dustSpecifier = new AmbientDustSpecifier;
+	ParticleSystem2* dustSystem = new ParticleSystem2(dustTex, dustSpecifier);
+	GE.perFrameUpdate().add(dustSystem);
+	GE.render().add(dustSystem);
 }
 
 PointerInputContext& Game::getPointerInput() {

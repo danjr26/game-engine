@@ -13,8 +13,6 @@ class PlayerShip;
 class PlayerShipMover {
 private:
 	PlayerShip& mParent;
-	Vector2d mLinearVelocity;
-	URotation2d mAngularVelocity;
 	InputListener mPointerInput;
 	InputListener mShipInput;
 

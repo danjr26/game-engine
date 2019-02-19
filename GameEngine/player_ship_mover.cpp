@@ -5,23 +5,26 @@
 
 PlayerShipMover::PlayerShipMover(PlayerShip& in_parent) :
 	mParent(in_parent),
-	mLinearVelocity(),
-	mAngularVelocity(),
 	mPointerInput(&GE.game().getPointerInput()),
 	mShipInput(&GE.game().getPlayerShipInput())
 {}
 
 void PlayerShipMover::update(double in_dt) {
+	RigidBody2& rigidBody = mParent.getRigidBody();
+
+	Vector2d linearVelocity = rigidBody.getLinearVelocity();
+	URotation2d angularVelocity = rigidBody.getAngularVelocity();
+
 	Vector2d direction(
 		mShipInput.getContext()->getRange(PlayerShipInputContext::Ranges::move_x),
 		mShipInput.getContext()->getRange(PlayerShipInputContext::Ranges::move_y) * -1
 	);
 
-	mLinearVelocity.addToMagnitude(-15.0 * in_dt);
-	mLinearVelocity += direction * 30.0 * in_dt;
-	mLinearVelocity = mLinearVelocity.normalized() * GEUtil::min(mLinearVelocity.magnitude(), 8.0);
+	linearVelocity.addToMagnitude(-15.0 * in_dt);
+	linearVelocity += direction * 30.0 * in_dt;
+	linearVelocity = linearVelocity.normalized() * GEUtil::min(linearVelocity.magnitude(), 8.0);
 
-	mParent.getTransform().translateWorld(mLinearVelocity * in_dt);
+	mParent.getTransform().translateWorld(linearVelocity * in_dt);
 
 	InputEvent _event;
 	mShipInput.clearEvents();
@@ -37,7 +40,10 @@ void PlayerShipMover::update(double in_dt) {
 	Rotation2d targetRotation(mousePosition - mParent.getTransform().getLocalPosition());
 	URotation2d rotationDiff = Rotation2d(mParent.getTransform().getLocalRotation(), targetRotation);
 
-	mAngularVelocity = URotation2d(-GEUtil::sign(rotationDiff.getAngle()) * GEUtil::min(exp(abs(rotationDiff.getAngle())), 2 * PI));
+	angularVelocity = URotation2d(-GEUtil::sign(rotationDiff.getAngle()) * GEUtil::min(1.0 * exp(abs(rotationDiff.getAngle())), 4 * PI));
 
-	mParent.getTransform().rotateLocal(mAngularVelocity * in_dt);
+	mParent.getTransform().rotateLocal(angularVelocity * in_dt);
+
+	rigidBody.setLinearVelocity(linearVelocity);
+	rigidBody.setAngularVelocity(angularVelocity);
 }
