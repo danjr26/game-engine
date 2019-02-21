@@ -24,12 +24,21 @@ ParticleSystem2::ParticleSystem2(Texture* in_texture, Specifier* in_specifier) :
 	params.mUseCase = MeshVertexGPUPusher::UseCase::changes_often;
 	mGPUPusher.initialize(&mVertexData, params);
 
+	if (mSpecifier != nullptr) {
+		Accessor accessor;
+		access(0, accessor);
+		mSpecifier->init(*this, accessor);
+	}
+
 	mTextureInstance.getSettings().setMagnifyFilter(TextureSettings::FilterMode::trilinear);
 	mTextureInstance.getSettings().setMinifyFilter(TextureSettings::FilterMode::trilinear);
 }
 
-ParticleSystem2::~ParticleSystem2()
-{}
+ParticleSystem2::~ParticleSystem2() {
+	if (mSpecifier != nullptr) delete mSpecifier;
+	GE.perFrameUpdate().remove(this);
+	GE.render().remove(this);
+}
 
 uint ParticleSystem2::getCount() const {
 	return mVertexData.getNumberVertices();
@@ -86,7 +95,7 @@ bool ParticleSystem2::shouldCull() const {
 void ParticleSystem2::render() {
 	ShaderProgram* shaderProgram = GE.assets().get<ShaderProgram>("Particle2Shader");
 
-	Matrix4f modelMatrix = Matrix4f::identity();
+	Matrix4f modelMatrix = mTransform.getWorldMatrix();
 	Matrix4f viewMatrix = GE.cameras().getActive()->getViewMatrix();
 	Matrix4f projectionMatrix = GE.cameras().getActive()->getProjectionMatrix();
 
@@ -102,16 +111,12 @@ void ParticleSystem2::render() {
 	}
 	shaderProgram->use();
 	glDepthMask(0);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 	glUniformMatrix4fv(locations[0], 1, GL_TRUE, modelMatrix.pointer());
 	glUniformMatrix4fv(locations[1], 1, GL_TRUE, viewMatrix.pointer());
 	glUniformMatrix4fv(locations[2], 1, GL_TRUE, projectionMatrix.pointer());
 	glUniform1i(locations[3], 0);
-
-	///
-
-	///
 
 	mGPUPusher.pushFaceCount();
 	mGPUPusher.pushFaces();
@@ -125,7 +130,7 @@ void ParticleSystem2::render() {
 	}
 	shaderProgram->useNone();
 	glDepthMask(1);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 }
 

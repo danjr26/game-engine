@@ -83,7 +83,7 @@ void Sprite::render() {
 
 	ShaderProgram* shaderProgram;
 
-	Matrix4f modelMatrix = mInnerTransform.getWorldMatrix();
+	Matrix4f modelMatrix = mDepthTransform.getWorldMatrix() * mInnerTransform.getWorldMatrix();
 	Matrix4f viewMatrix = GE.cameras().getActive()->getViewMatrix();
 	Matrix4f projectionMatrix = GE.cameras().getActive()->getProjectionMatrix();
 

@@ -14,10 +14,17 @@ private:
 	PlayerShip* mPlayerShip;
 
 public:
+	enum Allegiance {
+		player,
+		enemy,
+		neutral
+	};
+
 	enum MainCollisionContextFilters {
 		player_ship = CollisionContext2d::Filters::user_defined,
-		enemy,
-		player_bullet
+		enemy_ship,
+		player_bullet,
+		enemy_bullet
 	};
 
 public:

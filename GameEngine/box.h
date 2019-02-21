@@ -22,6 +22,7 @@ public:
 	Vector<T, n> getCenter() const;
 	void getAxes(Vector<T, n>* out_axes) const;
 	void getCorners(Vector<T, n>* out_corners) const;
+
 	void applyTransform(const Transform<T, n>& transform);
 
 	template<typename = typename std::enable_if_t<n == 2>>

@@ -12,7 +12,7 @@ private:
 public:
 	PlayerShipCollisionResponder(PlayerShip& in_parent);
 
-	virtual void respond(const Partner& in_partner, CollisionPacket& out_packet);
+	void respond(const Partner& in_partner, CollisionPacket& out_packet) override;
 };
 
 #endif

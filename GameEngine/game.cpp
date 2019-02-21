@@ -11,7 +11,7 @@ Game::Game() :
 	mPointerInput(),
 	mPlayerShipInput(),
 	mPlayerShip(nullptr),
-	mMainCollisionContext(AxisAlignedRectangled::fromCenter(Vector2d(), Vector2d(1024, 1024)), 8) {
+	mMainCollisionContext(AxisAlignedRectangled::fromCenter(Vector2d(), Vector2d(1024, 1024)), 10) {
 
 	GE.input().add(&mPointerInput);
 	GE.input().add(&mPlayerShipInput);
@@ -19,12 +19,12 @@ Game::Game() :
 
 	mMainCollisionContext.setPartnerTestActivation(std::pair<ubyte, ubyte>(
 		Game::MainCollisionContextFilters::player_ship, 
-		Game::MainCollisionContextFilters::enemy
+		Game::MainCollisionContextFilters::enemy_ship
 		), true);
 
 	mMainCollisionContext.setPartnerTestActivation(std::pair<ubyte, ubyte>(
 		Game::MainCollisionContextFilters::player_bullet,
-		Game::MainCollisionContextFilters::enemy
+		Game::MainCollisionContextFilters::enemy_ship
 		), true);
 }
 

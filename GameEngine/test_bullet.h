@@ -6,11 +6,15 @@
 #include "per_frame_updateable_object.h"
 #include "destructable_object.h"
 #include "basic_collision_mask.h"
+#include "rigid_body.h"
+#include "test_bullet_collision_responder.h"
 
 class TestBullet : public DeepTransformableObject2d, public PerFrameUpdateableObject, 
 	public DestructableObject {
 
 private:
+	TestBulletCollisionResponder mCollisionResponder;
+	RigidBody2 mRigidBody;
 	Sprite mSprite;
 	double mAge;
 
@@ -20,6 +24,7 @@ public:
 
 	virtual void update(double in_dt) override;
 
+	CollisionMask2d& getCollisionMask();
 };
 
 #endif

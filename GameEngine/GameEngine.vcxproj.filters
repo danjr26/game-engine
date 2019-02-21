@@ -594,6 +594,9 @@
     <ClInclude Include="destruction_manager.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
+    <ClInclude Include="test_bullet_collision_responder.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clock.cpp">
@@ -928,6 +931,12 @@
     </ClCompile>
     <ClCompile Include="test_bullet.cpp">
       <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="test_bullet_collision_responder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="deep_transformable_object.cpp">
+      <Filter>Source Files\geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,7 @@
 TestWeapon::TestWeapon() :
 	mIsFiring(false),
 	mAccum(0),
-	mReloadTime(0.2)
+	mReloadTime(0.1)
 {}
 
 void TestWeapon::update(double in_dt, Feedback* out_feedback) {
@@ -30,7 +30,7 @@ void TestWeapon::update(double in_dt, Feedback* out_feedback) {
 		mAccum = 0;
 
 		if (out_feedback != nullptr) {
-			out_feedback->impulse = bulletRotation.applyTo(Vector2d(-2, 0));
+			out_feedback->impulse = bulletRotation.applyTo(Vector2d(-1.0, 0.0));
 		}
 	}
 }

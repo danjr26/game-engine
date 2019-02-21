@@ -11,7 +11,7 @@
 template<class T, uint n>
 class BinaryCollisionTree {
 public:
-	const static int maxDepth = 10;
+	const static int maxDepth = 12;
 
 	class Evaluation {
 		friend class BinaryCollisionTree<T, n>;

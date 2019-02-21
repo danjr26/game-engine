@@ -231,14 +231,12 @@ void MeshVertexGPUPusher::pushMember(uint in_id, uint in_start, uint in_length) 
 	const uint vertexSize = member.getVertexSize();
 	glBindVertexArray(mVertexArrayID);
 	glBindBuffer(GL_ARRAY_BUFFER, member.mBufferID);
-	Log::main(std::string((const char*)glewGetErrorString(glGetError())) + " 1");
 	glBufferSubData(
 		GL_ARRAY_BUFFER, 
 		in_start * vertexSize, 
 		in_length * vertexSize, 
 		mData->getMemberPointer(in_id)
 	);
-	Log::main(std::to_string(glGetError()));
 	glBindVertexArray(0);
 }
 

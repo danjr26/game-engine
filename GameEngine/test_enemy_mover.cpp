@@ -12,7 +12,7 @@ void TestEnemyMover::update(double in_dt) {
 	collisionContext.getPartners(&mParent.getCollisionMask(), partners);
 
 	if (partners.size() > 0) {
-		mParent.getTransform().translateLocal(Vector2d(3, 0));
+		//mParent.getTransform().translateLocal(Vector2d(3, 0));
 	}
 
 	PlayerShip* target = GE.game().getPlayerShip();

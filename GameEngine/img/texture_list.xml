@@ -1,0 +1,5 @@
+<TextureList>
+	<Texture2 name="PlayerShipSpriteTexture" file="img/ship.png"/>
+	<Texture2 name="SparkSpriteTexture" file="img/spark.png"/>
+	<Texture2 name="LaserSpriteTexture" file="image/laser.png"/>
+</TextureList>

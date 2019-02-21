@@ -91,7 +91,7 @@ inline T Box<T, n>::getTotalEdgeLength() const {
 
 template<class T, uint n>
 inline Vector<T, n> Box<T, n>::randomPointBoundary() const {
-	Vector<T, n> out;
+	Vector<T, n> out = mOrigin;
 	uint stuckDimension = GEUtil::random<uint>(n);
 	for (uint i = 0; i < n; i++) {
 		if (i == stuckDimension) {
@@ -106,7 +106,7 @@ inline Vector<T, n> Box<T, n>::randomPointBoundary() const {
 
 template<class T, uint n>
 inline Vector<T, n> Box<T, n>::randomPointInside() const {
-	Vector<T, n> out;
+	Vector<T, n> out = mOrigin;
 	for (uint i = 0; i < n; i++) {
 		out += mAxes[i] * GEUtil::random<T>(1);
 	}

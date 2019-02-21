@@ -2092,7 +2092,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::evaluateTyped(AAHalfSpace2Colli
 	T pointValue = point[halfSpace.getDimension()];
 	T halfSpaceValue = halfSpace.getValue();
 
-	if (GEUtil::ceqSwitch(halfSpaceValue, pointValue, halfSpace.isPositive())) {
+	if (GEUtil::ceqSwitch(halfSpaceValue, pointValue, !halfSpace.isPositive())) {
 		collision.mDid = true;
 		if (mReturnPoint) {
 			collision.mPoint = point;

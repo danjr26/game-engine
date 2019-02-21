@@ -53,5 +53,15 @@ inline void DepthTransform<T, n>::translateWorldDepth(T in_depth) {
 	setWorldDepth(getWorldDepth() + in_depth);
 }
 
+template<class T, uint n>
+Matrix<T, 4, 4> DepthTransform<T, n>::getLocalMatrix() const {
+	return Matrix<T, 4, 4>::translation(Vector<T, 3>(0, 0, getLocalDepth()));
+}
+
+template<class T, uint n>
+Matrix<T, 4, 4> DepthTransform<T, n>::getWorldMatrix() const {
+	return Matrix<T, 4, 4>::translation(Vector<T, 3>(0, 0, getWorldDepth()));
+}
+
 template class DepthTransform<float, 2>;
 template class DepthTransform<double, 2>;

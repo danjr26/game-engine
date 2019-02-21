@@ -14,6 +14,9 @@ public:
 	Projectiond getProjection() const;
 	void setProjection(const Projectiond& in_projection);
 
+	Rectangled getRectangle() const;
+	Rectangled getTransformedRectangle() const;
+
 	Matrix4f getProjectionMatrix();
 	Matrix4f getViewMatrix();
 	Matrix4f getMatrix();

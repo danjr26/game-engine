@@ -7,8 +7,12 @@
 #include "mesh_vertex_gpu_pusher.h"
 #include "texture_instance.h"
 #include "color.h"
+#include "destructable_object.h"
+#include "transformable_object.h"
 
-class ParticleSystem2 : public RenderableObject, public PerFrameUpdateableObject {
+class ParticleSystem2 : public RenderableObject, public PerFrameUpdateableObject, 
+	public DestructableObject, public TransformableObject2d {
+
 public:
 	using position_t = Vector3f;
 	using color_t = ColorRGBAf;
@@ -35,6 +39,8 @@ public:
 
 	class Specifier {
 	public:
+		virtual ~Specifier() {};
+		virtual void init(ParticleSystem2& in_system, Accessor& in_accessor) = 0;
 		virtual void update(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) = 0;
 		virtual void destroy(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) = 0;
 		virtual void generate(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) = 0;

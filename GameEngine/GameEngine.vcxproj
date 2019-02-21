@@ -220,6 +220,7 @@
     <ClInclude Include="player_ship_renderer.h" />
     <ClInclude Include="player_ship_weapons_system.h" />
     <ClInclude Include="test_bullet.h" />
+    <ClInclude Include="test_bullet_collision_responder.h" />
     <ClInclude Include="test_enemy.h" />
     <ClInclude Include="test_enemy_mover.h" />
     <ClInclude Include="test_enemy_renderer.h" />
@@ -353,6 +354,7 @@
     <ClCompile Include="collision_mask.cpp" />
     <ClCompile Include="debug_mesh_vertex_data_renderer.cpp" />
     <ClCompile Include="deep_object.cpp" />
+    <ClCompile Include="deep_transformable_object.cpp" />
     <ClCompile Include="depth_transform.cpp" />
     <ClCompile Include="destruction_manager.cpp" />
     <ClCompile Include="disableable_object.cpp" />
@@ -376,6 +378,7 @@
     <ClCompile Include="player_ship_renderer.cpp" />
     <ClCompile Include="player_ship_weapons_system.cpp" />
     <ClCompile Include="test_bullet.cpp" />
+    <ClCompile Include="test_bullet_collision_responder.cpp" />
     <ClCompile Include="test_enemy.cpp" />
     <ClCompile Include="test_enemy_mover.cpp" />
     <ClCompile Include="test_enemy_renderer.cpp" />

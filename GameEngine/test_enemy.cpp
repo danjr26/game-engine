@@ -11,7 +11,7 @@ TestEnemy::TestEnemy() :
 	mRigidBody.setCollisionMask(mask);
 
 	mRigidBody.getTransform().setParent(&mTransform);
-	getCollisionMask().addFilter(Game::MainCollisionContextFilters::enemy);
+	getCollisionMask().addFilter(Game::MainCollisionContextFilters::enemy_ship);
 	GE.game().getMainCollisionContext().add(&getCollisionMask());
 }
 

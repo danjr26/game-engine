@@ -2,6 +2,7 @@
 #define DEEP_TRANSFORM_H
 
 #include "definitions.h"
+#include "matrix.h"
 
 template<class T, uint n>
 class DepthTransform {
@@ -21,6 +22,8 @@ public:
 	void setWorldDepth(T in_depth);
 	void translateLocalDepth(T in_depth);
 	void translateWorldDepth(T in_depth);
+	Matrix<T, 4, 4> getLocalMatrix() const;
+	Matrix<T, 4, 4> getWorldMatrix() const;
 };
 
 using DepthTransform2f = DepthTransform<float, 2>;
