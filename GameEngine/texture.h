@@ -61,6 +61,8 @@ public:
 	Texture(Type in_type, Vector3i in_dimensions, ColorRGBAc in_color, ubyte in_nChannels, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA = 0);
 	Texture(Type in_type, Vector3i in_dimensions, ubyte in_nChannels, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA = 0);
 
+	~Texture();
+
 	const ubyte* read();
 	void refreshFromOpenGL();
 
@@ -73,7 +75,7 @@ public:
 	ubyte getNumberBitsPerChannel();
 	ubyte getNumberSamplesMSAA();
 	uint getFlags();
-	TextureSettings getActiveSettings();
+	const TextureSettings& getActiveSettings();
 
 protected:
 	void finishSetup();

@@ -43,6 +43,7 @@ private:
 
 public:
 	TextureSettings(Texture* in_texture);
+	~TextureSettings();
 
 	void setTexture(Texture* in_texture);
 	void setBorderColor(const ColorRGBAc& in_color);
@@ -52,15 +53,16 @@ public:
 	void setMagnifyFilter(FilterMode in_filterMode);
 
 	Texture* getTexture();
-	ColorRGBAc getBorderColor();
-	const Swizzle* getSwizzle();
-	EdgeCase getSEdgeCase();
-	EdgeCase getTEdgeCase();
-	EdgeCase getREdgeCase();
-	FilterMode getMinifyFilter();
-	FilterMode getMagnifyFilter();
+	const Texture* getTexture() const;
+	ColorRGBAc getBorderColor() const;
+	const Swizzle* getSwizzle() const;
+	EdgeCase getSEdgeCase() const;
+	EdgeCase getTEdgeCase() const;
+	EdgeCase getREdgeCase() const;
+	FilterMode getMinifyFilter() const;
+	FilterMode getMagnifyFilter() const;
 
-	void use(TextureSettings* in_currentSettings = nullptr, ubyte in_slot = 0);
+	void use(const TextureSettings* in_currentSettings = nullptr, ubyte in_slot = 0);
 };
 
 #endif

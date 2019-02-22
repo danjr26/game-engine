@@ -74,8 +74,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Daniel\Documents\Visual Studio 2015\glew-1.13.0\include;C:\Users\Daniel\Downloads\freetype-2.7\include;C:\Users\Daniel\Downloads\freetype-2.7\include\freetype;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Daniel\Documents\Visual Studio 2015\glew-1.13.0\lib\Release\x64;C:\Users\Daniel\Downloads\freetype-2.7\objs\vc2010\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\danie\Documents\Visual Studio 2017\Projects\GameEngine\GameEngine\CImg-2.2.3;C:\Users\danie\Documents\Visual Studio 2017\glew-1.13.0\include;C:\Users\danie\Documents\Visual Studio 2017\freetype-2.7\include;C:\Users\danie\Documents\Visual Studio 2017\freetype-2.7\include\freetype;C:\Users\danie\Documents\GitHub\libpng;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\danie\Documents\Visual Studio 2017\glew-1.13.0\lib\Debug\x64;C:\Users\danie\Documents\Visual Studio 2017\freetype-2.7\objs\vc2010\x64;C:\Users\danie\Documents\GitHub\libpng\projects\vstudio2017\x64\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -104,12 +104,15 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>msvcrt.lib;msvcmrt.lib;opengl32.lib;glew32.lib;freetype27.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>msvcrtd.lib;msvcmrt.lib;opengl32.lib;glew32d.lib;freetype27d.lib;libpng_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

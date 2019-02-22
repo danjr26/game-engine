@@ -8,10 +8,10 @@
 #include "texture_instance.h"
 #include "color.h"
 #include "destructable_object.h"
-#include "transformable_object.h"
+#include "deep_transformable_object.h"
 
 class ParticleSystem2 : public RenderableObject, public PerFrameUpdateableObject, 
-	public DestructableObject, public TransformableObject2d {
+	public DestructableObject, public DeepTransformableObject2d {
 
 public:
 	using position_t = Vector3f;

@@ -77,6 +77,13 @@ Texture::Texture(Type in_type, Vector3i in_dimensions, ubyte in_nChannels, ubyte
 	finishSetup();
 }
 
+Texture::~Texture() {
+	if (mFlags & Flags::readable) {
+		delete[] mData;
+	}
+	glDeleteTextures(1, &mID);
+}
+
 const ubyte* Texture::read() {
 	if (mFlags & Flags::readable) {
 		return mData;
@@ -129,7 +136,7 @@ uint Texture::getFlags() {
 	return mFlags;
 }
 
-TextureSettings Texture::getActiveSettings() {
+const TextureSettings& Texture::getActiveSettings() {
 	return mActiveSettings;
 }
 

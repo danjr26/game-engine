@@ -11,6 +11,8 @@ private:
 	std::unordered_map<std::string, Asset*> mAssets;
 
 public:
+	~AssetManager();
+
 	void add(const std::string& in_name, Asset* in_asset);
 	void remove(Asset* in_asset);
 	void remove(const std::string& in_name);

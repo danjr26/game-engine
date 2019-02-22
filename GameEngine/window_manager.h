@@ -10,6 +10,8 @@ private:
 
 public:
 	WindowManager();
+	~WindowManager();
+
 	void add(Window* in_window);
 	void remove(Window* in_window);
 	Window* get(HWND in_handle);

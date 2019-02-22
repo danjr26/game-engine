@@ -28,12 +28,19 @@ Game::Game() :
 		), true);
 }
 
+Game::~Game() {
+	if (mPlayerShip != nullptr) delete mPlayerShip;
+
+}
+
 void Game::Init() {
 	mPlayerShip = new PlayerShip();
 	mPlayerShip->getWeaponsSystem().setPrimary(new TestWeapon);
+	mPlayerShip->getDepthTransform().setLocalDepth(0.2);
 
 	TestEnemy* testEnemy = new TestEnemy();
 	testEnemy->getTransform().setLocalPosition(Vector2d(4, 4));
+	testEnemy->getDepthTransform().setLocalDepth(0.1);
 
 	Texture* dustTex = GE.assets().get<Texture>("SparkSpriteTexture");
 	AmbientDustSpecifier* dustSpecifier = new AmbientDustSpecifier;

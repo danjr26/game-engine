@@ -97,9 +97,12 @@ mParams(in_params) {
 
 Window::~Window() {
 	std::lock_guard<std::mutex> lock(mMutex);
-	GE.windows().remove(this);
-	DestroyWindow(mWindowHandle);
+	if (GameEngine::exists()) {
+		GE.windows().remove(this);
+	}
 	setFullscreen(false);
+	DestroyWindow(mWindowHandle);
+	wglDeleteContext(mRenderContext);
 }
 
 void Window::flipBuffers() {

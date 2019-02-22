@@ -138,7 +138,7 @@ void TestBulletImpactSparksSpecifier::init(ParticleSystem2& in_system, Accessor&
 		in_accessor.mColor[i] = ColorRGBAf();
 		in_accessor.mDimensions[i] = Vector2f(0.5, 0.5);
 		in_accessor.mLinearVelocity[i] = Vector3f(2.0 * Vector2f(sqrt(GEUtil::random<double>(1)), 0).rotated(GEUtil::random<double>(2 * PI)), 0.0);
-		in_accessor.mPosition[i] = Vector3f(0, 0, 1.0);
+		in_accessor.mPosition[i] = Vector3f(0, 0, 0.5);
 		in_accessor.mUV1[i] = Vector2f(0, 0);
 		in_accessor.mUV2[i] = Vector2f(1, 1);
 	}

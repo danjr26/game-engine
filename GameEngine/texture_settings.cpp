@@ -13,6 +13,9 @@ mMinifyFilter(GL_NEAREST),
 mMagnifyFilter(GL_NEAREST)
 {}
 
+TextureSettings::~TextureSettings() 
+{}
+
 void TextureSettings::setTexture(Texture* in_texture) {
 	mTexture = in_texture;
 }
@@ -61,27 +64,31 @@ Texture* TextureSettings::getTexture() {
 	return mTexture;
 }
 
-ColorRGBAc TextureSettings::getBorderColor() {
+const Texture* TextureSettings::getTexture() const {
+	return mTexture;
+}
+
+ColorRGBAc TextureSettings::getBorderColor() const {
 	return mBorderColor;
 }
 
-const TextureSettings::Swizzle* TextureSettings::getSwizzle() {
+const TextureSettings::Swizzle* TextureSettings::getSwizzle() const {
 	return (Swizzle*) mSwizzleMask;
 }
 
-TextureSettings::EdgeCase TextureSettings::getSEdgeCase() {
+TextureSettings::EdgeCase TextureSettings::getSEdgeCase() const {
 	return (EdgeCase) mSEdgeCase;
 }
 
-TextureSettings::EdgeCase TextureSettings::getTEdgeCase() {
+TextureSettings::EdgeCase TextureSettings::getTEdgeCase() const {
 	return (EdgeCase) mTEdgeCase;
 }
 
-TextureSettings::EdgeCase TextureSettings::getREdgeCase() {
+TextureSettings::EdgeCase TextureSettings::getREdgeCase() const {
 	return (EdgeCase) mREdgeCase;
 }
 
-TextureSettings::FilterMode TextureSettings::getMinifyFilter() {
+TextureSettings::FilterMode TextureSettings::getMinifyFilter() const {
 	switch (mMinifyFilter) {
 	case GL_NEAREST:
 	case GL_NEAREST_MIPMAP_NEAREST:
@@ -98,7 +105,7 @@ TextureSettings::FilterMode TextureSettings::getMinifyFilter() {
 	}
 }
 
-TextureSettings::FilterMode TextureSettings::getMagnifyFilter() {
+TextureSettings::FilterMode TextureSettings::getMagnifyFilter() const {
 	if (mMagnifyFilter == GL_LINEAR) {
 		return FilterMode::bilinear;
 	}
@@ -107,7 +114,7 @@ TextureSettings::FilterMode TextureSettings::getMagnifyFilter() {
 	}
 }
 
-void TextureSettings::use(TextureSettings* in_currentSettings, ubyte in_slot) {
+void TextureSettings::use(const TextureSettings* in_currentSettings, ubyte in_slot) {
 	mTexture->use(in_slot);
 	GLenum target = mTexture->mTarget;
 

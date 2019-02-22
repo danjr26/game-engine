@@ -3,6 +3,12 @@
 WindowManager::WindowManager() 
 {}
 
+WindowManager::~WindowManager() {
+	for (auto it = mWindows.begin(); it != mWindows.end(); it++) {
+		delete *it;
+	}
+}
+
 void WindowManager::add(Window* in_window) {
 	mWindows.push_back(in_window);
 }

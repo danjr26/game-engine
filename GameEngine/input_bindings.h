@@ -34,15 +34,16 @@ public:
 		InputBindings& mParent;
 		const RawInputEvent& mEvent;
 		const RawInputState& mState;
-		union {
-			actions_it_t mActionIt;
-			states_it_t mStateIt;
-			ranges_it_t mRangeIt;
-		};
+		//union {
+		actions_it_t mActionIt;
+		states_it_t mStateIt;
+		ranges_it_t mRangeIt;
+		//};
 
 	private:
 		Iterator(Mode in_mode, InputBindings& in_parent, const RawInputEvent& in_event, const RawInputState& in_state);
 	public:
+		~Iterator();
 		operator bool();
 		Iterator& operator++();
 	};

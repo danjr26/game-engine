@@ -95,7 +95,7 @@ bool ParticleSystem2::shouldCull() const {
 void ParticleSystem2::render() {
 	ShaderProgram* shaderProgram = GE.assets().get<ShaderProgram>("Particle2Shader");
 
-	Matrix4f modelMatrix = mTransform.getWorldMatrix();
+	Matrix4f modelMatrix = getDeepWorldMatrix();
 	Matrix4f viewMatrix = GE.cameras().getActive()->getViewMatrix();
 	Matrix4f projectionMatrix = GE.cameras().getActive()->getProjectionMatrix();
 

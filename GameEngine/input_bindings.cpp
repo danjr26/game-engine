@@ -109,6 +109,9 @@ InputBindings::Iterator::Iterator(Mode in_mode, InputBindings& in_parent, const 
 	}
 }
 
+InputBindings::Iterator::~Iterator() 
+{}
+
 InputBindings::Iterator::operator bool() {
 	switch (mMode) {
 	case Mode::action:

@@ -21,10 +21,12 @@ void CollisionContext<T, n>::add(CollisionMask<T, n>* in_mask) {
 
 template<class T, uint n>
 void CollisionContext<T, n>::remove(CollisionMask<T, n>* in_mask) {
-	for (auto it = mEvaluations.begin(); it < mEvaluations.end(); it++) {
-		if (it->getParentMask() == in_mask) {
-			mEvaluations.erase(it);
-			it--;
+	for (uint i = 0; i < mEvaluations.size();) {
+		if (mEvaluations[i].getParentMask() == in_mask) {
+			mEvaluations.erase(mEvaluations.begin() + i);
+		}
+		else {
+			i++;
 		}
 	}
 }

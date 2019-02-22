@@ -25,6 +25,9 @@ MeshVertexGPUPusher::MeshVertexGPUPusher() :
 {}
 
 MeshVertexGPUPusher::~MeshVertexGPUPusher() {
+	if (!_CrtCheckMemory()) {
+		Log::main("err");
+	}
 	if (mVertexArrayID) glDeleteVertexArrays(1, &mVertexArrayID);
 	if (mIndexBufferID) glDeleteBuffers(1, &mIndexBufferID);
 	for (uint i = 0; i < mMembers.size(); i++) {

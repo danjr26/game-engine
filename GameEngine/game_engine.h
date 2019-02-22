@@ -65,6 +65,7 @@ public:
 	void quit();
 
 	static GameEngine& getInstance();
+	static bool exists();
 
 private:
 	void nextFrame();

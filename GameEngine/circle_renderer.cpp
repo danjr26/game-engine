@@ -20,7 +20,7 @@ void CircleRenderer::render() {
 
 	Camera& cam = *GE.cameras().getActive();
 
-	Matrix4f modelMatrix = (Matrix4f)mInnerTransform.getWorldMatrix();
+	Matrix4f modelMatrix = (Matrix4f)(mDepthTransform.getWorldMatrix() * mInnerTransform.getWorldMatrix());
 	Matrix4f viewMatrix = (Matrix4f)cam.getViewMatrix();
 	Matrix4f projectionMatrix = (Matrix4f)cam.getProjectionMatrix();
 	Matrix4f mvpMatrix = projectionMatrix * viewMatrix * modelMatrix;

@@ -1,5 +1,6 @@
 #include "binary_collision_tree.h"
 #include "basic_collision_mask.h"
+#include "log.h"
 
 template<class T, uint n>
 BinaryCollisionTree<T, n>::Evaluation::Iterator::Iterator(Evaluation* in_parent) :
@@ -83,9 +84,89 @@ BinaryCollisionTree<T, n>::Evaluation::Evaluation() :
 	mParentMask(nullptr),
 	mTransformedParentMask(nullptr),
 	mDepth(UINT_MAX) {
+
 	for (uint i = 0; i < n; i++) {
 		mData[i] = nullptr;
+		mDataSizes[i] = 0;
 	}
+}
+
+template<class T, uint n>
+BinaryCollisionTree<T, n>::Evaluation::Evaluation(const Evaluation& in_other) :
+	mParentTree(nullptr),
+	mParentMask(nullptr),
+	mTransformedParentMask(nullptr),
+	mDepth(UINT_MAX) {
+
+	for (uint i = 0; i < n; i++) {
+		mData[i] = nullptr;
+		mDataSizes[i] = 0;
+	}
+
+	*this = in_other;
+}
+
+template<class T, uint n>
+BinaryCollisionTree<T, n>::Evaluation::Evaluation(Evaluation&& in_other) :
+	mParentTree(in_other.mParentTree),
+	mParentMask(in_other.mParentMask),
+	mTransformedParentMask(in_other.mTransformedParentMask),
+	mData{},
+	mDataSizes{},
+	mDepth(in_other.mDepth) {
+	
+	in_other.mParentTree = nullptr;
+	in_other.mParentMask = nullptr;
+	in_other.mTransformedParentMask = nullptr;
+
+	for (uint i = 0; i < n; i++) {
+		mData[i] = in_other.mData[i];
+		mDataSizes[i] = in_other.mDataSizes[i];
+		in_other.mData[i] = nullptr;
+		in_other.mDataSizes[i] = 0;
+	}
+}
+
+template<class T, uint n>
+BinaryCollisionTree<T, n>::Evaluation::~Evaluation() {
+	for (uint i = 0; i < n; i++) {
+		if (mData[i] != nullptr) {
+			delete[] mData[i];
+			mData[i] = nullptr;
+		}
+	}
+	if (mTransformedParentMask != nullptr) {
+		delete mTransformedParentMask;
+		mTransformedParentMask = nullptr;
+	}
+}
+
+template<class T, uint n>
+typename BinaryCollisionTree<T, n>::Evaluation& BinaryCollisionTree<T, n>::Evaluation::operator=(const Evaluation& in_other) {
+	if (&in_other == this) {
+		return *this;
+	}
+
+	mParentTree = in_other.mParentTree;
+	mParentMask = in_other.mParentMask;
+	if (mTransformedParentMask != nullptr) { 
+		delete mTransformedParentMask;
+	}
+	mTransformedParentMask = in_other.mTransformedParentMask->clone();
+	for (uint i = 0; i < n; i++) {
+		mDataSizes[i] = in_other.mDataSizes[i];
+		if (mData[i] != nullptr) {
+			delete[] mData[i];
+		}
+		if (!_CrtCheckMemory()) {
+			Log::main("err");
+		}
+		mData[i] = new ubyte[mDataSizes[i]];
+		memcpy(mData[i], in_other.mData[i], mDataSizes[i]);
+	}
+	mDepth = in_other.mDepth;
+
+	return *this;
 }
 
 template<class T, uint n>
@@ -112,6 +193,7 @@ template<class T, uint n>
 void BinaryCollisionTree<T, n>::Evaluation::transformParentMask() {
 	if (mTransformedParentMask != nullptr) {
 		delete mTransformedParentMask;
+		mTransformedParentMask = nullptr;
 	}
 
 	mTransformedParentMask = mParentMask->clone();
@@ -286,7 +368,7 @@ BinaryCollisionTree<T, n>::BinaryCollisionTree(const AxisAlignedBox<T, n>& in_bo
 	mBox(in_box) {}
 
 template<class T, uint n>
-void BinaryCollisionTree<T, n>::evaluate(CollisionMask<T, n>* in_mask, uint in_depth, Evaluation & out_evaluation) {
+void BinaryCollisionTree<T, n>::evaluate(CollisionMask<T, n>* in_mask, uint in_depth, Evaluation& out_evaluation) {
 	using StackElement = EvaluationStackElement;
 	if (in_depth > maxDepth) {
 		throw InvalidArgumentException();

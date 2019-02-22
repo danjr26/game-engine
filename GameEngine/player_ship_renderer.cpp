@@ -22,5 +22,7 @@ PlayerShipRenderer::PlayerShipRenderer(PlayerShip& in_parent) :
 }
 
 PlayerShipRenderer::~PlayerShipRenderer() {
-	GE.render().remove(&mSprite);
+	if (GameEngine::exists()) {
+		GE.render().remove(&mSprite);
+	}
 }

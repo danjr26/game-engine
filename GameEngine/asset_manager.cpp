@@ -2,6 +2,13 @@
 #include "log.h"
 #include "exceptions.h"
 
+AssetManager::~AssetManager() {
+	for (auto it = mAssets.begin(); it != mAssets.end(); it++) {
+		delete it->second;
+	}
+	mAssets.clear();
+}
+
 void AssetManager::add(const std::string& in_name, Asset* in_asset) {
 	in_asset->setName(in_name);
 	std::pair<std::string, Asset*> pair(in_name, in_asset);

@@ -7,7 +7,9 @@ mSkipCount(0)
 {}
 
 PerFrameUpdateableObject::~PerFrameUpdateableObject() {
-	GE.perFrameUpdate().remove(this);
+	if (GameEngine::exists()) {
+		GE.perFrameUpdate().remove(this);
+	}
 }
 
 void PerFrameUpdateableObject::nextFrame(double in_dt) {

@@ -47,6 +47,11 @@ public:
 
 	public:
 		Evaluation();
+		Evaluation(const Evaluation& in_other);
+		Evaluation(Evaluation&& in_other);
+		~Evaluation();
+
+		Evaluation& operator=(const Evaluation& in_other);
 
 		Iterator getIterator();
 		BinaryCollisionTree<T, n>* getParentTree();

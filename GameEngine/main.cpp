@@ -36,13 +36,12 @@ void Test_Render(Window* window) {
 	FontFace::loadXMLList("fonts/font_list.xml");
 	ShaderProgram::loadXMLList("shaders/shader_list.xml");
 
-	Texture arrow(Texture::Type::_2d, "img/test_arrow.png", 8, Texture::Flags::mipmaps);
-	Texture spark(Texture::Type::_2d, "img/spark.png", 8, Texture::Flags::mipmaps);
-	Texture ship(Texture::Type::_2d, "img/ship.png", 8, Texture::Flags::mipmaps);
-	Texture laser(Texture::Type::_2d, "img/laser.png", 8, Texture::Flags::mipmaps);
-	GE.assets().add("PlayerShipSpriteTexture", &ship);
-	GE.assets().add("SparkSpriteTexture", &spark);
-	GE.assets().add("LaserSpriteTexture", &laser);
+	Texture* spark = new Texture(Texture::Type::_2d, "img/spark.png", 8, Texture::Flags::mipmaps);
+	Texture* ship = new Texture(Texture::Type::_2d, "img/ship.png", 8, Texture::Flags::mipmaps);
+	Texture* laser = new Texture(Texture::Type::_2d, "img/laser.png", 8, Texture::Flags::mipmaps);
+	GE.assets().add("PlayerShipSpriteTexture", ship);
+	GE.assets().add("SparkSpriteTexture", spark);
+	GE.assets().add("LaserSpriteTexture", laser);
 
 	PointerInputContext pointerInput;
 	GE.input().add(&pointerInput);
@@ -76,6 +75,9 @@ void Test_Render(Window* window) {
 }
 
 int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nArgs) {
+	int tmpFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+	_CrtSetDbgFlag(tmpFlag | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	new GameEngine();
 
 	Window::Params params =

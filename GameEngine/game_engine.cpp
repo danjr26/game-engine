@@ -5,7 +5,8 @@ GameEngine* GameEngine::instance = nullptr;
 GameEngine::GameEngine() :
 mHasBegun(false),
 mAsyncTaskManager(mClock),
-mFrameRateManager(100) {
+mFrameRateManager(60),
+mGame(nullptr) {
 	if (instance != nullptr) {
 		throw ProcessFailureException("game engine already created");
 	}
@@ -16,6 +17,7 @@ mFrameRateManager(100) {
 
 GameEngine::~GameEngine() {
 	instance = nullptr;
+	delete mGame;
 }
 
 FrameRateManager& GameEngine::frameRate() {
@@ -108,6 +110,10 @@ GameEngine& GameEngine::getInstance() {
 	return *instance;
 }
 
+bool GameEngine::exists() {
+	return instance != nullptr;
+}
+
 void GameEngine::nextFrame() {
 	static uint count = 0;
 	static uint cCount = 0;
@@ -133,7 +139,7 @@ void GameEngine::nextFrame() {
 	mPhysicsManager.update(dt);
 	mPerFrameUpdateManager.update(dt);
 	double t2 = GE.clock().now();
-	if (!mFrameRateManager.isLeanFrame()) {
+	if (!mFrameRateManager.isLeanFrame() || cCount % 10 == 0) {
 		rCount++;
 		mRenderManager.mMainWindow->flipBuffers();
 		mRenderManager.renderFrame();

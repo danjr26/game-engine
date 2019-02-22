@@ -1,6 +1,7 @@
 #include "asset.h"
 #include "log.h"
 #include "exceptions.h"
+#include "game_engine.h"
 
 void Asset::setName(std::string in_name) {
 	if (in_name == "") {
@@ -22,8 +23,11 @@ Asset::Asset() :
 	mName("")
 {}
 
-Asset::~Asset()
-{}
+Asset::~Asset() {
+	if (GameEngine::exists()) {
+		GE.assets().remove(this);
+	}
+}
 
 std::string Asset::getName() {
 	return mName;

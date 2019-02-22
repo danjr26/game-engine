@@ -14,7 +14,9 @@ FontFace::FontFace(std::string in_filename) {
 }
 
 FontFace::~FontFace() {
-	FT_Done_Face(mFace);
+	if (GameEngine::exists()) {
+		FT_Done_Face(mFace);
+	}
 }
 
 FontFaceRasterSet* FontFace::rasterize(uint in_size) {
