@@ -23,7 +23,7 @@ TestBullet::TestBullet() :
 	GE.render().add(&mSprite);
 	GE.perFrameUpdate().add(this);
 
-	Point2CollisionMask<double> mask(Vector2d(0.0, 0.0));
+	Point2CollisionMask<double> mask(Vector2d(0.3, 0.0));
 	mRigidBody.setCollisionMask(mask);
 
 	mRigidBody.setAngularMass(0);
@@ -55,7 +55,7 @@ void TestBullet::update(double in_dt) {
 		Texture* tex = GE.assets().get<Texture>("SparkSpriteTexture");
 		TestBulletImpactSparksSpecifier* specifier = new TestBulletImpactSparksSpecifier;
 		ParticleSystem2* particles = new ParticleSystem2(tex, specifier);
-		particles->getTransform().setLocalPosition(mTransform.getLocalPosition());
+		particles->getTransform().setLocalPosition(partners[0]->mCollision.mPoint);
 		
 		GE.perFrameUpdate().add(particles);
 		GE.render().add(particles);

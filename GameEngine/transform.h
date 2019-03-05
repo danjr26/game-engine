@@ -5,6 +5,7 @@
 #include "matrix.h"
 #include "unclamped_rotation.h"
 #include "rotation.h"
+#include "misc.h"
 
 template<class T, uint n>
 class Transform {
@@ -75,6 +76,10 @@ public:
 	Vector<T, n> localToWorldVector(const Vector<T, n>& in_vector) const;
 	Rotation<T, n> worldToLocalRotation(const Rotation<T, n>& in_rotation) const;
 	Rotation<T, n> localToWorldRotation(const Rotation<T, n>& in_rotation) const;
+
+	Transform<T, n>* cloneChain() const;
+	Transform<T, n>* lerpChain(const Transform<T, n>& in_other, T in_t) const;
+	void deleteChainParents();
 };
 
 using Transform2f = Transform<float, 2>;

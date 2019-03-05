@@ -70,6 +70,7 @@ public:
 
 public:
 	CollisionMask(bool in_ignoreTransform = false);
+	virtual ~CollisionMask() {}
 
 	bool getIgnoreTransform() const;
 	void setIgnoreTransform(bool in_value);

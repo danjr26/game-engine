@@ -65,8 +65,8 @@ public:
 	void invert();
 	Rotation<T, 3> getInverse() const;
 	Rotation<T, 3> followedBy(const Rotation<T, 3>& in_rotation) const;
-	Rotation<T, 3> lerp(const Rotation<T, 3>& in_rotation, T t) const;
-	Rotation<T, 3> slerp(const Rotation<T, 3>& in_rotation, T t) const;
+	Rotation<T, 3> lerp(const Rotation<T, 3>& in_rotation, T in_t) const;
+	Rotation<T, 3> slerp(const Rotation<T, 3>& in_rotation, T in_t) const;
 	Rotation<T, 3> reflectOver(const Rotation<T, 3>& in_rotation) const;
 	T getAngle() const;
 	Rotation<T, 3> withAngle(T in_angle);

@@ -301,6 +301,41 @@ Rotation<T, n> Transform<T, n>::localToWorldRotation(const Rotation<T, n>& in_ro
 }
 
 template<class T, uint n>
+Transform<T, n>* Transform<T, n>::cloneChain() const {
+	Transform<T, n>* out = new Transform<T, n>(*this);
+	for (Transform<T, n>* it = out; it->mParent != nullptr; it = it->mParent) {
+		it->mParent = new Transform<T, n>(*it->mParent);
+	}
+	return out;
+}
+
+template<class T, uint n>
+Transform<T, n>* Transform<T, n>::lerpChain(const Transform<T, n>& in_other, T in_t) const {
+	Transform<T, n>* out = cloneChain();
+	Transform<T, n>* t1 = out;
+	Transform<T, n> const* t2 = &in_other;
+	while (t1 != nullptr && t2 != nullptr) {
+		t1->mRotation = t1->mRotation.lerp(t2->mRotation, in_t);
+		t1->mTranslation = t1->mTranslation.lerp(t2->mTranslation, in_t);
+		t1->mScale = t1->mScale.lerp(t2->mScale, in_t);
+		t1 = t1->mParent;
+		t2 = t2->mParent;
+	}
+	if (t1 || t2) throw InvalidArgumentException();
+	return out;
+}
+
+template<class T, uint n>
+void Transform<T, n>::deleteChainParents() {
+	Transform<T, n>* next;
+	for (Transform<T, n>* it = mParent; it != nullptr; it = next) {
+		next = it->mParent;
+		delete it;
+		it = next;
+	}
+}
+
+template<class T, uint n>
 Matrix<T, 4, 4> Transform<T, n>::getLocalMatrix() const {
 	return Matrix<T, 4, 4>::translation(Vector<T, 3>(mTranslation)) * mRotation.getMatrix() * Matrix<T, 4, 4>::scale(Vector<T, 3>(mScale));
 }

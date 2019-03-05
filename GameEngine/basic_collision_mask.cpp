@@ -1,10 +1,15 @@
 #include "basic_collision_mask.h"
 #include "collision_evaluator.h"
+#include "log.h"
 
 template<class Basis, class T>
 BasicCollisionMask<Basis, T, 2>::BasicCollisionMask(const basis_t& in_basis, bool in_ignoreTransform) :
 	CollisionMask<T, 2>(in_ignoreTransform),
 	mWrappedBasis{ in_basis }
+{}
+
+template<class Basis, class T>
+BasicCollisionMask<Basis, T, 2>::~BasicCollisionMask() 
 {}
 
 template<class Basis, class T>

@@ -23,6 +23,7 @@ private:
 
 public:
 	BasicCollisionMask(const basis_t& in_basis, bool in_ignoreTransform = false);
+	virtual ~BasicCollisionMask();
 
 	basis_t& getBasis();
 	const basis_t& getBasis() const;

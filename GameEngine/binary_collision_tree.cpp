@@ -125,6 +125,7 @@ BinaryCollisionTree<T, n>::Evaluation::Evaluation(Evaluation&& in_other) :
 		in_other.mData[i] = nullptr;
 		in_other.mDataSizes[i] = 0;
 	}
+
 }
 
 template<class T, uint n>
@@ -143,27 +144,33 @@ BinaryCollisionTree<T, n>::Evaluation::~Evaluation() {
 
 template<class T, uint n>
 typename BinaryCollisionTree<T, n>::Evaluation& BinaryCollisionTree<T, n>::Evaluation::operator=(const Evaluation& in_other) {
+	const ullong maxDataSize = 1ull << (in_other.mDepth + 2);
+
 	if (&in_other == this) {
 		return *this;
 	}
 
 	mParentTree = in_other.mParentTree;
 	mParentMask = in_other.mParentMask;
+
 	if (mTransformedParentMask != nullptr) { 
 		delete mTransformedParentMask;
+		mTransformedParentMask = nullptr;
 	}
-	mTransformedParentMask = in_other.mTransformedParentMask->clone();
+	if (in_other.mTransformedParentMask != nullptr) {
+		mTransformedParentMask = in_other.mTransformedParentMask->clone();
+	}
+
 	for (uint i = 0; i < n; i++) {
 		mDataSizes[i] = in_other.mDataSizes[i];
 		if (mData[i] != nullptr) {
 			delete[] mData[i];
 		}
-		if (!_CrtCheckMemory()) {
-			Log::main("err");
-		}
-		mData[i] = new ubyte[mDataSizes[i]];
+		
+		mData[i] = new ubyte[maxDataSize];
 		memcpy(mData[i], in_other.mData[i], mDataSizes[i]);
 	}
+
 	mDepth = in_other.mDepth;
 
 	return *this;
@@ -206,7 +213,8 @@ BinaryCollisionTree<T, n>::GroupingScheme::Iterator::Iterator(GroupingScheme* in
 	mParent(in_parent),
 	mIt(in_parent->mGroupings.begin()),
 	mI(0),
-	mJ(1) {}
+	mJ(1) 
+{}
 
 template<class T, uint n>
 typename BinaryCollisionTree<T, n>::Evaluation* BinaryCollisionTree<T, n>::GroupingScheme::Iterator::getFirst() {
@@ -374,6 +382,9 @@ void BinaryCollisionTree<T, n>::evaluate(CollisionMask<T, n>* in_mask, uint in_d
 		throw InvalidArgumentException();
 	}
 
+	const ullong maxDataSize = 1ull << (in_depth + 2);
+	const ullong maxStackSize = 1ull << (maxDepth + 1);
+
 	out_evaluation.mParentTree = this;
 	out_evaluation.mParentMask = in_mask;
 	out_evaluation.transformParentMask();
@@ -383,7 +394,7 @@ void BinaryCollisionTree<T, n>::evaluate(CollisionMask<T, n>* in_mask, uint in_d
 			if (out_evaluation.mData[i] != nullptr) {
 				delete[] out_evaluation.mData[i];
 			}
-			out_evaluation.mData[i] = new ubyte[(1ull << (in_depth + 2))];
+			out_evaluation.mData[i] = new ubyte[maxDataSize];
 		}
 		out_evaluation.mDataSizes[i] = 0;
 	}
@@ -392,7 +403,7 @@ void BinaryCollisionTree<T, n>::evaluate(CollisionMask<T, n>* in_mask, uint in_d
 	InPlaceCollisionEvaluator evaluator;
 	evaluator.returnPoint(false);
 
-	EvaluationStackElement evaluationStacks[n][1 << (maxDepth + 1)];
+	EvaluationStackElement evaluationStacks[n][maxStackSize];
 	uint stackSizes[3];
 	for (uint i = 0; i < n; i++) {
 		stackSizes[i] = 1;

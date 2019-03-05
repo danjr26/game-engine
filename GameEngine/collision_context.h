@@ -36,6 +36,9 @@ private:
 
 	std::vector<CollisionMask<T, n>*> mMasksToAdd;
 
+	std::unordered_map<CollisionMask<T, n>*, Transform<T, n>*> mPrevTransforms;
+	std::unordered_multimap<CollisionMask<T, n>*, CollisionMask<T, n>*> mPrevPartnering;
+
 	std::vector<typename BinaryCollisionTree<T, n>::Evaluation> mEvaluations;
 	std::vector<typename BinaryCollisionTree<T, n>::GroupingScheme> mGroupingSchemes;
 	std::vector<typename BinaryCollisionTree<T, n>::PairedGroupingScheme> mPairedGroupingSchemes;
@@ -56,19 +59,27 @@ public:
 	void add(CollisionMask<T, n>* in_mask);
 	void remove(CollisionMask<T, n>* in_mask);
 	void update();
-	void update(CollisionMask<T, n>** in_masks, uint in_nMasks);
+	//void update(CollisionMask<T, n>** in_masks, uint in_nMasks);
 	uint getTotalPartnerings() const;
 	void getPartners(CollisionMask<T, n>* in_mask, std::vector<CollisionPartner*>& out_partners);
 	void setPartnerTestActivation(std::pair<ubyte, ubyte> in_test, bool in_value);
 	bool getPartnerTestActivation(std::pair<ubyte, ubyte> in_test);
 	void getTriggeredTests(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, std::vector<std::pair<ubyte, ubyte>>& out_tests);
 
+	static void narrowCollision(
+		CollisionMask<T, n>& in_mask1, CollisionMask<T, n>& in_mask2,
+		const Transform<T, n>& in_separated1, const Transform<T, n>& in_separated2, 
+		Collision<T, n>& inout_collision, uint in_nIterations
+	);
+
 private:
 	void updateEvaluations();
-	void updateEvaluations(CollisionMask<T, n>** in_masks, uint in_nMasks);
+	//void updateEvaluations(CollisionMask<T, n>** in_masks, uint in_nMasks);
 
 	void prepareDataContainers();
-	void prepareDataContainers(CollisionMask<T, n>** in_masks, uint in_nMasks);
+	//void prepareDataContainers(CollisionMask<T, n>** in_masks, uint in_nMasks);
+	
+	void recordHistory();
 
 	void partnerFiltered(
 		std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations
@@ -78,8 +89,8 @@ private:
 		std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations2
 	);
 
-	static void partnerIfCollide(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, Partnering& in_partnering);
-	static void partnerIfCollideAsync(
+	//static void partnerIfCollide(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, Partnering& in_partnering);
+	void partnerIfCollideAsync(
 		CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2,
 		CollisionMask<T, n>* in_maskToPartner1, CollisionMask<T, n>* in_maskToPartner2,
 		Partnering& in_partnering, std::mutex& in_mutex

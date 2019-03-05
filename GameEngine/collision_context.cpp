@@ -81,9 +81,11 @@ void CollisionContext<T, n>::update() {
 		(*it)->waitForFinish();
 		delete *it;
 	}
+
+	recordHistory();
 }
 
-
+/*
 template<class T, uint n>
 void CollisionContext<T, n>::update(CollisionMask<T, n>** in_masks, uint in_nMasks) {
 	using Evaluation = BinaryCollisionTree<T, n>::Evaluation;
@@ -135,6 +137,7 @@ void CollisionContext<T, n>::update(CollisionMask<T, n>** in_masks, uint in_nMas
 		delete *it;
 	}
 }
+*/
 
 template<class T, uint n>
 uint CollisionContext<T, n>::getTotalPartnerings() const {
@@ -181,7 +184,7 @@ template<class T, uint n>
 void CollisionContext<T, n>::updateEvaluations() {
 	std::vector<PackagedAsyncTask<void>> mTasks;
 	uint nEvaluations = (uint)mEvaluations.size();
-	uint batchSize = (uint)mEvaluations.size() / 4 + 1;
+	uint batchSize = GEUtil::max(nEvaluations, 1u);// / 4 + 1;
 
 	mTasks.reserve(nEvaluations / batchSize + 2);
 
@@ -205,13 +208,16 @@ void CollisionContext<T, n>::updateEvaluations() {
 		mTree.evaluate(mEvaluations[i].getParentMask(), mDepth, mEvaluations[i]);
 	}
 	*/
+	mEvaluations.shrink_to_fit();
 	for (auto it = mMasksToAdd.begin(); it < mMasksToAdd.end(); it++) {
+		mEvaluations.shrink_to_fit();
 		mEvaluations.push_back(BinaryCollisionTree<T, n>::Evaluation());
 		mTree.evaluate(*it, mDepth, mEvaluations.back());
 	}
 	mMasksToAdd.clear();
 }
 
+/*
 template<class T, uint n>
 void CollisionContext<T, n>::updateEvaluations(CollisionMask<T, n>** in_masks, uint in_nMasks) {
 	std::vector<PackagedAsyncTask<void>> mTasks;
@@ -241,6 +247,7 @@ void CollisionContext<T, n>::updateEvaluations(CollisionMask<T, n>** in_masks, u
 		it->waitForFinish();
 	}
 }
+*/
 
 template<class T, uint n>
 void CollisionContext<T, n>::prepareDataContainers() {
@@ -252,8 +259,10 @@ void CollisionContext<T, n>::prepareDataContainers() {
 
 	mPairedGroupingSchemes.clear();
 	mPairedGroupingSchemes.reserve(mPartnersToTest.size());
+
 }
 
+/*
 template<class T, uint n>
 void CollisionContext<T, n>::prepareDataContainers(CollisionMask<T, n>** in_masks, uint in_nMasks) {
 	mPartnering.clear();
@@ -264,6 +273,25 @@ void CollisionContext<T, n>::prepareDataContainers(CollisionMask<T, n>** in_mask
 
 	mPairedGroupingSchemes.clear();
 	mPairedGroupingSchemes.reserve(mPartnersToTest.size());
+}
+*/
+
+template<class T, uint n>
+void CollisionContext<T, n>::recordHistory() {
+	for (auto it = mPrevTransforms.begin(); it != mPrevTransforms.end(); it++) {
+		it->second->deleteChainParents();
+		delete it->second;
+	}
+	mPrevTransforms.clear();
+
+	for (auto it = mEvaluations.begin(); it != mEvaluations.end(); it++) {
+		mPrevTransforms[it->getParentMask()] = it->getParentMask()->getTransform().cloneChain();
+	}
+
+	mPrevPartnering.clear();
+	for (auto it = mPartnering.begin(); it != mPartnering.end(); it++) {
+		mPrevPartnering.insert(std::pair<CollisionMask<T, n>*, CollisionMask<T, n>*>(it->first, it->second.mMask));
+	}
 }
 
 template<class T, uint n>
@@ -337,6 +365,74 @@ void CollisionContext<T, n>::partnerFiltered(std::vector<typename BinaryCollisio
 }
 
 template<class T, uint n>
+void CollisionContext<T, n>::narrowCollision(
+	CollisionMask<T, n>& in_mask1, CollisionMask<T, n>& in_mask2,
+	const Transform<T, n>& in_separated1, const Transform<T, n>& in_separated2,
+	Collision<T, n>& inout_collision, uint in_nIterations) {
+
+	Transform<T, n> original1 = in_mask1.getTransform();
+	Transform<T, n> original2 = in_mask2.getTransform();
+	Transform<T, n> hit1 = in_mask1.getTransform();
+	Transform<T, n> hit2 = in_mask2.getTransform();
+	Transform<T, n> miss1 = in_separated1;
+	Transform<T, n> miss2 = in_separated2;
+
+	Collision<T, n> collision;
+
+	InPlaceCollisionEvaluator<T, n> collisionEvaluator;
+	collisionEvaluator.returnPoint(true);
+	collisionEvaluator.returnSeparator(true);
+
+	in_mask1.getTransform() = miss1;
+	in_mask2.getTransform() = miss2;
+
+	collision = collisionEvaluator.evaluate(in_mask1, in_mask2);
+	if (collision.mDid) throw InvalidArgumentException();
+	inout_collision.mOwner = collision.mOwner;
+	inout_collision.mSeparator = collision.mSeparator;
+
+	Transform<T, n>* test1;
+	Transform<T, n>* test2;
+	std::vector<Transform<T, n>*> tests1, tests2;
+	for (uint i = 0; i < in_nIterations; i++) {
+		test1 = miss1.lerpChain(hit1, 0.5);
+		test2 = miss2.lerpChain(hit2, 0.5);
+		tests1.push_back(test1);
+		tests2.push_back(test2);
+
+		in_mask1.getTransform() = *test1;
+		in_mask2.getTransform() = *test2;
+
+		collision = collisionEvaluator.evaluate(in_mask1, in_mask2);
+		if (collision.mDid) {
+			hit1 = *test1;
+			hit2 = *test2;
+			inout_collision.mDid = collision.mDid;
+			inout_collision.mPoint = collision.mPoint;
+		}
+		else {
+			miss1 = *test1;
+			miss2 = *test2;
+			inout_collision.mSeparator = collision.mSeparator;
+			inout_collision.mOwner = collision.mOwner;
+		}
+	}
+
+	for (auto it = tests1.begin(); it != tests1.end(); it++) {
+		(*it)->deleteChainParents();
+		delete (*it);
+	}
+	for (auto it = tests2.begin(); it != tests2.end(); it++) {
+		(*it)->deleteChainParents();
+		delete (*it);
+	}
+
+	in_mask1.getTransform() = original1;
+	in_mask2.getTransform() = original2;
+}
+
+/*
+template<class T, uint n>
 void CollisionContext<T, n>::partnerIfCollide(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, Partnering& in_partnering) {
 	Collision<T, n> collision;
 	InPlaceCollisionEvaluator<T, n> collisionEvaluator;
@@ -356,6 +452,8 @@ void CollisionContext<T, n>::partnerIfCollide(CollisionMask<T, n>* in_mask1, Col
 	}
 }
 
+*/
+
 template<class T, uint n>
 void CollisionContext<T, n>::partnerIfCollideAsync(
 	CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, 
@@ -371,6 +469,25 @@ void CollisionContext<T, n>::partnerIfCollideAsync(
 
 	if ((collision = collisionEvaluator.evaluate(*in_mask1, *in_mask2)).mDid) {
 		std::lock_guard<std::mutex> lock(in_mutex);
+
+		bool firstHit = mPrevTransforms.count(in_maskToPartner1) && mPrevTransforms.count(in_maskToPartner2);
+		if (firstHit) {
+			auto prevRange = mPrevPartnering.equal_range(in_maskToPartner1);
+			for (auto it = prevRange.first; it != prevRange.second; it++) {
+				if (it->second == in_maskToPartner2) {
+					firstHit = false;
+					break;
+				}
+			}
+		}
+
+		if (firstHit) {
+			narrowCollision(
+				*in_maskToPartner1, *in_maskToPartner2, 
+				*mPrevTransforms[in_maskToPartner1], *mPrevTransforms[in_maskToPartner2], 
+				collision, 5
+			);
+		}
 
 		if (collision.mOwner == in_mask1) collision.mOwner = in_maskToPartner1;
 		if (collision.mOwner == in_mask2) collision.mOwner = in_maskToPartner2;

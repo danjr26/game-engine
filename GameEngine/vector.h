@@ -248,8 +248,8 @@ public:
 		}
 	}
 
-	Vector<T, n> lerp(T s, const Vector<T, n> v) const {
-		return *this * ((T)1 - s) + v * s;
+	Vector<T, n> lerp(const Vector<T, n> v, T t) const {
+		return *this * ((T)1 - t) + v * t;
 	}
 
 	Vector<T, n> compwise(const Vector<T, n>& v) const {

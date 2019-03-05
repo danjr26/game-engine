@@ -1254,7 +1254,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::evaluateTyped(LineSegment2Colli
 		diff1 = corners[i] - projectionPoints[i];
 		diff2 = corners[(i + 1) % 3] - projectionPoints[(i + 1) % 3];
 		if (diff1.dot(diff2) < 0.0) {
-			testPoint = projectionPoints[i].lerp(diff2.magnitude() / diff1.magnitude(), projectionPoints[(i + 1) % 3]);
+			testPoint = projectionPoints[i].lerp(projectionPoints[(i + 1) % 3], diff2.magnitude() / diff1.magnitude());
 			if (GEUtil::betwInc(
 					lineSegment.getProjectionCoefficient(testPoint),
 					lineSegment.getProjectionCoefficient1(),
@@ -2008,7 +2008,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::evaluateTyped(Line2CollisionMas
 		if (diff1.dot(diff2) < 0.0) {
 			collision.mDid = true;
 			if (mReturnPoint) {
-				collision.mPoint = projectionPoints[i].lerp(diff2.magnitude() / diff1.magnitude(), projectionPoints[(i + 1) % 3]);
+				collision.mPoint = projectionPoints[i].lerp(projectionPoints[(i + 1) % 3], diff2.magnitude() / diff1.magnitude());
 			}
 			break;
 		}

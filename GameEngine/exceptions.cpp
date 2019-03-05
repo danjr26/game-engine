@@ -29,7 +29,7 @@ void handleFatalException(const std::exception& in_exception) {
 	std::string message = 
 		std::string("a fatal error occurred. (") + 
 		in_exception.what() + ") \n\n" + 
-		"The application will now exit to desktop.";
+		"The application will now aa to desktop.";
 	FatalAppExitA(0, message.c_str());
 }
 
