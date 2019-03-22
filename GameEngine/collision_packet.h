@@ -4,15 +4,11 @@
 #include "collision.h"
 #include "definitions.h"
 #include "located_vector.h"
+#include "damage_packet.h"
 
 struct CollisionPacket {
-	enum Message : uint {
-
-	};
-
-	uint message;
-	LocatedVector2d impulse;
-	float damage;
+	LocatedVector2d mImpulse;
+	DamagePacket mDamage;
 };
 
 #endif

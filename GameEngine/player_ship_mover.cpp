@@ -1,6 +1,7 @@
 #include "player_ship_mover.h"
 #include "player_ship.h"
 #include "game_engine.h"
+#include "game.h"
 #include "misc.h"
 
 PlayerShipMover::PlayerShipMover(PlayerShip& in_parent) :
@@ -47,3 +48,5 @@ void PlayerShipMover::update(double in_dt) {
 	rigidBody.setLinearVelocity(linearVelocity);
 	rigidBody.setAngularVelocity(angularVelocity);
 }
+
+void PlayerShipMover::init() {}

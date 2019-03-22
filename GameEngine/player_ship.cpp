@@ -1,6 +1,7 @@
 #include "player_ship.h"
 #include "game_engine.h"
 #include "basic_collision_mask.h"
+#include "game.h"
 
 PlayerShip::PlayerShip() :
 	mRenderer(*this),
@@ -10,6 +11,8 @@ PlayerShip::PlayerShip() :
 	mCollisionResponder(*this),
 	mRigidBody() {
 
+	subTransform(&mRigidBody.getTransform());
+
 	GE.perFrameUpdate().add(this);
 
 	CircleCollisionMask<double> mask(Circled::fromPointRadius(Vector2d(), 0.25));
@@ -18,10 +21,11 @@ PlayerShip::PlayerShip() :
 	mRigidBody.setAngularMass(0);
 	mRigidBody.setLinearMass(1.0);
 
-	mRigidBody.getTransform().setParent(&mTransform);
 	getCollisionMask().addFilter(Game::MainCollisionContextFilters::player_ship);
 	getCollisionMask().setParent((CollisionResponder*)&mCollisionResponder);
 	GE.game().getMainCollisionContext().add(&getCollisionMask());
+
+	initMembers();
 }
 
 PlayerShipRenderer& PlayerShip::getRenderer() {
@@ -58,6 +62,10 @@ void PlayerShip::update(double in_dt) {
 	mMover.update(in_dt);
 	mCameraMover.update(in_dt);
 	mWeaponsSystem.update(in_dt);
+}
+
+void PlayerShip::initMembers() {
+	mRenderer.init();
 }
 
 

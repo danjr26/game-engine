@@ -13,6 +13,7 @@
 class Sprite : public RenderableObject, public DeepTransformableObject2d {
 protected:
 	Transform2d mInnerTransform;
+	DepthTransform2d mDepthTransform;
 	MeshVertexData mMeshVertexData;
 	MeshVertexGPUPusher mGPUPusher;
 	TextureInstance mTextureInstance;

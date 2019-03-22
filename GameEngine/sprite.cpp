@@ -9,7 +9,7 @@ Sprite::Sprite(const AxisAlignedRectangled& in_rectangle, Texture* in_texture, c
 	mTextureInstance(in_texture) {
 
 	setRectangle(in_rectangle);
-	mInnerTransform.setParent(&mTransform);
+	mInnerTransform.setParent(&getTransform());
 
 	Vector3f positions[] = {
 		Vector3f(0.0f, 0.0f, 0.0f),

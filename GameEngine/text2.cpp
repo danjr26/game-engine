@@ -12,7 +12,7 @@ Text2::Text2(const std::string& in_text, FontFaceRasterSet* in_rasterSet, ColorR
 		throw InvalidArgumentException("invalid raster texture passed to text");
 	}
 
-	mScrollTransform.setParent(&mTransform);
+	mScrollTransform.setParent(&getTransform());
 
 	createOpenGL();
 }
@@ -209,7 +209,7 @@ void Text2::replace(const std::string& in_text, uint in_start, uint in_number) {
 }
 
 double Text2::z() const {
-	return mDepthTransform.getWorldDepth();
+	return getDepthTransform().getWorldDepth();
 }
 
 bool Text2::shouldCull() const {

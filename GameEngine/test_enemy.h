@@ -5,8 +5,9 @@
 #include "test_enemy_mover.h"
 #include "deep_transformable_object.h"
 #include "rigid_body.h"
+#include "destructable_object.h"
 
-class TestEnemy : public DeepTransformableObject2d {
+class TestEnemy : public DeepTransformableObject2d, public DestructableObject {
 private:
 	TestEnemyRenderer mRenderer;
 	TestEnemyMover mMover;
@@ -19,6 +20,9 @@ public:
 	TestEnemyMover& getMover();
 	RigidBody<2>& getRigidBody();
 	CollisionMask2d& getCollisionMask();
+
+private:
+	void initMembers();
 };
 
 #endif

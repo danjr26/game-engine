@@ -123,7 +123,7 @@ TestBulletImpactSparksSpecifier::TestBulletImpactSparksSpecifier() :
 	mColorTransition(),
 	mMaxParticles(10) {
 	
-	mColorTransition.mKeys.push_back({ ColorRGBAf(0.5, 0.5, 1.0, 0.5), 0.3 });
+	mColorTransition.mKeys.push_back({ ColorRGBAf(0.5, 0.5, 1.0, 0.7), 0.3 });
 	mColorTransition.mKeys.push_back({ ColorRGBAf(0.5, 0.5, 0.5, 0.0), 0.0 });
 }
 

@@ -22,6 +22,14 @@ EditableText::EditableText(TextInputContext* in_context, FontFaceRasterSet* in_r
 	//text.setScrollPosition(Vector2d(0, 50));
 }
 
+Transform2d& EditableText::getTransform() {
+	return mTransform;
+}
+
+DepthTransform2d& EditableText::getDepthTransform() {
+	return mDepthTransform; 
+}
+
 void EditableText::setCursorPosition(uint in_cursorPos) {
 	mCursorPosition = GEUtil::min<uint>(in_cursorPos, (uint)mText.getText().size());
 	updateCursorSprite();

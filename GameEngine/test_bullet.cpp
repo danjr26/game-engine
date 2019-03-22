@@ -1,6 +1,7 @@
 #include "test_bullet.h"
 #include "game_engine.h"
 #include "particle_system2_specifiers.h"
+#include "game.h"
 
 TestBullet::TestBullet() :
 	mCollisionResponder(*this),
@@ -18,7 +19,7 @@ TestBullet::TestBullet() :
 
 	mSprite.getTextureInstance().getSettings().setMinifyFilter(TextureSettings::FilterMode::trilinear);
 
-	mSprite.setColor(ColorRGBAf(0.1, 0.2, 0.9, 1.0));
+	mSprite.setColor(ColorRGBAf(0.5, 0.5, 0.9, 1.0));
 
 	GE.render().add(&mSprite);
 	GE.perFrameUpdate().add(this);

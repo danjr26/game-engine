@@ -51,15 +51,15 @@ Vector2d RigidBody<2>::getRelativePointVelocity(const Vector2d& in_point) {
 template<uint n>
 Vector<double, n> RigidBody<n>::getLocalPointVelocity(const Vector<double, n>& in_point) {
 	return getRelativePointVelocity(
-		in_point - mTransform.getLocalPosition()
+		in_point - getTransform().getLocalPosition()
 	);
 }
 
 template<uint n>
 Vector<double, n> RigidBody<n>::getWorldPointVelocity(const Vector<double, n>& in_point) {
-	URotation2d rotation = (mTransform.getParent() == nullptr) ? URotation2d() : mTransform.getWorldRotation().getInverse();
+	URotation2d rotation = (getTransform().getParent() == nullptr) ? URotation2d() : getTransform().getWorldRotation().getInverse();
 	return getRelativePointVelocity(
-		rotation.applyTo(in_point - mTransform.getWorldPosition())
+		rotation.applyTo(in_point - getTransform().getWorldPosition())
 	);
 }
 
@@ -142,16 +142,16 @@ void RigidBody<2>::applyRelativeImpulse(const LocatedVector<double, 2>& in_impul
 template<uint n>
 void RigidBody<n>::applyLocalImpulse(const LocatedVector<double, n>& in_impulse) {
 	applyRelativeImpulse({
-		in_impulse.mPosition - mTransform.getLocalPosition(),
+		in_impulse.mPosition - getTransform().getLocalPosition(),
 		in_impulse.mVector
 	});
 }
 
 template<uint n>
 void RigidBody<n>::applyWorldImpulse(const LocatedVector<double, n>& in_impulse) {
-	URotation2d rotation = (mTransform.getParent() == nullptr) ? URotation2d() : mTransform.getParent()->getWorldRotation().getInverse();
+	URotation2d rotation = (getTransform().getParent() == nullptr) ? URotation2d() : getTransform().getParent()->getWorldRotation().getInverse();
 	applyRelativeImpulse({
-		rotation.applyTo(in_impulse.mPosition - mTransform.getWorldPosition()),
+		rotation.applyTo(in_impulse.mPosition - getTransform().getWorldPosition()),
 		rotation.applyTo(in_impulse.mVector)
 	});
 }
@@ -162,7 +162,7 @@ Vector2d RigidBody<2>::impulseToChangePointVelocity(const Vector2d& in_point, co
 	}
 
 	Vector2d normal = in_dv.normalized();
-	Vector2d radius = in_point - mTransform.getWorldPosition();
+	Vector2d radius = in_point - getTransform().getWorldPosition();
 	double linearFactor = (mLinearMass == 0.0) ? 0.0 : 1.0 / mLinearMass;
 	Vector2d angularFactor = (mAngularMass == 0.0) ? Vector2d() : radius.orthogonal() * radius.magnitude() / mAngularMass;
 	double denominator = linearFactor + angularFactor.dot(normal);
@@ -172,8 +172,8 @@ Vector2d RigidBody<2>::impulseToChangePointVelocity(const Vector2d& in_point, co
 
 template<uint n>
 void RigidBody<n>::update(double in_dt) {
-	mTransform.translateWorld(mLinearVelocity * in_dt);
-	mTransform.rotateWorld(mAngularVelocity * in_dt);
+	getTransform().translateWorld(mLinearVelocity * in_dt);
+	getTransform().rotateWorld(mAngularVelocity * in_dt);
 }
 
 template<uint n>

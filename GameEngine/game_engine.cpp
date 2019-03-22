@@ -1,4 +1,5 @@
 #include "game_engine.h"
+#include "game.h"
 
 GameEngine* GameEngine::instance = nullptr;
 

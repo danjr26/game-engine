@@ -12,6 +12,8 @@ private:
 public:
 	PlayerShipRenderer(PlayerShip& in_parent);
 	~PlayerShipRenderer();
+
+	void init();
 };
 
 #endif

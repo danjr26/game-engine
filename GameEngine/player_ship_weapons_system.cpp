@@ -1,5 +1,6 @@
 #include "player_ship_weapons_system.h"
 #include "game_engine.h"
+#include "game.h"
 
 PlayerShipWeaponsSystem::PlayerShipWeaponsSystem(PlayerShip& in_parent) :
 	mParent(in_parent),

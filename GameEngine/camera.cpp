@@ -23,11 +23,11 @@ Rectangled Camera::getRectangle() const {
 
 Rectangled Camera::getTransformedRectangle() const {
 	Rectangled rect = getRectangle();
-	Vector2d origin = Vector2d(mTransform.applyToLocalPoint(Vector3d(rect.getOrigin(), 0)));
+	Vector2d origin = Vector2d(getTransform().applyToLocalPoint(Vector3d(rect.getOrigin(), 0)));
 	Vector2d axes[2];
 	rect.getAxes(axes);
 	for (uint i = 0; i < 2; i++) {
-		axes[i] = Vector2d(mTransform.applyToLocalVector(Vector3d(axes[i], 0)));
+		axes[i] = Vector2d(getTransform().applyToLocalVector(Vector3d(axes[i], 0)));
 	}
 	return Rectangled::fromOriginAxes(origin, axes);
 }
@@ -37,7 +37,7 @@ Matrix4f Camera::getProjectionMatrix() {
 }
 
 Matrix4f Camera::getViewMatrix() {
-	return mTransform.getWorldInverseMatrix();
+	return getTransform().getWorldInverseMatrix();
 }
 
 Matrix4f Camera::getMatrix() {

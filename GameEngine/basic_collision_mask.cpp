@@ -32,7 +32,7 @@ neuterable_ptr<Basis> BasicCollisionMask<Basis, T, 2>::getTransformedBasis() {
 	else {
 		basis_t* ptr = new basis_t(mWrappedBasis.mBasis);
 		neuterable_ptr_t out = neuterable_ptr_t(ptr);
-		reinterpret_cast<CollisionBasisWrapper<Basis, T>*>(ptr)->applyTransform(mTransform);
+		reinterpret_cast<CollisionBasisWrapper<Basis, T>*>(ptr)->applyTransform(getTransform());
 		return out;
 	}
 }
@@ -47,14 +47,14 @@ neuterable_ptr<const Basis> BasicCollisionMask<Basis, T, 2>::getTransformedBasis
 	else {
 		basis_t* ptr = new basis_t(mWrappedBasis.mBasis);
 		neuterable_cptr_t out = neuterable_cptr_t(ptr);
-		reinterpret_cast<CollisionBasisWrapper<Basis, T>*>(ptr)->applyTransform(mTransform);
+		reinterpret_cast<CollisionBasisWrapper<Basis, T>*>(ptr)->applyTransform(getTransform());
 		return out;
 	}
 }
 
 template<class Basis, class T>
 void BasicCollisionMask<Basis, T, 2>::applyTransform() {
-	mWrappedBasis.applyTransform(mTransform);
+	mWrappedBasis.applyTransform(getTransform());
 }
 
 template<class Basis, class T>

@@ -64,3 +64,7 @@ PlayerShip* Game::getPlayerShip() {
 CollisionContext2d& Game::getMainCollisionContext() {
 	return mMainCollisionContext;
 }
+
+CollisionResponseManager& Game::getCollisionResponseManager() {
+	return mCollisionResponseManager;
+}

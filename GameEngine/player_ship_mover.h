@@ -20,6 +20,7 @@ public:
 	PlayerShipMover(PlayerShip& in_parent);
 
 	void update(double in_dt);
+	void init();
 };
 
 #endif

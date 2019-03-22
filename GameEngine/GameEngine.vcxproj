@@ -182,8 +182,10 @@
     <ClInclude Include="collision_mask.h" />
     <ClInclude Include="collision_packet.h" />
     <ClInclude Include="collision_responder.h" />
+    <ClInclude Include="collision_response_manager.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="cubic_transitioner.h" />
+    <ClInclude Include="damage_packet.h" />
     <ClInclude Include="debug_mesh_vertex_data_renderer.h" />
     <ClInclude Include="deep_object.h" />
     <ClInclude Include="deep_transformable_object.h" />
@@ -225,6 +227,7 @@
     <ClInclude Include="test_bullet.h" />
     <ClInclude Include="test_bullet_collision_responder.h" />
     <ClInclude Include="test_enemy.h" />
+    <ClInclude Include="test_enemy_health.h" />
     <ClInclude Include="test_enemy_mover.h" />
     <ClInclude Include="test_enemy_renderer.h" />
     <ClInclude Include="test_weapon.h" />
@@ -355,6 +358,7 @@
     <ClCompile Include="collision_evaluator.cpp" />
     <ClCompile Include="collision_manager.cpp" />
     <ClCompile Include="collision_mask.cpp" />
+    <ClCompile Include="collision_response_manager.cpp" />
     <ClCompile Include="debug_mesh_vertex_data_renderer.cpp" />
     <ClCompile Include="deep_object.cpp" />
     <ClCompile Include="deep_transformable_object.cpp" />

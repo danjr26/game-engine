@@ -195,7 +195,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::evaluateTyped(AARectangleCollis
 		}
 		else if (mReturnSeparator) {
 			collision.mSeparator[i1] = 0;
-			collision.mSeparator[i2] = (point[i2] < minima[i2]) ? 1 : -1;
+			collision.mSeparator[i2] = (point[i2] < minima[i2]) ? (T)1 : (T)-1;
 			collision.mOwner = &in_mask2;
 		}
 

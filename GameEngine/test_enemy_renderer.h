@@ -13,6 +13,8 @@ private:
 public:
 	TestEnemyRenderer(TestEnemy& in_parent);
 	~TestEnemyRenderer();
+
+	void init();
 };
 
 #endif

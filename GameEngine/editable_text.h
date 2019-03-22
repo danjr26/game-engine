@@ -12,6 +12,9 @@ class EditableText : public RenderableObject, public DeepTransformableObject2d, 
 private:
 	const float mCursorWidth = 1.0f;
 
+	Transform2d mTransform;
+	DepthTransform2d mDepthTransform;
+
 	InputListener mInput;
 	Text2 mText;
 	Sprite mCursorSprite;
@@ -20,6 +23,10 @@ private:
 
 public:
 	EditableText(TextInputContext* in_context, FontFaceRasterSet* in_rasterSet);
+
+	Transform2d& getTransform();
+	DepthTransform2d& getDepthTransform();
+
 	void setCursorPosition(uint in_cursorPos);
 	void incrementCursor();
 	void decrementCursor();

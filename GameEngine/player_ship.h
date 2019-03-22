@@ -31,6 +31,9 @@ public:
 	PlayerShipCollisionResponder& getCollisionResponder();
 
 	virtual void update(double in_dt) override;
+
+private:
+	void initMembers();
 };
 
 #endif

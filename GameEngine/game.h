@@ -5,12 +5,14 @@
 #include "player_ship_input_context.h"
 #include "player_ship.h"
 #include "collision_context.h"
+#include "collision_response_manager.h"
 
 class Game {
 private:
 	PointerInputContext mPointerInput;
 	PlayerShipInputContext mPlayerShipInput;
 	CollisionContext2d mMainCollisionContext;
+	CollisionResponseManager mCollisionResponseManager;
 	PlayerShip* mPlayerShip;
 
 public:
@@ -37,6 +39,7 @@ public:
 	PlayerShipInputContext& getPlayerShipInput();
 	PlayerShip* getPlayerShip();
 	CollisionContext2d& getMainCollisionContext();
+	CollisionResponseManager& getCollisionResponseManager();
 };
 
 #endif

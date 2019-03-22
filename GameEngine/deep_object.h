@@ -2,15 +2,20 @@
 #define DEEP_OBJECT_H
 
 #include "depth_transform.h"
+#include "misc.h"
 
 template<class T, uint n>
 class DeepObject {
-protected:
-	DepthTransform<T, n> mDepthTransform;
+private:
+	neuterable_ptr<DepthTransform<T, n>> mDepthTransform;
 
 public:
 	DeepObject();
+	DeepObject(DepthTransform<T, n>* in_depthTransform);
+
 	DepthTransform<T, n>& getDepthTransform();
+	DepthTransform<T, n> const& getDepthTransform() const;
+	void subDepthTransform(DepthTransform<T, n>* in_depthTransform);
 };
 
 using DeepObject2f = DeepObject<float, 2>;

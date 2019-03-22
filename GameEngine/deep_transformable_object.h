@@ -7,6 +7,8 @@
 template<class T, uint n>
 class DeepTransformableObject : public TransformableObject<T, n>, public DeepObject<T, n> {
 public:
+	DeepTransformableObject(Transform<T, n>* in_transform = nullptr, DepthTransform<T, n>* in_depthTransform = nullptr);
+
 	Matrix<T, 4, 4> getDeepLocalMatrix() const;
 	Matrix<T, 4, 4> getDeepWorldMatrix() const;
 };

@@ -16,8 +16,9 @@
 #include "exceptions.h"
 #include "async_task_manager.h"
 #include "physics_manager.h"
-#include "game.h"
 #include "destruction_manager.h"
+
+class Game;
 
 #define GE GameEngine::getInstance()
 
