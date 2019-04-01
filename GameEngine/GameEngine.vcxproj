@@ -387,6 +387,7 @@
     <ClCompile Include="test_bullet.cpp" />
     <ClCompile Include="test_bullet_collision_responder.cpp" />
     <ClCompile Include="test_enemy.cpp" />
+    <ClCompile Include="test_enemy_health.cpp" />
     <ClCompile Include="test_enemy_mover.cpp" />
     <ClCompile Include="test_enemy_renderer.cpp" />
     <ClCompile Include="test_weapon.cpp" />

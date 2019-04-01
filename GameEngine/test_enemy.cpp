@@ -4,9 +4,10 @@
 
 TestEnemy::TestEnemy() :
 	mRenderer(*this),
-	mMover(*this) {
+	mMover(*this),
+	mHealth(*this) {
 	
-	GE.perFrameUpdate().add(&mMover);
+	GE.perFrameUpdate().add(this);
 
 	subTransform(&mRigidBody.getTransform());
 
@@ -20,12 +21,46 @@ TestEnemy::TestEnemy() :
 	initMembers();
 }
 
+TestEnemy::~TestEnemy() {
+	GE.perFrameUpdate().remove(this);
+	GE.game().getMainCollisionContext().remove(&getCollisionMask());
+}
+
+void TestEnemy::update(double in_dt) {
+	std::vector<CollisionContext2d::CollisionPartner*> partners;
+	CollisionContext2d& collisionContext = GE.game().getMainCollisionContext();
+	collisionContext.getPartners(&getCollisionMask(), partners);
+
+	CollisionResponder::Partner thisAsPartner;
+	thisAsPartner.mMask = &getCollisionMask();
+
+	for (auto it = partners.begin(); it < partners.end(); it++) {
+		CollisionResponder* responder = (CollisionResponder*)(*it)->mMask->getParent();
+		thisAsPartner.mCollision = (*it)->mCollision;
+		if (responder) {
+			CollisionPacket collisionPacket;
+			responder->respond(thisAsPartner, collisionPacket);
+			mHealth.damage(collisionPacket.mDamage);
+		}
+	}
+
+	if (mHealth.isDead()) {
+		GE.destruction().add(this);
+	}
+
+	mMover.update(in_dt);
+}
+
 TestEnemyRenderer& TestEnemy::getRenderer() {
 	return mRenderer;
 }
 
 TestEnemyMover& TestEnemy::getMover() {
 	return mMover;
+}
+
+TestEnemyHealth& TestEnemy::getHealth() {
+	return mHealth;
 }
 
 RigidBody<2>& TestEnemy::getRigidBody() {

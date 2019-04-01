@@ -19,9 +19,9 @@ void TestParticleSpecifier::update(ParticleSystem2& in_system, Accessor& in_acce
 	in_system.access(0, in_accessor);
 	for (uint i = 0; i < in_system.getCount(); i++) {
 		in_accessor.mAge[i] += (float)in_dt;
-		in_accessor.mPosition[i] += in_accessor.mLinearVelocity[i] * in_dt;
+		in_accessor.mPosition[i] += in_accessor.mLinearVelocity[i] * (float)in_dt;
 		in_accessor.mPosition[i] -= Vector3f(300, 300, 0);
-		in_accessor.mPosition[i].rotate(Vector3f(0, 0, 1), 0.5f * PI * in_dt);
+		in_accessor.mPosition[i].rotate(Vector3f(0, 0, 1), 0.5f * (float)PI * (float)in_dt);
 		in_accessor.mPosition[i] += Vector3f(300, 300, 0);
 		in_accessor.mColor[i] = mColorTransition.evaluate(in_accessor.mAge[i]);
 	}
@@ -128,7 +128,6 @@ TestBulletImpactSparksSpecifier::TestBulletImpactSparksSpecifier() :
 }
 
 void TestBulletImpactSparksSpecifier::init(ParticleSystem2& in_system, Accessor& in_accessor) {
-	in_system.access(0, in_accessor);
 	uint index = in_system.add(mMaxParticles);
 	in_system.access(index, in_accessor);
 	for (uint i = 0; i < mMaxParticles; i++) {
@@ -170,3 +169,49 @@ void TestBulletImpactSparksSpecifier::destroy(ParticleSystem2& in_system, Access
 }
 
 void TestBulletImpactSparksSpecifier::generate(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) {}
+
+TestEnemyExplosionWaveSpecifier::TestEnemyExplosionWaveSpecifier() :
+	mColorTransition() {
+	
+	mColorTransition.mKeys.push_back({ ColorRGBAf(1.0, 1.0, 1.0, 1.0), 0.5 });
+	mColorTransition.mKeys.push_back({ ColorRGBAf(1.0, 1.0, 1.0, 0.0), 0.0 });
+}
+
+void TestEnemyExplosionWaveSpecifier::init(ParticleSystem2& in_system, Accessor& in_accessor) {
+	uint nParticles = 1;
+	uint index = in_system.add(nParticles);
+	in_system.access(index, in_accessor);
+	for (uint i = 0; i < nParticles; i++) {
+		in_accessor.clear(i);
+		in_accessor.mDimensions[i] = Vector2f(0.5, 0.5);
+		in_accessor.mUV2[i] = Vector2f(1, 1);
+	}
+}
+
+void TestEnemyExplosionWaveSpecifier::update(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) {
+	in_system.access(0, in_accessor);
+	for (uint i = 0; i < in_system.getCount(); i++) {
+		in_accessor.mAge[i] += (float)in_dt;
+		in_accessor.mDimensions[i] += Vector2f(4.0, 4.0) * (float)in_dt;
+		in_accessor.mColor[i] = mColorTransition.evaluate(in_accessor.mAge[i]);
+	}
+}
+
+void TestEnemyExplosionWaveSpecifier::destroy(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) {
+	in_system.access(0, in_accessor);
+	for (uint i = 0; i < in_system.getCount();) {
+		if (in_accessor.mAge[i] > 0.5f) {
+			in_system.remove(i);
+		}
+		else {
+			i++;
+		}
+	}
+
+	if (in_system.getCount() == 0) {
+		GE.destruction().add(&in_system);
+	}
+}
+
+void TestEnemyExplosionWaveSpecifier::generate(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) {}
+

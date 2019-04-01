@@ -5,14 +5,15 @@
 
 class TestEnemy;
 
-class TestEnemyMover : public PerFrameUpdateableObject {
+class TestEnemyMover {
 private:
 	TestEnemy& mParent;
 
 public:
 	TestEnemyMover(TestEnemy& in_parent);
+	~TestEnemyMover();
 
-	void update(double in_dt) override;
+	void update(double in_dt);
 };
 
 #endif

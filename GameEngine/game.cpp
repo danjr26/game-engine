@@ -47,6 +47,12 @@ void Game::Init() {
 	ParticleSystem2* dustSystem = new ParticleSystem2(dustTex, dustSpecifier);
 	GE.perFrameUpdate().add(dustSystem);
 	GE.render().add(dustSystem);
+
+	Texture* waveTex = GE.assets().get<Texture>("RingWaveTexture");
+	TestEnemyExplosionWaveSpecifier* waveSpecifier = new TestEnemyExplosionWaveSpecifier;
+	ParticleSystem2* waveSystem = new ParticleSystem2(waveTex, waveSpecifier);
+	GE.perFrameUpdate().add(waveSystem);
+	GE.render().add(waveSystem);
 }
 
 PointerInputContext& Game::getPointerInput() {

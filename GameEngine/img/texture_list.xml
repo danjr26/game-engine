@@ -1,5 +1,6 @@
 <TextureList>
-	<Texture2 name="PlayerShipSpriteTexture" file="img/ship.png"/>
-	<Texture2 name="SparkSpriteTexture" file="img/spark.png"/>
-	<Texture2 name="LaserSpriteTexture" file="image/laser.png"/>
+	<Texture2 name="PlayerShipSpriteTexture" file="img/ship.png" flags="mipmaps"/>
+	<Texture2 name="SparkSpriteTexture" file="img/spark.png" flags="mipmaps"/>
+	<Texture2 name="LaserSpriteTexture" file="img/laser.png" flags="mipmaps"/>
+	<Texture2 name="RingWaveTexture" file="img/ring_wave.png" flags="mipmaps"/>
 </TextureList>

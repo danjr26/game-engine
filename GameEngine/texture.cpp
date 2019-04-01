@@ -1,8 +1,12 @@
 #include "texture.h"
+#include "rapidxml-1.13/rapidxml.hpp"
+#include <fstream>
+#include <sstream>
+#include <unordered_map>
 #include "log.h"
 #include "game_engine.h"
 
-Texture::Texture(Type in_type, std::string in_filename, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA) :
+Texture::Texture(Type in_type, std::string in_filename, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA) :
 	mType(in_type),
 	mNSamplesMSAA(in_nSamplesMSAA),
 	mNBitsPerChannel(in_nBitsPerChannel),
@@ -26,7 +30,7 @@ Texture::Texture(Type in_type, std::string in_filename, ubyte in_nBitsPerChannel
 	finishSetup();
 }
 
-Texture::Texture(Type in_type, Vector3i in_dimensions, ubyte* in_data, ubyte in_nChannels, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA) :
+Texture::Texture(Type in_type, Vector3i in_dimensions, ubyte* in_data, ubyte in_nChannels, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA) :
 	mType(in_type),
 	mDimensions(in_dimensions),
 	mNSamplesMSAA(in_nSamplesMSAA),
@@ -41,7 +45,7 @@ Texture::Texture(Type in_type, Vector3i in_dimensions, ubyte* in_data, ubyte in_
 	finishSetup();
 }
 
-Texture::Texture(Type in_type, Vector3i in_dimensions, ColorRGBAc in_color, ubyte in_nChannels, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA) :
+Texture::Texture(Type in_type, Vector3i in_dimensions, ColorRGBAc in_color, ubyte in_nChannels, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA) :
 	mType(in_type),
 	mDimensions(in_dimensions),
 	mNSamplesMSAA(in_nSamplesMSAA),
@@ -60,7 +64,7 @@ Texture::Texture(Type in_type, Vector3i in_dimensions, ColorRGBAc in_color, ubyt
 	finishSetup();
 }
 
-Texture::Texture(Type in_type, Vector3i in_dimensions, ubyte in_nChannels, ubyte in_nBitsPerChannel, Flags in_flags, ubyte in_nSamplesMSAA) :
+Texture::Texture(Type in_type, Vector3i in_dimensions, ubyte in_nChannels, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA) :
 	mType(in_type),
 	mData(nullptr),
 	mDimensions(in_dimensions),
@@ -138,6 +142,68 @@ uint Texture::getFlags() {
 
 const TextureSettings& Texture::getActiveSettings() {
 	return mActiveSettings;
+}
+
+void Texture::loadXMLList(std::string in_filename) {
+	std::ifstream file(in_filename);
+	if (!file.is_open()) {
+		Log::main(std::string("error: cannot open file '") + in_filename + "'");
+		GE.quit();
+	}
+
+	file.seekg(0, file.end);
+	uint length = (uint)file.tellg();
+	file.seekg(0, file.beg);
+
+	char* buffer = new char[length];
+	for (uint i = 0; i < length; i++) {
+		buffer[i] = '\0';
+	}
+	file.read(buffer, length);
+	file.close();
+
+	rapidxml::xml_document<char> doc;
+	doc.parse<0>(buffer);
+
+	auto masterNode = doc.first_node("TextureList");
+	if (!masterNode) {
+		Log::main(std::string("error: invalid texture list file '") + in_filename + "'");
+		GE.quit();
+	}
+
+	std::unordered_map<std::string, uint> flagMap = {
+		{"none", Flags::none},
+		{"readable", Flags::readable},
+		{"mipmaps", Flags::mipmaps},
+		{"hdr", Flags::hdr},
+		{"depth", Flags::depth}
+	};
+
+	for (auto node = masterNode->first_node("Texture2"); node; node = node->next_sibling("Texture2")) {
+		auto nameAttribute = node->first_attribute("name");
+		auto fileAttribute = node->first_attribute("file");
+		auto flagsAttribute = node->first_attribute("flags");
+
+		if (!nameAttribute || !fileAttribute) {
+			Log::main(std::string("error: invalid shader list file '") + in_filename + "'");
+			GE.quit();
+		}
+
+		uint flags = 0;
+		if (flagsAttribute) {
+			std::stringstream stream;
+			stream << flagsAttribute->value();
+			std::string flag;
+			while (std::getline(stream, flag, ',')) {
+				flags |= flagMap.at(flag);
+			}
+		}
+
+		Texture* texture = new Texture(Type::_2d, fileAttribute->value(), 8, flags);
+		GE.assets().add(nameAttribute->value(), texture);
+	}
+
+	delete[] buffer;
 }
 
 void Texture::finishSetup() {

@@ -12,7 +12,7 @@ mType(in_type) {
 	}
 
 	file.seekg(0, std::ios::end);
-	int length = file.tellg();   
+	int length = (int)file.tellg();   
 	char* buffer = new char[length]; 
 
 	for (int i = 0; i < length; i++) {
@@ -60,5 +60,6 @@ Shader::Type Shader::parseType(const std::string& in_text) {
 	if (in_text == "compute") return Type::compute;
 	Log::main(std::string("invalid shader type string literal '") + in_text + "'");
 	GE.quit();
+	return Type::vertex;
 }
 

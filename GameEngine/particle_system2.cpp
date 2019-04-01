@@ -134,3 +134,14 @@ void ParticleSystem2::render() {
 
 }
 
+void ParticleSystem2::Accessor::clear(uint in_index) {
+	mPosition[in_index] = position_t();
+	mColor[in_index] = color_t();
+	mUV1[in_index] = uv1_t();
+	mUV2[in_index] = uv2_t();
+	mDimensions[in_index] = dimensions_t();
+	mAngle[in_index] = angle_t(0);
+	mAge[in_index] = age_t(0);
+	mLinearVelocity[in_index] = linear_velocity_t();
+	mAngularVelocity[in_index] = angular_velocity_t(0);
+}

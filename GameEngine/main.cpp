@@ -36,13 +36,7 @@ void Test_Render(Window* window) {
 
 	FontFace::loadXMLList("fonts/font_list.xml");
 	ShaderProgram::loadXMLList("shaders/shader_list.xml");
-
-	Texture* spark = new Texture(Texture::Type::_2d, "img/spark.png", 8, Texture::Flags::mipmaps);
-	Texture* ship = new Texture(Texture::Type::_2d, "img/ship.png", 8, Texture::Flags::mipmaps);
-	Texture* laser = new Texture(Texture::Type::_2d, "img/laser.png", 8, Texture::Flags::mipmaps);
-	GE.assets().add("PlayerShipSpriteTexture", ship);
-	GE.assets().add("SparkSpriteTexture", spark);
-	GE.assets().add("LaserSpriteTexture", laser);
+	Texture::loadXMLList("img/texture_list.xml");
 
 	PointerInputContext pointerInput;
 	GE.input().add(&pointerInput);

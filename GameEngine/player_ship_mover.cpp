@@ -27,7 +27,6 @@ void PlayerShipMover::update(double in_dt) {
 
 	mParent.getTransform().translateWorld(linearVelocity * in_dt);
 
-	InputEvent _event;
 	mShipInput.clearEvents();
 	mPointerInput.clearEvents();
 

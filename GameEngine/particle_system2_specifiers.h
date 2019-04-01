@@ -7,7 +7,7 @@
 
 class TestParticleSpecifier : public ParticleSystem2::Specifier {
 	using Accessor = ParticleSystem2::Accessor;
-	CubicTransitioner<ColorRGBAf> mColorTransition;
+	CubicTransitioner<ColorRGBAf, float> mColorTransition;
 	Stepper mGenerateStepper;
 	uint mNGenerated;
 
@@ -22,7 +22,7 @@ public:
 
 class AmbientDustSpecifier : public ParticleSystem2::Specifier {
 	using Accessor = ParticleSystem2::Accessor;
-	CubicTransitioner<ColorRGBAf> mColorTransition;
+	CubicTransitioner<ColorRGBAf, float> mColorTransition;
 	uint mMaxParticles;
 
 public:
@@ -36,11 +36,24 @@ public:
 
 class TestBulletImpactSparksSpecifier : public ParticleSystem2::Specifier {
 	using Accessor = ParticleSystem2::Accessor;
-	CubicTransitioner<ColorRGBAf> mColorTransition;
+	CubicTransitioner<ColorRGBAf, float> mColorTransition;
 	uint mMaxParticles;
 
 public:
 	TestBulletImpactSparksSpecifier();
+
+	void init(ParticleSystem2& in_system, Accessor& in_accessor) override;
+	void update(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) override;
+	void destroy(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) override;
+	void generate(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) override;
+};
+
+class TestEnemyExplosionWaveSpecifier : public ParticleSystem2::Specifier {
+	using Accessor = ParticleSystem2::Accessor;
+	CubicTransitioner<ColorRGBAf, float> mColorTransition;
+
+public:
+	TestEnemyExplosionWaveSpecifier();
 
 	void init(ParticleSystem2& in_system, Accessor& in_accessor) override;
 	void update(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) override;

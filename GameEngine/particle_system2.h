@@ -35,6 +35,8 @@ public:
 		linear_velocity_t* mLinearVelocity;
 		angular_velocity_t* mAngularVelocity;
 		std::unordered_map<ubyte, void*> mExtra;
+
+		void clear(uint in_index);
 	};
 
 	class Specifier {
