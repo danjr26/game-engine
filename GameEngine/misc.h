@@ -268,8 +268,6 @@ namespace GEUtil {
 		return s;
 	}
 
-
-
 	template<class T>
 	T random();
 

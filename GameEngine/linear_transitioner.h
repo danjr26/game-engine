@@ -7,25 +7,25 @@
 template<class ValT, class TimeT = double>
 struct LinearTransitioner : Transitioner<ValT, TimeT> {
 	ValT evaluate(TimeT in_time) override {
-		if (keys.empty()) {
+		if (mKeys.empty()) {
 			throw ProcessFailureException();
 		}
 
 		if (in_time < 0) {
-			return keys.front().value;
+			return mKeys.front().mValue;
 		}
 
 		TimeT t = 0;
-		for (uint i = 0; i < keys.size() - 1; i++) {
-			t += keys[i].duration;
+		for (uint i = 0; i < mKeys.size() - 1; i++) {
+			t += mKeys[i].mDuration;
 			if (t >= in_time) {
-				TimeT interT = (in_time - (t - keys[i].duration)) / (keys[i].duration);
-				return keys[i].value * ((TimeT)1 - interT) + keys[i + 1].value * interT;
+				TimeT interT = (in_time - (t - mKeys[i].mDuration)) / (mKeys[i].mDuration);
+				return mKeys[i].mValue * ((TimeT)1 - interT) + mKeys[i + 1].mValue * interT;
 			}
 		}
 
-		return keys.back().value;
+		return mKeys.back().mValue;
 	}
 };
 
-endif
+#endif

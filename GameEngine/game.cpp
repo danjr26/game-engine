@@ -40,19 +40,13 @@ void Game::Init() {
 
 	TestEnemy* testEnemy = new TestEnemy();
 	testEnemy->getTransform().setLocalPosition(Vector2d(4, 4));
-	testEnemy->getDepthTransform().setLocalDepth(0.1);
+	testEnemy->getDepthTransform().setLocalDepth(-0.1);
 
 	Texture* dustTex = GE.assets().get<Texture>("SparkSpriteTexture");
 	AmbientDustSpecifier* dustSpecifier = new AmbientDustSpecifier;
 	ParticleSystem2* dustSystem = new ParticleSystem2(dustTex, dustSpecifier);
 	GE.perFrameUpdate().add(dustSystem);
 	GE.render().add(dustSystem);
-
-	Texture* waveTex = GE.assets().get<Texture>("RingWaveTexture");
-	TestEnemyExplosionWaveSpecifier* waveSpecifier = new TestEnemyExplosionWaveSpecifier;
-	ParticleSystem2* waveSystem = new ParticleSystem2(waveTex, waveSpecifier);
-	GE.perFrameUpdate().add(waveSystem);
-	GE.render().add(waveSystem);
 }
 
 PointerInputContext& Game::getPointerInput() {

@@ -1,6 +1,7 @@
 #include "test_enemy.h"
 #include "game_engine.h"
 #include "game.h"
+#include "particle_system2_specifiers.h"
 
 TestEnemy::TestEnemy() :
 	mRenderer(*this),
@@ -45,6 +46,16 @@ void TestEnemy::update(double in_dt) {
 	}
 
 	if (mHealth.isDead()) {
+		TestEnemy* testEnemy = new TestEnemy();
+		testEnemy->getTransform().setLocalPosition(Vector2d(4, 4));
+		testEnemy->getDepthTransform().setLocalDepth(-0.1);
+
+		Texture* waveTex = GE.assets().get<Texture>("SmokeTexture");
+		TestEnemyExplosionSmokeSpecifier* waveSpecifier = new TestEnemyExplosionSmokeSpecifier;
+		ParticleSystem2* waveSystem = new ParticleSystem2(waveTex, waveSpecifier);
+		waveSystem->getTransform().setLocalPosition(getTransform().getLocalPosition());
+		GE.perFrameUpdate().add(waveSystem);
+		GE.render().add(waveSystem);
 		GE.destruction().add(this);
 	}
 

@@ -146,9 +146,10 @@ void TestBulletImpactSparksSpecifier::init(ParticleSystem2& in_system, Accessor&
 void TestBulletImpactSparksSpecifier::update(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) {
 	in_system.access(0, in_accessor);
 	for (uint i = 0; i < in_system.getCount(); i++) {
+		float v = GEUtil::random<float>(-0.5, 0.5);
 		in_accessor.mAge[i] += (float)in_dt;
 		in_accessor.mPosition[i] += in_accessor.mLinearVelocity[i] * in_dt;
-		in_accessor.mColor[i] = mColorTransition.evaluate(in_accessor.mAge[i]);
+		in_accessor.mColor[i] = mColorTransition.evaluate(in_accessor.mAge[i]) + ColorRGBAf(v, v, v, 0);
 	}
 }
 
@@ -170,37 +171,41 @@ void TestBulletImpactSparksSpecifier::destroy(ParticleSystem2& in_system, Access
 
 void TestBulletImpactSparksSpecifier::generate(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) {}
 
-TestEnemyExplosionWaveSpecifier::TestEnemyExplosionWaveSpecifier() :
+TestEnemyExplosionSmokeSpecifier::TestEnemyExplosionSmokeSpecifier() :
 	mColorTransition() {
 	
-	mColorTransition.mKeys.push_back({ ColorRGBAf(1.0, 1.0, 1.0, 1.0), 0.5 });
-	mColorTransition.mKeys.push_back({ ColorRGBAf(1.0, 1.0, 1.0, 0.0), 0.0 });
+	mColorTransition.mKeys.push_back({ ColorRGBAf(1.0, 1.0, 1.0, 0.3), 0.3 * 5.0f});
+	mColorTransition.mKeys.push_back({ ColorRGBAf(0.0, 0.0, 0.0, 0.0), 0.0 });
 }
 
-void TestEnemyExplosionWaveSpecifier::init(ParticleSystem2& in_system, Accessor& in_accessor) {
-	uint nParticles = 1;
+void TestEnemyExplosionSmokeSpecifier::init(ParticleSystem2& in_system, Accessor& in_accessor) {
+	uint nParticles = 5;
 	uint index = in_system.add(nParticles);
 	in_system.access(index, in_accessor);
 	for (uint i = 0; i < nParticles; i++) {
 		in_accessor.clear(i);
-		in_accessor.mDimensions[i] = Vector2f(0.5, 0.5);
+		in_accessor.mPosition[i] = Vector3f(0.3 * Vector2f(sqrt(GEUtil::random<double>(1)), 0).rotated(GEUtil::random<double>(2 * PI)), 0.0);
+		in_accessor.mDimensions[i] = Vector2f(0.2, 0.2);
 		in_accessor.mUV2[i] = Vector2f(1, 1);
+		in_accessor.mAngle[i] = GEUtil::random<double>(0.0, 2 * PI);
+		in_accessor.mAngularVelocity[i] = GEUtil::random<double>(-PI/4, PI/4);
 	}
 }
 
-void TestEnemyExplosionWaveSpecifier::update(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) {
+void TestEnemyExplosionSmokeSpecifier::update(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) {
 	in_system.access(0, in_accessor);
 	for (uint i = 0; i < in_system.getCount(); i++) {
 		in_accessor.mAge[i] += (float)in_dt;
-		in_accessor.mDimensions[i] += Vector2f(4.0, 4.0) * (float)in_dt;
+		in_accessor.mDimensions[i] += Vector2f(8.0, 8.0) * (float)in_dt / 5.0f;
 		in_accessor.mColor[i] = mColorTransition.evaluate(in_accessor.mAge[i]);
+		in_accessor.mAngle[i] += in_accessor.mAngularVelocity[i] * (float)in_dt / 5.0f;
 	}
 }
 
-void TestEnemyExplosionWaveSpecifier::destroy(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) {
+void TestEnemyExplosionSmokeSpecifier::destroy(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) {
 	in_system.access(0, in_accessor);
 	for (uint i = 0; i < in_system.getCount();) {
-		if (in_accessor.mAge[i] > 0.5f) {
+		if (in_accessor.mAge[i] > 0.3f * 5.0f) {
 			in_system.remove(i);
 		}
 		else {
@@ -213,5 +218,5 @@ void TestEnemyExplosionWaveSpecifier::destroy(ParticleSystem2& in_system, Access
 	}
 }
 
-void TestEnemyExplosionWaveSpecifier::generate(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) {}
+void TestEnemyExplosionSmokeSpecifier::generate(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) {}
 
