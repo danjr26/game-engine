@@ -1,11 +1,11 @@
-#ifndef BLEND_H
-#define BLEND_H
+#ifndef BLEND_SETTINGS_H
+#define BLEND_SETTINGS_H
 
 #include "misc.h"
 
 class BlendSettings {
 public:
-	enum Factor : GLenum {
+	enum class Factor : GLenum {
 		zero = GL_ZERO,
 		one = GL_ONE,
 		src_a = GL_SRC_ALPHA,
@@ -18,26 +18,28 @@ public:
 		inv_dst_rgba = GL_ONE_MINUS_DST_COLOR
 	};
 
-	enum Operation {
+	enum class Operation : GLenum {
 		add = GL_ADD,
 		subtract = GL_SUBTRACT,
 		multiply = GL_MULT
 	};
 
 private:
-	GLenum	mDestinationFactor;
-	GLenum	mSourceFactor;
-	GLenum	mOperation;
+	Factor mDestinationFactor;
+	Factor mSourceFactor;
+	Operation mOperation;
 
-	BlendSettings(Factor in_destinationFactor, Factor in_sourceFactor, Factor in_operation);
+	BlendSettings(Factor in_destinationFactor, Factor in_sourceFactor, Operation in_operation);
 
 public:
+	void use(const BlendSettings* in_currentSettings = nullptr);
+
 	static BlendSettings none();
 	static BlendSettings standard();
 	static BlendSettings additive();
 	static BlendSettings subtractive();
 	static BlendSettings multiply();
-	static BlendSettings custom();
+	static BlendSettings custom(Factor in_destinationFactor, Factor in_sourceFactor, Operation in_operation);
 };
 
 #endif

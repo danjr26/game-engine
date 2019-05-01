@@ -12,10 +12,6 @@ TestWeapon::TestWeapon() :
 void TestWeapon::update(double in_dt, Feedback* out_feedback) {
 	mAccum += in_dt;
 
-	if (out_feedback != nullptr) {
-		out_feedback->impulse = Vector2d();
-	}
-
 	if (mIsFiring && mAccum >= mReloadTime) {
 		TestBullet* bullet = new TestBullet;
 
@@ -30,7 +26,7 @@ void TestWeapon::update(double in_dt, Feedback* out_feedback) {
 		mAccum = 0;
 
 		if (out_feedback != nullptr) {
-			out_feedback->impulse = bulletRotation.applyTo(Vector2d(-1.0, 0.0));
+			out_feedback->impulse = bulletRotation.applyTo(Vector2d(-3.0, 0.0));
 		}
 	}
 }

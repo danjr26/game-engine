@@ -51,10 +51,11 @@ void Test_Render(Window* window) {
 	double averageT = (t2 - t1) / n;
 	Log::main(std::to_string(averageT * 1000000) + " us");
 
+	double zoom = 20.0;
 	double aspectRatio = (double)window->getDimensions().x() / (double)window->getDimensions().y();
 
 	Camera camera1;
-	camera1.setProjection(Projectiond(Vector3d(0.0, 10.0, 1.0), Vector3d(10.0 * aspectRatio, 0.0, -1.0)));
+	camera1.setProjection(Projectiond(Vector3d(0.0, zoom, 1.0), Vector3d(zoom * aspectRatio, 0.0, -1.0)));
 	GE.cameras().add(CameraManager::ID::main, &camera1);
 
 	RenderPass testPass =

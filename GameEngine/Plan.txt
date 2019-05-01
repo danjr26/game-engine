@@ -1,13 +1,171 @@
---Plot--
-The main conflict is between the Terrans of Earth and the Khivaru of Ourus V. The game takes place in 2488 CE, the time of the first skirmishes between the two races.
-
-The Terrans have known about the Khivaru for decades, though it is only in the past few years that this information has been released to the general populus. They are a race of approximately equal technological advancement to the Terrans - the most advanced species that the Terrans have so far encountered. The Khivaru, however, are ruthless in their dealings with less advanced species. Caring little for comfort goods, their entire economy is based on empire building. Hundreds of other planets have fallen to their might, swelling their numbers well into the trillions. 
-
---Game Mechanics--
-
-
---Levels--
-
-
---Game Entities--
-
+## primary weapons
+laser cannon
+  ROF med-high
+  DMG med
+  ACY med-high
+  SPD med-high
+  PSH low
+  RNG high
+  nothing special
+pulse repeater
+  ROF high
+  DMG low
+  ACY low-med
+  SPD high-vhigh
+  PSH low-med
+  RNG high
+  nothing special
+minigun
+  ROF vhigh
+  DMG med 
+  ACY low-med
+  SPD vhigh
+  PSH med
+  RNG vhigh
+  requires warmup
+charge beam
+  ROF varies 
+  DMG varies
+  ACY high
+  SPD med 
+  PSH vary
+  RNG med
+  vary based on time held (concave-up curve w/ ceiling)
+dark artifact 
+  ROF med
+  DMG varies
+  ACY vhigh
+  SPD high
+  PSH low
+  RNG med-high
+  vary based on # enemies killed in last 20 sec
+incapacitator
+  ROF med
+  DMG low-med
+  ACY med-high
+  SPD med-high
+  PSH low
+  RNG med
+  prevents movement, slows firing (stackable), effect AOE but not DMG
+shrapnel gun
+  ROF low
+  DMG med
+  ACY low
+  SPD vhigh
+  PSH high
+  RNG low
+  multi-shot
+refractor
+  ROF always on
+  DMG high
+  ACY perfect
+  SPD instant
+  PSH none
+  RNG vlow
+  splits into two beams on contact
+grenade launcher
+  ROF low-med
+  DMG med-high
+  ACY med-high
+  SPD low-med
+  PSH high
+  RNG med
+  AOE med
+  nothing special
+industrial laser
+  ROF always on
+  DMG med
+  ACY perfect
+  SPD instant
+  PSH none
+  RNG vhigh
+  nothing special
+concussive wave
+  ROF low
+  DMG med
+  ACY vlow
+  SPD low
+  PSH vhigh
+  RNG low
+volatile spray
+  ROF always on
+  DMG med
+  ACY med
+  SPD low
+  PSH none
+  RNG low
+  does DMG over time
+feedback drones
+  ROF med
+  DMG varies
+  ACY high
+  SPD high
+  PSH low
+  RNG med-high
+  AOE varies
+  delayed DMG; three successive hits does high bonus DMG + low AOE 
+precision laser
+  ROF vlow
+  DMG varies
+  ACY perfect
+  SPD vfast
+  PSH varies
+  RNG high
+  varies based on mouse movement within target graphic which appears around cursor
+chaos spike
+  ROF low
+  DMG vhigh
+  ACY perfect
+  SPD vfast
+  PSH vhigh
+  RNG vlow
+lightning overloader
+  ROF always on
+  DMG varies
+  ACY perfect
+  SPD instant
+  PSH none
+  RNG med
+  increases DMG over time (concave-up), but after a threshold explodes, damaging ship with AOE explosion
+relativistic cannon
+  ROF low-med
+  DMG vhigh
+  ACY vhigh
+  SPD instant
+  PSH high
+  RNG inf
+  piercing
+chain bolt
+  ROF low-med
+  DMG med-high
+  ACY high
+  SPD med-high
+  PSH none
+  RNG med
+  jumps from enemy to enemy over time, limited by total distance
+blind seekers
+  ROF med
+  DMG med
+  ACY med
+  SPD low-med
+  PSH med
+  RNG med-high
+  only "armed" after an amount of time; after this, will track & damage
+    nearest entity, including source ship
+arc connector
+  ROF always on 
+  DMG varies
+  ACY perfect
+  SPD instant
+  PSH none (low?)
+  RNG low-med
+  uninterrupted connection to same entity increases DMG over time
+spark gun
+  ROF med
+  DMG varies
+  ACY med
+  SPD varies
+  PSH varies
+  RNG med
+  gets more DMG and SPD over time
+##

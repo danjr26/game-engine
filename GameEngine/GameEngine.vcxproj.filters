@@ -169,6 +169,21 @@
     <Filter Include="Header Files\objects\collision">
       <UniqueIdentifier>{edd05411-056f-4c83-abe4-616a1a365aea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\objects\collision">
+      <UniqueIdentifier>{fca46e5f-f8c9-44df-99d6-731166bf774c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\objects\weapons">
+      <UniqueIdentifier>{14f786b4-39ac-408a-8570-9a763f51ea33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\objects\projectiles">
+      <UniqueIdentifier>{20f8bba0-c027-4359-b6b5-2591b81e57f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\objects\projectiles">
+      <UniqueIdentifier>{e6a8cd3e-c915-4de8-9e9b-67b6d21c391f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\objects\weapons">
+      <UniqueIdentifier>{1bbe3e96-7df6-4450-b533-cf327c369ca5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="transform.h">
@@ -229,9 +244,6 @@
       <Filter>Header Files\framework\async</Filter>
     </ClInclude>
     <ClInclude Include="render_pass.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="blend.h">
       <Filter>Header Files\render</Filter>
     </ClInclude>
     <ClInclude Include="transformable_object.h">
@@ -570,9 +582,6 @@
     <ClInclude Include="player_ship_weapons_system.h">
       <Filter>Header Files\objects\player ship</Filter>
     </ClInclude>
-    <ClInclude Include="test_bullet.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
     <ClInclude Include="collision_responder.h">
       <Filter>Header Files\objects\collision</Filter>
     </ClInclude>
@@ -582,20 +591,11 @@
     <ClInclude Include="player_ship_collision_responder.h">
       <Filter>Header Files\objects\player ship</Filter>
     </ClInclude>
-    <ClInclude Include="weapon.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="test_weapon.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
     <ClInclude Include="destructable_object.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
     <ClInclude Include="destruction_manager.h">
       <Filter>Header Files\framework</Filter>
-    </ClInclude>
-    <ClInclude Include="test_bullet_collision_responder.h">
-      <Filter>Header Files\objects</Filter>
     </ClInclude>
     <ClInclude Include="collision_response_manager.h">
       <Filter>Header Files\objects\collision</Filter>
@@ -605,6 +605,87 @@
     </ClInclude>
     <ClInclude Include="damage_packet.h">
       <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_system2_factories.h">
+      <Filter>Header Files\render\renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="blend_settings.h">
+      <Filter>Header Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="weapon.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="test_bullet.h">
+      <Filter>Header Files\objects\projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="test_bullet_collision_responder.h">
+      <Filter>Header Files\objects\projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="test_weapon.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="laser_cannon.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="pulse_repeater.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="minigun.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="charge_beam.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="dark_artifact.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="incapacitator.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="shrapnel_gun.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="grenade_launcher.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="industrial_laser.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="concussive_wave.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="volatile_spray.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="feedback_drone_launcher.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="precision_laser.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="chaos_spike.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="lightning_overloader.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="relativistic_cannon.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="chain_bolt.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="blind_seeker_launcher.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="arc_connector.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="spark_gun.h">
+      <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="refractor_gun.h">
+      <Filter>Header Files\objects\weapons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -932,26 +1013,32 @@
     <ClCompile Include="player_ship_weapons_system.cpp">
       <Filter>Source Files\objects\player ship</Filter>
     </ClCompile>
-    <ClCompile Include="test_weapon.cpp">
-      <Filter>Source Files\objects</Filter>
-    </ClCompile>
     <ClCompile Include="destruction_manager.cpp">
       <Filter>Source Files\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="test_bullet.cpp">
-      <Filter>Source Files\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="test_bullet_collision_responder.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="deep_transformable_object.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
-    <ClCompile Include="collision_response_manager.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="particle_system2_factories.cpp">
+      <Filter>Source Files\render\renderable</Filter>
     </ClCompile>
     <ClCompile Include="test_enemy_health.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\objects\test enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="blend_settings.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="collision_response_manager.cpp">
+      <Filter>Source Files\objects\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="test_weapon.cpp">
+      <Filter>Source Files\objects\weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="test_bullet.cpp">
+      <Filter>Source Files\objects\projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="test_bullet_collision_responder.cpp">
+      <Filter>Source Files\objects\projectiles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

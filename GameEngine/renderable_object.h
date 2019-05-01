@@ -12,6 +12,7 @@ class Renderer;
 class RenderableObject : public FilteredObject, public DisableableObject {
 private:
 	AxisAlignedRectangled mCullingRectangle;
+
 public:
 	RenderableObject();
 	virtual ~RenderableObject();
@@ -20,13 +21,4 @@ public:
 	virtual void render() = 0;
 };
 
-/*
-class TestRenderableObject : public RenderableObject {
-public:
-	TestRenderableObject(Renderer* in_renderer);
-	double z() const override final;
-	bool shouldCull() const override final;
-	void render() override final;
-};
-*/
 #endif

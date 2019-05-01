@@ -12,7 +12,7 @@ TestBullet::TestBullet() :
 	Texture* tex = GE.assets().get<Texture>("LaserSpriteTexture");
 	mSprite.setTexture(tex);
 
-	mSprite.setRectangle(AxisAlignedRectangled::fromCenter(Vector2d(), Vector2d(0.5, 0.5)));
+	mSprite.setRectangle(AxisAlignedRectangled::fromCenter(Vector2d(), Vector2d(0.8, 1.0)));
 
 	mSprite.getTransform().setParent(&getTransform());
 	mSprite.getDepthTransform().setParent(&getDepthTransform());
@@ -24,7 +24,7 @@ TestBullet::TestBullet() :
 	GE.render().add(&mSprite);
 	GE.perFrameUpdate().add(this);
 
-	Point2CollisionMask<double> mask(Vector2d(0.3, 0.0));
+	Point2CollisionMask<double> mask(Vector2d(0.4, 0.0));
 	mRigidBody.setCollisionMask(mask);
 
 	mRigidBody.setAngularMass(0);

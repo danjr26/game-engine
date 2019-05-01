@@ -7,6 +7,7 @@
 #include "text_input_context.h"
 #include "sprite.h"
 #include "stepper.h"
+#include "blend_settings.h"
 
 class EditableText : public RenderableObject, public DeepTransformableObject2d, public PerFrameUpdateableObject {
 private:
@@ -14,6 +15,8 @@ private:
 
 	Transform2d mTransform;
 	DepthTransform2d mDepthTransform;
+
+
 
 	InputListener mInput;
 	Text2 mText;
