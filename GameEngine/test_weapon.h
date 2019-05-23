@@ -8,6 +8,8 @@ private:
 	bool mIsFiring;
 	double mAccum;
 	double mReloadTime;
+	double mSpreadAngle;
+	double mRecoil;
 
 public:
 	TestWeapon();

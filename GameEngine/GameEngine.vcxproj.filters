@@ -588,9 +588,6 @@
     <ClInclude Include="collision_packet.h">
       <Filter>Header Files\objects\collision</Filter>
     </ClInclude>
-    <ClInclude Include="player_ship_collision_responder.h">
-      <Filter>Header Files\objects\player ship</Filter>
-    </ClInclude>
     <ClInclude Include="destructable_object.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
@@ -616,9 +613,6 @@
       <Filter>Header Files\objects\weapons</Filter>
     </ClInclude>
     <ClInclude Include="test_bullet.h">
-      <Filter>Header Files\objects\projectiles</Filter>
-    </ClInclude>
-    <ClInclude Include="test_bullet_collision_responder.h">
       <Filter>Header Files\objects\projectiles</Filter>
     </ClInclude>
     <ClInclude Include="test_weapon.h">
@@ -686,6 +680,15 @@
     </ClInclude>
     <ClInclude Include="refractor_gun.h">
       <Filter>Header Files\objects\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="laser_cannon_bullet.h">
+      <Filter>Header Files\objects\projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="graph.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ribbon2.h">
+      <Filter>Header Files\render\renderable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -790,9 +793,6 @@
     </ClCompile>
     <ClCompile Include="window_proc.cpp">
       <Filter>Source Files\framework\input</Filter>
-    </ClCompile>
-    <ClCompile Include="debug_mesh_vertex_data_renderer.cpp">
-      <Filter>Source Files\objects</Filter>
     </ClCompile>
     <ClCompile Include="mesh_vertex_gpu_pusher.cpp">
       <Filter>Source Files\geometry</Filter>
@@ -1007,9 +1007,6 @@
     <ClCompile Include="player_ship_camera_mover.cpp">
       <Filter>Source Files\objects\player ship</Filter>
     </ClCompile>
-    <ClCompile Include="player_ship_collision_responder.cpp">
-      <Filter>Source Files\objects\player ship</Filter>
-    </ClCompile>
     <ClCompile Include="player_ship_weapons_system.cpp">
       <Filter>Source Files\objects\player ship</Filter>
     </ClCompile>
@@ -1037,8 +1034,17 @@
     <ClCompile Include="test_bullet.cpp">
       <Filter>Source Files\objects\projectiles</Filter>
     </ClCompile>
-    <ClCompile Include="test_bullet_collision_responder.cpp">
+    <ClCompile Include="laser_cannon.cpp">
+      <Filter>Source Files\objects\weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="laser_cannon_bullet.cpp">
       <Filter>Source Files\objects\projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="debug_mesh_vertex_data_renderer.cpp">
+      <Filter>Source Files\render\renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="ribbon2.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

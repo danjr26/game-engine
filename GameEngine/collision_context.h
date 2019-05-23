@@ -102,4 +102,9 @@ using CollisionContext2d = CollisionContext<double, 2>;
 using CollisionContext3f = CollisionContext<float, 3>;
 using CollisionContext3d = CollisionContext<double, 3>;
 
+using CollisionPartner2f = typename CollisionContext2f::CollisionPartner;
+using CollisionPartner2d = typename CollisionContext2d::CollisionPartner;
+using CollisionPartner3f = typename CollisionContext3f::CollisionPartner;
+using CollisionPartner3d = typename CollisionContext3d::CollisionPartner;
+
 #endif

@@ -6,9 +6,9 @@
 #include "player_ship_camera_mover.h"
 #include "deep_transformable_object.h"
 #include "player_ship_weapons_system.h"
-#include "player_ship_collision_responder.h"
 #include "per_frame_updateable_object.h"
 #include "rigid_body.h"
+#include "collision_responder.h"
 
 class PlayerShip : public DeepTransformableObject2d, public PerFrameUpdateableObject {
 private:
@@ -17,7 +17,7 @@ private:
 	PlayerShipCameraMover mCameraMover;
 	RigidBody<2> mRigidBody;
 	PlayerShipWeaponsSystem mWeaponsSystem;
-	PlayerShipCollisionResponder mCollisionResponder;
+	CollisionResponder mCollisionResponder;
 
 public:
 	PlayerShip();	
@@ -28,7 +28,7 @@ public:
 	RigidBody<2>& getRigidBody();
 	CollisionMask2d& getCollisionMask();
 	PlayerShipWeaponsSystem& getWeaponsSystem();
-	PlayerShipCollisionResponder& getCollisionResponder();
+	CollisionResponder& getCollisionResponder();
 
 	virtual void update(double in_dt) override;
 

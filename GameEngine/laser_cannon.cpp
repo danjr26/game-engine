@@ -1,21 +1,20 @@
-#include "test_weapon.h"
-#include "test_bullet.h"
+#include "laser_cannon.h"
+#include "laser_cannon_bullet.h"
 #include "log.h"
 #include "game_engine.h"
 
-TestWeapon::TestWeapon() :
+LaserCannon::LaserCannon() :
 	mIsFiring(false),
 	mAccum(0),
 	mReloadTime(0.1),
 	mSpreadAngle(0.05),
-	mRecoil(2.0)
-{}
+	mRecoil(2.0) {}
 
-void TestWeapon::update(double in_dt, Feedback* out_feedback) {
+void LaserCannon::update(double in_dt, Feedback* out_feedback) {
 	mAccum += in_dt;
 
 	if (mIsFiring && mAccum >= mReloadTime) {
-		TestBullet* bullet = new TestBullet;
+		LaserCannonBullet* bullet = new LaserCannonBullet;
 
 		Vector2d bulletPosition;
 		bulletPosition = getTransform().localToWorldPoint(bulletPosition);
@@ -33,10 +32,10 @@ void TestWeapon::update(double in_dt, Feedback* out_feedback) {
 	}
 }
 
-void TestWeapon::startFire() {
+void LaserCannon::startFire() {
 	mIsFiring = true;
 }
 
-void TestWeapon::endFire() {
+void LaserCannon::endFire() {
 	mIsFiring = false;
 }

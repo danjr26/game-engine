@@ -3,9 +3,11 @@
 #include "player_ship.h"
 #include "test_enemy.h"
 #include "test_weapon.h"
+#include "laser_cannon.h"
 #include "test_bullet.h"
 #include "particle_system2.h"
 #include "particle_system2_specifiers.h"
+#include "ribbon2.h"
 
 Game::Game() :
 	mPointerInput(),
@@ -35,7 +37,7 @@ Game::~Game() {
 
 void Game::Init() {
 	mPlayerShip = new PlayerShip();
-	mPlayerShip->getWeaponsSystem().setPrimary(new TestWeapon);
+	mPlayerShip->getWeaponsSystem().setPrimary(new LaserCannon);
 	mPlayerShip->getDepthTransform().setLocalDepth(0.2);
 
 	TestEnemy* testEnemy = new TestEnemy();
@@ -47,6 +49,34 @@ void Game::Init() {
 	ParticleSystem2* dustSystem = new ParticleSystem2(dustTex, dustSpecifier);
 	GE.perFrameUpdate().add(dustSystem);
 	GE.render().add(dustSystem);
+
+	Ribbon2* ribbon = new Ribbon2;
+	Ribbon2::graph_t& ribbonGraph = ribbon->getGraph();
+
+	Ribbon2::node_t& node1 = ribbonGraph.addNode();
+	node1.mData.mPosition = Vector2d(0, 0);
+	node1.mData.mWidth = 0.5;
+	node1.mData.mColor = ColorRGBAf(1.0, 1.0, 1.0, 1.0);
+
+	Ribbon2::node_t& node2 = ribbonGraph.addNode();
+	node2.mData.mPosition = Vector2d(3, 0);
+	node2.mData.mWidth = 0.5;
+	node2.mData.mColor = ColorRGBAf(1.0, 0.0, 1.0, 1.0);
+
+	Ribbon2::node_t& node3 = ribbonGraph.addNode();
+	node3.mData.mPosition = Vector2d(5, 2);
+	node3.mData.mWidth = 0.3;
+	node3.mData.mColor = ColorRGBAf(1.0, 0.0, 0.0, 1.0);
+
+	Ribbon2::EdgeData edgeData;
+
+	edgeData.mMinUV = Vector2f(0, 0);
+	edgeData.mMaxUV = Vector2f(1, 1);
+	node1.connect1(node2, edgeData);
+	node2.connect1(node3, edgeData);
+
+	ribbon->updateMesh();
+	GE.render().add(ribbon);
 }
 
 PointerInputContext& Game::getPointerInput() {

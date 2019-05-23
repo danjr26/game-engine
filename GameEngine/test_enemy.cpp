@@ -33,7 +33,7 @@ void TestEnemy::update(double in_dt) {
 	CollisionContext2d& collisionContext = GE.game().getMainCollisionContext();
 	collisionContext.getPartners(&getCollisionMask(), partners);
 
-	CollisionResponder::Partner thisAsPartner;
+	CollisionPartner2d thisAsPartner;
 	thisAsPartner.mMask = &getCollisionMask();
 
 	for (auto it = partners.begin(); it < partners.end(); it++) {
@@ -41,7 +41,7 @@ void TestEnemy::update(double in_dt) {
 		thisAsPartner.mCollision = (*it)->mCollision;
 		if (responder) {
 			CollisionPacket collisionPacket;
-			responder->respond(thisAsPartner, collisionPacket);
+			(*responder)(thisAsPartner, collisionPacket);
 			mHealth.damage(collisionPacket.mDamage);
 		}
 	}

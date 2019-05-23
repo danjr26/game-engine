@@ -18,6 +18,7 @@ protected:
 	MeshVertexGPUPusher mGPUPusher;
 	TextureInstance mTextureInstance;
 	ColorRGBAf mColor;
+
 public:
 	Sprite(
 		const AxisAlignedRectangled& in_rectangle = AxisAlignedRectangled(), 

@@ -79,8 +79,6 @@ bool Sprite::shouldCull() const {
 }
 
 void Sprite::render() {
-	Matrix<float, 4, 4> iden = Matrix<float, 4, 4>::identity();
-
 	ShaderProgram* shaderProgram;
 
 	Matrix4f modelMatrix = mDepthTransform.getWorldMatrix() * mInnerTransform.getWorldMatrix();

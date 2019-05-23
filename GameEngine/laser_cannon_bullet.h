@@ -1,5 +1,5 @@
-#ifndef TEST_BULLET_H
-#define TEST_BULLET_H
+#ifndef LASER_CANNON_BULLET_H
+#define LASER_CANNON_BULLET_H
 
 #include "sprite.h"
 #include "deep_transformable_object.h"
@@ -9,7 +9,7 @@
 #include "rigid_body.h"
 #include "collision_responder.h"
 
-class TestBullet : public DeepTransformableObject2d, public PerFrameUpdateableObject, 
+class LaserCannonBullet : public DeepTransformableObject2d, public PerFrameUpdateableObject,
 	public DestructableObject {
 
 private:
@@ -17,10 +17,11 @@ private:
 	RigidBody2 mRigidBody;
 	Sprite mSprite;
 	double mAge;
+	double mLifeSpan;
 
 public:
-	TestBullet();
-	~TestBullet();
+	LaserCannonBullet();
+	~LaserCannonBullet();
 
 	virtual void update(double in_dt) override;
 

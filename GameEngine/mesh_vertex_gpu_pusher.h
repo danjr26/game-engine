@@ -28,6 +28,8 @@ private:
 		DataType mType;
 		ubyte mDepth;
 		GLuint mBufferID;
+		void* mDefaultValue;
+		bool mRealInts;
 
 		ubyte getVertexSize() const;
 	};
@@ -67,6 +69,11 @@ public:
 	void removeMember(uint in_id);
 	bool hasMember(uint in_id);
 
+	void setMemberDefault(uint in_id, const void* in_value, bool in_realInts = false);
+	void clearMemberDefault(uint in_id);
+	void pushDefault(uint in_id);
+	void pushDefaults();
+
 	void pushVertexCount();
 	void pushFaceCount();
 
@@ -78,6 +85,7 @@ public:
 	void pushFaces(uint in_start, uint in_length);
 	void pushFaceElements();
 	void pushFaceElements(uint in_start, uint in_length);
+	void pushAll();
 
 	bool isInitialized() const;
 

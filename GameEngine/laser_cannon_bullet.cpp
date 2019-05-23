@@ -1,23 +1,24 @@
-#include "test_bullet.h"
+#include "laser_cannon_bullet.h"
 #include "game_engine.h"
 #include "particle_system2_specifiers.h"
 #include "game.h"
 
-TestBullet::TestBullet() :
+LaserCannonBullet::LaserCannonBullet() :
 	mCollisionResponder(
-		[this] (const CollisionPartner2d& in_partner, CollisionPacket& out_packet) {
+		[this](const CollisionPartner2d& in_partner, CollisionPacket& out_packet) {
 	out_packet.mDamage.mAmount = 2.0;
 	out_packet.mImpulse.mPosition = in_partner.mCollision.mPoint;
 	out_packet.mImpulse.mVector = Vector2d();
 }),
-	mRigidBody(),
-	mSprite(),
-	mAge(0) {
-	
+mRigidBody(),
+mSprite(),
+mAge(0.0),
+mLifeSpan(5.0) {
+
 	Texture* tex = GE.assets().get<Texture>("LaserSpriteTexture");
 	mSprite.setTexture(tex);
 
-	mSprite.setRectangle(AxisAlignedRectangled::fromCenter(Vector2d(), Vector2d(0.8, 1.0)));
+	mSprite.setRectangle(AxisAlignedRectangled::fromCenter(Vector2d(), Vector2d(0.8, 0.8)));
 
 	mSprite.getTransform().setParent(&getTransform());
 	mSprite.getDepthTransform().setParent(&getDepthTransform());
@@ -41,19 +42,19 @@ TestBullet::TestBullet() :
 	GE.game().getMainCollisionContext().add(&getCollisionMask());
 }
 
-TestBullet::~TestBullet() {
+LaserCannonBullet::~LaserCannonBullet() {
 	GE.render().remove(&mSprite);
 	GE.perFrameUpdate().remove(this);
 	GE.game().getMainCollisionContext().remove(&getCollisionMask());
 }
 
-void TestBullet::update(double in_dt) {
+void LaserCannonBullet::update(double in_dt) {
 	std::vector<CollisionContext2d::CollisionPartner*> partners;
 	CollisionContext2d& collisionContext = GE.game().getMainCollisionContext();
 	collisionContext.getPartners(&getCollisionMask(), partners);
 
 	mAge += in_dt;
-	if (mAge >= 5.0 || partners.size() > 0) {
+	if (mAge >= mLifeSpan || partners.size() > 0) {
 		GE.destruction().add(this);
 	}
 
@@ -62,7 +63,7 @@ void TestBullet::update(double in_dt) {
 		TestBulletImpactSparksSpecifier* specifier = new TestBulletImpactSparksSpecifier;
 		ParticleSystem2* particles = new ParticleSystem2(tex, specifier);
 		particles->getTransform().setLocalPosition(partners[0]->mCollision.mPoint);
-		
+
 		GE.perFrameUpdate().add(particles);
 		GE.render().add(particles);
 	}
@@ -71,7 +72,7 @@ void TestBullet::update(double in_dt) {
 	getTransform().translateLocal(direction * 15.0 * in_dt);
 }
 
-CollisionMask2d& TestBullet::getCollisionMask() {
+CollisionMask2d& LaserCannonBullet::getCollisionMask() {
 	CollisionMask2d* mask = mRigidBody.getCollisionMask();
 	if (mask == nullptr) throw InvalidArgumentException();
 	return *mask;

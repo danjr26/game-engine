@@ -164,6 +164,7 @@ void MeshVertexGPUPusher::addMember(uint in_id) {
 	Member& newMember = mMembers[in_id];
 	newMember.mType = mData->getMemberType(in_id);
 	newMember.mDepth = mData->getMemberDepth(in_id);
+	newMember.mDefaultValue = nullptr;
 
 	glBindVertexArray(mVertexArrayID);
 
@@ -189,11 +190,137 @@ void MeshVertexGPUPusher::removeMember(uint in_id) {
 	glDeleteBuffers(1, &member.mBufferID);
 	glBindVertexArray(0);
 
+	if (member.mDefaultValue) delete[] member.mDefaultValue;
+
 	mMembers.erase(in_id);
 }
 
 bool MeshVertexGPUPusher::hasMember(uint in_id) {
 	return mMembers.find(in_id) != mMembers.end();
+}
+
+void MeshVertexGPUPusher::setMemberDefault(uint in_id, const void* in_value, bool in_realInts) {
+	Member& member = mMembers[in_id];
+	if (in_value == nullptr) throw InvalidArgumentException();
+	if (member.mDefaultValue != nullptr) {
+		delete[] member.mDefaultValue;
+	}
+	member.mDefaultValue = new ubyte[member.getVertexSize()];
+	memcpy(member.mDefaultValue, in_value, member.getVertexSize());
+	member.mRealInts = in_realInts;
+	glBindVertexArray(mVertexArrayID);
+	glDisableVertexAttribArray(in_id);
+	glBindVertexArray(0);
+}
+
+void MeshVertexGPUPusher::clearMemberDefault(uint in_id) {
+	Member& member = mMembers[in_id];
+	if (member.mDefaultValue != nullptr) {
+		delete[] member.mDefaultValue;
+		member.mDefaultValue = nullptr;
+	}
+	glBindVertexArray(mVertexArrayID);
+	glEnableVertexAttribArray(in_id);
+	glBindVertexArray(0);
+}
+
+void MeshVertexGPUPusher::pushDefault(uint in_id) {
+	Member& member = mMembers[in_id];
+	if (member.mDefaultValue == nullptr) return;
+	const void* value = member.mDefaultValue;
+	switch (member.mType) {
+	case DataType::_byte:
+		if (member.mRealInts) {
+			if (member.mDepth == 4) glVertexAttribI4bv(in_id, (GLbyte*)value);
+			else throw InvalidArgumentException();
+		}
+		else {
+			if (member.mDepth == 4) glVertexAttrib4Nbv(in_id, (GLbyte*)value);
+			else throw InvalidArgumentException();
+		}
+		break;
+	case DataType::_ubyte:
+		if (member.mRealInts) {
+			if (member.mDepth == 4) glVertexAttribI4ubv(in_id, (GLubyte*)value);
+			else throw InvalidArgumentException();
+		}
+		else {
+			if (member.mDepth == 4) glVertexAttrib4Nubv(in_id, (GLubyte*)value);
+			else throw InvalidArgumentException();
+		}
+		break;
+	case DataType::_short:
+		if (member.mRealInts) {
+			if (member.mDepth == 4) glVertexAttribI4sv(in_id, (GLshort*)value);
+			else throw InvalidArgumentException();
+		}
+		else {
+			switch (member.mDepth) {
+			case 1: glVertexAttrib1sv(in_id, (GLshort*)value); break;
+			case 2: glVertexAttrib2sv(in_id, (GLshort*)value); break;
+			case 3: glVertexAttrib3sv(in_id, (GLshort*)value); break;
+			case 4: glVertexAttrib4sv(in_id, (GLshort*)value); break;
+			default: throw InvalidArgumentException();
+			}
+		}
+		break;
+	case DataType::_ushort:
+		if (member.mRealInts) {
+			if (member.mDepth == 4) glVertexAttribI4usv(in_id, (GLushort*)value);
+			else throw InvalidArgumentException();
+		}
+		else {
+			if (member.mDepth == 4) glVertexAttrib4Nusv(in_id, (GLushort*)value);
+			else throw InvalidArgumentException();
+		}
+		break;
+	case DataType::_int:
+		switch (member.mDepth) {
+		case 1: glVertexAttribI1iv(in_id, (GLint*)value); break;
+		case 2: glVertexAttribI2iv(in_id, (GLint*)value); break;
+		case 3: glVertexAttribI3iv(in_id, (GLint*)value); break;
+		case 4: glVertexAttribI4iv(in_id, (GLint*)value); break;
+		}
+		break;
+	case DataType::_uint:
+		if (member.mRealInts) {
+			switch (member.mDepth) {
+			case 1: glVertexAttribI1uiv(in_id, (GLuint*)value); break;
+			case 2: glVertexAttribI2uiv(in_id, (GLuint*)value); break;
+			case 3: glVertexAttribI3uiv(in_id, (GLuint*)value); break;
+			case 4: glVertexAttribI4uiv(in_id, (GLuint*)value); break;
+			}
+		}
+		else {
+			if (member.mDepth == 4) glVertexAttrib4Nuiv(in_id, (GLuint*)value);
+			else throw InvalidArgumentException();
+		}
+		break;
+	case DataType::_float:
+		switch (member.mDepth) {
+		case 1: glVertexAttrib1fv(in_id, (GLfloat*)value); break;
+		case 2: glVertexAttrib2fv(in_id, (GLfloat*)value); break;
+		case 3: glVertexAttrib3fv(in_id, (GLfloat*)value); break;
+		case 4: glVertexAttrib4fv(in_id, (GLfloat*)value); break;
+		default: throw InvalidArgumentException();
+		}
+		break;
+	case DataType::_double:
+		switch (member.mDepth) {
+		case 1: glVertexAttrib1dv(in_id, (GLdouble*)value); break;
+		case 2: glVertexAttrib2dv(in_id, (GLdouble*)value); break;
+		case 3: glVertexAttrib3dv(in_id, (GLdouble*)value); break;
+		case 4: glVertexAttrib4dv(in_id, (GLdouble*)value); break;
+		default: throw InvalidArgumentException();
+		}
+		break;
+	}
+}
+
+void MeshVertexGPUPusher::pushDefaults() {
+	for (auto it = mMembers.begin(); it != mMembers.end(); it++) {
+		pushDefault(it->first);
+	}
 }
 
 void MeshVertexGPUPusher::pushVertexCount() {
@@ -269,6 +396,13 @@ void MeshVertexGPUPusher::pushFaceElements(uint in_start, uint in_length) {
 	glBindVertexArray(0);
 }
 
+void MeshVertexGPUPusher::pushAll() {
+	pushVertexCount();
+	pushFaceCount();
+	pushVertices();
+	pushFaces();
+}
+
 bool MeshVertexGPUPusher::isInitialized() const {
 	return mData != nullptr;
 }
@@ -278,6 +412,7 @@ void MeshVertexGPUPusher::draw() {
 }
 
 void MeshVertexGPUPusher::draw(uint in_elementIndex, uint in_nElements) {
+	pushDefaults();
 	glBindVertexArray(mVertexArrayID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferID);
 	glDrawElements(mData->getFaceMode(), in_nElements, mData->setFaceType(), (const void*)(in_elementIndex * mData->getFaceElementSize()));
@@ -289,6 +424,7 @@ void MeshVertexGPUPusher::drawRaw() {
 }
 
 void MeshVertexGPUPusher::drawRaw(uint in_elementIndex, uint in_nElements) {
+	pushDefaults();
 	glBindVertexArray(mVertexArrayID);
 	glDrawArrays(mData->getFaceMode(), in_elementIndex, in_nElements);
 	glBindVertexArray(0);
