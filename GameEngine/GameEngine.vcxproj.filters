@@ -582,20 +582,11 @@
     <ClInclude Include="player_ship_weapons_system.h">
       <Filter>Header Files\objects\player ship</Filter>
     </ClInclude>
-    <ClInclude Include="collision_responder.h">
-      <Filter>Header Files\objects\collision</Filter>
-    </ClInclude>
-    <ClInclude Include="collision_packet.h">
-      <Filter>Header Files\objects\collision</Filter>
-    </ClInclude>
     <ClInclude Include="destructable_object.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
     <ClInclude Include="destruction_manager.h">
       <Filter>Header Files\framework</Filter>
-    </ClInclude>
-    <ClInclude Include="collision_response_manager.h">
-      <Filter>Header Files\objects\collision</Filter>
     </ClInclude>
     <ClInclude Include="test_enemy_health.h">
       <Filter>Header Files\objects\test enemy</Filter>
@@ -689,6 +680,15 @@
     </ClInclude>
     <ClInclude Include="ribbon2.h">
       <Filter>Header Files\render\renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="industrial_laser_beam.h">
+      <Filter>Header Files\objects\projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="raycast.h">
+      <Filter>Header Files\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_queue.h">
+      <Filter>Header Files\collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1025,9 +1025,6 @@
     <ClCompile Include="blend_settings.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
-    <ClCompile Include="collision_response_manager.cpp">
-      <Filter>Source Files\objects\collision</Filter>
-    </ClCompile>
     <ClCompile Include="test_weapon.cpp">
       <Filter>Source Files\objects\weapons</Filter>
     </ClCompile>
@@ -1044,6 +1041,18 @@
       <Filter>Source Files\render\renderable</Filter>
     </ClCompile>
     <ClCompile Include="ribbon2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="industrial_laser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="raycast.cpp">
+      <Filter>Source Files\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="industrial_laser_beam.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="weapon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

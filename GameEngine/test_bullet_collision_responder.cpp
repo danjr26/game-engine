@@ -6,7 +6,7 @@ TestBulletCollisionResponder::TestBulletCollisionResponder(TestBullet& in_parent
 {}
 
 void TestBulletCollisionResponder::respond(const Partner& in_partner, CollisionPacket& out_packet) {
-	out_packet.mDamage.mAmount = 2.0;
+	out_packet.mDamage.mBulk = 2.0;
 	out_packet.mImpulse.mPosition = in_partner.mCollision.mPoint;
 	out_packet.mImpulse.mVector = Vector2d();
 }

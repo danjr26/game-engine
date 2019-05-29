@@ -28,7 +28,7 @@ void TestWeapon::update(double in_dt, Feedback* out_feedback) {
 		mAccum = 0;
 
 		if (out_feedback != nullptr) {
-			out_feedback->impulse = bulletRotation.applyTo(Vector2d(-mRecoil, 0.0));
+			out_feedback->mImpulse = bulletRotation.applyTo(Vector2d(-mRecoil, 0.0));
 		}
 	}
 }

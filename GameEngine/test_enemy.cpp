@@ -17,7 +17,7 @@ TestEnemy::TestEnemy() :
 	mRigidBody.setCollisionMask(mask);
 
 	//mRigidBody.getTransform().setParent(&getTransform());
-	getCollisionMask().addFilter(Game::MainCollisionContextFilters::enemy_ship);
+	getCollisionMask().addFilter(Game::CollisionFilters::enemy_ship);
 	GE.game().getMainCollisionContext().add(&getCollisionMask());
 
 	initMembers();
@@ -37,13 +37,7 @@ void TestEnemy::update(double in_dt) {
 	thisAsPartner.mMask = &getCollisionMask();
 
 	for (auto it = partners.begin(); it < partners.end(); it++) {
-		CollisionResponder* responder = (CollisionResponder*)(*it)->mMask->getParent();
-		thisAsPartner.mCollision = (*it)->mCollision;
-		if (responder) {
-			CollisionPacket collisionPacket;
-			(*responder)(thisAsPartner, collisionPacket);
-			mHealth.damage(collisionPacket.mDamage);
-		}
+
 	}
 
 	if (mHealth.isDead()) {
@@ -81,6 +75,10 @@ CollisionMask2d& TestEnemy::getCollisionMask() {
 	CollisionMask2d* mask = mRigidBody.getCollisionMask();
 	if (mask == nullptr) throw InvalidArgumentException();
 	return *mask;
+}
+
+CollisionQueue2d& TestEnemy::getCollisionQueue() {
+	return mCollisionQueue;
 }
 
 void TestEnemy::initMembers() {

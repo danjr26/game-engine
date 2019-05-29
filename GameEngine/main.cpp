@@ -81,7 +81,7 @@ int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nA
 	Window::Params params =
 		Window::Params()
 		.Name(L"Test")
-		.Dimensions(Vector2i(800, 600))
+		.Dimensions(Vector2i(1024, 768))
 		.Fullscreen(false)
 		.Always_Front(false)
 		.Visible(false);

@@ -11,6 +11,7 @@ PlayerShip::PlayerShip() :
 	mCollisionResponder(
 		[this] (const CollisionPartner2d& in_partner, CollisionPacket& out_packet) {
 		out_packet.mDamage.mAmount = 0.0f;
+		out_packet.mDamage.mMethod = DamagePacket::Method::bulk;
 		out_packet.mImpulse.mPosition = in_partner.mCollision.mPoint;
 		out_packet.mImpulse.mVector = Vector2d();
 	}),
@@ -26,8 +27,7 @@ PlayerShip::PlayerShip() :
 	mRigidBody.setAngularMass(0);
 	mRigidBody.setLinearMass(1.0);
 
-	getCollisionMask().addFilter(Game::MainCollisionContextFilters::player_ship);
-	getCollisionMask().setParent((CollisionResponder*)&mCollisionResponder);
+	getCollisionMask().addFilter(Game::CollisionFilters::player_ship);
 	GE.game().getMainCollisionContext().add(&getCollisionMask());
 
 	initMembers();

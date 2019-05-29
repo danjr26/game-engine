@@ -165,8 +165,15 @@ public:
 
 	void evaluate(CollisionMask<T, n>* in_mask, uint in_depth, Evaluation& out_evaluation);
 	bool intersection(Evaluation& in_evaluation1, Evaluation& in_evaluation2);
-	void group(Evaluation** in_evaluations, uint in_nElements, GroupingScheme& out_groupingScheme);
-	void group(Evaluation** in_evaluations1, uint in_nElements1, Evaluation** in_evaluations2, uint in_nElements2, PairedGroupingScheme& out_groupingScheme);
+	void group(
+		Evaluation** in_evaluations, uint in_nElements, 
+		GroupingScheme& out_groupingScheme
+	);
+	void group(
+		Evaluation** in_evaluations1, uint in_nElements1, 
+		Evaluation** in_evaluations2, uint in_nElements2, 
+		PairedGroupingScheme& out_groupingScheme
+	);
 
 	friend class Evaluation::Iterator;
 };

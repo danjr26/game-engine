@@ -645,7 +645,8 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::evaluateTyped(CircleCollisionMa
 	Circle<T> const& circle = *basis1;
 	Ray<T, 2> const& ray = *basis2;
 
-	Ray2CollisionMask<T> rayMask = Ray2CollisionMask<T>(ray, true);
+	Ray2CollisionMask<T> rayMask(ray, true);
+	CircleCollisionMask<T> circleMask(circle, true);
 
 	Vector<T, 2> projectionPoint = ray.getProjection(circle.getCenter());
 
@@ -653,11 +654,26 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::evaluateTyped(CircleCollisionMa
 	Point2CollisionMask<T> pointMask2 = Point2CollisionMask<T>(ray.getPoint(), true);
 
 	if (ray.getProjectionCoefficient(projectionPoint) >= ray.getProjectionCoefficient()) {
-		collision = evaluateTyped(pointMask1, rayMask);
+		collision = evaluateTyped(circleMask, pointMask1);
 	}
 
 	if (!collision.mDid) {
-		collision = evaluateTyped(pointMask2, rayMask);
+		collision = evaluateTyped(circleMask, pointMask2);
+	}
+
+	if (collision.mDid && mReturnPoint) {
+		Vector<T, 2> direction = ray.getDirection();
+		Vector<T, 2> toCenter = circle.getCenter() - ray.getPoint();
+		T x1, x2;
+		uint count = GEUtil::solveQuadratic(
+			direction.dotSelf(), 
+			2 * direction.dot(toCenter), 
+			toCenter.dot(toCenter) - circle.getLazyRadius(), 
+			x1, x2
+		);
+		if (count == 0 || (x1 > 0 && x2 > 0)) throw ProcessFailureException();
+		T x = (x1 < 0) ? x2 : x1;
+		collision.mPoint = ray.getPoint() + direction * x;
 	}
 	
 	return collision;

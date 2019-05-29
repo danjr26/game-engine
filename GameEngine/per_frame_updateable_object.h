@@ -13,7 +13,9 @@ public:
 	PerFrameUpdateableObject();
 	virtual ~PerFrameUpdateableObject();
 	virtual void update(double in_dt) = 0;
+	virtual void updateLate(double in_dt);
 	void nextFrame(double in_dt);
+	void nextFrameLate(double in_dt);
 	void skipFrames(ubyte in_numberToSkip);
 };
 

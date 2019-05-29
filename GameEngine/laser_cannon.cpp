@@ -4,16 +4,17 @@
 #include "game_engine.h"
 
 LaserCannon::LaserCannon() :
-	mIsFiring(false),
+	mState(State::off),
 	mAccum(0),
 	mReloadTime(0.1),
 	mSpreadAngle(0.05),
-	mRecoil(2.0) {}
+	mRecoil(2.0) 
+{}
 
 void LaserCannon::update(double in_dt, Feedback* out_feedback) {
 	mAccum += in_dt;
 
-	if (mIsFiring && mAccum >= mReloadTime) {
+	if (mState == State::on && mAccum >= mReloadTime) {
 		LaserCannonBullet* bullet = new LaserCannonBullet;
 
 		Vector2d bulletPosition;
@@ -27,15 +28,15 @@ void LaserCannon::update(double in_dt, Feedback* out_feedback) {
 		mAccum = 0;
 
 		if (out_feedback != nullptr) {
-			out_feedback->impulse = bulletRotation.applyTo(Vector2d(-mRecoil, 0.0));
+			out_feedback->mImpulse = bulletRotation.applyTo(Vector2d(-mRecoil, 0.0));
 		}
 	}
 }
 
 void LaserCannon::startFire() {
-	mIsFiring = true;
+	mState = State::on;
 }
 
 void LaserCannon::endFire() {
-	mIsFiring = false;
+	mState = State::off;
 }

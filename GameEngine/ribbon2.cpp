@@ -1,6 +1,6 @@
 #include "ribbon2.h"
 #include "game_engine.h"
-#include <unordered_set>
+#include <set>
 #include <unordered_map>
 #include <vector>
 
@@ -36,21 +36,39 @@ TextureInstance& Ribbon2::getTextureInstance() {
 }
 
 void Ribbon2::updateMesh() {
+	struct NodeEntry {
+		Vector2d mOffset;
+		ushort mIndex1;
+		ushort mIndex2;
+
+		struct Comparator {
+			bool operator()(const NodeEntry& ne1, const NodeEntry& ne2) {
+				return ne1.mOffset.ccwTheta() < ne2.mOffset.ccwTheta();
+			}
+		};
+	};
+
+	std::unordered_map<node_t*, std::set<NodeEntry, NodeEntry::Comparator>> allEdges;
+	for (auto it = mGraph.mNodes.begin(); it != mGraph.mNodes.end(); it++) {
+		allEdges[&*it] = {};
+	}
+
 	std::unordered_map<ubyte, const void*> newData;
 	std::vector<Vector2d> newPositions(4);
 	std::vector<Vector2f> newUVs(4);
 	std::vector<ColorRGBAf> newColors(4);
 	std::vector<ushort> newIndices(6);
-
 	for (auto it = mGraph.mNodes.begin(); it != mGraph.mNodes.end(); it++) {
 		node_t& node1 = *it;
 		for (auto jt = it->mEdges.begin(); jt != it->mEdges.end(); jt++) {
 			edge_t& edge = *jt;
 			ushort baseIndex = (ushort)mMeshVertexData.getNumberVertices();
 			node_t& node2 = *jt->mDest;
-			Vector2d offset = (node2.mData.mPosition - node1.mData.mPosition).orthogonal().normalized() / 2.0;
+			Vector2d outward = node2.mData.mPosition - node1.mData.mPosition;
+			Vector2d offset = outward.orthogonal().normalized() / 2.0;
 			Vector2d offset1 = offset * node1.mData.mWidth;
 			Vector2d offset2 = offset * node2.mData.mWidth;
+
 			newPositions.assign({
 				node1.mData.mPosition + offset1,
 				node1.mData.mPosition - offset1,
@@ -58,10 +76,10 @@ void Ribbon2::updateMesh() {
 				node2.mData.mPosition + offset2
 				});
 			newUVs.assign({
-				Vector2f(edge.mData.mMinUV.x(), edge.mData.mMaxUV.y()),
-				edge.mData.mMinUV,
-				Vector2f(edge.mData.mMaxUV.x(), edge.mData.mMinUV.y()),
-				edge.mData.mMaxUV
+				node1.mData.mUV1,
+				node1.mData.mUV2,
+				node2.mData.mUV2,
+				node2.mData.mUV1
 				});
 			newColors.assign({
 				node1.mData.mColor,
@@ -77,11 +95,42 @@ void Ribbon2::updateMesh() {
 				(ushort)(baseIndex + 3),
 				(ushort)(baseIndex + 0)
 				});
+
 			newData[MeshVertexData::MemberID::position] = &newPositions[0];
 			newData[MeshVertexData::MemberID::uv] = &newUVs[0];
 			newData[MeshVertexData::MemberID::color] = &newColors[0];
+
 			mMeshVertexData.addVertices(4, newData);
 			mMeshVertexData.addFaces(2, &newIndices[0]);
+
+			allEdges[&*it].insert({ outward, newIndices[0], newIndices[1] });
+			allEdges[jt->mDest].insert({ -outward, newIndices[3], newIndices[4] });
+		}
+	}
+
+	for (auto it = mGraph.mNodes.begin(); it != mGraph.mNodes.end(); it++) {
+		auto entries = allEdges[&*it];
+		if (entries.size() <= 1) continue;
+		ushort baseIndex = (ushort)mMeshVertexData.getNumberVertices();
+
+		newPositions.assign({ it->mData.mPosition });
+		newUVs.assign({ (it->mData.mUV1 + it->mData.mUV2) / 2.0 });
+		newColors.assign({ it->mData.mColor });
+		mMeshVertexData.addVertices(1, newData);
+
+		for (auto jt = entries.begin(); jt != entries.end(); jt++) {
+			const NodeEntry& entry1 = *jt;
+			auto next = std::next(jt);
+			const NodeEntry& entry2 = (next == entries.end()) ? *entries.begin() : *next;
+			if (entry1.mOffset.ccwTheta(entry2.mOffset) > PI) {
+				newIndices.assign({
+					baseIndex,
+					entry1.mIndex2,
+					entry2.mIndex1
+					});
+				mMeshVertexData.addFaces(1, &newIndices[0]);
+				break;
+			}
 		}
 	}
 

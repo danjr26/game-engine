@@ -23,7 +23,7 @@ public:
 	LaserCannonBullet();
 	~LaserCannonBullet();
 
-	virtual void update(double in_dt) override;
+	void update(double in_dt) override;
 
 	CollisionMask2d& getCollisionMask();
 };

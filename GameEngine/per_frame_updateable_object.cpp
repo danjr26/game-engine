@@ -12,9 +12,18 @@ PerFrameUpdateableObject::~PerFrameUpdateableObject() {
 	}
 }
 
+void PerFrameUpdateableObject::updateLate(double in_dt) 
+{}
+
 void PerFrameUpdateableObject::nextFrame(double in_dt) {
 	if (mSkipCount++ >= mNumberToSkip) {
 		update(in_dt);
+	}
+}
+
+void PerFrameUpdateableObject::nextFrameLate(double in_dt) {
+	if (mSkipCount++ >= mNumberToSkip) {
+		updateLate(in_dt);
 	}
 }
 

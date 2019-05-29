@@ -4,7 +4,7 @@
 #include "mesh_vertex_data.h"
 #include "filtered_object.h"
 #include "disableable_object.h"
-#include "collision.h"
+#include "collision_queue.h"
 #include "transformable_object.h"
 #include <tuple>
 
@@ -58,8 +58,8 @@ class CollisionMask
 template<class T>
 class CollisionMask<T, 2> : public FilteredObject, public DisableableObject, public TransformableObject<T, 2> {
 protected:
+	CollisionQueue<T, 2>* mQueue;
 	bool mIgnoreTransform;
-	void* mParent;
 
 public:
 	enum PointNormalPolicy {
@@ -74,8 +74,8 @@ public:
 
 	bool getIgnoreTransform() const;
 	void setIgnoreTransform(bool in_value);
-	void* getParent() const;
-	void setParent(void* in_parent);
+	CollisionQueue<T, 2>* getQueue();
+	void setQueue(CollisionQueue<T, 2>* in_parent);
 	
 	virtual void applyTransform() = 0;
 	virtual CollisionMask<T, 2>* clone() const = 0;

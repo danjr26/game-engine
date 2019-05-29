@@ -7,6 +7,7 @@ LaserCannonBullet::LaserCannonBullet() :
 	mCollisionResponder(
 		[this](const CollisionPartner2d& in_partner, CollisionPacket& out_packet) {
 	out_packet.mDamage.mAmount = 2.0;
+	out_packet.mDamage.mMethod = DamagePacket::Method::bulk;
 	out_packet.mImpulse.mPosition = in_partner.mCollision.mPoint;
 	out_packet.mImpulse.mVector = Vector2d();
 }),
@@ -37,8 +38,7 @@ mLifeSpan(5.0) {
 	mRigidBody.setLinearMass(0);
 
 	mRigidBody.getTransform().setParent(&getTransform());
-	getCollisionMask().addFilter(Game::MainCollisionContextFilters::player_bullet);
-	getCollisionMask().setParent((CollisionResponder*)&mCollisionResponder);
+	getCollisionMask().addFilter(Game::CollisionFilters::player_bullet);
 	GE.game().getMainCollisionContext().add(&getCollisionMask());
 }
 

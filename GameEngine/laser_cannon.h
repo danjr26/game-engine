@@ -5,7 +5,10 @@
 
 class LaserCannon : public Weapon {
 private:
-	bool mIsFiring;
+	enum class State {
+		off,
+		on
+	} mState;
 	double mAccum;
 	double mReloadTime;
 	double mSpreadAngle;

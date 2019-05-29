@@ -5,10 +5,11 @@ PerFrameUpdateManager::PerFrameUpdateManager()
 {}
 
 void PerFrameUpdateManager::update(double in_dt) {
-	for (uint i = 0; i < mUpdateables.size(); i++) {
-		if (mUpdateables[i]->isEnabled()) {
-			mUpdateables[i]->nextFrame(in_dt);
-		}
+	for (auto it = mUpdateables.begin(); it != mUpdateables.end(); it++) {
+		if ((*it)->isEnabled()) (*it)->nextFrame(in_dt);
+	}
+	for (auto it = mUpdateables.begin(); it != mUpdateables.end(); it++) {
+		if ((*it)->isEnabled()) (*it)->nextFrameLate(in_dt);
 	}
 }
 

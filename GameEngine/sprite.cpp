@@ -32,10 +32,12 @@ Sprite::Sprite(const AxisAlignedRectangled& in_rectangle, Texture* in_texture, c
 
 	mMeshVertexData.addVertices(4, {});
 	mMeshVertexData.addMember(MeshVertexData::MemberID::position, MeshVertexData::DataType::_float, 3, positions);
+	mMeshVertexData.addMember(MeshVertexData::MemberID::color, MeshVertexData::DataType::_float, 4, nullptr);
 	mMeshVertexData.addMember(MeshVertexData::MemberID::uv, MeshVertexData::DataType::_float, 2, uvs);
 	mMeshVertexData.addFaces(2, indices);
 
 	mGPUPusher.initialize(&mMeshVertexData);
+	setColor(in_color);
 }
 
 Sprite::~Sprite() 
@@ -64,6 +66,7 @@ void Sprite::setUVs(const Vector2f& in_topLeft, const Vector2f& in_bottomRight) 
 
 void Sprite::setColor(const ColorRGBAf& in_color) {
 	mColor = in_color;
+	mGPUPusher.setMemberDefault(MeshVertexData::MemberID::color, in_color.pointer());
 }
 
 TextureInstance& Sprite::getTextureInstance() {
@@ -79,6 +82,7 @@ bool Sprite::shouldCull() const {
 }
 
 void Sprite::render() {
+	Log::main(std::to_string(mInnerTransform.getWorldRotation().getAngle()));
 	ShaderProgram* shaderProgram;
 
 	Matrix4f modelMatrix = mDepthTransform.getWorldMatrix() * mInnerTransform.getWorldMatrix();

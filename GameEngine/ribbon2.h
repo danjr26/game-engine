@@ -16,11 +16,11 @@ public:
 		Vector2d mPosition;
 		double mWidth;
 		ColorRGBAf mColor;
+		Vector2f mUV1;
+		Vector2f mUV2;
 	};
 
 	struct EdgeData {
-		Vector2f mMinUV;
-		Vector2f mMaxUV;
 	};
 
 	using node_t = GraphNode<NodeData, EdgeData>;

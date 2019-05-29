@@ -6,6 +6,7 @@
 #include <map>
 #include <unordered_map>
 #include <mutex>
+#include <functional>
 #include "basic_collision_mask.h"
 #include "binary_collision_tree.h"
 #include "in_place_collision_evaluator.h"
@@ -39,9 +40,12 @@ private:
 	std::unordered_map<CollisionMask<T, n>*, Transform<T, n>*> mPrevTransforms;
 	std::unordered_multimap<CollisionMask<T, n>*, CollisionMask<T, n>*> mPrevPartnering;
 
-	std::vector<typename BinaryCollisionTree<T, n>::Evaluation> mEvaluations;
-	std::vector<typename BinaryCollisionTree<T, n>::GroupingScheme> mGroupingSchemes;
-	std::vector<typename BinaryCollisionTree<T, n>::PairedGroupingScheme> mPairedGroupingSchemes;
+	using Evaluation = typename BinaryCollisionTree<T, n>::Evaluation;
+	using GroupingScheme = typename BinaryCollisionTree<T, n>::GroupingScheme;
+	using PairedGroupingScheme = typename BinaryCollisionTree<T, n>::PairedGroupingScheme;
+	std::vector<Evaluation> mEvaluations;
+	std::vector<GroupingScheme> mGroupingSchemes;
+	std::vector<PairedGroupingScheme> mPairedGroupingSchemes;
 
 	using Partnering = std::unordered_multimap<CollisionMask<T, n>*, CollisionPartner>;
 	Partnering mPartnering;
@@ -58,13 +62,19 @@ public:
 
 	void add(CollisionMask<T, n>* in_mask);
 	void remove(CollisionMask<T, n>* in_mask);
+	void check(CollisionMask<T, n>* in_mask, std::vector<CollisionPartner>& out_partners);
+	void check(CollisionMask<T, n>* in_mask, std::vector<CollisionPartner>& out_partners, 
+		std::function<bool(CollisionMask<T, n>*)> in_filter);
 	void update();
 	//void update(CollisionMask<T, n>** in_masks, uint in_nMasks);
 	uint getTotalPartnerings() const;
 	void getPartners(CollisionMask<T, n>* in_mask, std::vector<CollisionPartner*>& out_partners);
 	void setPartnerTestActivation(std::pair<ubyte, ubyte> in_test, bool in_value);
 	bool getPartnerTestActivation(std::pair<ubyte, ubyte> in_test);
-	void getTriggeredTests(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, std::vector<std::pair<ubyte, ubyte>>& out_tests);
+	void getTriggeredTests(
+		CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, 
+		std::vector<std::pair<ubyte, ubyte>>& out_tests
+	);
 
 	static void narrowCollision(
 		CollisionMask<T, n>& in_mask1, CollisionMask<T, n>& in_mask2,
@@ -82,11 +92,13 @@ private:
 	void recordHistory();
 
 	void partnerFiltered(
-		std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations
+		std::vector<Evaluation*>& in_filteredEvaluations,
+		Partnering& in_partnering
 	);
 	void partnerFiltered(
-		std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations1, 
-		std::vector<typename BinaryCollisionTree<T, n>::Evaluation*>& in_filteredEvaluations2
+		std::vector<Evaluation*>& in_filteredEvaluations1, 
+		std::vector<Evaluation*>& in_filteredEvaluations2,
+		Partnering& in_partnering
 	);
 
 	//static void partnerIfCollide(CollisionMask<T, n>* in_mask1, CollisionMask<T, n>* in_mask2, Partnering& in_partnering);

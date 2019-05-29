@@ -8,6 +8,7 @@
 #include "rigid_body.h"
 #include "destructable_object.h"
 #include "per_frame_updateable_object.h"
+#include "collision_queue.h"
 
 class TestEnemy : public DeepTransformableObject2d, public DestructableObject, public PerFrameUpdateableObject {
 private:
@@ -15,6 +16,7 @@ private:
 	TestEnemyMover mMover;
 	TestEnemyHealth mHealth;
 	RigidBody<2> mRigidBody;
+	CollisionQueue2d mCollisionQueue;
 
 public:
 	TestEnemy();
@@ -27,6 +29,7 @@ public:
 	TestEnemyHealth& getHealth();
 	RigidBody<2>& getRigidBody();
 	CollisionMask2d& getCollisionMask();
+	CollisionQueue2d& getCollisionQueue();
 
 private:
 	void initMembers();

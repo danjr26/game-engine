@@ -366,6 +366,31 @@ public:
 	}
 
 	template<typename = std::enable_if_t<n == 2, void>>
+	T ccwTheta() const {
+		if (mMembers[1] > 0) {
+			return theta(Vector<T, n>(1, 0));
+		}
+		else if (mMembers[1] < 0) {
+			return theta(Vector<T, n>(1, 0)) + 2.0 * PI;
+		}
+		else if (mMembers[0] > 0) {
+			return (T)0;
+		}
+		else if (mMembers[0] < 0) {
+			return (T)PI;
+		}
+		else {
+			return (T)0;
+		}
+	}
+
+	template<typename = std::enable_if_t<n == 2, void>>
+	T ccwTheta(const Vector<T, n>& v) const {
+		T diff = v.ccwTheta() - ccwTheta();
+		return (diff >= 0) ? diff : (diff + 2.0 * PI);
+	}
+
+	template<typename = std::enable_if_t<n == 2, void>>
 	void rotate(T angle) {
 		T sine = sin(angle);
 		T cosine = cos(angle);

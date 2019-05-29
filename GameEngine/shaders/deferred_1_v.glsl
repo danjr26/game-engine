@@ -20,6 +20,7 @@ void main() {
 	
 	position_f = (modelMatrix * vec4(position_v, 1.0)).xyz;
 	normal_f = (modelMatrix * vec4(normal_v, 0.0)).xyz; 
+	color_f = color_v;
 	uv_f = uv_v;
 }
 

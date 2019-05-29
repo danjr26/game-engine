@@ -269,6 +269,17 @@ namespace GEUtil {
 	}
 
 	template<class T>
+	inline uint solveQuadratic(T a, T b, T c, T& x1, T& x2) {
+		T disc = b * b - 4 * a * c;
+		if (disc < 0) return 0;
+		T sqrtDisc = sqrt(disc);
+		T denom = 1 / (2 * a);
+		x1 = (-b - sqrtDisc) * denom;
+		x2 = (-b + sqrtDisc) * denom;
+		return (disc == 0) ? 1 : 2;
+	}
+
+	template<class T>
 	T random();
 
 	template<> bool random<bool>();

@@ -80,7 +80,7 @@ Game& GameEngine::game() {
 void GameEngine::begin() {
 	try {
 		mGame = new Game();
-		mGame->Init();
+		mGame->init();
 
 		if (mHasBegun) {
 			throw ProcessFailureException("game engine already started");
