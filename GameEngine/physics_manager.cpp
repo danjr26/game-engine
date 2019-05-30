@@ -80,7 +80,7 @@ void PhysicsManager::prepareDataContainers(double in_dt) {
 }
 
 void PhysicsManager::excludePreembedded(double in_dt) {
-	std::vector<CollisionContext2d::CollisionPartner*> partners;
+	std::vector<CollisionPartner2d*> partners;
 	std::vector<CollisionMask2d const*> tried;
 	collisionContext.update();
 	for (uint i = 0; i < 5 && collisionContext.getTotalPartnerings() != 0; i++) {
@@ -112,7 +112,7 @@ void PhysicsManager::stepAll(double in_dt) {
 }
 
 void PhysicsManager::applyRigidBodiesToRigidBodies(double in_dt) {
-	std::vector<CollisionContext2d::CollisionPartner*> partners;
+	std::vector<CollisionPartner2d*> partners;
 
 	double t = 0.0;
 
@@ -139,7 +139,7 @@ void PhysicsManager::applyRigidBodiesToRigidBodies(double in_dt) {
 			collisionContext.getPartners(rigidBody1->getCollisionMask(), partners);
 
 			for (auto jt = partners.begin(); jt < partners.end(); jt++) {
-				CollisionContext2d::CollisionPartner* partner = *jt;
+				CollisionPartner2d* partner = *jt;
 
 				auto kt = std::find_if(rigidBody2s.begin(), rigidBody2s.end(),
 					[partner](RigidBody2* rigidBody) {return rigidBody->getCollisionMask() == partner->mMask; });
@@ -265,7 +265,7 @@ void PhysicsManager::applyRigidBodiesToRigidBodies(double in_dt) {
 void PhysicsManager::applyForceFieldsToRigidBodies(double in_dt) {
 	collisionContext.update();
 
-	std::vector<CollisionContext2d::CollisionPartner*> partners;
+	std::vector<CollisionPartner2d*> partners;
 	for (auto it = forceField2s.begin(); it < forceField2s.end(); it++) {
 		ForceField2* forceField = *it;
 		if (forceField->getCollisionMask() == nullptr) {
@@ -283,7 +283,7 @@ void PhysicsManager::applyForceFieldsToRigidBodies(double in_dt) {
 		else {
 			collisionContext.getPartners(forceField->getCollisionMask(), partners);
 			for (auto jt = partners.begin(); jt < partners.end(); jt++) {
-				CollisionContext2d::CollisionPartner* partner = *jt;
+				CollisionPartner2d* partner = *jt;
 				auto kt = std::find_if(rigidBody2s.begin(), rigidBody2s.end(), 
 					[partner](RigidBody2* rigidBody) {return rigidBody->getCollisionMask() == partner->mMask; });
 
@@ -304,7 +304,7 @@ void PhysicsManager::applyForceFieldsToRigidBodies(double in_dt) {
 /*
 void PhysicsManager::calculateForceFieldEffects(double in_dt) {
 	using EffectInfo2 = typename RigidBodyUpdateInfo<2>::ForceFieldEffectInfo;
-	std::vector<CollisionContext2d::CollisionPartner*> partners;
+	std::vector<CollisionPartner2d*> partners;
 
 	for (auto it = forceField2s.begin(); it < forceField2s.end(); it++) {
 		if ((*it)->getCollisionMask() == nullptr) { 
@@ -350,7 +350,7 @@ void PhysicsManager::calculateForceFieldEffects(double in_dt) {
 void PhysicsManager::calculateRigidBodyEffects(double in_dt) {
 	using EffectInfo2 = typename RigidBodyUpdateInfo<2>::RigidBodyEffectInfo;
 	using Status2 = typename EffectInfo2::Status;
-	std::vector<CollisionContext2d::CollisionPartner*> partners;
+	std::vector<CollisionPartner2d*> partners;
 	for (auto it = rigidBody2s.begin(); it < rigidBody2s.end(); it++) {
 		collisionContext.getPartners((*it)->getCollisionMask(), partners);
 		for (auto jt = partners.begin(); jt < partners.end(); jt++) {
@@ -433,7 +433,7 @@ void PhysicsManager::applyEffectsToRigidBodies(double in_dt) {
 	}
 
 	collisionContext.update();
-	std::vector<CollisionContext2d::CollisionPartner*> partners;
+	std::vector<CollisionPartner2d*> partners;
 	for (auto it = rigidBody2s.begin(); it < rigidBody2s.end(); it++) {
 		collisionContext.getPartners((*it)->getCollisionMask(), partners);
 		for (auto jt = partners.begin(); jt < partners.end(); jt++) {

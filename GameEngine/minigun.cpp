@@ -1,21 +1,22 @@
-#include "laser_cannon.h"
-#include "laser_cannon_bullet.h"
+#include "minigun.h"
+#include "minigun_bullet.h"
 #include "log.h"
 #include "game_engine.h"
 
-LaserCannon::LaserCannon() :
+Minigun::Minigun() :
 	mState(State::off),
-	mAccum(0),
-	mReloadTime(0.2),
-	mSpreadAngle(0.05),
-	mRecoil(2.0) 
+	mAccum(0.05),
+	mReloadTime(0.05),
+	mWarmTime(1.5),
+	mSpreadAngle(0.2),
+	mRecoil(1.0) 
 {}
 
-void LaserCannon::update(double in_dt, Feedback* out_feedback) {
+void Minigun::update(double in_dt, Feedback* out_feedback) {
 	mAccum += in_dt;
 
 	if (mState == State::on && mAccum >= mReloadTime) {
-		LaserCannonBullet* bullet = new LaserCannonBullet;
+		MinigunBullet* bullet = new MinigunBullet;
 
 		Vector2d bulletPosition;
 		bulletPosition = getTransform().localToWorldPoint(bulletPosition);
@@ -25,18 +26,24 @@ void LaserCannon::update(double in_dt, Feedback* out_feedback) {
 		bulletRotation = getTransform().localToWorldRotation(bulletRotation);
 		bullet->getTransform().setLocalRotation(bulletRotation);
 
-		mAccum = 0;
+		mAccum = 0.0;
 
 		if (out_feedback != nullptr) {
 			out_feedback->mImpulse = bulletRotation.applyTo(Vector2d(-mRecoil, 0.0));
 		}
 	}
+	else if (mState == State::warm && mAccum >= mWarmTime) {
+		mState = State::on;
+		mAccum = mReloadTime;
+	}
 }
 
-void LaserCannon::startFire() {
-	mState = State::on;
+void Minigun::startFire() {
+	mState = State::warm;
+	mAccum = 0.0;
 }
 
-void LaserCannon::endFire() {
+void Minigun::endFire() {
 	mState = State::off;
+	mAccum = 0.0;
 }

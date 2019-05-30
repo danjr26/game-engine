@@ -9,8 +9,10 @@
 #include "destructable_object.h"
 #include "per_frame_updateable_object.h"
 #include "collision_queue.h"
+#include "damage_receiver.h"
 
-class TestEnemy : public DeepTransformableObject2d, public DestructableObject, public PerFrameUpdateableObject {
+class TestEnemy : public DeepTransformableObject2d, public DestructableObject, 
+	public PerFrameUpdateableObject {
 private:
 	TestEnemyRenderer mRenderer;
 	TestEnemyMover mMover;

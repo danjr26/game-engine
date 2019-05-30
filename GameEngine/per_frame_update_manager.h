@@ -3,11 +3,11 @@
 
 #include "stepper.h"
 #include "per_frame_updateable_object.h"
-#include <vector>
+#include <list>
 
 class PerFrameUpdateManager {
 private:
-	std::vector<PerFrameUpdateableObject*> mUpdateables;
+	std::list<PerFrameUpdateableObject*> mUpdateables;
 
 public:
 	PerFrameUpdateManager();

@@ -2,6 +2,7 @@
 #include "game_engine.h"
 #include "game.h"
 #include "raycast.h"
+#include "damage_manager.h"
 
 IndustrialLaserBeam::IndustrialLaserBeam() :
 mSprite(),
@@ -11,9 +12,7 @@ mRaycastFilter(
 	}
 ),
 mRadius(0.8),
-mCollisionMask(LineSegment2d::fromPoints(
-	Vector2d(0.0, 0.0), Vector2d(10.0, 0.0)
-)) {
+mIsOn(true) {
 
 	Texture* tex = GE.assets().get<Texture>("LaserSpriteTexture");
 	mSprite.setTexture(tex);
@@ -30,35 +29,34 @@ mCollisionMask(LineSegment2d::fromPoints(
 
 	GE.render().add(&mSprite);
 	GE.perFrameUpdate().add(this);
-
-	mCollisionMask.addFilter(Game::CollisionFilters::player_bullet);
-	GE.game().getMainCollisionContext().add(&getCollisionMask());
 }
 
 IndustrialLaserBeam::~IndustrialLaserBeam() {}
 
 void IndustrialLaserBeam::update(double in_dt) {
+	if (!mIsOn) return;
 	Ray2d ray = Ray2d::fromPointDirection(
 		getTransform().getWorldPosition(),
 		getTransform().getWorldRotation().applyTo(Vector2d(1, 0))
 	);
-	typename CollisionContext2d::CollisionPartner partner;
-	double length = raycast(ray, *GE.collision().getActive2(), partner, mRaycastFilter) ?
-		(partner.mCollision.mPoint - getTransform().getWorldPosition()).magnitude() : 50.0;
-	
-	mCollisionMask.getBasis() = 
-	LineSegment2d::fromPoints(
-		Vector2d(0.0, 0.0), Vector2d(length, 0.0)
-	);
+	CollisionPartner2d partner;
+	bool hit = raycast(ray, *GE.collision().getActive2(), partner, mRaycastFilter);
+
+	double length = hit ? (partner.mCollision.mPoint - getTransform().getWorldPosition()).magnitude() : 50.0;
 
 	mSprite.setRectangle(AxisAlignedRectangled::fromExtrema(
 		Vector2d(0.0, -mRadius), Vector2d(length, mRadius)
 	));
 	
-}
-
-CollisionMask2d& IndustrialLaserBeam::getCollisionMask() {
-	return mCollisionMask;
+	if (hit) {
+		DamageReceiver* receiver = GE.game().getDamageManager().get(partner.mMask);
+		if (receiver) {
+			DamagePacket packet;
+			packet.mAmount = 5.0;
+			packet.mMethod = DamagePacket::Method::per_second;
+			receiver->receiveDamage(packet, in_dt);
+		}
+	}
 }
 
 void IndustrialLaserBeam::setFilter(std::function<bool(CollisionMask2d*)> in_filter) {
@@ -71,4 +69,14 @@ void IndustrialLaserBeam::setIgnoreMasks(std::unordered_set<CollisionMask2d*>& i
 
 std::unordered_set<CollisionMask2d*>& IndustrialLaserBeam::getIgnoreMasks() {
 	return mIgnoreMasks;
+}
+
+void IndustrialLaserBeam::setToggle(bool in_value) {
+	mIsOn = in_value;
+	if (mIsOn) {
+		mSprite.enable();
+	}
+	else {
+		mSprite.disable();
+	}
 }

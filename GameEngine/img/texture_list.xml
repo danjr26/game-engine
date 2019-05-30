@@ -4,4 +4,5 @@
 	<Texture2 name="LaserSpriteTexture" file="img/laser.png" flags="mipmaps"/>
 	<Texture2 name="RingWaveTexture" file="img/ring_wave.png" flags="mipmaps"/>
 	<Texture2 name="SmokeTexture" file="img/smoke.png" flags="mipmaps"/>
+	<Texture2 name="MinigunBulletTexture" file="img/minigun_bullet.png" flags="mipmaps"/>
 </TextureList>

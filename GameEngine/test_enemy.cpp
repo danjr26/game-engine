@@ -18,7 +18,10 @@ TestEnemy::TestEnemy() :
 
 	//mRigidBody.getTransform().setParent(&getTransform());
 	getCollisionMask().addFilter(Game::CollisionFilters::enemy_ship);
+	getCollisionMask().addFilter(Game::CollisionFilters::solid);
 	GE.game().getMainCollisionContext().add(&getCollisionMask());
+
+	GE.game().getDamageManager().add(&getCollisionMask(), &mHealth);
 
 	initMembers();
 }
@@ -26,20 +29,10 @@ TestEnemy::TestEnemy() :
 TestEnemy::~TestEnemy() {
 	GE.perFrameUpdate().remove(this);
 	GE.game().getMainCollisionContext().remove(&getCollisionMask());
+	GE.game().getDamageManager().remove(&getCollisionMask());
 }
 
 void TestEnemy::update(double in_dt) {
-	std::vector<CollisionContext2d::CollisionPartner*> partners;
-	CollisionContext2d& collisionContext = GE.game().getMainCollisionContext();
-	collisionContext.getPartners(&getCollisionMask(), partners);
-
-	CollisionPartner2d thisAsPartner;
-	thisAsPartner.mMask = &getCollisionMask();
-
-	for (auto it = partners.begin(); it < partners.end(); it++) {
-
-	}
-
 	if (mHealth.isDead()) {
 		TestEnemy* testEnemy = new TestEnemy();
 		testEnemy->getTransform().setLocalPosition(Vector2d(

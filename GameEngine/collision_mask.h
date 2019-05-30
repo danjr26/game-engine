@@ -4,8 +4,8 @@
 #include "mesh_vertex_data.h"
 #include "filtered_object.h"
 #include "disableable_object.h"
-#include "collision_queue.h"
 #include "transformable_object.h"
+#include "collision_queue.h"
 #include <tuple>
 
 #include "axis_aligned_half_space.h"

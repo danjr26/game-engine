@@ -229,7 +229,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::evaluateTyped(AARectangleCollis
 
 	if (!collision.mDid && mReturnSeparator) {
 		Vector<T, 2> ortho = direction.orthogonal();
-		collision.mSeparator = ortho * ((ortho.dot(center - point) < 0) ? -1 : 1);
+		collision.mSeparator = ortho * ((ortho.dot(center - point) < 0) ? -1.0 : 1.0);
 		collision.mOwner = &in_mask2;
 	}
 
@@ -663,7 +663,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::evaluateTyped(CircleCollisionMa
 
 	if (collision.mDid && mReturnPoint) {
 		Vector<T, 2> direction = ray.getDirection();
-		Vector<T, 2> toCenter = circle.getCenter() - ray.getPoint();
+		Vector<T, 2> toCenter = ray.getPoint() - circle.getCenter();
 		T x1, x2;
 		uint count = GEUtil::solveQuadratic(
 			direction.dotSelf(), 
@@ -671,7 +671,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::evaluateTyped(CircleCollisionMa
 			toCenter.dot(toCenter) - circle.getLazyRadius(), 
 			x1, x2
 		);
-		if (count == 0 || (x1 > 0 && x2 > 0)) throw ProcessFailureException();
+		if (count == 0 || (x1 < 0 && x2 < 0)) throw ProcessFailureException();
 		T x = (x1 < 0) ? x2 : x1;
 		collision.mPoint = ray.getPoint() + direction * x;
 	}

@@ -48,7 +48,7 @@ TestBullet::~TestBullet() {
 }
 
 void TestBullet::update(double in_dt) {
-	std::vector<CollisionContext2d::CollisionPartner*> partners;
+	std::vector<CollisionPartner2d*> partners;
 	CollisionContext2d& collisionContext = GE.game().getMainCollisionContext();
 	collisionContext.getPartners(&getCollisionMask(), partners);
 

@@ -1,5 +1,5 @@
-#ifndef LASER_CANNON_BULLET_H
-#define LASER_CANNON_BULLET_H
+#ifndef MINIGUN_BULLET_H
+#define MINIGUN_BULLET_H
 
 #include "sprite.h"
 #include "deep_transformable_object.h"
@@ -10,7 +10,7 @@
 #include "collision_responder.h"
 #include "collision_queue.h"
 
-class LaserCannonBullet : public DeepTransformableObject2d, public PerFrameUpdateableObject,
+class MinigunBullet : public DeepTransformableObject2d, public PerFrameUpdateableObject,
 	public DestructableObject {
 
 private:
@@ -21,8 +21,8 @@ private:
 	double mLifeSpan;
 
 public:
-	LaserCannonBullet();
-	~LaserCannonBullet();
+	MinigunBullet();
+	~MinigunBullet();
 
 	void update(double in_dt) override;
 

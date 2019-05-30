@@ -74,8 +74,6 @@ int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nA
 	int tmpFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
 	_CrtSetDbgFlag(tmpFlag | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
 
-	Log::main(getWindowsErrorMessage());
-
 	new GameEngine();
 
 	Window::Params params =

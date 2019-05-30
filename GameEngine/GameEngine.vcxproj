@@ -180,6 +180,7 @@
     <ClInclude Include="chaos_spike.h" />
     <ClInclude Include="charge_beam.h" />
     <ClInclude Include="circle_renderer.h" />
+    <ClInclude Include="collision_partner.h" />
     <ClInclude Include="collision_queue.h" />
     <ClInclude Include="collision_basis_wrapper.h" />
     <ClInclude Include="collision_context.h" />
@@ -189,7 +190,9 @@
     <ClInclude Include="color.h" />
     <ClInclude Include="concussive_wave.h" />
     <ClInclude Include="cubic_transitioner.h" />
+    <ClInclude Include="damage_manager.h" />
     <ClInclude Include="damage_packet.h" />
+    <ClInclude Include="damage_receiver.h" />
     <ClInclude Include="dark_artifact.h" />
     <ClInclude Include="debug_mesh_vertex_data_renderer.h" />
     <ClInclude Include="deep_object.h" />
@@ -230,6 +233,7 @@
     <ClInclude Include="located_vector.h" />
     <ClInclude Include="mesh_sphere_tree.h" />
     <ClInclude Include="minigun.h" />
+    <ClInclude Include="minigun_bullet.h" />
     <ClInclude Include="particle_system2.h" />
     <ClInclude Include="particle_system2_factories.h" />
     <ClInclude Include="particle_system2_specifiers.h" />
@@ -382,6 +386,8 @@
     <ClCompile Include="collision_evaluator.cpp" />
     <ClCompile Include="collision_manager.cpp" />
     <ClCompile Include="collision_mask.cpp" />
+    <ClCompile Include="damage_manager.cpp" />
+    <ClCompile Include="damage_receiver.cpp" />
     <ClCompile Include="debug_mesh_vertex_data_renderer.cpp" />
     <ClCompile Include="deep_object.cpp" />
     <ClCompile Include="deep_transformable_object.cpp" />
@@ -402,6 +408,8 @@
     <ClCompile Include="laser_cannon.cpp" />
     <ClCompile Include="laser_cannon_bullet.cpp" />
     <ClCompile Include="mesh_sphere_tree.cpp" />
+    <ClCompile Include="minigun.cpp" />
+    <ClCompile Include="minigun_bullet.cpp" />
     <ClCompile Include="particle_system2.cpp" />
     <ClCompile Include="particle_system2_factories.cpp" />
     <ClCompile Include="particle_system2_specifiers.cpp" />

@@ -690,6 +690,18 @@
     <ClInclude Include="collision_queue.h">
       <Filter>Header Files\collision</Filter>
     </ClInclude>
+    <ClInclude Include="collision_partner.h">
+      <Filter>Header Files\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="damage_receiver.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="damage_manager.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="minigun_bullet.h">
+      <Filter>Header Files\objects\projectiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clock.cpp">
@@ -1043,16 +1055,28 @@
     <ClCompile Include="ribbon2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="industrial_laser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="raycast.cpp">
       <Filter>Source Files\collision</Filter>
     </ClCompile>
-    <ClCompile Include="industrial_laser_beam.cpp">
+    <ClCompile Include="weapon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="weapon.cpp">
+    <ClCompile Include="damage_receiver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="damage_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="industrial_laser.cpp">
+      <Filter>Source Files\objects\weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="industrial_laser_beam.cpp">
+      <Filter>Source Files\objects\projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="minigun_bullet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="minigun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

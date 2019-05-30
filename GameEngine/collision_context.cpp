@@ -1,5 +1,6 @@
 #include "collision_context.h"
 #include "game_engine.h"
+#include "collision_queue.h"
 
 template<class T, uint n>
 CollisionContext<T, n>::CollisionContext(const AxisAlignedBox<T, n>& in_box, uint in_depth) :
@@ -31,6 +32,7 @@ void CollisionContext<T, n>::remove(CollisionMask<T, n>* in_mask) {
 	}
 }
 
+/*
 template<class T, uint n>
 void CollisionContext<T, n>::check(CollisionMask<T, n>* in_mask, std::vector<CollisionPartner>& out_partners) {
 	return;
@@ -72,18 +74,19 @@ void CollisionContext<T, n>::check(CollisionMask<T, n>* in_mask, std::vector<Col
 		}
 	}
 }
+*/
 
 template<class T, uint n>
 void CollisionContext<T, n>::check(
 	CollisionMask<T, n>* in_mask, 
-	std::vector<CollisionPartner>& out_partners, 
+	std::vector<CollisionPartner<T, n>>& out_partners, 
 	std::function<bool(CollisionMask<T, n>*)> in_filter) {
 
 	InPlaceCollisionEvaluator<T, n> collisionEvaluator;
 	collisionEvaluator.returnPoint(true);
 	collisionEvaluator.returnSeparator(true);
 
-	CollisionPartner partner;
+	CollisionPartner<T, n> partner;
 	CollisionMask<T, n>* transformedMask = in_mask->clone();
 	transformedMask->applyTransform();
 
@@ -102,6 +105,7 @@ void CollisionContext<T, n>::check(
 	}
 	delete transformedMask;
 }
+
 
 template<class T, uint n>
 void CollisionContext<T, n>::update() {
@@ -214,7 +218,7 @@ uint CollisionContext<T, n>::getTotalPartnerings() const {
 }
 
 template<class T, uint n>
-void CollisionContext<T, n>::getPartners(CollisionMask<T, n>* in_mask, std::vector<CollisionPartner*>& out_partners) {
+void CollisionContext<T, n>::getPartners(CollisionMask<T, n>* in_mask, std::vector<CollisionPartner<T, n>*>& out_partners) {
 	out_partners.clear();
 	auto search = mPartnering.equal_range(in_mask);
 	for (auto it = search.first; it != search.second; it++) {
@@ -246,6 +250,13 @@ void CollisionContext<T, n>::getTriggeredTests(CollisionMask<T, n>* in_mask1, Co
 		else if (in_mask1->hasFilter(it->second) && in_mask2->hasFilter(it->first)) {
 			out_tests.push_back(std::pair<ubyte, ubyte>(it->second, it->first));
 		}
+	}
+}
+
+template<class T, uint n>
+void CollisionContext<T, n>::broadcast() {
+	for (auto it = mPartnering.begin(); it != mPartnering.end(); it++) {
+		if (it->first->getQueue()) it->first->getQueue()->push_back(it->second);
 	}
 }
 

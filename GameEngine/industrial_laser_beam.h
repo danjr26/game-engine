@@ -9,16 +9,17 @@
 #include "rigid_body.h"
 #include "sprite.h"
 #include "basic_collision_mask.h"
+#include "collision_queue.h"
 
 class IndustrialLaserBeam : public DeepTransformableObject2d, public PerFrameUpdateableObject,
 	public DestructableObject {
 
 private:
 	std::unordered_set<CollisionMask2d*> mIgnoreMasks;
-	LineSegment2CollisionMask<double> mCollisionMask;
 	Sprite mSprite;
 	std::function<bool(CollisionMask2d*)> mRaycastFilter;
 	double mRadius;
+	bool mIsOn;
 
 public:
 	IndustrialLaserBeam();
@@ -26,10 +27,11 @@ public:
 
 	void update(double in_dt) override;
 
-	CollisionMask2d& getCollisionMask();
 	void setFilter(std::function<bool(CollisionMask2d*)> in_filter);
 	void setIgnoreMasks(std::unordered_set<CollisionMask2d*>& in_masks);
 	std::unordered_set<CollisionMask2d*>& getIgnoreMasks();
+
+	void setToggle(bool in_value);
 };
 
 #endif

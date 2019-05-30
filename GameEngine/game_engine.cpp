@@ -138,7 +138,9 @@ void GameEngine::nextFrame() {
 	mInputManager.update();
 	mCollisionManager.update();
 	mPhysicsManager.update(dt);
+	mGame->preupdate(dt);
 	mPerFrameUpdateManager.update(dt);
+	mGame->postupdate(dt);
 	double t2 = GE.clock().now();
 	if (!mFrameRateManager.isLeanFrame() || cCount % 10 == 0) {
 		rCount++;

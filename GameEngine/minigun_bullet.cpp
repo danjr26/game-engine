@@ -1,25 +1,24 @@
-#include "laser_cannon_bullet.h"
+#include "minigun_bullet.h"
 #include "game_engine.h"
-#include "particle_system2_specifiers.h"
 #include "game.h"
 
-LaserCannonBullet::LaserCannonBullet() :
-mRigidBody(),
-mSprite(),
-mAge(0.0),
-mLifeSpan(5.0) {
+MinigunBullet::MinigunBullet() :
+	mRigidBody(),
+	mSprite(),
+	mAge(0.0),
+	mLifeSpan(2.0) {
 
-	Texture* tex = GE.assets().get<Texture>("LaserSpriteTexture");
+	Texture* tex = GE.assets().get<Texture>("MinigunBulletTexture");
 	mSprite.setTexture(tex);
 
-	mSprite.setRectangle(AxisAlignedRectangled::fromCenter(Vector2d(), Vector2d(0.8, 0.8)));
+	mSprite.setRectangle(AxisAlignedRectangled::fromCenter(Vector2d(), Vector2d(0.3, 0.3)));
 
 	mSprite.getTransform().setParent(&getTransform());
 	mSprite.getDepthTransform().setParent(&getDepthTransform());
 
 	mSprite.getTextureInstance().getSettings().setMinifyFilter(TextureSettings::FilterMode::trilinear);
 
-	mSprite.setColor(ColorRGBAf(0.5, 0.5, 0.9, 1.0));
+	mSprite.setColor(ColorRGBAf(0.9, 0.7, 0.4, 1.0));
 
 	GE.render().add(&mSprite);
 	GE.perFrameUpdate().add(this);
@@ -36,13 +35,13 @@ mLifeSpan(5.0) {
 	GE.game().getMainCollisionContext().add(&getCollisionMask());
 }
 
-LaserCannonBullet::~LaserCannonBullet() {
+MinigunBullet::~MinigunBullet() {
 	GE.render().remove(&mSprite);
 	GE.perFrameUpdate().remove(this);
 	GE.game().getMainCollisionContext().remove(&getCollisionMask());
 }
 
-void LaserCannonBullet::update(double in_dt) {
+void MinigunBullet::update(double in_dt) {
 	mAge += in_dt;
 	if (mAge >= mLifeSpan) {
 		GE.destruction().add(this);
@@ -50,18 +49,10 @@ void LaserCannonBullet::update(double in_dt) {
 
 	for (auto it = mCollisionQueue.begin(); !mCollisionQueue.empty(); it = mCollisionQueue.begin()) {
 		if (it->mMask->hasFilter(Game::CollisionFilters::solid)) {
-			Texture* tex = GE.assets().get<Texture>("SparkSpriteTexture");
-			TestBulletImpactSparksSpecifier* specifier = new TestBulletImpactSparksSpecifier;
-			ParticleSystem2* particles = new ParticleSystem2(tex, specifier);
-			particles->getTransform().setLocalPosition(it->mCollision.mPoint);
-
-			GE.perFrameUpdate().add(particles);
-			GE.render().add(particles);
-
 			DamageReceiver* receiver = GE.game().getDamageManager().get(it->mMask);
 			if (receiver) {
 				DamagePacket packet;
-				packet.mAmount = 4.0;
+				packet.mAmount = 1.0;
 				packet.mMethod = DamagePacket::Method::bulk;
 				receiver->receiveDamage(packet, in_dt);
 			}
@@ -71,10 +62,10 @@ void LaserCannonBullet::update(double in_dt) {
 	}
 
 	Vector2d direction = getTransform().applyToLocalDirection(Vector2d(1, 0));
-	getTransform().translateLocal(direction * 10.0 * in_dt);
+	getTransform().translateLocal(direction * 15.0 * in_dt);
 }
 
-CollisionMask2d& LaserCannonBullet::getCollisionMask() {
+CollisionMask2d& MinigunBullet::getCollisionMask() {
 	CollisionMask2d* mask = mRigidBody.getCollisionMask();
 	if (mask == nullptr) throw InvalidArgumentException();
 	return *mask;

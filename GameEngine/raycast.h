@@ -12,11 +12,11 @@ template<class T, uint n>
 bool raycast(
 	Ray<T, n>& in_ray,
 	CollisionContext<T, n>& in_context,
-	typename CollisionContext<T, n>::CollisionPartner& out_partner,
+	CollisionPartner<T, n>& out_partner,
 	std::function<bool(CollisionMask<T, n>*)> in_filter) {
 
 	BasicCollisionMask<Ray<T, n>, T, n> rayMask(in_ray);
-	std::vector<typename CollisionContext<T, n>::CollisionPartner> partners;
+	std::vector<CollisionPartner<T, n>> partners;
 	in_context.check(&rayMask, partners, in_filter);
 	if (partners.empty()) return false;
 	T minDistance = std::numeric_limits<T>::infinity();

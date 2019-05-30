@@ -14,6 +14,7 @@ void PerFrameUpdateManager::update(double in_dt) {
 }
 
 void PerFrameUpdateManager::add(PerFrameUpdateableObject* in_updateable) {
+	if (in_updateable == nullptr) throw InvalidArgumentException();
 	mUpdateables.push_back(in_updateable);
 }
 

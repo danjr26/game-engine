@@ -9,6 +9,7 @@
 #include "particle_system2_specifiers.h"
 #include "ribbon2.h"
 #include "industrial_laser.h"
+#include "minigun.h"
 
 Game::Game() :
 	mPointerInput(),
@@ -37,7 +38,7 @@ Game::~Game() {
 
 void Game::init() {
 	mPlayerShip = new PlayerShip();
-	mPlayerShip->getWeaponsSystem().setPrimary(new IndustrialLaser);
+	mPlayerShip->getWeaponsSystem().setPrimary(new Minigun);
 	mPlayerShip->getDepthTransform().setLocalDepth(0.2);
 
 	
@@ -85,6 +86,12 @@ void Game::init() {
 	//IndustrialLaserBeam* beam = new IndustrialLaserBeam;
 }
 
+void Game::preupdate(double in_dt) {
+	mMainCollisionContext.broadcast();
+}
+
+void Game::postupdate(double in_dt) {}
+
 PointerInputContext& Game::getPointerInput() {
 	return mPointerInput;
 }
@@ -99,5 +106,9 @@ PlayerShip* Game::getPlayerShip() {
 
 CollisionContext2d& Game::getMainCollisionContext() {
 	return mMainCollisionContext;
+}
+
+DamageManager& Game::getDamageManager() {
+	return mDamageManager;
 }
 

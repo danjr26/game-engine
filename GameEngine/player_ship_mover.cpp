@@ -41,7 +41,7 @@ void PlayerShipMover::update(double in_dt) {
 	URotation2d rotationDiff = Rotation2d(mParent.getTransform().getLocalRotation(), targetRotation);
 
 	angularVelocity = URotation2d(
-		-GEUtil::sign(rotationDiff.getAngle()) * 2.0 *
+		-GEUtil::sign(rotationDiff.getAngle()) * 3.0 *
 		GEUtil::min(exp(abs(rotationDiff.getAngle())) - 1.0, 4 * PI)
 	);
 

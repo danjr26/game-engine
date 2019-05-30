@@ -82,7 +82,6 @@ bool Sprite::shouldCull() const {
 }
 
 void Sprite::render() {
-	Log::main(std::to_string(mInnerTransform.getWorldRotation().getAngle()));
 	ShaderProgram* shaderProgram;
 
 	Matrix4f modelMatrix = mDepthTransform.getWorldMatrix() * mInnerTransform.getWorldMatrix();
