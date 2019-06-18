@@ -54,6 +54,7 @@ void MinigunBullet::update(double in_dt) {
 				DamagePacket packet;
 				packet.mAmount = 1.0;
 				packet.mMethod = DamagePacket::Method::bulk;
+				packet.mImpulse = { it->mCollision.mPoint, getTransform().applyToLocalDirection(Vector2d(1, 0)) };
 				receiver->receiveDamage(packet, in_dt);
 			}
 			GE.destruction().add(this);

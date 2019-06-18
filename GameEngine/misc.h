@@ -57,6 +57,14 @@ namespace GEUtil {
 	}
 
 	template<class T>
+	inline T regress(T start, T step, T towards) {
+		step = (step < 0) ? -step : step;
+		if (start > towards + step) return start - step;
+		else if (start < towards - step) return start + step;
+		return towards;
+	}
+
+	template<class T>
 	inline T mean(T a, T b) {
 		return (a + b) * 0.5;
 	}

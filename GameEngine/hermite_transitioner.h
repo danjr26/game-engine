@@ -18,7 +18,8 @@ struct HermiteTransitioner : Transitioner<LocatedVector<ValT, n>, TimeT> {
 		for (uint i = 0; i < mKeys.size() - 1; i++) {
 			t += mKeys[i].mDuration;
 			if (t >= in_time) {
-				TimeT interT = (in_time - (t - mKeys[i].mDuration)) / (mKeys[i].mDuration);
+				if (!mKeys[i].mDuration) return mKeys[i].mValue;
+				TimeT interT = (in_time - (t - mKeys[i].mDuration)) / mKeys[i].mDuration;
 				TimeT interT2 = interT * interT;
 				TimeT interT3 = interT2 * interT;
 

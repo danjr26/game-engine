@@ -169,3 +169,14 @@ spark gun
   RNG med
   gets more DMG and SPD over time
 ##
+
+rusher - rushes at player; stops and moves erratically backwards if player is looking at it within donut; inside donut "activates" and kamikazies
+
+runner - makes runs at player, shooting when moving towards and shielded when moving away
+
+tank - frequent burst shots, occasional missle, slowly moves towards player, shielded by droid that moves erratically around it
+
+
+
+shields take heavy damage, but when break, temporarily disable ships in immediate area
+
