@@ -7,10 +7,11 @@ TestEnemyController::TestEnemyController(TestEnemy& in_parent) :
 	mParent(in_parent),
 	mTarget(nullptr),
 	mState(State::approach),
+	mStateT(0.0),
 	mPathUpdateStepper(0.7),
 	mPath(),
-	mTargetSpeed(0.1),
-	mMaxAcceleration(0.1) {
+	mMaxSpeed(5.0),
+	mMaxAcceleration(5.0) {
 
 	updateTarget();
 	updatePath();
@@ -19,46 +20,103 @@ TestEnemyController::TestEnemyController(TestEnemy& in_parent) :
 TestEnemyController::~TestEnemyController() {}
 
 void TestEnemyController::update(double in_dt) {
-	if (mPathUpdateStepper.stepNumber(in_dt)) updatePath();
+	if (mTarget == nullptr) return;
+
+	bool forcePathUpdate = false;
+
+	Vector2d targetToParent = mParent.getTransform().getWorldPosition() - mTarget->getCollisionMask().getTransform().getWorldPosition();
+
+	bool beingRushed = targetToParent.theta(mTarget->getLinearVelocity()) < (PI / 12) && mTarget->getLinearVelocity().magnitude() > 4.0;
+
+	switch (mState) {
+	case State::approach:
+		if (targetToParent.magnitude() <= 5.0) {
+			mState = State::rush;
+			forcePathUpdate = true;
+			mStateT = 0.0;
+		}
+		else if (beingRushed) {
+			mState = State::retreat;
+			forcePathUpdate = true;
+			mStateT = 0.0;
+		}
+		break;
+	case State::retreat:
+		if (targetToParent.magnitude() >= 10.0 && mStateT > 1.0) {
+			mState = State::approach;
+			forcePathUpdate = true;
+			mStateT = 0.0;
+		}
+		break;
+	case State::rush:
+		if (beingRushed && targetToParent.magnitude() >= 2.0 || mStateT >= 2.0) {
+			mState = State::retreat;
+			forcePathUpdate = true;
+			mStateT = 0.0;
+		}
+		break;
+	}
+
+	if (mPathUpdateStepper.stepNumber(in_dt) || forcePathUpdate) updatePath();
+	mStateT += in_dt;
 }
 
 TestEnemyController::MoveCommand TestEnemyController::getMoveCommand() {
 	MoveCommand command;
 	command.mLinearVelocity = mPath.evaluate(mPathUpdateStepper.mAccum).mVector;
-	command.mTargetSpeed = mTargetSpeed;
+	command.mMaxSpeed = mMaxSpeed;
 	command.mMaxAcceleration = mMaxAcceleration;
 	return command;
 }
 
 void TestEnemyController::updatePath() {
+	if (mTarget == nullptr) return;
+
 	RigidBody2& rigidBody = mParent.getRigidBody();
 	Vector2d linearVelocity = rigidBody.getLinearVelocity();
 	URotation2d angularVelocity = rigidBody.getAngularVelocity();
 
+	Vector2d entityPosition = mTarget->getCollisionMask().getTransform().getWorldPosition();
+	Vector2d entityLinearVelocity = mTarget->getLinearVelocity();
+
+	Vector2d targetPoint;
+	Vector2d currentPoint = mParent.getTransform().getWorldPosition();
+
 	switch (mState) {
 	case State::approach:
-		break;
-	case State::retreat: 
-		break;
-	case State::rush:
-		break;
-	default:
+	{
+		mMaxSpeed = 7.0;
+		mMaxAcceleration = 6.0;
+		mPathUpdateStepper.mStep = 0.7;
+		targetPoint = entityPosition + entityLinearVelocity + Vector2d(10, 0).rotated(GEUtil::random<double>(0, 2 * PI));
 		break;
 	}
+	case State::retreat:
+	{
+		mMaxSpeed = 8.0;
+		mMaxAcceleration = 10.0;
+		mPathUpdateStepper.mStep = 0.5;
+		targetPoint = (currentPoint - entityPosition).rotated(GEUtil::random<double>(-PI / 4, PI / 4));
+		targetPoint.addToMagnitude(1.0);
+		break;
+	}
+	case State::rush:
+	{
+		mMaxSpeed = 12.0;
+		mMaxAcceleration = 25.0;
+		mPathUpdateStepper.mStep = 1.0;
+		targetPoint = entityPosition + entityLinearVelocity * 0.25/* + Vector2d(2, 0).rotated(GEUtil::random<double>(0, 2 * PI))*/;
+		break;
+	}
+	}
 
-	PlayerShip* target = GE.game().getPlayerShip();
-
-	Vector2d currentPoint = mParent.getTransform().getWorldPosition();
-	Vector2d targetPoint = target->getTransform().getWorldPosition() +
-		target->getRigidBody().getLinearVelocity() * 1.0 +
-		Vector2d(10, 0).rotated(GEUtil::random<double>(0, 2 * PI));
 	Vector2d offset = targetPoint - currentPoint;
 
 	LocatedVector2d currentLocVec(currentPoint, linearVelocity);
-	LocatedVector2d targetLocVec(targetPoint, offset.normalized() * mTargetSpeed);
+	LocatedVector2d targetLocVec(targetPoint, offset.normalized() * mMaxSpeed);
 
 	mPath.mKeys.clear();
-	mPath.mKeys.push_back({ currentLocVec, offset.magnitude() / mTargetSpeed });
+	mPath.mKeys.push_back({ currentLocVec, offset.magnitude() / mMaxSpeed / 2.0 });
 	mPath.mKeys.push_back({ targetLocVec, 0.0 });
 }
 

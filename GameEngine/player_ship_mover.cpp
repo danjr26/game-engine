@@ -25,7 +25,7 @@ void PlayerShipMover::update(double in_dt) {
 	linearVelocity += direction * 30.0 * in_dt;
 	linearVelocity = linearVelocity.normalized() * GEUtil::min(linearVelocity.magnitude(), 8.0);
 
-	mParent.getTransform().translateWorld(linearVelocity * in_dt);
+	//mParent.getTransform().translateWorld(linearVelocity * in_dt);
 
 	mShipInput.clearEvents();
 	mPointerInput.clearEvents();

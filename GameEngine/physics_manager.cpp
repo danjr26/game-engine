@@ -18,17 +18,13 @@ PhysicsManager::PhysicsManager() :
 
 void PhysicsManager::update(double in_dt) {
 	prepareDataContainers(in_dt);
-	//excludePreembedded(in_dt);
 
 	collisionContext.update();
 
 	stepAll(in_dt);
+
 	applyForceFieldsToRigidBodies(in_dt);
 	applyRigidBodiesToRigidBodies(in_dt);
-	//collisionContext.update();
-	//calculateForceFieldEffects(in_dt);
-	//calculateRigidBodyEffects(in_dt);
-	//applyEffectsToRigidBodies(in_dt);
 }
 
 void PhysicsManager::add(RigidBody2* in_rigidBody) {
@@ -147,11 +143,16 @@ void PhysicsManager::applyRigidBodiesToRigidBodies(double in_dt) {
 				if (kt == rigidBody2s.end()) break;
 				RigidBody2* rigidBody2 = *kt;
 
-
 				if (std::find_if(minPartners.begin(), minPartners.end(),
 					[rigidBody1, rigidBody2](const ProcessedPartnering& partnering) { 
 						return partnering.body1 == rigidBody2 && partnering.body2 == rigidBody1;
 				}) != minPartners.end()) break;
+
+				CollisionPartner2d thisAsPartner(rigidBody1->getCollisionMask(), partner->mCollision);
+				CollisionQueue2d* queue1 = rigidBody1->getCollisionMask()->getQueue();
+				CollisionQueue2d* queue2 = rigidBody2->getCollisionMask()->getQueue();
+				if (queue1) queue1->push_back(*partner);
+				if (queue2) queue2->push_back(thisAsPartner);
 
 				ProcessedPartnering processed;
 				processed.body1 = rigidBody1;
@@ -188,6 +189,7 @@ void PhysicsManager::applyRigidBodiesToRigidBodies(double in_dt) {
 				}
 
 				if (processed.collision.mOwner == nullptr) {
+					continue;
 					Log::main("err");
 				}
 
@@ -201,7 +203,7 @@ void PhysicsManager::applyRigidBodiesToRigidBodies(double in_dt) {
 			}
 		}
 
-		// apply impulses tp min partners
+		// apply impulses to min partners
 		std::unordered_map<RigidBody2*, Transform2d> uniqueBodies;
 		for (auto it = minPartners.begin(); it != minPartners.end(); it++) {
 			if (uniqueBodies.find(it->body1) == uniqueBodies.end()) {

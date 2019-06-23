@@ -11,6 +11,16 @@ struct CollisionPartner {
 	CollisionMask<T, n>* mMask;
 	Collision<T, n> mCollision;
 
+	CollisionPartner() :
+		mMask(nullptr),
+		mCollision()
+	{}
+
+	CollisionPartner(CollisionMask<T, n>* in_mask, Collision<T, n> in_collision) :
+		mMask(in_mask),
+		mCollision(in_collision)
+	{}
+
 	bool operator==(const CollisionPartner& in_other) {
 		return mMask == in_other.mMask;
 	}

@@ -38,12 +38,13 @@ Game::~Game() {
 
 void Game::init() {
 	mPlayerShip = new PlayerShip();
-	mPlayerShip->getWeaponsSystem().setPrimary(new IndustrialLaser);
+	mPlayerShip->getWeaponsSystem().setPrimary(new Minigun);
+	//mPlayerShip->getWeaponsSystem().setSecondary();
 	mPlayerShip->getDepthTransform().setLocalDepth(0.2);
 
-	for (uint i = 0; i < 5; i++) {
+	for (uint i = 0; i < 10; i++) {
 		TestEnemy* testEnemy = new TestEnemy();
-		testEnemy->getTransform().setLocalPosition(Vector2d(4, 4));
+		testEnemy->getTransform().setLocalPosition(Vector2d(4 + i * 2.0, 4));
 		testEnemy->getDepthTransform().setLocalDepth(-0.1);
 	}
 	

@@ -6,23 +6,28 @@
 #include "player_ship_camera_mover.h"
 #include "deep_transformable_object.h"
 #include "player_ship_weapons_system.h"
+#include "player_ship_health.h"
 #include "per_frame_updateable_object.h"
 #include "player_ship_target.h"
 #include "rigid_body.h"
-#include "collision_responder.h"
+#include "collision_queue.h"
+#include "destructable_object.h"
 
-class PlayerShip : public DeepTransformableObject2d, public PerFrameUpdateableObject {
+class PlayerShip : public DeepTransformableObject2d, public PerFrameUpdateableObject,
+	public DestructableObject {
 private:
 	PlayerShipRenderer mRenderer;
 	PlayerShipMover mMover;
 	PlayerShipCameraMover mCameraMover;
-	RigidBody<2> mRigidBody;
 	PlayerShipWeaponsSystem mWeaponsSystem;
 	PlayerShipTarget mTarget;
-	CollisionResponder mCollisionResponder;
+	PlayerShipHealth mHealth;
+	RigidBody<2> mRigidBody;
+	CollisionQueue2d mCollisionQueue;
 
 public:
 	PlayerShip();	
+	~PlayerShip();
 
 	PlayerShipRenderer& getRenderer();
 	PlayerShipMover& getMover();
@@ -31,7 +36,8 @@ public:
 	CollisionMask2d& getCollisionMask();
 	PlayerShipWeaponsSystem& getWeaponsSystem();
 	PlayerShipTarget& getTarget();
-	CollisionResponder& getCollisionResponder();
+	PlayerShipHealth& getHealth();
+	CollisionQueue2d& getCollisionQueue();
 
 	virtual void update(double in_dt) override;
 

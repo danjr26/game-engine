@@ -19,11 +19,11 @@ void TestEnemyMover::update(double in_dt) {
 
 	TestEnemyController::MoveCommand command = mParent.getController().getMoveCommand();
 	Vector2d targetLinVel = command.mLinearVelocity;
-	targetLinVel = targetLinVel.normalized() * GEUtil::min(targetLinVel.magnitude(), command.mTargetSpeed);
+	targetLinVel = targetLinVel.normalized() * GEUtil::min(targetLinVel.magnitude(), command.mMaxSpeed);
 	Vector2d courseError = linearVelocity - targetLinVel;
 	linearVelocity -= courseError.normalized() * GEUtil::min(courseError.magnitude(), command.mMaxAcceleration * in_dt);
 
-	mParent.getTransform().translateWorld(linearVelocity);
+	//mParent.getTransform().translateWorld(linearVelocity);
 
 	mParent.getRigidBody().setLinearVelocity(linearVelocity);
 	mParent.getRigidBody().setAngularVelocity(angularVelocity);

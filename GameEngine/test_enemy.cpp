@@ -17,6 +17,9 @@ TestEnemy::TestEnemy() :
 
 	CircleCollisionMask<double> mask(Circled::fromPointRadius(Vector2d(), 0.5));
 	mRigidBody.setCollisionMask(mask);
+	mRigidBody.setAngularMass(0);
+	mRigidBody.setLinearMass(1.0);
+	GE.physics().add(&mRigidBody);
 
 	//mRigidBody.getTransform().setParent(&getTransform());
 	getCollisionMask().addFilter(Game::CollisionFilters::enemy_ship);
@@ -29,9 +32,12 @@ TestEnemy::TestEnemy() :
 }
 
 TestEnemy::~TestEnemy() {
-	GE.perFrameUpdate().remove(this);
-	GE.game().getMainCollisionContext().remove(&getCollisionMask());
-	GE.game().getDamageManager().remove(&getCollisionMask());
+	if (GameEngine::exists()) {
+		GE.perFrameUpdate().remove(this);
+		GE.game().getMainCollisionContext().remove(&getCollisionMask());
+		GE.game().getDamageManager().remove(&getCollisionMask());
+		GE.physics().remove(&mRigidBody);
+	}
 }
 
 void TestEnemy::update(double in_dt) {

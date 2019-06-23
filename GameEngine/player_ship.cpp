@@ -9,13 +9,7 @@ PlayerShip::PlayerShip() :
 	mCameraMover(*this),
 	mWeaponsSystem(*this),
 	mTarget(*this),
-	mCollisionResponder(
-		[this] (const CollisionPartner2d& in_partner, CollisionPacket& out_packet) {
-		out_packet.mDamage.mAmount = 0.0f;
-		out_packet.mDamage.mMethod = DamagePacket::Method::bulk;
-		out_packet.mImpulse.mPosition = in_partner.mCollision.mPoint;
-		out_packet.mImpulse.mVector = Vector2d();
-	}),
+	mHealth(*this),
 	mRigidBody() {
 
 	subTransform(&mRigidBody.getTransform());
@@ -24,14 +18,26 @@ PlayerShip::PlayerShip() :
 
 	CircleCollisionMask<double> mask(Circled::fromPointRadius(Vector2d(), 0.25));
 	mRigidBody.setCollisionMask(mask);
-
 	mRigidBody.setAngularMass(0);
 	mRigidBody.setLinearMass(1.0);
+	GE.physics().add(&mRigidBody);
 
 	getCollisionMask().addFilter(Game::CollisionFilters::player_ship);
+	getCollisionMask().setQueue(&mCollisionQueue);
 	GE.game().getMainCollisionContext().add(&getCollisionMask());
 
+	GE.game().getDamageManager().add(&getCollisionMask(), &mHealth);
+
 	initMembers();
+}
+
+PlayerShip::~PlayerShip() {
+	if (GameEngine::exists()) {
+		GE.perFrameUpdate().remove(this);
+		GE.game().getMainCollisionContext().remove(&getCollisionMask());
+		GE.game().getDamageManager().remove(&getCollisionMask());
+		GE.physics().remove(&mRigidBody);
+	}
 }
 
 PlayerShipRenderer& PlayerShip::getRenderer() {
@@ -64,11 +70,29 @@ PlayerShipTarget& PlayerShip::getTarget() {
 	return mTarget;
 }
 
-CollisionResponder& PlayerShip::getCollisionResponder() {
-	return mCollisionResponder;
+PlayerShipHealth& PlayerShip::getHealth() {
+	return mHealth;
+}
+
+CollisionQueue2d& PlayerShip::getCollisionQueue() {
+	return mCollisionQueue;
 }
 
 void PlayerShip::update(double in_dt) {
+	for (auto it = mCollisionQueue.begin(); !mCollisionQueue.empty(); it = mCollisionQueue.begin()) {
+		if (it->mMask->hasFilter(Game::CollisionFilters::solid)) {
+			DamageReceiver* receiver = GE.game().getDamageManager().get(it->mMask);
+			if (receiver) {
+				DamagePacket packet;
+				packet.mAmount = 10.0;
+				packet.mMethod = DamagePacket::Method::bulk;
+				packet.mImpulse = { it->mCollision.mPoint, getTransform().applyToLocalDirection(Vector2d(1, 0)) };
+				receiver->receiveDamage(packet, in_dt);
+			}
+		}
+		mCollisionQueue.pop_front();
+	}
+
 	mMover.update(in_dt);
 	mCameraMover.update(in_dt);
 	mWeaponsSystem.update(in_dt);

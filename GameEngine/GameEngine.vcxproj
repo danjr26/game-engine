@@ -241,6 +241,7 @@
     <ClInclude Include="particle_system2_specifiers.h" />
     <ClInclude Include="player_ship.h" />
     <ClInclude Include="player_ship_camera_mover.h" />
+    <ClInclude Include="player_ship_health.h" />
     <ClInclude Include="player_ship_input_context.h" />
     <ClInclude Include="player_ship_mover.h" />
     <ClInclude Include="player_ship_renderer.h" />
@@ -420,6 +421,7 @@
     <ClCompile Include="particle_system2_specifiers.cpp" />
     <ClCompile Include="player_ship.cpp" />
     <ClCompile Include="player_ship_camera_mover.cpp" />
+    <ClCompile Include="player_ship_health.cpp" />
     <ClCompile Include="player_ship_input_context.cpp" />
     <ClCompile Include="player_ship_mover.cpp" />
     <ClCompile Include="player_ship_renderer.cpp" />

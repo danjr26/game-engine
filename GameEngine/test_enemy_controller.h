@@ -12,7 +12,7 @@ class TestEnemyController {
 public:
 	struct MoveCommand {
 		Vector2d mLinearVelocity;
-		double mTargetSpeed;
+		double mMaxSpeed;
 		double mMaxAcceleration;
 	};
 
@@ -26,9 +26,10 @@ private:
 	TestEnemy& mParent;
 	AITarget* mTarget;
 	State mState;
+	double mStateT;
 	Stepper mPathUpdateStepper;
 	HermiteTransitioner<double, 2> mPath;
-	double mTargetSpeed;
+	double mMaxSpeed;
 	double mMaxAcceleration;
 
 public:

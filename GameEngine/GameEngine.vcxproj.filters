@@ -717,6 +717,9 @@
     <ClInclude Include="test_enemy_target.h">
       <Filter>Header Files\objects\test enemy</Filter>
     </ClInclude>
+    <ClInclude Include="player_ship_health.h">
+      <Filter>Header Files\objects\player ship</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clock.cpp">
@@ -1088,9 +1091,6 @@
     <ClCompile Include="industrial_laser_beam.cpp">
       <Filter>Source Files\objects\projectiles</Filter>
     </ClCompile>
-    <ClCompile Include="minigun_bullet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="minigun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1102,6 +1102,12 @@
     </ClCompile>
     <ClCompile Include="test_enemy_target.cpp">
       <Filter>Source Files\objects\test enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="player_ship_health.cpp">
+      <Filter>Source Files\objects\player ship</Filter>
+    </ClCompile>
+    <ClCompile Include="minigun_bullet.cpp">
+      <Filter>Source Files\objects\projectiles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
