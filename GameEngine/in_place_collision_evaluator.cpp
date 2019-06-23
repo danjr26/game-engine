@@ -653,7 +653,7 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::evaluateTyped(CircleCollisionMa
 	Point2CollisionMask<T> pointMask1 = Point2CollisionMask<T>(projectionPoint, true);
 	Point2CollisionMask<T> pointMask2 = Point2CollisionMask<T>(ray.getPoint(), true);
 
-	if (ray.getProjectionCoefficient(projectionPoint) >= ray.getProjectionCoefficient()) {
+	if (ray.getProjectionCoefficient(circle.getCenter()) > 0) {
 		collision = evaluateTyped(circleMask, pointMask1);
 	}
 

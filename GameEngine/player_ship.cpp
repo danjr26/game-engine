@@ -8,6 +8,7 @@ PlayerShip::PlayerShip() :
 	mMover(*this),
 	mCameraMover(*this),
 	mWeaponsSystem(*this),
+	mTarget(*this),
 	mCollisionResponder(
 		[this] (const CollisionPartner2d& in_partner, CollisionPacket& out_packet) {
 		out_packet.mDamage.mAmount = 0.0f;
@@ -57,6 +58,10 @@ CollisionMask2d& PlayerShip::getCollisionMask() {
 
 PlayerShipWeaponsSystem& PlayerShip::getWeaponsSystem() {
 	return mWeaponsSystem;
+}
+
+PlayerShipTarget& PlayerShip::getTarget() {
+	return mTarget;
 }
 
 CollisionResponder& PlayerShip::getCollisionResponder() {

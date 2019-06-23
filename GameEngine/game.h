@@ -6,21 +6,11 @@
 #include "player_ship.h"
 #include "collision_context.h"
 #include "damage_manager.h"
+#include "ai_target.h"
 
 class Game {
-private:
-	PointerInputContext mPointerInput;
-	PlayerShipInputContext mPlayerShipInput;
-	CollisionContext2d mMainCollisionContext;
-	DamageManager mDamageManager;
-	PlayerShip* mPlayerShip;
-
 public:
-	enum Allegiance {
-		player,
-		enemy,
-		neutral
-	};
+	using AITargetContainer = std::unordered_set<AITarget*>;
 
 	enum CollisionFilters {
 		player_ship = CollisionContext2d::Filters::user_defined,
@@ -29,6 +19,14 @@ public:
 		enemy_bullet,
 		solid
 	};
+
+private:
+	PointerInputContext mPointerInput;
+	PlayerShipInputContext mPlayerShipInput;
+	CollisionContext2d mMainCollisionContext;
+	DamageManager mDamageManager;
+	PlayerShip* mPlayerShip;
+	AITargetContainer mAITargets;
 
 public:
 	Game();
@@ -43,6 +41,7 @@ public:
 	PlayerShip* getPlayerShip();
 	CollisionContext2d& getMainCollisionContext();
 	DamageManager& getDamageManager();
+	AITargetContainer& getAITargets();
 };
 
 #endif

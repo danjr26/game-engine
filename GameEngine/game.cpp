@@ -38,13 +38,14 @@ Game::~Game() {
 
 void Game::init() {
 	mPlayerShip = new PlayerShip();
-	mPlayerShip->getWeaponsSystem().setPrimary(new Minigun);
+	mPlayerShip->getWeaponsSystem().setPrimary(new IndustrialLaser);
 	mPlayerShip->getDepthTransform().setLocalDepth(0.2);
 
-	
-	TestEnemy* testEnemy = new TestEnemy();
-	testEnemy->getTransform().setLocalPosition(Vector2d(4, 4));
-	testEnemy->getDepthTransform().setLocalDepth(-0.1);
+	for (uint i = 0; i < 5; i++) {
+		TestEnemy* testEnemy = new TestEnemy();
+		testEnemy->getTransform().setLocalPosition(Vector2d(4, 4));
+		testEnemy->getDepthTransform().setLocalDepth(-0.1);
+	}
 	
 	Texture* dustTex = GE.assets().get<Texture>("SparkSpriteTexture");
 	AmbientDustSpecifier* dustSpecifier = new AmbientDustSpecifier;
@@ -110,5 +111,9 @@ CollisionContext2d& Game::getMainCollisionContext() {
 
 DamageManager& Game::getDamageManager() {
 	return mDamageManager;
+}
+
+Game::AITargetContainer& Game::getAITargets() {
+	return mAITargets;
 }
 

@@ -52,7 +52,7 @@ void IndustrialLaserBeam::update(double in_dt) {
 		DamageReceiver* receiver = GE.game().getDamageManager().get(partner.mMask);
 		if (receiver) {
 			DamagePacket packet;
-			packet.mAmount = 5.0;
+			packet.mAmount = 20.0;
 			packet.mMethod = DamagePacket::Method::per_second;
 			receiver->receiveDamage(packet, in_dt);
 		}

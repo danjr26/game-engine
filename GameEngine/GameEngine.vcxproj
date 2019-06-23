@@ -156,6 +156,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ai_target.h" />
+    <ClInclude Include="allegiance.h" />
     <ClInclude Include="arc_connector.h" />
     <ClInclude Include="asset.h" />
     <ClInclude Include="asset_manager.h" />
@@ -242,6 +244,7 @@
     <ClInclude Include="player_ship_input_context.h" />
     <ClInclude Include="player_ship_mover.h" />
     <ClInclude Include="player_ship_renderer.h" />
+    <ClInclude Include="player_ship_target.h" />
     <ClInclude Include="player_ship_weapons_system.h" />
     <ClInclude Include="precision_laser.h" />
     <ClInclude Include="pulse_repeater.h" />
@@ -253,9 +256,11 @@
     <ClInclude Include="spark_gun.h" />
     <ClInclude Include="test_bullet.h" />
     <ClInclude Include="test_enemy.h" />
+    <ClInclude Include="test_enemy_controller.h" />
     <ClInclude Include="test_enemy_health.h" />
     <ClInclude Include="test_enemy_mover.h" />
     <ClInclude Include="test_enemy_renderer.h" />
+    <ClInclude Include="test_enemy_target.h" />
     <ClInclude Include="test_weapon.h" />
     <ClInclude Include="transitioner.h" />
     <ClInclude Include="uniform_force_field.h" />
@@ -418,14 +423,17 @@
     <ClCompile Include="player_ship_input_context.cpp" />
     <ClCompile Include="player_ship_mover.cpp" />
     <ClCompile Include="player_ship_renderer.cpp" />
+    <ClCompile Include="player_ship_target.cpp" />
     <ClCompile Include="player_ship_weapons_system.cpp" />
     <ClCompile Include="raycast.cpp" />
     <ClCompile Include="ribbon2.cpp" />
     <ClCompile Include="test_bullet.cpp" />
     <ClCompile Include="test_enemy.cpp" />
+    <ClCompile Include="test_enemy_controller.cpp" />
     <ClCompile Include="test_enemy_health.cpp" />
     <ClCompile Include="test_enemy_mover.cpp" />
     <ClCompile Include="test_enemy_renderer.cpp" />
+    <ClCompile Include="test_enemy_target.cpp" />
     <ClCompile Include="test_weapon.cpp" />
     <ClCompile Include="uniform_force_field.cpp" />
     <ClCompile Include="framebuffer.cpp">

@@ -561,9 +561,6 @@
     <ClInclude Include="player_ship_input_context.h">
       <Filter>Header Files\objects\player ship</Filter>
     </ClInclude>
-    <ClInclude Include="game.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
     <ClInclude Include="test_enemy.h">
       <Filter>Header Files\objects\test enemy</Filter>
     </ClInclude>
@@ -701,6 +698,24 @@
     </ClInclude>
     <ClInclude Include="minigun_bullet.h">
       <Filter>Header Files\objects\projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>Header Files\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="test_enemy_controller.h">
+      <Filter>Header Files\objects\test enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_target.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="player_ship_target.h">
+      <Filter>Header Files\objects\player ship</Filter>
+    </ClInclude>
+    <ClInclude Include="allegiance.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="test_enemy_target.h">
+      <Filter>Header Files\objects\test enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1078,6 +1093,15 @@
     </ClCompile>
     <ClCompile Include="minigun.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_enemy_controller.cpp">
+      <Filter>Source Files\objects\test enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="player_ship_target.cpp">
+      <Filter>Source Files\objects\player ship</Filter>
+    </ClCompile>
+    <ClCompile Include="test_enemy_target.cpp">
+      <Filter>Source Files\objects\test enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

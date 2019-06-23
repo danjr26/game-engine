@@ -10,19 +10,12 @@ class TestEnemy;
 class TestEnemyMover {
 private:
 	TestEnemy& mParent;
-	Stepper mPathUpdateStepper;
-	HermiteTransitioner<double, 2> mPath;
-	double mTargetSpeed;
-	double mMaxAcceleration;
 
 public:
 	TestEnemyMover(TestEnemy& in_parent);
 	~TestEnemyMover();
 
 	void update(double in_dt);
-
-private:
-	void updatePath();
 };
 
 #endif

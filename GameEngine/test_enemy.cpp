@@ -7,7 +7,9 @@
 TestEnemy::TestEnemy() :
 	mRenderer(*this),
 	mMover(*this),
-	mHealth(*this) {
+	mHealth(*this),
+	mController(*this),
+	mTarget(*this) {
 	
 	GE.perFrameUpdate().add(this);
 
@@ -45,6 +47,7 @@ void TestEnemy::update(double in_dt) {
 		GE.destruction().add(this);
 	}
 
+	mController.update(in_dt);
 	mMover.update(in_dt);
 }
 
@@ -58,6 +61,14 @@ TestEnemyMover& TestEnemy::getMover() {
 
 TestEnemyHealth& TestEnemy::getHealth() {
 	return mHealth;
+}
+
+TestEnemyController& TestEnemy::getController() {
+	return mController;
+}
+
+TestEnemyTarget& TestEnemy::getTarget() {
+	return mTarget;
 }
 
 RigidBody<2>& TestEnemy::getRigidBody() {
