@@ -4,7 +4,7 @@
 #include "particle_system2_specifiers.h"
 #include "particle_system2_factories.h"
 
-BurningEye::BurningEye() :
+burning_eye::BurningEye::BurningEye() :
 	mRenderer(*this),
 	mMover(*this),
 	mHealth(*this),
@@ -31,7 +31,7 @@ BurningEye::BurningEye() :
 	initMembers();
 }
 
-BurningEye::~BurningEye() {
+burning_eye::BurningEye::~BurningEye() {
 	if (GameEngine::exists()) {
 		GE.perFrameUpdate().remove(this);
 		GE.game().getMainCollisionContext().remove(&getCollisionMask());
@@ -40,7 +40,7 @@ BurningEye::~BurningEye() {
 	}
 }
 
-void BurningEye::update(double in_dt) {
+void burning_eye::BurningEye::update(double in_dt) {
 	if (mHealth.isDead()) {
 		BurningEye* testEnemy = new BurningEye();
 		testEnemy->getTransform().setLocalPosition(Vector2d(
@@ -57,40 +57,40 @@ void BurningEye::update(double in_dt) {
 	mMover.update(in_dt);
 }
 
-BurningEyeRenderer& BurningEye::getRenderer() {
+burning_eye::Renderer& burning_eye::BurningEye::getRenderer() {
 	return mRenderer;
 }
 
-BurningEyeMover& BurningEye::getMover() {
+burning_eye::Mover& burning_eye::BurningEye::getMover() {
 	return mMover;
 }
 
-BurningEyeHealth& BurningEye::getHealth() {
+burning_eye::Health& burning_eye::BurningEye::getHealth() {
 	return mHealth;
 }
 
-BurningEyeController& BurningEye::getController() {
+burning_eye::Controller& burning_eye::BurningEye::getController() {
 	return mController;
 }
 
-BurningEyeTarget& BurningEye::getTarget() {
+burning_eye::Target& burning_eye::BurningEye::getTarget() {
 	return mTarget;
 }
 
-RigidBody<2>& BurningEye::getRigidBody() {
+RigidBody<2>& burning_eye::BurningEye::getRigidBody() {
 	return mRigidBody;
 }
 
-CollisionMask2d& BurningEye::getCollisionMask() {
+CollisionMask2d& burning_eye::BurningEye::getCollisionMask() {
 	CollisionMask2d* mask = mRigidBody.getCollisionMask();
 	if (mask == nullptr) throw InvalidArgumentException();
 	return *mask;
 }
 
-CollisionQueue2d& BurningEye::getCollisionQueue() {
+CollisionQueue2d& burning_eye::BurningEye::getCollisionQueue() {
 	return mCollisionQueue;
 }
 
-void BurningEye::initMembers() {
+void burning_eye::BurningEye::initMembers() {
 	mRenderer.init();
 }

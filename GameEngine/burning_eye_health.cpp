@@ -2,12 +2,12 @@
 #include "misc.h"
 #include "burning_eye.h"
 
-BurningEyeHealth::BurningEyeHealth(BurningEye& in_parent) :
+burning_eye::Health::Health(BurningEye& in_parent) :
 	mParent(in_parent),
 	mHealth(10.0)
 {}
 
-void BurningEyeHealth::receiveDamage(const DamagePacket& in_damage, double in_dt) {
+void burning_eye::Health::receiveDamage(const DamagePacket& in_damage, double in_dt) {
 	switch (in_damage.mMethod) {
 	case DamagePacket::Method::bulk:
 		mHealth = GEUtil::max(mHealth - in_damage.mAmount, 0.0f);
@@ -22,6 +22,6 @@ void BurningEyeHealth::receiveDamage(const DamagePacket& in_damage, double in_dt
 	}
 }
 
-bool BurningEyeHealth::isDead() const {
+bool burning_eye::Health::isDead() const {
 	return mHealth <= 0.0f;
 }

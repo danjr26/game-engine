@@ -5,17 +5,19 @@
 #include "hermite_transitioner.h"
 #include "stepper.h"
 
-class BurningEye;
+namespace burning_eye {
+	class BurningEye;
 
-class BurningEyeMover {
-private:
-	BurningEye& mParent;
+	class Mover {
+	private:
+		BurningEye& mParent;
 
-public:
-	BurningEyeMover(BurningEye& in_parent);
-	~BurningEyeMover();
+	public:
+		Mover(BurningEye& in_parent);
+		~Mover();
 
-	void update(double in_dt);
-};
+		void update(double in_dt);
+	};
+}
 
 #endif

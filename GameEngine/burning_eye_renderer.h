@@ -5,21 +5,22 @@
 #include "particle_system2.h"
 #include "particle_system2_specifiers.h"
 
+namespace burning_eye {
+	class BurningEye;
 
-class BurningEye;
+	class Renderer {
+	private:
+		BurningEye& mParent;
+		CircleRenderer mSprite;
+		ParticleSystem2* mIris;
+		ParticleSystem2* mPupil;
 
-class BurningEyeRenderer {
-private:
-	BurningEye& mParent;
-	CircleRenderer mSprite;
-	ParticleSystem2* mIris;
-	ParticleSystem2* mPupil;
+	public:
+		Renderer(BurningEye& in_parent);
+		~Renderer();
 
-public:
-	BurningEyeRenderer(BurningEye& in_parent);
-	~BurningEyeRenderer();
-
-	void init();
-};
+		void init();
+	};
+}
 
 #endif

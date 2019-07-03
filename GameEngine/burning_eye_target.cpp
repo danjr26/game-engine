@@ -3,31 +3,31 @@
 #include "game_engine.h"
 #include "game.h"
 
-BurningEyeTarget::BurningEyeTarget(BurningEye& in_parent) :
+burning_eye::Target::Target(BurningEye& in_parent) :
 	mParent(in_parent) {
 	
 	GE.game().getAITargets().insert(this);
 }
 
-BurningEyeTarget::~BurningEyeTarget() {
+burning_eye::Target::~Target() {
 	if (GameEngine::exists()) {
 		GE.game().getAITargets().erase(this);
 	}
 }
 
-CollisionMask2d const& BurningEyeTarget::getCollisionMask() const {
+CollisionMask2d const& burning_eye::Target::getCollisionMask() const {
 	return mParent.getCollisionMask();
 }
 
-Vector2d BurningEyeTarget::getLinearVelocity() const {
+Vector2d burning_eye::Target::getLinearVelocity() const {
 	return mParent.getRigidBody().getLinearVelocity();
 }
 
-URotation2d BurningEyeTarget::getAngularVelocity() const {
+URotation2d burning_eye::Target::getAngularVelocity() const {
 	return mParent.getRigidBody().getAngularVelocity();
 }
 
-Allegiance BurningEyeTarget::getAllegiance() const {
+Allegiance burning_eye::Target::getAllegiance() const {
 	return Allegiance::enemy;
 }
 

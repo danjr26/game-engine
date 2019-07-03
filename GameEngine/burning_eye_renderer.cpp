@@ -4,7 +4,7 @@
 #include "game_engine.h"
 #include "particle_system2_factories.h"
 
-BurningEyeRenderer::BurningEyeRenderer(BurningEye& in_parent) :
+burning_eye::Renderer::Renderer(BurningEye& in_parent) :
 	mParent(in_parent),
 	mSprite(Circled::fromPointRadius(Vector2d(0, 0), 0.5), ColorRGBAf(0.8, 0.2, 0.2, 1.0), 2.0f),
 	mIris(nullptr),
@@ -20,13 +20,13 @@ BurningEyeRenderer::BurningEyeRenderer(BurningEye& in_parent) :
 	//GE.render().add(&mSprite);
 }
 
-BurningEyeRenderer::~BurningEyeRenderer() {
+burning_eye::Renderer::~Renderer() {
 	//GE.render().remove(&mSprite);
 	mIris->getStateFlags() |= ParticleSystem2::StateFlags::planned_deletion;
 	mPupil->getStateFlags() |= ParticleSystem2::StateFlags::planned_deletion;
 }
 
-void BurningEyeRenderer::init() {
+void burning_eye::Renderer::init() {
 	//mSprite.getTransform().setParent(&mParent.getTransform());
 	//mSprite.getDepthTransform().setParent(&mParent.getDepthTransform());
 

@@ -43,7 +43,7 @@ void Game::init() {
 	mPlayerShip->getDepthTransform().setLocalDepth(0.2);
 
 	for (uint i = 0; i < 5; i++) {
-		BurningEye* testEnemy = new BurningEye();
+		burning_eye::BurningEye* testEnemy = new burning_eye::BurningEye();
 		testEnemy->getTransform().setLocalPosition(Vector2d(4 + i * 2.0, 4));
 		testEnemy->getDepthTransform().setLocalDepth(-0.1);
 	}

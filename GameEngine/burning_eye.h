@@ -13,34 +13,36 @@
 #include "burning_eye_controller.h"
 #include "burning_eye_target.h"
 
-class BurningEye : public DeepTransformableObject2d, public DestructableObject, 
-	public PerFrameUpdateableObject {
-private:
-	BurningEyeRenderer mRenderer;
-	BurningEyeMover mMover;
-	BurningEyeHealth mHealth;
-	BurningEyeController mController;
-	BurningEyeTarget mTarget;
-	RigidBody<2> mRigidBody;
-	CollisionQueue2d mCollisionQueue;
+namespace burning_eye {
+	class BurningEye : public DeepTransformableObject2d, public DestructableObject,
+		public PerFrameUpdateableObject {
+	private:
+		Renderer mRenderer;
+		Mover mMover;
+		Health mHealth;
+		Controller mController;
+		Target mTarget;
+		RigidBody<2> mRigidBody;
+		CollisionQueue2d mCollisionQueue;
 
-public:
-	BurningEye();
-	~BurningEye();
+	public:
+		BurningEye();
+		~BurningEye();
 
-	void update(double in_dt) override;
+		void update(double in_dt) override;
 
-	BurningEyeRenderer& getRenderer();
-	BurningEyeMover& getMover();
-	BurningEyeHealth& getHealth();
-	BurningEyeController& getController();
-	BurningEyeTarget& getTarget();
-	RigidBody<2>& getRigidBody();
-	CollisionMask2d& getCollisionMask();
-	CollisionQueue2d& getCollisionQueue();
+		Renderer& getRenderer();
+		Mover& getMover();
+		Health& getHealth();
+		Controller& getController();
+		Target& getTarget();
+		RigidBody<2>& getRigidBody();
+		CollisionMask2d& getCollisionMask();
+		CollisionQueue2d& getCollisionQueue();
 
-private:
-	void initMembers();
-};
+	private:
+		void initMembers();
+	};
+}
 
 #endif

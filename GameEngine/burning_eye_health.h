@@ -3,17 +3,19 @@
 
 #include "damage_receiver.h"
 
-class BurningEye;
+namespace burning_eye {
+	class BurningEye;
 
-class BurningEyeHealth : public DamageReceiver {
-private:
-	BurningEye& mParent;
-	float mHealth;
+	class Health : public DamageReceiver {
+	private:
+		BurningEye& mParent;
+		float mHealth;
 
-public:
-	BurningEyeHealth(BurningEye& in_parent);
-	void receiveDamage(const DamagePacket& in_damage, double in_dt) override;
-	bool isDead() const;
-};
+	public:
+		Health(BurningEye& in_parent);
+		void receiveDamage(const DamagePacket& in_damage, double in_dt) override;
+		bool isDead() const;
+	};
+}
 
 #endif

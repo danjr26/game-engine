@@ -3,7 +3,7 @@
 #include "game.h"
 #include "burning_eye.h"
 
-BurningEyeController::BurningEyeController(BurningEye& in_parent) :
+burning_eye::Controller::Controller(BurningEye& in_parent) :
 	mParent(in_parent),
 	mTarget(nullptr),
 	mState(State::approach),
@@ -17,9 +17,9 @@ BurningEyeController::BurningEyeController(BurningEye& in_parent) :
 	updatePath();
 }
 
-BurningEyeController::~BurningEyeController() {}
+burning_eye::Controller::~Controller() {}
 
-void BurningEyeController::update(double in_dt) {
+void burning_eye::Controller::update(double in_dt) {
 	if (mTarget == nullptr) return;
 
 	bool forcePathUpdate = false;
@@ -61,7 +61,7 @@ void BurningEyeController::update(double in_dt) {
 	mStateT += in_dt;
 }
 
-BurningEyeController::MoveCommand BurningEyeController::getMoveCommand() {
+burning_eye::Controller::MoveCommand burning_eye::Controller::getMoveCommand() {
 	MoveCommand command;
 	command.mLinearVelocity = mPath.evaluate(mPathUpdateStepper.mAccum).mVector;
 	command.mMaxSpeed = mMaxSpeed;
@@ -69,7 +69,7 @@ BurningEyeController::MoveCommand BurningEyeController::getMoveCommand() {
 	return command;
 }
 
-void BurningEyeController::updatePath() {
+void burning_eye::Controller::updatePath() {
 	if (mTarget == nullptr) return;
 
 	RigidBody2& rigidBody = mParent.getRigidBody();
@@ -120,7 +120,7 @@ void BurningEyeController::updatePath() {
 	mPath.mKeys.push_back({ targetLocVec, 0.0 });
 }
 
-void BurningEyeController::updateTarget() {
+void burning_eye::Controller::updateTarget() {
 	AITarget* bestTarget = nullptr;
 	double bestDistance = std::numeric_limits<double>::infinity();
 	Game::AITargetContainer& mTargets = GE.game().getAITargets();
