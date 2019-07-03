@@ -1,9 +1,9 @@
-#include "test_enemy_controller.h"
+#include "burning_eye_controller.h"
 #include "game_engine.h"
 #include "game.h"
-#include "test_enemy.h"
+#include "burning_eye.h"
 
-TestEnemyController::TestEnemyController(TestEnemy& in_parent) :
+BurningEyeController::BurningEyeController(BurningEye& in_parent) :
 	mParent(in_parent),
 	mTarget(nullptr),
 	mState(State::approach),
@@ -17,9 +17,9 @@ TestEnemyController::TestEnemyController(TestEnemy& in_parent) :
 	updatePath();
 }
 
-TestEnemyController::~TestEnemyController() {}
+BurningEyeController::~BurningEyeController() {}
 
-void TestEnemyController::update(double in_dt) {
+void BurningEyeController::update(double in_dt) {
 	if (mTarget == nullptr) return;
 
 	bool forcePathUpdate = false;
@@ -61,7 +61,7 @@ void TestEnemyController::update(double in_dt) {
 	mStateT += in_dt;
 }
 
-TestEnemyController::MoveCommand TestEnemyController::getMoveCommand() {
+BurningEyeController::MoveCommand BurningEyeController::getMoveCommand() {
 	MoveCommand command;
 	command.mLinearVelocity = mPath.evaluate(mPathUpdateStepper.mAccum).mVector;
 	command.mMaxSpeed = mMaxSpeed;
@@ -69,7 +69,7 @@ TestEnemyController::MoveCommand TestEnemyController::getMoveCommand() {
 	return command;
 }
 
-void TestEnemyController::updatePath() {
+void BurningEyeController::updatePath() {
 	if (mTarget == nullptr) return;
 
 	RigidBody2& rigidBody = mParent.getRigidBody();
@@ -86,7 +86,7 @@ void TestEnemyController::updatePath() {
 	case State::approach:
 	{
 		mMaxSpeed = 7.0;
-		mMaxAcceleration = 6.0;
+		mMaxAcceleration = 10.0;
 		mPathUpdateStepper.mStep = 0.7;
 		targetPoint = entityPosition + entityLinearVelocity + Vector2d(10, 0).rotated(GEUtil::random<double>(0, 2 * PI));
 		break;
@@ -94,7 +94,7 @@ void TestEnemyController::updatePath() {
 	case State::retreat:
 	{
 		mMaxSpeed = 8.0;
-		mMaxAcceleration = 10.0;
+		mMaxAcceleration = 15.0;
 		mPathUpdateStepper.mStep = 0.5;
 		targetPoint = (currentPoint - entityPosition).rotated(GEUtil::random<double>(-PI / 4, PI / 4));
 		targetPoint.addToMagnitude(1.0);
@@ -120,7 +120,7 @@ void TestEnemyController::updatePath() {
 	mPath.mKeys.push_back({ targetLocVec, 0.0 });
 }
 
-void TestEnemyController::updateTarget() {
+void BurningEyeController::updateTarget() {
 	AITarget* bestTarget = nullptr;
 	double bestDistance = std::numeric_limits<double>::infinity();
 	Game::AITargetContainer& mTargets = GE.game().getAITargets();

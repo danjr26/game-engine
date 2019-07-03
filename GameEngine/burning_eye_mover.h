@@ -5,15 +5,15 @@
 #include "hermite_transitioner.h"
 #include "stepper.h"
 
-class TestEnemy;
+class BurningEye;
 
-class TestEnemyMover {
+class BurningEyeMover {
 private:
-	TestEnemy& mParent;
+	BurningEye& mParent;
 
 public:
-	TestEnemyMover(TestEnemy& in_parent);
-	~TestEnemyMover();
+	BurningEyeMover(BurningEye& in_parent);
+	~BurningEyeMover();
 
 	void update(double in_dt);
 };

@@ -6,9 +6,9 @@
 #include "stepper.h"
 #include "ai_target.h"
 
-class TestEnemy;
+class BurningEye;
 
-class TestEnemyController {
+class BurningEyeController {
 public:
 	struct MoveCommand {
 		Vector2d mLinearVelocity;
@@ -23,7 +23,7 @@ private:
 		retreat
 	};
 
-	TestEnemy& mParent;
+	BurningEye& mParent;
 	AITarget* mTarget;
 	State mState;
 	double mStateT;
@@ -33,8 +33,8 @@ private:
 	double mMaxAcceleration;
 
 public:
-	TestEnemyController(TestEnemy& in_parent);
-	~TestEnemyController();
+	BurningEyeController(BurningEye& in_parent);
+	~BurningEyeController();
 
 	void update(double in_dt);
 	MoveCommand getMoveCommand();

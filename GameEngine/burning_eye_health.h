@@ -3,15 +3,15 @@
 
 #include "damage_receiver.h"
 
-class TestEnemy;
+class BurningEye;
 
-class TestEnemyHealth : public DamageReceiver {
+class BurningEyeHealth : public DamageReceiver {
 private:
-	TestEnemy& mParent;
+	BurningEye& mParent;
 	float mHealth;
 
 public:
-	TestEnemyHealth(TestEnemy& in_parent);
+	BurningEyeHealth(BurningEye& in_parent);
 	void receiveDamage(const DamagePacket& in_damage, double in_dt) override;
 	bool isDead() const;
 };

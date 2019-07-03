@@ -208,6 +208,18 @@ Vector<T, n> Transform<T, n>::applyToWorldVector(const Vector<T, n>& in_vector) 
 }
 
 template<class T, uint n>
+Rotation<T, n> Transform<T, n>::applyToLocalRotation(const Rotation<T, n>& in_rotation) const {
+	return in_rotation.followedBy(mRotation);
+}
+
+template<class T, uint n>
+Rotation<T, n> Transform<T, n>::applyToWorldRotation(const Rotation<T, n>& in_rotation) const {
+	Rotation<T, n> tempRotation = worldToLocalRotation(in_rotation);
+	tempRotation = applyToLocalRotation(tempRotation);
+	return localToWorldRotation(tempRotation);
+}
+
+template<class T, uint n>
 Vector<T, n> Transform<T, n>::worldToLocalPoint(const Vector<T, n>& in_point) const {
 	std::vector<Transform*> chain;
 	for (Transform* transform = mParent; transform != nullptr; transform = transform->mParent) {
@@ -298,6 +310,26 @@ Rotation<T, n> Transform<T, n>::localToWorldRotation(const Rotation<T, n>& in_ro
 		tempRotation = transform->mRotation.followedBy(tempRotation);
 	}
 	return tempRotation;
+}
+
+template<class T, uint n>
+Vector<T, n> Transform<T, n>::applyChainToLocalPoint(const Vector<T, n>& in_point) const {
+	return localToWorldPoint(applyToLocalPoint(in_point));
+}
+
+template<class T, uint n>
+Vector<T, n> Transform<T, n>::applyChainToLocalDirection(const Vector<T, n>& in_point) const {
+	return localToWorldDirection(applyToLocalDirection(in_point));
+}
+
+template<class T, uint n>
+Vector<T, n> Transform<T, n>::applyChainToLocalVector(const Vector<T, n>& in_point) const {
+	return localToWorldVector(applyToLocalVector(in_point));
+}
+
+template<class T, uint n>
+Rotation<T, n> Transform<T, n>::applyChainToLocalRotation(const Rotation<T, n>& in_rotation) const {
+	return localToWorldRotation(applyToLocalRotation(in_rotation));
 }
 
 template<class T, uint n>

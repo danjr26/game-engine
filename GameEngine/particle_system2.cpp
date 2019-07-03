@@ -1,11 +1,12 @@
 #include "particle_system2.h"
 #include "game_engine.h"
 
-ParticleSystem2::ParticleSystem2(Texture* in_texture, Specifier* in_specifier) :
+ParticleSystem2::ParticleSystem2(Texture* in_texture, Specifier* in_specifier, uint in_stateFlags) :
 	mVertexData(MeshVertexData::DataType::_uint, MeshVertexData::FaceMode::points),
 	mGPUPusher(),
 	mTextureInstance(in_texture),
-	mSpecifier(in_specifier) {
+	mSpecifier(in_specifier),
+	mStateFlags(in_stateFlags) {
 	
 	MeshVertexData::DataType dataType = MeshVertexData::DataType::_float;
 
@@ -24,7 +25,7 @@ ParticleSystem2::ParticleSystem2(Texture* in_texture, Specifier* in_specifier) :
 	params.mUseCase = MeshVertexGPUPusher::UseCase::changes_often;
 	mGPUPusher.initialize(&mVertexData, params);
 
-	if (mSpecifier != nullptr) {
+	if ((mSpecifier != nullptr) && !(mStateFlags & StateFlags::suppress_init)) {
 		Accessor accessor;
 		access(0, accessor);
 		mSpecifier->init(*this, accessor);
@@ -36,12 +37,30 @@ ParticleSystem2::ParticleSystem2(Texture* in_texture, Specifier* in_specifier) :
 
 ParticleSystem2::~ParticleSystem2() {
 	if (mSpecifier != nullptr) delete mSpecifier;
-	GE.perFrameUpdate().remove(this);
-	GE.render().remove(this);
+	if (GameEngine::exists()) {
+		GE.perFrameUpdate().remove(this);
+		GE.render().remove(this);
+	}
 }
 
 uint ParticleSystem2::getCount() const {
 	return mVertexData.getNumberVertices();
+}
+
+uint& ParticleSystem2::getStateFlags() {
+	return mStateFlags;
+}
+
+ParticleSystem2::Specifier* ParticleSystem2::getSpecifier() {
+	return mSpecifier;
+}
+
+BlendSettings ParticleSystem2::getBlendSettings() const {
+	return mBlendSettings;
+}
+
+void ParticleSystem2::setBlendSettings(const BlendSettings& in_blendSettings) {
+	mBlendSettings = in_blendSettings;
 }
 
 uint ParticleSystem2::add(uint in_nParticles) {
@@ -74,13 +93,18 @@ void ParticleSystem2::reserve(uint in_nParticles) {
 }
 
 void ParticleSystem2::update(double in_dt) {
+	if ((mStateFlags & StateFlags::delete_when_empty) && getCount() == 0) {
+		GE.destruction().add(this);
+		return;
+	}
+
 	if (mSpecifier != nullptr) {
 		Accessor accessor;
 		access(0, accessor);
 
-		mSpecifier->update(*this, accessor, in_dt);
-		mSpecifier->destroy(*this, accessor, in_dt);
-		mSpecifier->generate(*this, accessor, in_dt);
+		if (!(mStateFlags & StateFlags::suppress_update)) mSpecifier->update(*this, accessor, in_dt);
+		if (!(mStateFlags & StateFlags::suppress_destroy)) mSpecifier->destroy(*this, accessor, in_dt);
+		if (!(mStateFlags & StateFlags::suppress_generate)) mSpecifier->generate(*this, accessor, in_dt);
 	}
 }
 
@@ -95,7 +119,7 @@ bool ParticleSystem2::shouldCull() const {
 void ParticleSystem2::render() {
 	ShaderProgram* shaderProgram = GE.assets().get<ShaderProgram>("Particle2Shader");
 
-	Matrix4f modelMatrix = getDeepWorldMatrix();
+	Matrix4f modelMatrix = Matrix4f::identity(); //getDeepWorldMatrix();
 	Matrix4f viewMatrix = GE.cameras().getActive()->getViewMatrix();
 	Matrix4f projectionMatrix = GE.cameras().getActive()->getProjectionMatrix();
 
@@ -110,8 +134,8 @@ void ParticleSystem2::render() {
 		mTextureInstance.use();
 	}
 	shaderProgram->use();
+	mBlendSettings.use();
 	glDepthMask(0);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 	glUniformMatrix4fv(locations[0], 1, GL_TRUE, modelMatrix.pointer());
 	glUniformMatrix4fv(locations[1], 1, GL_TRUE, viewMatrix.pointer());
@@ -129,9 +153,23 @@ void ParticleSystem2::render() {
 		mTextureInstance.useNone();
 	}
 	shaderProgram->useNone();
+	BlendSettings::standard().use();
 	glDepthMask(1);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+}
+
+void ParticleSystem2::transformParticles(Accessor& in_accessor, uint in_nParticles, Transform2d& in_transform, DepthTransform2d& in_depthTransform) {
+	for (uint i = 0; i < in_nParticles; i++) {
+		in_accessor.mPosition[i] = Vector3d(
+			in_transform.applyChainToLocalPoint(Vector2f(in_accessor.mPosition[i])),
+			in_accessor.mPosition[i].z() + in_depthTransform.getWorldDepth()
+		);
+		in_accessor.mLinearVelocity[i] = Vector3d(
+			in_transform.applyChainToLocalVector(Vector2f(in_accessor.mLinearVelocity[i])), 
+			(double)in_accessor.mLinearVelocity[i].z()
+		);
+		in_accessor.mAngle[i] = in_transform.applyChainToLocalRotation(Rotation2d(in_accessor.mAngle[i])).getAngle();
+	}
 }
 
 void ParticleSystem2::Accessor::clear(uint in_index) {

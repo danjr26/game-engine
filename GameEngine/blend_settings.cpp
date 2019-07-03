@@ -7,6 +7,12 @@ BlendSettings::BlendSettings(Factor in_destinationFactor, Factor in_sourceFactor
 	mOperation(in_operation)
 {}
 
+BlendSettings::BlendSettings() :
+	mDestinationFactor(Factor::inv_src_a),
+	mSourceFactor(Factor::src_a),
+	mOperation(Operation::add)
+{}
+
 void BlendSettings::use(const BlendSettings* in_currentSettings) {
 	if(in_currentSettings == nullptr) {
 		glBlendFunc((GLenum)mSourceFactor, (GLenum)mDestinationFactor);
@@ -37,11 +43,11 @@ BlendSettings BlendSettings::additive() {
 }
 
 BlendSettings BlendSettings::subtractive() {
-	return BlendSettings(Factor::one, Factor::src_a, Operation::subtract);
+	return BlendSettings(Factor::one, Factor::src_a, Operation::inv_subtract);
 }
 
 BlendSettings BlendSettings::multiply() {
-	return BlendSettings(Factor::one, Factor::one, Operation::multiply);
+	return BlendSettings(Factor::src_rgba, Factor::zero, Operation::add);
 }
 
 BlendSettings BlendSettings::custom(Factor in_destinationFactor, Factor in_sourceFactor, 

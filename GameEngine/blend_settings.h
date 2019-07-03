@@ -19,9 +19,9 @@ public:
 	};
 
 	enum class Operation : GLenum {
-		add = GL_ADD,
-		subtract = GL_SUBTRACT,
-		multiply = GL_MULT
+		add = GL_FUNC_ADD,
+		subtract = GL_FUNC_SUBTRACT,
+		inv_subtract = GL_FUNC_REVERSE_SUBTRACT
 	};
 
 private:
@@ -32,6 +32,8 @@ private:
 	BlendSettings(Factor in_destinationFactor, Factor in_sourceFactor, Operation in_operation);
 
 public:
+	BlendSettings();
+
 	void use(const BlendSettings* in_currentSettings = nullptr);
 
 	static BlendSettings none();

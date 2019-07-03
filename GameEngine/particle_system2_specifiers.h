@@ -6,14 +6,14 @@
 #include "cubic_transitioner.h"
 #include "linear_transitioner.h"
 
-class TestParticleSpecifier : public ParticleSystem2::Specifier {
+class BurningEyePupilSpecifier : public ParticleSystem2::Specifier {
 	using Accessor = ParticleSystem2::Accessor;
-	CubicTransitioner<ColorRGBAf, float> mColorTransition;
+	LinearTransitioner<ColorRGBAf, float> mColorTransition;
 	Stepper mGenerateStepper;
 	uint mNGenerated;
 
 public:
-	TestParticleSpecifier();
+	BurningEyePupilSpecifier();
 
 	void init(ParticleSystem2& in_system, Accessor& in_accessor) override;
 	void update(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) override;
@@ -49,12 +49,12 @@ public:
 	void generate(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) override;
 };
 
-class TestEnemyExplosionSmokeSpecifier : public ParticleSystem2::Specifier {
+class BurningEyeExplosionSmokeSpecifier : public ParticleSystem2::Specifier {
 	using Accessor = ParticleSystem2::Accessor;
 	LinearTransitioner<ColorRGBAf, float> mColorTransition;
 
 public:
-	TestEnemyExplosionSmokeSpecifier();
+	BurningEyeExplosionSmokeSpecifier();
 
 	void init(ParticleSystem2& in_system, Accessor& in_accessor) override;
 	void update(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) override;
@@ -62,12 +62,12 @@ public:
 	void generate(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) override;
 };
 
-class TestEnemyExplosionWaveSpecifier : public ParticleSystem2::Specifier {
+class BurningEyeExplosionWaveSpecifier : public ParticleSystem2::Specifier {
 	using Accessor = ParticleSystem2::Accessor;
 	CubicTransitioner<ColorRGBAf, float> mColorTransition;
 
 public:
-	TestEnemyExplosionWaveSpecifier();
+	BurningEyeExplosionWaveSpecifier();
 
 	void init(ParticleSystem2& in_system, Accessor& in_accessor) override;
 	void update(ParticleSystem2& in_system, Accessor& in_accessor, double in_dt) override;

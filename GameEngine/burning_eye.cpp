@@ -1,10 +1,10 @@
-#include "test_enemy.h"
+#include "burning_eye.h"
 #include "game_engine.h"
 #include "game.h"
 #include "particle_system2_specifiers.h"
 #include "particle_system2_factories.h"
 
-TestEnemy::TestEnemy() :
+BurningEye::BurningEye() :
 	mRenderer(*this),
 	mMover(*this),
 	mHealth(*this),
@@ -31,7 +31,7 @@ TestEnemy::TestEnemy() :
 	initMembers();
 }
 
-TestEnemy::~TestEnemy() {
+BurningEye::~BurningEye() {
 	if (GameEngine::exists()) {
 		GE.perFrameUpdate().remove(this);
 		GE.game().getMainCollisionContext().remove(&getCollisionMask());
@@ -40,16 +40,16 @@ TestEnemy::~TestEnemy() {
 	}
 }
 
-void TestEnemy::update(double in_dt) {
+void BurningEye::update(double in_dt) {
 	if (mHealth.isDead()) {
-		TestEnemy* testEnemy = new TestEnemy();
+		BurningEye* testEnemy = new BurningEye();
 		testEnemy->getTransform().setLocalPosition(Vector2d(
 			GEUtil::random<double>(-4, 4),
 			GEUtil::random<double>(-4, 4)
 			));
 		testEnemy->getDepthTransform().setLocalDepth(-0.1);
 
-		createTestEnemyExplosion(Vector3d(getTransform().getLocalPosition(), 0.0));
+		createBurningEyeExplosion(Vector3d(getTransform().getWorldPosition(), 0.0));
 		GE.destruction().add(this);
 	}
 
@@ -57,40 +57,40 @@ void TestEnemy::update(double in_dt) {
 	mMover.update(in_dt);
 }
 
-TestEnemyRenderer& TestEnemy::getRenderer() {
+BurningEyeRenderer& BurningEye::getRenderer() {
 	return mRenderer;
 }
 
-TestEnemyMover& TestEnemy::getMover() {
+BurningEyeMover& BurningEye::getMover() {
 	return mMover;
 }
 
-TestEnemyHealth& TestEnemy::getHealth() {
+BurningEyeHealth& BurningEye::getHealth() {
 	return mHealth;
 }
 
-TestEnemyController& TestEnemy::getController() {
+BurningEyeController& BurningEye::getController() {
 	return mController;
 }
 
-TestEnemyTarget& TestEnemy::getTarget() {
+BurningEyeTarget& BurningEye::getTarget() {
 	return mTarget;
 }
 
-RigidBody<2>& TestEnemy::getRigidBody() {
+RigidBody<2>& BurningEye::getRigidBody() {
 	return mRigidBody;
 }
 
-CollisionMask2d& TestEnemy::getCollisionMask() {
+CollisionMask2d& BurningEye::getCollisionMask() {
 	CollisionMask2d* mask = mRigidBody.getCollisionMask();
 	if (mask == nullptr) throw InvalidArgumentException();
 	return *mask;
 }
 
-CollisionQueue2d& TestEnemy::getCollisionQueue() {
+CollisionQueue2d& BurningEye::getCollisionQueue() {
 	return mCollisionQueue;
 }
 
-void TestEnemy::initMembers() {
+void BurningEye::initMembers() {
 	mRenderer.init();
 }

@@ -160,12 +160,6 @@
     <Filter Include="Source Files\objects\player ship">
       <UniqueIdentifier>{5f0dd5b3-1517-440b-8183-deaa168a8aaa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\objects\test enemy">
-      <UniqueIdentifier>{5d475a96-7c3b-40b5-bc2d-3dd56964ccb5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\objects\test enemy">
-      <UniqueIdentifier>{501d5091-79c4-4da7-b469-d229bc8fcf2b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\objects\collision">
       <UniqueIdentifier>{edd05411-056f-4c83-abe4-616a1a365aea}</UniqueIdentifier>
     </Filter>
@@ -183,6 +177,24 @@
     </Filter>
     <Filter Include="Header Files\objects\weapons">
       <UniqueIdentifier>{1bbe3e96-7df6-4450-b533-cf327c369ca5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\render\renderable\particle system 2">
+      <UniqueIdentifier>{b385d336-2b8e-4788-8887-77e36ad7c6a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\render\renderable\particle system 2">
+      <UniqueIdentifier>{d951ef2e-70b7-47ce-bf79-e7ff9ced3fe6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\render\renderable\particle system 2\specifier">
+      <UniqueIdentifier>{dc94ed96-a43f-4b90-9994-e29af38238b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\render\renderable\particle system 2\specifier">
+      <UniqueIdentifier>{cba78232-0259-4e95-9544-6e186edd8efd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\objects\burning eye">
+      <UniqueIdentifier>{5d475a96-7c3b-40b5-bc2d-3dd56964ccb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\objects\burning eye">
+      <UniqueIdentifier>{501d5091-79c4-4da7-b469-d229bc8fcf2b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -540,12 +552,6 @@
     <ClInclude Include="debug_mesh_vertex_data_renderer.h">
       <Filter>Header Files\render\renderable</Filter>
     </ClInclude>
-    <ClInclude Include="particle_system2.h">
-      <Filter>Header Files\render\renderable</Filter>
-    </ClInclude>
-    <ClInclude Include="particle_system2_specifiers.h">
-      <Filter>Header Files\render\renderable</Filter>
-    </ClInclude>
     <ClInclude Include="mesh_sphere_tree.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
@@ -560,15 +566,6 @@
     </ClInclude>
     <ClInclude Include="player_ship_input_context.h">
       <Filter>Header Files\objects\player ship</Filter>
-    </ClInclude>
-    <ClInclude Include="test_enemy.h">
-      <Filter>Header Files\objects\test enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="test_enemy_renderer.h">
-      <Filter>Header Files\objects\test enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="test_enemy_mover.h">
-      <Filter>Header Files\objects\test enemy</Filter>
     </ClInclude>
     <ClInclude Include="sprite.h">
       <Filter>Header Files\render\renderable</Filter>
@@ -585,14 +582,8 @@
     <ClInclude Include="destruction_manager.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
-    <ClInclude Include="test_enemy_health.h">
-      <Filter>Header Files\objects\test enemy</Filter>
-    </ClInclude>
     <ClInclude Include="damage_packet.h">
       <Filter>Header Files\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="particle_system2_factories.h">
-      <Filter>Header Files\render\renderable</Filter>
     </ClInclude>
     <ClInclude Include="blend_settings.h">
       <Filter>Header Files\render</Filter>
@@ -702,9 +693,6 @@
     <ClInclude Include="game.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
-    <ClInclude Include="test_enemy_controller.h">
-      <Filter>Header Files\objects\test enemy</Filter>
-    </ClInclude>
     <ClInclude Include="ai_target.h">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
@@ -714,11 +702,41 @@
     <ClInclude Include="allegiance.h">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
-    <ClInclude Include="test_enemy_target.h">
-      <Filter>Header Files\objects\test enemy</Filter>
-    </ClInclude>
     <ClInclude Include="player_ship_health.h">
       <Filter>Header Files\objects\player ship</Filter>
+    </ClInclude>
+    <ClInclude Include="small_enemy_bullet.h">
+      <Filter>Header Files\objects\projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_system2.h">
+      <Filter>Header Files\render\renderable\particle system 2</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_system2_factories.h">
+      <Filter>Header Files\render\renderable\particle system 2</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_system2_specifiers.h">
+      <Filter>Header Files\render\renderable\particle system 2\specifier</Filter>
+    </ClInclude>
+    <ClInclude Include="burning_eye.h">
+      <Filter>Header Files\objects\burning eye</Filter>
+    </ClInclude>
+    <ClInclude Include="burning_eye_controller.h">
+      <Filter>Header Files\objects\burning eye</Filter>
+    </ClInclude>
+    <ClInclude Include="burning_eye_health.h">
+      <Filter>Header Files\objects\burning eye</Filter>
+    </ClInclude>
+    <ClInclude Include="burning_eye_mover.h">
+      <Filter>Header Files\objects\burning eye</Filter>
+    </ClInclude>
+    <ClInclude Include="burning_eye_renderer.h">
+      <Filter>Header Files\objects\burning eye</Filter>
+    </ClInclude>
+    <ClInclude Include="burning_eye_target.h">
+      <Filter>Header Files\objects\burning eye</Filter>
+    </ClInclude>
+    <ClInclude Include="burning_eye_iris.h">
+      <Filter>Header Files\render\renderable\particle system 2\specifier</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -995,12 +1013,6 @@
     <ClCompile Include="circle_renderer.cpp">
       <Filter>Source Files\render\renderable</Filter>
     </ClCompile>
-    <ClCompile Include="particle_system2.cpp">
-      <Filter>Source Files\render\renderable</Filter>
-    </ClCompile>
-    <ClCompile Include="particle_system2_specifiers.cpp">
-      <Filter>Source Files\render\renderable</Filter>
-    </ClCompile>
     <ClCompile Include="mesh_sphere_tree.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
@@ -1019,15 +1031,6 @@
     <ClCompile Include="game.cpp">
       <Filter>Source Files\framework</Filter>
     </ClCompile>
-    <ClCompile Include="test_enemy_renderer.cpp">
-      <Filter>Source Files\objects\test enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="test_enemy.cpp">
-      <Filter>Source Files\objects\test enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="test_enemy_mover.cpp">
-      <Filter>Source Files\objects\test enemy</Filter>
-    </ClCompile>
     <ClCompile Include="sprite.cpp">
       <Filter>Source Files\render\renderable</Filter>
     </ClCompile>
@@ -1045,12 +1048,6 @@
     </ClCompile>
     <ClCompile Include="deep_transformable_object.cpp">
       <Filter>Source Files\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="particle_system2_factories.cpp">
-      <Filter>Source Files\render\renderable</Filter>
-    </ClCompile>
-    <ClCompile Include="test_enemy_health.cpp">
-      <Filter>Source Files\objects\test enemy</Filter>
     </ClCompile>
     <ClCompile Include="blend_settings.cpp">
       <Filter>Source Files\render</Filter>
@@ -1091,23 +1088,47 @@
     <ClCompile Include="industrial_laser_beam.cpp">
       <Filter>Source Files\objects\projectiles</Filter>
     </ClCompile>
-    <ClCompile Include="minigun.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="test_enemy_controller.cpp">
-      <Filter>Source Files\objects\test enemy</Filter>
-    </ClCompile>
     <ClCompile Include="player_ship_target.cpp">
       <Filter>Source Files\objects\player ship</Filter>
-    </ClCompile>
-    <ClCompile Include="test_enemy_target.cpp">
-      <Filter>Source Files\objects\test enemy</Filter>
     </ClCompile>
     <ClCompile Include="player_ship_health.cpp">
       <Filter>Source Files\objects\player ship</Filter>
     </ClCompile>
     <ClCompile Include="minigun_bullet.cpp">
       <Filter>Source Files\objects\projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="minigun.cpp">
+      <Filter>Source Files\objects\projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_system2.cpp">
+      <Filter>Source Files\render\renderable\particle system 2</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_system2_factories.cpp">
+      <Filter>Source Files\render\renderable\particle system 2</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_system2_specifiers.cpp">
+      <Filter>Source Files\render\renderable\particle system 2\specifier</Filter>
+    </ClCompile>
+    <ClCompile Include="burning_eye.cpp">
+      <Filter>Source Files\objects\burning eye</Filter>
+    </ClCompile>
+    <ClCompile Include="burning_eye_controller.cpp">
+      <Filter>Source Files\objects\burning eye</Filter>
+    </ClCompile>
+    <ClCompile Include="burning_eye_health.cpp">
+      <Filter>Source Files\objects\burning eye</Filter>
+    </ClCompile>
+    <ClCompile Include="burning_eye_mover.cpp">
+      <Filter>Source Files\objects\burning eye</Filter>
+    </ClCompile>
+    <ClCompile Include="burning_eye_renderer.cpp">
+      <Filter>Source Files\objects\burning eye</Filter>
+    </ClCompile>
+    <ClCompile Include="burning_eye_target.cpp">
+      <Filter>Source Files\objects\burning eye</Filter>
+    </ClCompile>
+    <ClCompile Include="burning_eye_iris.cpp">
+      <Filter>Source Files\render\renderable\particle system 2\specifier</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

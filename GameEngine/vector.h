@@ -248,6 +248,10 @@ public:
 		}
 	}
 
+	Vector<T, n> withMagnitude(T m) const {
+		return this->normalized() * m;
+	}
+
 	Vector<T, n> lerp(const Vector<T, n> v, T t) const {
 		return *this * ((T)1 - t) + v * t;
 	}
@@ -363,6 +367,12 @@ public:
 	template<typename = std::enable_if_t<n >= 2, void>>
 	T& y() {
 		return mMembers[1];
+	}
+
+	template<typename = std::enable_if_t<n == 2, void>>
+	Vector<T, n> withTheta(T t) {
+		T mag = magnitude();
+		return Vector<T, n>(cos(t), sin(t)) * mag;
 	}
 
 	template<typename = std::enable_if_t<n == 2, void>>

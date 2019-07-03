@@ -9,6 +9,7 @@
 #include "color.h"
 #include "destructable_object.h"
 #include "deep_transformable_object.h"
+#include "blend_settings.h"
 
 class ParticleSystem2 : public RenderableObject, public PerFrameUpdateableObject, 
 	public DestructableObject, public DeepTransformableObject2d {
@@ -54,6 +55,15 @@ public:
 
 	};
 
+	enum StateFlags : uint {
+		suppress_init = 1,
+		suppress_update = suppress_init << 1,
+		suppress_generate = suppress_update << 1,
+		suppress_destroy = suppress_generate << 1,
+		delete_when_empty = suppress_destroy << 1,
+		planned_deletion = suppress_generate | delete_when_empty
+	};
+
 	enum MemberID : ubyte {
 		position = MeshVertexData::MemberID::position,
 		color = MeshVertexData::MemberID::color,
@@ -71,12 +81,20 @@ protected:
 	MeshVertexGPUPusher mGPUPusher;
 	TextureInstance mTextureInstance;
 	Specifier* mSpecifier;
+	BlendSettings mBlendSettings;
+	uint mStateFlags;
 
 public:
-	ParticleSystem2(Texture* in_texture, Specifier* in_specifier);
+	ParticleSystem2(Texture* in_texture, Specifier* in_specifier, uint in_stateFlags = 0);
 	~ParticleSystem2();
 
 	uint getCount() const;
+
+	uint& getStateFlags();
+	Specifier* getSpecifier();
+
+	BlendSettings getBlendSettings() const;
+	void setBlendSettings(const BlendSettings& in_blendSettings);
 
 	uint add(uint in_nParticles);
 	void remove(uint in_index);
@@ -91,8 +109,8 @@ public:
 	bool shouldCull() const override;
 	void render() override;
 
-protected:
-
+	static void transformParticles(Accessor& in_accessor, uint in_nParticles,
+		Transform2d& in_transform, DepthTransform2d& in_depthTransform);
 };
 
 #endif

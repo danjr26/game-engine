@@ -1,23 +1,23 @@
-#include "test_enemy_mover.h"
+#include "burning_eye_mover.h"
 #include "game_engine.h"
 #include "game.h"
-#include "test_enemy.h"
+#include "burning_eye.h"
 
-TestEnemyMover::TestEnemyMover(TestEnemy& in_parent) :
+BurningEyeMover::BurningEyeMover(BurningEye& in_parent) :
 	mParent(in_parent) {
 
 }
 
-TestEnemyMover::~TestEnemyMover() 
+BurningEyeMover::~BurningEyeMover() 
 {}
 
-void TestEnemyMover::update(double in_dt) {
+void BurningEyeMover::update(double in_dt) {
 	RigidBody2& rigidBody = mParent.getRigidBody();
 
 	Vector2d linearVelocity = rigidBody.getLinearVelocity();
 	URotation2d angularVelocity = rigidBody.getAngularVelocity();
 
-	TestEnemyController::MoveCommand command = mParent.getController().getMoveCommand();
+	BurningEyeController::MoveCommand command = mParent.getController().getMoveCommand();
 	Vector2d targetLinVel = command.mLinearVelocity;
 	targetLinVel = targetLinVel.normalized() * GEUtil::min(targetLinVel.magnitude(), command.mMaxSpeed);
 	Vector2d courseError = linearVelocity - targetLinVel;

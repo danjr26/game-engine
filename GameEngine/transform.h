@@ -56,17 +56,19 @@ public:
 	void translateLocal(const Vector<T, n>& in_translation);
 	void translateWorld(const Vector<T, n>& in_translation);
 
+	Matrix<T, 4, 4> getLocalMatrix() const;
+	Matrix<T, 4, 4> getWorldMatrix() const;
+	Matrix<T, 4, 4> getLocalInverseMatrix() const;
+	Matrix<T, 4, 4> getWorldInverseMatrix() const;
+
 	Vector<T, n> applyToLocalPoint(const Vector<T, n>& in_point) const;
 	Vector<T, n> applyToWorldPoint(const Vector<T, n>& in_point) const;
 	Vector<T, n> applyToLocalDirection(const Vector<T, n>& in_direction) const;
 	Vector<T, n> applyToWorldDirection(const Vector<T, n>& in_direction) const;
 	Vector<T, n> applyToLocalVector(const Vector<T, n>& in_vector) const;
 	Vector<T, n> applyToWorldVector(const Vector<T, n>& in_vector) const;
-
-	Matrix<T, 4, 4> getLocalMatrix() const;
-	Matrix<T, 4, 4> getWorldMatrix() const;
-	Matrix<T, 4, 4> getLocalInverseMatrix() const;
-	Matrix<T, 4, 4> getWorldInverseMatrix() const;
+	Rotation<T, n> applyToLocalRotation(const Rotation<T, n>& in_rotation) const;
+	Rotation<T, n> applyToWorldRotation(const Rotation<T, n>& in_rotation) const;
 
 	Vector<T, n> worldToLocalPoint(const Vector<T, n>& in_point) const;
 	Vector<T, n> localToWorldPoint(const Vector<T, n>& in_point) const;
@@ -76,6 +78,11 @@ public:
 	Vector<T, n> localToWorldVector(const Vector<T, n>& in_vector) const;
 	Rotation<T, n> worldToLocalRotation(const Rotation<T, n>& in_rotation) const;
 	Rotation<T, n> localToWorldRotation(const Rotation<T, n>& in_rotation) const;
+
+	Vector<T, n> applyChainToLocalPoint(const Vector<T, n>& in_point) const;
+	Vector<T, n> applyChainToLocalDirection(const Vector<T, n>& in_point) const;
+	Vector<T, n> applyChainToLocalVector(const Vector<T, n>& in_point) const;
+	Rotation<T, n> applyChainToLocalRotation(const Rotation<T, n>& in_rotation) const;
 
 	Transform<T, n>* cloneChain() const;
 	Transform<T, n>* lerpChain(const Transform<T, n>& in_other, T in_t) const;

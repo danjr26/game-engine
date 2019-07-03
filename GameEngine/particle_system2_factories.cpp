@@ -3,7 +3,7 @@
 #include "game.h"
 #include "game_engine.h"
 
-void createTestEnemyExplosion(const Vector3d& in_position) {
-	createSimpleParticleSystem2<TestEnemyExplosionSmokeSpecifier>(in_position, "SmokeTexture");
-	createSimpleParticleSystem2<TestEnemyExplosionWaveSpecifier>(in_position, "RingWaveTexture");
+void createBurningEyeExplosion(const Vector3d& in_position) {
+	createSimpleParticleSystem2<BurningEyeExplosionSmokeSpecifier>(in_position, "SmokeTexture");
+	createSimpleParticleSystem2<BurningEyeExplosionWaveSpecifier>(in_position, "RingWaveTexture");
 }

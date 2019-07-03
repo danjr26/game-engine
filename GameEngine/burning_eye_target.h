@@ -3,15 +3,15 @@
 
 #include "ai_target.h"
 
-class TestEnemy;
+class BurningEye;
 
-class TestEnemyTarget : public AITarget {
+class BurningEyeTarget : public AITarget {
 	private:
-		TestEnemy& mParent;
+		BurningEye& mParent;
 
 	public:
-		TestEnemyTarget(TestEnemy& in_parent);
-		~TestEnemyTarget();
+		BurningEyeTarget(BurningEye& in_parent);
+		~BurningEyeTarget();
 
 		virtual CollisionMask2d const& getCollisionMask() const override;
 		virtual Vector2d getLinearVelocity() const override;

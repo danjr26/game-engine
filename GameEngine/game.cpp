@@ -1,12 +1,13 @@
 #include "game.h"
 #include "game_engine.h"
 #include "player_ship.h"
-#include "test_enemy.h"
+#include "burning_eye.h"
 #include "test_weapon.h"
 #include "laser_cannon.h"
 #include "test_bullet.h"
 #include "particle_system2.h"
 #include "particle_system2_specifiers.h"
+#include "particle_system2_factories.h"
 #include "ribbon2.h"
 #include "industrial_laser.h"
 #include "minigun.h"
@@ -39,20 +40,24 @@ Game::~Game() {
 void Game::init() {
 	mPlayerShip = new PlayerShip();
 	mPlayerShip->getWeaponsSystem().setPrimary(new Minigun);
-	//mPlayerShip->getWeaponsSystem().setSecondary();
 	mPlayerShip->getDepthTransform().setLocalDepth(0.2);
 
-	for (uint i = 0; i < 10; i++) {
-		TestEnemy* testEnemy = new TestEnemy();
+	for (uint i = 0; i < 5; i++) {
+		BurningEye* testEnemy = new BurningEye();
 		testEnemy->getTransform().setLocalPosition(Vector2d(4 + i * 2.0, 4));
 		testEnemy->getDepthTransform().setLocalDepth(-0.1);
 	}
+	/*
 	
 	Texture* dustTex = GE.assets().get<Texture>("SparkSpriteTexture");
 	AmbientDustSpecifier* dustSpecifier = new AmbientDustSpecifier;
 	ParticleSystem2* dustSystem = new ParticleSystem2(dustTex, dustSpecifier);
 	GE.perFrameUpdate().add(dustSystem);
 	GE.render().add(dustSystem);
+
+	Texture* smallBulletTex = GE.assets().get<Texture>("SmallBulletTexture");
+	Sprite* smallBullet = new Sprite(AxisAlignedRectangled::fromCenter(Vector2d(0, 0), Vector2d(1.0, 1.0)), smallBulletTex);
+	GE.render().add(smallBullet);
 
 	Ribbon2* ribbon = new Ribbon2(GE.assets().get<Texture>("LaserSpriteTexture"));
 	Ribbon2::graph_t& ribbonGraph = ribbon->getGraph();
@@ -84,7 +89,7 @@ void Game::init() {
 
 	ribbon->updateMesh();
 	GE.render().add(ribbon);
-
+	*/
 	//IndustrialLaserBeam* beam = new IndustrialLaserBeam;
 }
 
