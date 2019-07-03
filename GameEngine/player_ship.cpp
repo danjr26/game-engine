@@ -3,7 +3,7 @@
 #include "basic_collision_mask.h"
 #include "game.h"
 
-PlayerShip::PlayerShip() :
+player_ship::PlayerShip::PlayerShip() :
 	mRenderer(*this),
 	mMover(*this),
 	mCameraMover(*this),
@@ -31,7 +31,7 @@ PlayerShip::PlayerShip() :
 	initMembers();
 }
 
-PlayerShip::~PlayerShip() {
+player_ship::PlayerShip::~PlayerShip() {
 	if (GameEngine::exists()) {
 		GE.perFrameUpdate().remove(this);
 		GE.game().getMainCollisionContext().remove(&getCollisionMask());
@@ -40,45 +40,45 @@ PlayerShip::~PlayerShip() {
 	}
 }
 
-PlayerShipRenderer& PlayerShip::getRenderer() {
+player_ship::Renderer& player_ship::PlayerShip::getRenderer() {
 	return mRenderer;
 }
 
-PlayerShipMover& PlayerShip::getMover() {
+player_ship::Mover& player_ship::PlayerShip::getMover() {
 	return mMover;
 }
 
-PlayerShipCameraMover& PlayerShip::getCameraMover() {
+player_ship::CameraMover& player_ship::PlayerShip::getCameraMover() {
 	return mCameraMover;
 }
 
-RigidBody<2>& PlayerShip::getRigidBody() {
+RigidBody<2>& player_ship::PlayerShip::getRigidBody() {
 	return mRigidBody;
 }
 
-CollisionMask2d& PlayerShip::getCollisionMask() {
+CollisionMask2d& player_ship::PlayerShip::getCollisionMask() {
 	CollisionMask2d* mask = mRigidBody.getCollisionMask();
 	if (mask == nullptr) throw InvalidArgumentException();
 	return *mask;
 }
 
-PlayerShipWeaponsSystem& PlayerShip::getWeaponsSystem() {
+player_ship::WeaponsSystem& player_ship::PlayerShip::getWeaponsSystem() {
 	return mWeaponsSystem;
 }
 
-PlayerShipTarget& PlayerShip::getTarget() {
+player_ship::Target& player_ship::PlayerShip::getTarget() {
 	return mTarget;
 }
 
-PlayerShipHealth& PlayerShip::getHealth() {
+player_ship::Health& player_ship::PlayerShip::getHealth() {
 	return mHealth;
 }
 
-CollisionQueue2d& PlayerShip::getCollisionQueue() {
+CollisionQueue2d& player_ship::PlayerShip::getCollisionQueue() {
 	return mCollisionQueue;
 }
 
-void PlayerShip::update(double in_dt) {
+void player_ship::PlayerShip::update(double in_dt) {
 	for (auto it = mCollisionQueue.begin(); !mCollisionQueue.empty(); it = mCollisionQueue.begin()) {
 		if (it->mMask->hasFilter(Game::CollisionFilters::solid)) {
 			DamageReceiver* receiver = GE.game().getDamageManager().get(it->mMask);
@@ -98,7 +98,7 @@ void PlayerShip::update(double in_dt) {
 	mWeaponsSystem.update(in_dt);
 }
 
-void PlayerShip::initMembers() {
+void player_ship::PlayerShip::initMembers() {
 	mRenderer.init();
 }
 

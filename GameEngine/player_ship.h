@@ -13,36 +13,40 @@
 #include "collision_queue.h"
 #include "destructable_object.h"
 
-class PlayerShip : public DeepTransformableObject2d, public PerFrameUpdateableObject,
-	public DestructableObject {
-private:
-	PlayerShipRenderer mRenderer;
-	PlayerShipMover mMover;
-	PlayerShipCameraMover mCameraMover;
-	PlayerShipWeaponsSystem mWeaponsSystem;
-	PlayerShipTarget mTarget;
-	PlayerShipHealth mHealth;
-	RigidBody<2> mRigidBody;
-	CollisionQueue2d mCollisionQueue;
+namespace player_ship {
+	class PlayerShip :
+		public DeepTransformableObject2d,
+		public PerFrameUpdateableObject,
+		public DestructableObject {
+	private:
+		Renderer mRenderer;
+		Mover mMover;
+		CameraMover mCameraMover;
+		WeaponsSystem mWeaponsSystem;
+		Target mTarget;
+		Health mHealth;
+		RigidBody<2> mRigidBody;
+		CollisionQueue2d mCollisionQueue;
 
-public:
-	PlayerShip();	
-	~PlayerShip();
+	public:
+		PlayerShip();
+		~PlayerShip();
 
-	PlayerShipRenderer& getRenderer();
-	PlayerShipMover& getMover();
-	PlayerShipCameraMover& getCameraMover();
-	RigidBody<2>& getRigidBody();
-	CollisionMask2d& getCollisionMask();
-	PlayerShipWeaponsSystem& getWeaponsSystem();
-	PlayerShipTarget& getTarget();
-	PlayerShipHealth& getHealth();
-	CollisionQueue2d& getCollisionQueue();
+		Renderer& getRenderer();
+		Mover& getMover();
+		CameraMover& getCameraMover();
+		RigidBody<2>& getRigidBody();
+		CollisionMask2d& getCollisionMask();
+		WeaponsSystem& getWeaponsSystem();
+		Target& getTarget();
+		Health& getHealth();
+		CollisionQueue2d& getCollisionQueue();
 
-	virtual void update(double in_dt) override;
+		virtual void update(double in_dt) override;
 
-private:
-	void initMembers();
-};
+	private:
+		void initMembers();
+	};
+}
 
 #endif

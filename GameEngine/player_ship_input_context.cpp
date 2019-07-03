@@ -4,7 +4,7 @@
 #include "keyboard_state_identifier.h"
 #include "player_ship.h"
 
-PlayerShipInputContext::PlayerShipInputContext() {
+player_ship::InputContext::InputContext() {
 	//mBindings.bindState(States::fire_1, MouseStateIdentifier(RawInputEvent::Type::mouse_down, MouseButton::left, InputStateChange::turn_on));
 	//mBindings.bindState(States::fire_1, MouseStateIdentifier(RawInputEvent::Type::mouse_up, MouseButton::left, InputStateChange::turn_off));
 

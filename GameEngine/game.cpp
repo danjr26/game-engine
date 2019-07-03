@@ -38,7 +38,7 @@ Game::~Game() {
 }
 
 void Game::init() {
-	mPlayerShip = new PlayerShip();
+	mPlayerShip = new player_ship::PlayerShip();
 	mPlayerShip->getWeaponsSystem().setPrimary(new Minigun);
 	mPlayerShip->getDepthTransform().setLocalDepth(0.2);
 
@@ -103,11 +103,11 @@ PointerInputContext& Game::getPointerInput() {
 	return mPointerInput;
 }
 
-PlayerShipInputContext& Game::getPlayerShipInput() {
+player_ship::InputContext& Game::getPlayerShipInput() {
 	return mPlayerShipInput;
 }
 
-PlayerShip* Game::getPlayerShip() {
+player_ship::PlayerShip* Game::getPlayerShip() {
 	return mPlayerShip;
 }
 

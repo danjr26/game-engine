@@ -3,17 +3,19 @@
 
 #include "damage_receiver.h"
 
-class PlayerShip;
+namespace player_ship {
+	class PlayerShip;
 
-class PlayerShipHealth : public DamageReceiver {
-private:
-	PlayerShip& mParent;
-	float mHealth;
+	class Health : public DamageReceiver {
+	private:
+		PlayerShip& mParent;
+		float mHealth;
 
-public:
-	PlayerShipHealth(PlayerShip& in_parent);
-	void receiveDamage(const DamagePacket& in_damage, double in_dt) override;
-	bool isDead() const;
-};
+	public:
+		Health(PlayerShip& in_parent);
+		void receiveDamage(const DamagePacket& in_damage, double in_dt) override;
+		bool isDead() const;
+	};
+}
 
 #endif

@@ -5,24 +5,26 @@
 #include "weapon.h"
 #include "input_listener.h"
 
-class PlayerShip;
+namespace player_ship {
+	class PlayerShip;
 
-class PlayerShipWeaponsSystem {
-private:
-	PlayerShip& mParent;
-	Weapon* mActivePrimary;
-	Weapon* mActiveSecondary;
-	InputListener mShipInput;
+	class WeaponsSystem {
+	private:
+		PlayerShip& mParent;
+		Weapon* mActivePrimary;
+		Weapon* mActiveSecondary;
+		InputListener mShipInput;
 
-public:
-	PlayerShipWeaponsSystem(PlayerShip& in_parent);
+	public:
+		WeaponsSystem(PlayerShip& in_parent);
 
-	virtual void update(double in_dt);
+		virtual void update(double in_dt);
 
-	Weapon* getPrimary();
-	Weapon* getSecondary();
-	void setPrimary(Weapon* in_weapon);
-	void setSecondary(Weapon* in_weapon);
-};
+		Weapon* getPrimary();
+		Weapon* getSecondary();
+		void setPrimary(Weapon* in_weapon);
+		void setSecondary(Weapon* in_weapon);
+	};
+}
 
 #endif

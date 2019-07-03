@@ -4,17 +4,19 @@
 #include "per_frame_updateable_object.h"
 #include "input_listener.h"
 
-class PlayerShip;
+namespace player_ship {
+	class PlayerShip;
 
-class PlayerShipCameraMover {
-private:
-	PlayerShip& mParent;
-	InputListener mPointerInput;
+	class CameraMover {
+	private:
+		PlayerShip& mParent;
+		InputListener mPointerInput;
 
-public:
-	PlayerShipCameraMover(PlayerShip& in_parent);
+	public:
+		CameraMover(PlayerShip& in_parent);
 
-	void update(double in_dt);
-};
+		void update(double in_dt);
+	};
+}
 
 #endif

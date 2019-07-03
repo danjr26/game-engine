@@ -1,12 +1,12 @@
 #include "player_ship_health.h"
 #include "player_ship.h"
 
-PlayerShipHealth::PlayerShipHealth(PlayerShip& in_parent) :
+player_ship::Health::Health(PlayerShip& in_parent) :
 	mParent(in_parent),
 	mHealth(100.0f)
 {}
 
-void PlayerShipHealth::receiveDamage(const DamagePacket& in_damage, double in_dt) {
+void player_ship::Health::receiveDamage(const DamagePacket& in_damage, double in_dt) {
 	switch (in_damage.mMethod) {
 	case DamagePacket::Method::bulk:
 		mHealth = GEUtil::max(mHealth - in_damage.mAmount, 0.0f);
@@ -21,6 +21,6 @@ void PlayerShipHealth::receiveDamage(const DamagePacket& in_damage, double in_dt
 	}
 }
 
-bool PlayerShipHealth::isDead() const {
+bool player_ship::Health::isDead() const {
 	return mHealth <= 0.0f;
 }

@@ -4,35 +4,37 @@
 #include "input_context.h"
 #include "definitions.h"
 
-class PlayerShip;
+namespace player_ship {
+	class PlayerShip;
 
-class PlayerShipInputContext : public InputContext {
-public:
-	struct Actions {
-		enum {
-			count
+	class InputContext : public ::InputContext {
+	public:
+		struct Actions {
+			enum {
+				count
+			};
 		};
-	};
 
-	struct States {
-		enum {
-			fire_1,
-			fire_2,
-			fire_3,
-			count
+		struct States {
+			enum {
+				fire_1,
+				fire_2,
+				fire_3,
+				count
+			};
 		};
-	};
 
-	struct Ranges {
-		enum {
-			move_x,
-			move_y,
-			count
+		struct Ranges {
+			enum {
+				move_x,
+				move_y,
+				count
+			};
 		};
-	};
 
-public:
-	PlayerShipInputContext();
-};
+	public:
+		InputContext();
+	};
+}
 
 #endif

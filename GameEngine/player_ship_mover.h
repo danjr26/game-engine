@@ -8,19 +8,20 @@
 #include "vector.h"
 #include "unclamped_rotation.h"
 
-class PlayerShip;
+namespace player_ship {
+	class PlayerShip;
 
-class PlayerShipMover {
-private:
-	PlayerShip& mParent;
-	InputListener mPointerInput;
-	InputListener mShipInput;
+	class Mover {
+	private:
+		PlayerShip& mParent;
+		InputListener mPointerInput;
+		InputListener mShipInput;
 
-public:
-	PlayerShipMover(PlayerShip& in_parent);
+	public:
+		Mover(PlayerShip& in_parent);
 
-	void update(double in_dt);
-	void init();
-};
-
+		void update(double in_dt);
+		void init();
+	};
+}
 #endif

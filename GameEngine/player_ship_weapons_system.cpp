@@ -2,20 +2,20 @@
 #include "game_engine.h"
 #include "game.h"
 
-PlayerShipWeaponsSystem::PlayerShipWeaponsSystem(PlayerShip& in_parent) :
+player_ship::WeaponsSystem::WeaponsSystem(PlayerShip& in_parent) :
 	mParent(in_parent),
 	mActivePrimary(nullptr),
 	mActiveSecondary(nullptr),
 	mShipInput(&GE.game().getPlayerShipInput())
 {}
 
-void PlayerShipWeaponsSystem::update(double in_dt) {
+void player_ship::WeaponsSystem::update(double in_dt) {
 	InputEvent _event;
 	while (mShipInput.getNumberEvents() > 0) {
 		_event = mShipInput.popEvent();
 		if (_event.mType == InputEvent::Type::state_change) {
 			switch (_event.mMessage) {
-			case PlayerShipInputContext::States::fire_1:
+			case InputContext::States::fire_1:
 				if (mActivePrimary == nullptr) break;
 				if (_event.mState.newValue) mActivePrimary->startFire();
 				else mActivePrimary->endFire();
@@ -34,15 +34,15 @@ void PlayerShipWeaponsSystem::update(double in_dt) {
 	if (mActiveSecondary != nullptr) mActiveSecondary->update(in_dt, &feedback);
 }
 
-Weapon* PlayerShipWeaponsSystem::getPrimary() {
+Weapon* player_ship::WeaponsSystem::getPrimary() {
 	return mActivePrimary;
 }
 
-Weapon* PlayerShipWeaponsSystem::getSecondary() {
+Weapon* player_ship::WeaponsSystem::getSecondary() {
 	return mActiveSecondary;
 }
 
-void PlayerShipWeaponsSystem::setPrimary(Weapon* in_weapon) {
+void player_ship::WeaponsSystem::setPrimary(Weapon* in_weapon) {
 	if (in_weapon == nullptr && mActivePrimary != nullptr) {
 		mActivePrimary->removeIgnoreMask(&mParent.getCollisionMask());
 	}
@@ -53,7 +53,7 @@ void PlayerShipWeaponsSystem::setPrimary(Weapon* in_weapon) {
 	}
 }
 
-void PlayerShipWeaponsSystem::setSecondary(Weapon* in_weapon) {
+void player_ship::WeaponsSystem::setSecondary(Weapon* in_weapon) {
 	if (in_weapon == nullptr && mActiveSecondary != nullptr) {
 		mActiveSecondary->removeIgnoreMask(&mParent.getCollisionMask());
 	}

@@ -22,10 +22,10 @@ public:
 
 private:
 	PointerInputContext mPointerInput;
-	PlayerShipInputContext mPlayerShipInput;
+	player_ship::InputContext mPlayerShipInput;
 	CollisionContext2d mMainCollisionContext;
 	DamageManager mDamageManager;
-	PlayerShip* mPlayerShip;
+	player_ship::PlayerShip* mPlayerShip;
 	AITargetContainer mAITargets;
 
 public:
@@ -37,8 +37,8 @@ public:
 	void postupdate(double in_dt);
 
 	PointerInputContext& getPointerInput();
-	PlayerShipInputContext& getPlayerShipInput();
-	PlayerShip* getPlayerShip();
+	player_ship::InputContext& getPlayerShipInput();
+	player_ship::PlayerShip* getPlayerShip();
 	CollisionContext2d& getMainCollisionContext();
 	DamageManager& getDamageManager();
 	AITargetContainer& getAITargets();

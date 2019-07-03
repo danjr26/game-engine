@@ -4,21 +4,21 @@
 #include "game.h"
 #include "misc.h"
 
-PlayerShipMover::PlayerShipMover(PlayerShip& in_parent) :
+player_ship::Mover::Mover(PlayerShip& in_parent) :
 	mParent(in_parent),
 	mPointerInput(&GE.game().getPointerInput()),
 	mShipInput(&GE.game().getPlayerShipInput())
 {}
 
-void PlayerShipMover::update(double in_dt) {
+void player_ship::Mover::update(double in_dt) {
 	RigidBody2& rigidBody = mParent.getRigidBody();
 
 	Vector2d linearVelocity = rigidBody.getLinearVelocity();
 	URotation2d angularVelocity = rigidBody.getAngularVelocity();
 
 	Vector2d direction(
-		mShipInput.getContext()->getRange(PlayerShipInputContext::Ranges::move_x),
-		mShipInput.getContext()->getRange(PlayerShipInputContext::Ranges::move_y) * -1
+		mShipInput.getContext()->getRange(InputContext::Ranges::move_x),
+		mShipInput.getContext()->getRange(InputContext::Ranges::move_y) * -1
 	);
 
 	linearVelocity.addToMagnitude(-15.0 * in_dt);
@@ -51,4 +51,4 @@ void PlayerShipMover::update(double in_dt) {
 	rigidBody.setAngularVelocity(angularVelocity);
 }
 
-void PlayerShipMover::init() {}
+void player_ship::Mover::init() {}

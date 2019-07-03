@@ -4,20 +4,22 @@
 
 #include "ai_target.h"
 
-class PlayerShip;
+namespace player_ship {
+	class PlayerShip;
 
-class PlayerShipTarget : public AITarget {
-private:
-	PlayerShip& mParent;
+	class Target : public AITarget {
+	private:
+		PlayerShip& mParent;
 
-public:
-	PlayerShipTarget(PlayerShip& in_parent);
-	~PlayerShipTarget();
+	public:
+		Target(PlayerShip& in_parent);
+		~Target();
 
-	virtual CollisionMask2d const& getCollisionMask() const override;
-	virtual Vector2d getLinearVelocity() const override;
-	virtual URotation2d getAngularVelocity() const override;
-	virtual Allegiance getAllegiance() const override;
-};
+		virtual CollisionMask2d const& getCollisionMask() const override;
+		virtual Vector2d getLinearVelocity() const override;
+		virtual URotation2d getAngularVelocity() const override;
+		virtual Allegiance getAllegiance() const override;
+	};
+}
 
 #endif

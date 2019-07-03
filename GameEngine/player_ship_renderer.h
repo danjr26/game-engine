@@ -3,17 +3,19 @@
 
 #include "sprite.h"
 
-class PlayerShip;
+namespace player_ship {
+	class PlayerShip;
 
-class PlayerShipRenderer {
-private:
-	PlayerShip& mParent;
-	Sprite mSprite;
-public:
-	PlayerShipRenderer(PlayerShip& in_parent);
-	~PlayerShipRenderer();
+	class Renderer {
+	private:
+		PlayerShip& mParent;
+		Sprite mSprite;
+	public:
+		Renderer(PlayerShip& in_parent);
+		~Renderer();
 
-	void init();
-};
+		void init();
+	};
+}
 
 #endif

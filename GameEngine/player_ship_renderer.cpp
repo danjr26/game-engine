@@ -2,7 +2,7 @@
 #include "player_ship.h"
 #include "game_engine.h"
 
-PlayerShipRenderer::PlayerShipRenderer(PlayerShip& in_parent) :
+player_ship::Renderer::Renderer(PlayerShip& in_parent) :
 	mParent(in_parent),
 	mSprite() {
 	
@@ -18,13 +18,13 @@ PlayerShipRenderer::PlayerShipRenderer(PlayerShip& in_parent) :
 	GE.render().add(&mSprite);
 }
 
-PlayerShipRenderer::~PlayerShipRenderer() {
+player_ship::Renderer::~Renderer() {
 	if (GameEngine::exists()) {
 		GE.render().remove(&mSprite);
 	}
 }
 
-void PlayerShipRenderer::init() {
+void player_ship::Renderer::init() {
 	mSprite.getTransform().setParent(&mParent.getTransform());
 	mSprite.getDepthTransform().setParent(&mParent.getDepthTransform());
 }

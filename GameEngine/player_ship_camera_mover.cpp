@@ -3,12 +3,12 @@
 #include "game_engine.h"
 #include "game.h"
 
-PlayerShipCameraMover::PlayerShipCameraMover(PlayerShip& in_parent) :
+player_ship::CameraMover::CameraMover(PlayerShip& in_parent) :
 	mParent(in_parent),
 	mPointerInput(&GE.game().getPointerInput())
 {}
 
-void PlayerShipCameraMover::update(double in_dt) {
+void player_ship::CameraMover::update(double in_dt) {
 	Camera& camera = *GE.cameras().get(CameraManager::ID::main);
 
 	Vector2d centerOffset = Vector2d((camera.getProjection().mMaxima - camera.getProjection().mMinima) / 2.0);
