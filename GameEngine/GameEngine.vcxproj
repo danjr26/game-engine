@@ -158,6 +158,7 @@
   <ItemGroup>
     <ClInclude Include="ai_target.h" />
     <ClInclude Include="allegiance.h" />
+    <ClInclude Include="ambient_dust_specifier.h" />
     <ClInclude Include="arc_connector.h" />
     <ClInclude Include="asset.h" />
     <ClInclude Include="asset_manager.h" />
@@ -174,7 +175,10 @@
     <ClInclude Include="boolean_and_action_identifier.h" />
     <ClInclude Include="boolean_or_action_identifier.h" />
     <ClInclude Include="box.h" />
-    <ClInclude Include="burning_eye_iris.h" />
+    <ClInclude Include="burning_eye_explosion_smoke_specifier.h" />
+    <ClInclude Include="burning_eye_explosion_wave_specifier.h" />
+    <ClInclude Include="burning_eye_iris_specifier.h" />
+    <ClInclude Include="burning_eye_pupil_specifier.h" />
     <ClInclude Include="camera_manager.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
@@ -240,6 +244,7 @@
     <ClInclude Include="particle_system2.h" />
     <ClInclude Include="particle_system2_factories.h" />
     <ClInclude Include="particle_system2_specifiers.h" />
+    <ClInclude Include="perlin.h" />
     <ClInclude Include="player_ship.h" />
     <ClInclude Include="player_ship_camera_mover.h" />
     <ClInclude Include="player_ship_health.h" />
@@ -368,6 +373,7 @@
     <ClInclude Include="window_proc.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ambient_dust_specifier.cpp" />
     <ClCompile Include="asset.cpp" />
     <ClCompile Include="asset_manager.cpp" />
     <ClCompile Include="async_task.cpp" />
@@ -379,7 +385,10 @@
     <ClCompile Include="binary_collision_tree.cpp" />
     <ClCompile Include="blend_settings.cpp" />
     <ClCompile Include="box.cpp" />
-    <ClCompile Include="burning_eye_iris.cpp" />
+    <ClCompile Include="burning_eye_explosion_smoke_specifier.cpp" />
+    <ClCompile Include="burning_eye_explosion_wave_specifier.cpp" />
+    <ClCompile Include="burning_eye_iris_specifier.cpp" />
+    <ClCompile Include="burning_eye_pupil_specifier.cpp" />
     <ClCompile Include="camera.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -422,6 +431,7 @@
     <ClCompile Include="particle_system2.cpp" />
     <ClCompile Include="particle_system2_factories.cpp" />
     <ClCompile Include="particle_system2_specifiers.cpp" />
+    <ClCompile Include="perlin.cpp" />
     <ClCompile Include="player_ship.cpp" />
     <ClCompile Include="player_ship_camera_mover.cpp" />
     <ClCompile Include="player_ship_health.cpp" />

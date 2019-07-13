@@ -1,6 +1,7 @@
 #include "burning_eye_renderer.h"
 #include "burning_eye.h"
-#include "burning_eye_iris.h"
+#include "burning_eye_iris_specifier.h"
+#include "burning_eye_pupil_specifier.h"
 #include "game_engine.h"
 #include "particle_system2_factories.h"
 
@@ -10,7 +11,7 @@ burning_eye::Renderer::Renderer(BurningEye& in_parent) :
 	mIris(nullptr),
 	mPupil(nullptr) {
 
-	mPupil = createSimpleParticleSystem2<BurningEyePupilSpecifier>(Vector3d(), "GlowTexture");
+	mPupil = createSimpleParticleSystem2<PupilSpecifier>(Vector3d(), "GlowTexture");
 	mPupil->setBlendSettings(BlendSettings::subtractive());
 	mPupil->getDepthTransform().setLocalDepth(0.01);
 

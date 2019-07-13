@@ -103,11 +103,12 @@ void Ribbon2::updateMesh() {
 			mMeshVertexData.addVertices(4, newData);
 			mMeshVertexData.addFaces(2, &newIndices[0]);
 
-			allEdges[&*it].insert({ outward, newIndices[0], newIndices[1] });
-			allEdges[jt->mDest].insert({ -outward, newIndices[3], newIndices[4] });
+			allEdges[&node1].insert({ outward, newIndices[0], newIndices[1] });
+			allEdges[&node2].insert({ -outward, newIndices[3], newIndices[4] });
 		}
 	}
 
+	
 	for (auto it = mGraph.mNodes.begin(); it != mGraph.mNodes.end(); it++) {
 		auto entries = allEdges[&*it];
 		if (entries.size() <= 1) continue;
@@ -116,6 +117,10 @@ void Ribbon2::updateMesh() {
 		newPositions.assign({ it->mData.mPosition });
 		newUVs.assign({ (it->mData.mUV1 + it->mData.mUV2) / 2.0 });
 		newColors.assign({ it->mData.mColor });
+
+		newData[MeshVertexData::MemberID::position] = &newPositions[0];
+		newData[MeshVertexData::MemberID::uv] = &newUVs[0];
+		newData[MeshVertexData::MemberID::color] = &newColors[0];
 		mMeshVertexData.addVertices(1, newData);
 
 		for (auto jt = entries.begin(); jt != entries.end(); jt++) {
@@ -133,7 +138,7 @@ void Ribbon2::updateMesh() {
 			}
 		}
 	}
-
+	
 	mGPUPusher.pushAll();
 }
 

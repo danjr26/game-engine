@@ -20,7 +20,7 @@ struct GraphNode {
 
 	void connect2(node_t& in_other, EdgeData& in_edgeData) {
 		this->connect1(in_other, in_edgeData);
-		other.connect1(*this, in_edgeData);
+		in_other.connect1(*this, in_edgeData);
 	}
 };
 

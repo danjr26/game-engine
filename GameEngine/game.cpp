@@ -42,11 +42,13 @@ void Game::init() {
 	mPlayerShip->getWeaponsSystem().setPrimary(new Minigun);
 	mPlayerShip->getDepthTransform().setLocalDepth(0.2);
 
+	/*
 	for (uint i = 0; i < 5; i++) {
 		burning_eye::BurningEye* testEnemy = new burning_eye::BurningEye();
 		testEnemy->getTransform().setLocalPosition(Vector2d(4 + i * 2.0, 4));
 		testEnemy->getDepthTransform().setLocalDepth(-0.1);
 	}
+	*/
 	/*
 	
 	Texture* dustTex = GE.assets().get<Texture>("SparkSpriteTexture");
@@ -59,38 +61,39 @@ void Game::init() {
 	Sprite* smallBullet = new Sprite(AxisAlignedRectangled::fromCenter(Vector2d(0, 0), Vector2d(1.0, 1.0)), smallBulletTex);
 	GE.render().add(smallBullet);
 
-	Ribbon2* ribbon = new Ribbon2(GE.assets().get<Texture>("LaserSpriteTexture"));
+	*/
+
+	Ribbon2* ribbon = new Ribbon2(); //GE.assets().get<Texture>("LaserSpriteTexture")
 	Ribbon2::graph_t& ribbonGraph = ribbon->getGraph();
 
 	Ribbon2::node_t& node1 = ribbonGraph.addNode();
 	node1.mData.mPosition = Vector2d(0, 0);
-	node1.mData.mWidth = 2.0;
-	node1.mData.mColor = ColorRGBAf(0.0, 0.0, 1.0, 1.0);
+	node1.mData.mWidth = 0.05;
+	node1.mData.mColor = ColorRGBAf(0.5, 0.5, 1.0, 1.0);
 	node1.mData.mUV1 = Vector2f(0.5, 0.0);
 	node1.mData.mUV2 = Vector2f(0.5, 1.0);
 
 	Ribbon2::node_t& node2 = ribbonGraph.addNode();
-	node2.mData.mPosition = Vector2d(3, 0);
-	node2.mData.mWidth = 2.0;
+	node2.mData.mPosition = Vector2d(4, 1);
+	node2.mData.mWidth = 0.05;
 	node2.mData.mColor = ColorRGBAf(1.0, 0.0, 1.0, 1.0);
 	node2.mData.mUV1 = Vector2f(0.5, 0.0);
 	node2.mData.mUV2 = Vector2f(0.5, 1.0);
 
 	Ribbon2::node_t& node3 = ribbonGraph.addNode();
-	node3.mData.mPosition = Vector2d(7, 5);
-	node3.mData.mWidth = 2.0;
+	node3.mData.mPosition = Vector2d(1, 4);
+	node3.mData.mWidth = 0.05;
 	node3.mData.mColor = ColorRGBAf(1.0, 0.0, 0.0, 1.0);
 	node3.mData.mUV1 = Vector2f(0.5, 0.0);
 	node3.mData.mUV2 = Vector2f(0.5, 1.0);
 
 	Ribbon2::EdgeData edgeData;
 	node1.connect1(node2, edgeData);
-	node2.connect1(node3, edgeData);
+	node3.connect1(node2, edgeData);
+	node1.connect1(node3, edgeData);
 
 	ribbon->updateMesh();
 	GE.render().add(ribbon);
-	*/
-	//IndustrialLaserBeam* beam = new IndustrialLaserBeam;
 }
 
 void Game::preupdate(double in_dt) {

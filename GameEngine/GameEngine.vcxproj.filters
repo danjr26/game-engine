@@ -735,8 +735,23 @@
     <ClInclude Include="burning_eye_target.h">
       <Filter>Header Files\objects\burning eye</Filter>
     </ClInclude>
-    <ClInclude Include="burning_eye_iris.h">
+    <ClInclude Include="burning_eye_pupil_specifier.h">
       <Filter>Header Files\render\renderable\particle system 2\specifier</Filter>
+    </ClInclude>
+    <ClInclude Include="burning_eye_iris_specifier.h">
+      <Filter>Header Files\render\renderable\particle system 2\specifier</Filter>
+    </ClInclude>
+    <ClInclude Include="ambient_dust_specifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="burning_eye_explosion_smoke_specifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="burning_eye_explosion_wave_specifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="perlin.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1127,8 +1142,23 @@
     <ClCompile Include="burning_eye_target.cpp">
       <Filter>Source Files\objects\burning eye</Filter>
     </ClCompile>
-    <ClCompile Include="burning_eye_iris.cpp">
+    <ClCompile Include="burning_eye_iris_specifier.cpp">
       <Filter>Source Files\render\renderable\particle system 2\specifier</Filter>
+    </ClCompile>
+    <ClCompile Include="burning_eye_pupil_specifier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ambient_dust_specifier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="burning_eye_explosion_smoke_specifier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="burning_eye_explosion_wave_specifier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="perlin.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

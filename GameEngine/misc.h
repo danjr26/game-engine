@@ -308,6 +308,13 @@ namespace GEUtil {
 
 	template<class T>
 	T random(T low, T high);
+
+	template<class T>
+	inline T gauss() {
+		static std::default_random_engine generator;
+		static std::normal_distribution<T> distribution;
+		return distribution(generator);
+	}
 }
 
 #endif 

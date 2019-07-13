@@ -50,6 +50,14 @@ public:
 		}
 	}
 
+	static Vector<T, n> filled(T value) {
+		Vector<T, n> out;
+		for (uint i = 0; i < n; i++) {
+			out.mMembers[i] = value;
+		}
+		return out;
+	}
+
 	template<class T2>
 	void operator=(const Vector<T2, n>& v) {
 		for (int i = 0; i < n; i++) {
@@ -331,6 +339,29 @@ public:
 		return v * projectionCoeff(v);
 	}
 
+	template<typename = std::enable_if_t<std::is_integral_v<T>, void>>
+	T getAsCoords(const Vector<T, n>& d) const {
+		T index = 0;
+		for (uint i = 0; i < n; i++) {
+			T segment = mMembers[i];
+			for (uint j = i + 1; j < n; j++) {
+				segment *= d[j];
+			}
+			index += segment;
+		}
+		return index;
+	}
+
+	template<typename = std::enable_if_t<std::is_integral_v<T>, void>>
+	void setAsCoords(const Vector<T, n>& d, T index) {
+		T total = d.componentProduct();
+		for (uint i = 0; i < n; i++) {
+			mMembers[i] = index / total;
+			index %= total;
+			total /= d[i];
+		}
+	}
+
 	const T* pointer() const {
 		return mMembers;
 	}
@@ -381,7 +412,7 @@ public:
 			return theta(Vector<T, n>(1, 0));
 		}
 		else if (mMembers[1] < 0) {
-			return theta(Vector<T, n>(1, 0)) + 2.0 * PI;
+			return -theta(Vector<T, n>(1, 0)) + 2.0 * PI;
 		}
 		else if (mMembers[0] > 0) {
 			return (T)0;
