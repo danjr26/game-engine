@@ -91,6 +91,7 @@ public:
 		for (uint i = 0; i < m; i++) {
 			vOut[i] = mData[i][j];
 		}
+		return vOut;
 	} 
 
 	bool isElementZero(uint i, uint j) const {
@@ -126,17 +127,17 @@ public:
 		return true;
 	}
 
-	void getElement(uint i, uint j, T value) {
+	void setElement(uint i, uint j, T value) {
 		mData[i][j] = value;
 	}
 
-	void getRow(uint i, const Vector<T, n>& values) {
+	void setRow(uint i, const Vector<T, n>& values) {
 		for (uint j = 0; j < n; j++) {
 			mData[i][j] = values[j];
 		}
 	}
 	
-	void getColumn(uint j, const Vector<T, m>& values) {
+	void setColumn(uint j, const Vector<T, m>& values) {
 		for (uint i = 0; i < m; i++) {
 			mData[i][j] = values.get(i);
 		}

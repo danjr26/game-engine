@@ -90,7 +90,7 @@ public:
 
 	uint getCount() const;
 
-	uint& getStateFlags();
+	void planDeletion();
 	Specifier* getSpecifier();
 
 	BlendSettings getBlendSettings() const;

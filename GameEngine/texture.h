@@ -46,7 +46,7 @@ private:
 	GLenum mInternalFormat;
 	GLenum mTarget;
 
-	Vector3i mDimensions;
+	Vector3ui mDimensions;
 	ubyte mNChannels;
 	ubyte mNBitsPerChannel;
 	ubyte mNSamplesMSAA;
@@ -57,9 +57,9 @@ private:
 
 public:
 	Texture(Type in_type, std::string in_filename, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA = 0);
-	Texture(Type in_type, Vector3i in_dimensions, ubyte* in_data, ubyte in_nChannels, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA = 0);
-	Texture(Type in_type, Vector3i in_dimensions, ColorRGBAc in_color, ubyte in_nChannels, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA = 0);
-	Texture(Type in_type, Vector3i in_dimensions, ubyte in_nChannels, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA = 0);
+	Texture(Type in_type, Vector3ui in_dimensions, ubyte* in_data, ubyte in_nChannels, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA = 0);
+	Texture(Type in_type, Vector3ui in_dimensions, ColorRGBAc in_color, ubyte in_nChannels, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA = 0);
+	Texture(Type in_type, Vector3ui in_dimensions, ubyte in_nChannels, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA = 0);
 
 	~Texture();
 
@@ -70,7 +70,7 @@ public:
 	void useNone(ubyte in_slot = 0);
 
 	Type getType();
-	Vector3i getDimensions();
+	Vector3ui getDimensions();
 	ubyte getNumberChannels();
 	ubyte getNumberBitsPerChannel();
 	ubyte getNumberSamplesMSAA();

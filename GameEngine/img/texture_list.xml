@@ -7,5 +7,6 @@
 	<Texture2 name="MinigunBulletTexture" file="img/minigun_bullet.png" flags="mipmaps"/>
 	<Texture2 name="SmallBulletTexture" file="img/small_bullet.png" flags="mipmaps"/>
 	<Texture2 name="FlameTexture" file="img/flame.png" flags="mipmaps"/>
-	<Texture2 name="GlowTexture" file = "img/glow.png" flags="mipmaps"/>
+	<Texture2 name="GlowTexture" file="img/glow.png" flags="mipmaps"/>
+	<Texture2 name="WaveTexture" file="img/wave.png" flags="mipmaps"/>
 </TextureList>

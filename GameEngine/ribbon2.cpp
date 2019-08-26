@@ -1,5 +1,7 @@
 #include "ribbon2.h"
 #include "game_engine.h"
+#include "line.h"
+#include "ray.h"
 #include <set>
 #include <unordered_map>
 #include <vector>
@@ -23,7 +25,7 @@ Ribbon2::Ribbon2(Texture* in_texture) :
 		MeshVertexData::DataType::_float, 2,
 		nullptr
 	);
-	
+
 	mGPUPusher.initialize(&mMeshVertexData);
 }
 
@@ -36,10 +38,13 @@ TextureInstance& Ribbon2::getTextureInstance() {
 }
 
 void Ribbon2::updateMesh() {
+	double t1 = GE.clock().now();
 	struct NodeEntry {
 		Vector2d mOffset;
-		ushort mIndex1;
-		ushort mIndex2;
+		ushort mCloseIndex1;
+		ushort mCloseIndex2;
+		ushort mFarIndex1;
+		ushort mFarIndex2;
 
 		struct Comparator {
 			bool operator()(const NodeEntry& ne1, const NodeEntry& ne2) {
@@ -54,10 +59,10 @@ void Ribbon2::updateMesh() {
 	}
 
 	std::unordered_map<ubyte, const void*> newData;
-	std::vector<Vector2d> newPositions(4);
-	std::vector<Vector2f> newUVs(4);
-	std::vector<ColorRGBAf> newColors(4);
-	std::vector<ushort> newIndices(6);
+	std::vector<Vector2d> newPositions(6);
+	std::vector<Vector2f> newUVs(6);
+	std::vector<ColorRGBAf> newColors(6);
+	std::vector<ushort> newIndices(12);
 	for (auto it = mGraph.mNodes.begin(); it != mGraph.mNodes.end(); it++) {
 		node_t& node1 = *it;
 		for (auto jt = it->mEdges.begin(); jt != it->mEdges.end(); jt++) {
@@ -71,44 +76,68 @@ void Ribbon2::updateMesh() {
 
 			newPositions.assign({
 				node1.mData.mPosition + offset1,
+				node1.mData.mPosition,
 				node1.mData.mPosition - offset1,
 				node2.mData.mPosition - offset2,
+				node2.mData.mPosition,
 				node2.mData.mPosition + offset2
 				});
 			newUVs.assign({
 				node1.mData.mUV1,
+				(node1.mData.mUV1 + node1.mData.mUV2) / 2.0,
 				node1.mData.mUV2,
 				node2.mData.mUV2,
+				(node2.mData.mUV1 + node2.mData.mUV2) / 2.0,
 				node2.mData.mUV1
 				});
 			newColors.assign({
 				node1.mData.mColor,
 				node1.mData.mColor,
+				node1.mData.mColor,
+				node2.mData.mColor,
 				node2.mData.mColor,
 				node2.mData.mColor
 				});
 			newIndices.assign({
 				(ushort)(baseIndex + 0),
 				(ushort)(baseIndex + 1),
+				(ushort)(baseIndex + 5),
+				(ushort)(baseIndex + 1),
+				(ushort)(baseIndex + 5),
+				(ushort)(baseIndex + 4),
+				(ushort)(baseIndex + 1),
+				(ushort)(baseIndex + 4),
 				(ushort)(baseIndex + 2),
 				(ushort)(baseIndex + 2),
-				(ushort)(baseIndex + 3),
-				(ushort)(baseIndex + 0)
+				(ushort)(baseIndex + 4),
+				(ushort)(baseIndex + 3)
 				});
 
 			newData[MeshVertexData::MemberID::position] = &newPositions[0];
 			newData[MeshVertexData::MemberID::uv] = &newUVs[0];
 			newData[MeshVertexData::MemberID::color] = &newColors[0];
 
-			mMeshVertexData.addVertices(4, newData);
-			mMeshVertexData.addFaces(2, &newIndices[0]);
+			mMeshVertexData.addVertices(6, newData);
+			mMeshVertexData.addFaces(4, &newIndices[0]);
 
-			allEdges[&node1].insert({ outward, newIndices[0], newIndices[1] });
-			allEdges[&node2].insert({ -outward, newIndices[3], newIndices[4] });
+			allEdges[&node1].insert({
+				outward,
+				(ushort)(baseIndex + 0),
+				(ushort)(baseIndex + 2),
+				(ushort)(baseIndex + 5),
+				(ushort)(baseIndex + 3)
+				});
+			allEdges[&node2].insert({
+				-outward,
+				(ushort)(baseIndex + 3),
+				(ushort)(baseIndex + 5),
+				(ushort)(baseIndex + 2),
+				(ushort)(baseIndex + 0)
+				});
 		}
 	}
 
-	
+
 	for (auto it = mGraph.mNodes.begin(); it != mGraph.mNodes.end(); it++) {
 		auto entries = allEdges[&*it];
 		if (entries.size() <= 1) continue;
@@ -130,16 +159,40 @@ void Ribbon2::updateMesh() {
 			if (entry1.mOffset.ccwTheta(entry2.mOffset) > PI) {
 				newIndices.assign({
 					baseIndex,
-					entry1.mIndex2,
-					entry2.mIndex1
+					entry1.mCloseIndex2,
+					entry2.mCloseIndex1
 					});
 				mMeshVertexData.addFaces(1, &newIndices[0]);
-				break;
+			}
+			else {
+				Vector2d midline = (entry1.mOffset.normalized() + entry2.mOffset.normalized()).normalized();
+
+				Vector2d closeVertex1, closeVertex2, farVertex1, farVertex2;
+				mMeshVertexData.getMemberValue(MeshVertexData::MemberID::position, entry1.mCloseIndex2, &closeVertex1[0]);
+				mMeshVertexData.getMemberValue(MeshVertexData::MemberID::position, entry2.mCloseIndex1, &closeVertex2[0]);
+				mMeshVertexData.getMemberValue(MeshVertexData::MemberID::position, entry1.mFarIndex2, &farVertex1[0]);
+				mMeshVertexData.getMemberValue(MeshVertexData::MemberID::position, entry2.mFarIndex1, &farVertex2[0]);
+
+				Line2CollisionMask<double> lineMask1(Line2d::fromPoints(closeVertex1, farVertex1));
+				Line2CollisionMask<double> lineMask2(Line2d::fromPoints(closeVertex2, farVertex2));
+
+				lineMask1.setIgnoreTransform(true);
+				lineMask2.setIgnoreTransform(true);
+
+				InPlaceCollisionEvaluator2d evaluator;
+				evaluator.returnPoint(true);
+				Vector2d newPoint = evaluator.evaluateTyped(lineMask1, lineMask2).mPoint;
+				
+				mMeshVertexData.setMemberValue(MeshVertexData::MemberID::position, entry1.mCloseIndex2, &newPoint[0]);
+				mMeshVertexData.setMemberValue(MeshVertexData::MemberID::position, entry2.mCloseIndex1, &newPoint[0]);
 			}
 		}
 	}
-	
+
 	mGPUPusher.pushAll();
+
+	double t2 = GE.clock().now();
+	Log::main(std::string("t: ") + std::to_string(t2 - t1));
 }
 
 double Ribbon2::z() const {

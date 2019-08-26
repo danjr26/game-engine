@@ -1,5 +1,6 @@
 #include "transform.h"
 #include <vector>
+#include <sstream>
 #include "log.h"
 
 template<class T, uint n>
@@ -13,6 +14,18 @@ Transform<T, n>::Transform() :
 }
 
 template<class T, uint n>
+Transform<T, n>::Transform(const Transform<T, n>& in_other) :
+	mParent(in_other.mParent),
+	mTranslation(in_other.mTranslation),
+	mScale(in_other.mScale),
+	mRotation(in_other.mRotation) {
+
+	if (this == in_other.mParent) {
+		Log::main("bad");
+	}
+}
+
+template<class T, uint n>
 Transform<T, n>* Transform<T, n>::getParent() {
 	return mParent;
 }
@@ -23,7 +36,7 @@ Transform<T, n> const* Transform<T, n>::getConstParent() const {
 }
 
 template<class T, uint n>
-void Transform<T, n>::setParent(Transform* in_parent) {
+void Transform<T, n>::setParent(Transform<T, n>* in_parent) {
 	mParent = in_parent;
 }
 
@@ -334,11 +347,11 @@ Rotation<T, n> Transform<T, n>::applyChainToLocalRotation(const Rotation<T, n>& 
 
 template<class T, uint n>
 Transform<T, n>* Transform<T, n>::cloneChain() const {
-	Transform<T, n>* out = new Transform<T, n>(*this);
-	for (Transform<T, n>* it = out; it->mParent != nullptr; it = it->mParent) {
+	Transform<T, n>* newTransform = new Transform<T, n>(*this);
+	for (Transform<T, n>* it = newTransform; it->mParent != nullptr; it = it->mParent) {
 		it->mParent = new Transform<T, n>(*it->mParent);
 	}
-	return out;
+	return newTransform;
 }
 
 template<class T, uint n>

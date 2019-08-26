@@ -122,11 +122,11 @@ Vector2i Window::getPosition() {
 	return Vector2i(rect.left, rect.top);
 }
 
-Vector2i Window::getDimensions() const {
+Vector2ui Window::getDimensions() const {
 	std::lock_guard<std::mutex> lock(mMutex);
 	RECT rect;
 	GetClientRect(mWindowHandle, &rect);
-	return Vector2i(rect.right - rect.left, rect.bottom - rect.top);
+	return Vector2ui(rect.right - rect.left, rect.bottom - rect.top);
 }
 
 bool Window::isFullscreen() {

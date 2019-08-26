@@ -11,6 +11,9 @@
 #include "ribbon2.h"
 #include "industrial_laser.h"
 #include "minigun.h"
+#include "fractal_perlin.h"
+#include "needler_iris_specifier.h"
+#include "needler_pupil_specifier.h"
 
 Game::Game() :
 	mPointerInput(),
@@ -42,16 +45,47 @@ void Game::init() {
 	mPlayerShip->getWeaponsSystem().setPrimary(new Minigun);
 	mPlayerShip->getDepthTransform().setLocalDepth(0.2);
 
+	ParticleSystem2* newSystem = new ParticleSystem2(GE.assets().get<Texture>("WaveTexture"), new needler::IrisSpecifier);
+	newSystem->setBlendSettings(BlendSettings::additive());
+	newSystem->getDepthTransform().setLocalDepth(0.0);
+	GE.perFrameUpdate().add(newSystem);
+	GE.render().add(newSystem);
+
+	newSystem = new ParticleSystem2(GE.assets().get<Texture>("GlowTexture"), new needler::PupilSpecifier);
+	newSystem->setBlendSettings(BlendSettings::subtractive());
+	newSystem->getDepthTransform().setLocalDepth(0.1);
+	GE.perFrameUpdate().add(newSystem);
+	GE.render().add(newSystem);
+
+
+	FractalPerlin2f fractalPerlin(Vector2ui::filled(8), 8, Vector2f::filled(2), 2);
+	
 	/*
+	Vector2ui dimensions(Vector2ui::filled(512));
+	ColorRGBAc* buffer = new ColorRGBAc[dimensions.componentProduct()];
+	for (uint i = 0; i < dimensions.componentProduct(); i++) {
+		Vector2ui coords;
+		coords.setAsCoords(dimensions, i);
+		Vector2f normedCoords = Vector2f(coords).compwise(Vector2f(dimensions).componentInverted());
+		float value = GEUtil::clamp<float>(fractalPerlin.evaluate(normedCoords), 0, 1);
+		value = powf(value, 2.2);
+		buffer[i] = ColorRGBAf(1, 1, 1, value);
+	}
+
+	Texture* perlinTexture = new Texture(Texture::Type::_2d, Vector3ui(dimensions, 1), (uchar*)buffer, 4, 8, Texture::Flags::mipmaps);
+	Sprite* perlinSprite = new Sprite(AxisAlignedRectangled::fromCenter(Vector2d(), Vector2d::filled(20)), perlinTexture);
+	GE.render().add(perlinSprite);
+
+	*/
 	for (uint i = 0; i < 5; i++) {
 		burning_eye::BurningEye* testEnemy = new burning_eye::BurningEye();
 		testEnemy->getTransform().setLocalPosition(Vector2d(4 + i * 2.0, 4));
 		testEnemy->getDepthTransform().setLocalDepth(-0.1);
 	}
-	*/
+	
 	/*
 	
-	Texture* dustTex = GE.assets().get<Texture>("SparkSpriteTexture");
+	Texture* dustTex = GE.assets().get<Texture>("SparkSpriteTexture");	
 	AmbientDustSpecifier* dustSpecifier = new AmbientDustSpecifier;
 	ParticleSystem2* dustSystem = new ParticleSystem2(dustTex, dustSpecifier);
 	GE.perFrameUpdate().add(dustSystem);
@@ -63,34 +97,32 @@ void Game::init() {
 
 	*/
 
-	Ribbon2* ribbon = new Ribbon2(); //GE.assets().get<Texture>("LaserSpriteTexture")
+	Ribbon2* ribbon = new Ribbon2(GE.assets().get<Texture>("SparkSpriteTexture"));
 	Ribbon2::graph_t& ribbonGraph = ribbon->getGraph();
 
-	Ribbon2::node_t& node1 = ribbonGraph.addNode();
-	node1.mData.mPosition = Vector2d(0, 0);
-	node1.mData.mWidth = 0.05;
-	node1.mData.mColor = ColorRGBAf(0.5, 0.5, 1.0, 1.0);
-	node1.mData.mUV1 = Vector2f(0.5, 0.0);
-	node1.mData.mUV2 = Vector2f(0.5, 1.0);
+	HermiteTransitioner<float, 2> transitioner;
 
-	Ribbon2::node_t& node2 = ribbonGraph.addNode();
-	node2.mData.mPosition = Vector2d(4, 1);
-	node2.mData.mWidth = 0.05;
-	node2.mData.mColor = ColorRGBAf(1.0, 0.0, 1.0, 1.0);
-	node2.mData.mUV1 = Vector2f(0.5, 0.0);
-	node2.mData.mUV2 = Vector2f(0.5, 1.0);
-
-	Ribbon2::node_t& node3 = ribbonGraph.addNode();
-	node3.mData.mPosition = Vector2d(1, 4);
-	node3.mData.mWidth = 0.05;
-	node3.mData.mColor = ColorRGBAf(1.0, 0.0, 0.0, 1.0);
-	node3.mData.mUV1 = Vector2f(0.5, 0.0);
-	node3.mData.mUV2 = Vector2f(0.5, 1.0);
+	transitioner.mKeys.push_back({ LocatedVector2f(Vector2f(0, 0), Vector2f(10, 5)), 1.0 });
+	transitioner.mKeys.push_back({ LocatedVector2f(Vector2f(10, 0), Vector2f(0, 0)), 0.0 });
 
 	Ribbon2::EdgeData edgeData;
-	node1.connect1(node2, edgeData);
-	node3.connect1(node2, edgeData);
-	node1.connect1(node3, edgeData);
+	Ribbon2::node_t* prevNode = nullptr;
+	uint nPoints = 1000;
+
+	for (uint i = 0; i < nPoints; i++) {
+		float progress = i / (float)nPoints;
+		Ribbon2::node_t& newNode = ribbonGraph.addNode();
+		newNode.mData.mPosition = transitioner.evaluate(progress).mPosition;
+		newNode.mData.mPosition += transitioner.evaluate(progress).mVector.orthogonal() * 
+			(fractalPerlin.evaluate(Vector2f(progress, 0.5)) - 0.5) * 0.2;
+		newNode.mData.mWidth = GEUtil::cerp<float>(0.1, 0.02, progress) * 10.0;
+		newNode.mData.mColor = ColorRGBAf(0.5, 0.5, 1.0, 1.0);
+		newNode.mData.mUV1 = Vector2f(0.5, 0.0);
+		newNode.mData.mUV2 = Vector2f(0.5, 1.0);
+
+		if (prevNode) prevNode->connect1(newNode, edgeData);
+		prevNode = &newNode;
+	}
 
 	ribbon->updateMesh();
 	GE.render().add(ribbon);

@@ -1849,9 +1849,9 @@ Collision<T, 2> InPlaceCollisionEvaluator<T, 2>::evaluateTyped(Line2CollisionMas
 	Line<T, 2> const& line2 = *basis2;
 
 	Matrix<T, 2, 3> matrix;
-	matrix.getColumn(0, line1.getDirection());
-	matrix.getColumn(1, -line2.getDirection());
-	matrix.getColumn(2, line2.getPoint() - line2.getPoint());
+	matrix.setColumn(0, line1.getDirection());
+	matrix.setColumn(1, line2.getDirection());
+	matrix.setColumn(2, line2.getPoint() - line1.getPoint());
 	matrix.RREFify();
 
 	if (!matrix.isRowZero(1)) {

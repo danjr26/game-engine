@@ -1,7 +1,7 @@
 #include "render_target.h"
 #include "game_engine.h"
 
-void RenderTarget::Draw_To_This() {
+void RenderTarget::drawToThis() {
 	GE.render().mActiveTarget = this;
 	_drawToThis();
 }

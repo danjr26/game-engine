@@ -14,15 +14,17 @@
 #include "burning_eye_target.h"
 
 namespace burning_eye {
-	class BurningEye : public DeepTransformableObject2d, public DestructableObject,
+	class BurningEye : 
+		public DeepTransformableObject2d, 
+		public DestructableObject,
 		public PerFrameUpdateableObject {
 	private:
+		RigidBody<2> mRigidBody;
 		Renderer mRenderer;
 		Mover mMover;
 		Health mHealth;
 		Controller mController;
 		Target mTarget;
-		RigidBody<2> mRigidBody;
 		CollisionQueue2d mCollisionQueue;
 
 	public:

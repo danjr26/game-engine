@@ -253,8 +253,13 @@ namespace GEUtil {
 	}
 
 	template<class T>
-	inline T cuberp(T a, T b, T t) {
+	inline T cerp(T a, T b, T t) {
 		return lerp<T>(a, b, t * t * (3 - 2 * t));
+	}
+
+	template<class T>
+	inline T qerp(T a, T b, T t) {
+		return lerp<T>(a, b, t * t * t * (10 + t * (-15 + t * 6)));
 	}
 
 	template<class T>

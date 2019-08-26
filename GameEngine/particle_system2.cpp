@@ -7,6 +7,8 @@ ParticleSystem2::ParticleSystem2(Texture* in_texture, Specifier* in_specifier, u
 	mTextureInstance(in_texture),
 	mSpecifier(in_specifier),
 	mStateFlags(in_stateFlags) {
+
+	if (in_texture == nullptr) throw InvalidArgumentException();
 	
 	MeshVertexData::DataType dataType = MeshVertexData::DataType::_float;
 
@@ -37,6 +39,12 @@ ParticleSystem2::ParticleSystem2(Texture* in_texture, Specifier* in_specifier, u
 
 ParticleSystem2::~ParticleSystem2() {
 	if (mSpecifier != nullptr) delete mSpecifier;
+
+	if (mStateFlags & StateFlags::delete_when_empty) {
+		getTransform().deleteChainParents();
+		getDepthTransform().deleteChainParents();
+	}
+
 	if (GameEngine::exists()) {
 		GE.perFrameUpdate().remove(this);
 		GE.render().remove(this);
@@ -47,8 +55,10 @@ uint ParticleSystem2::getCount() const {
 	return mVertexData.getNumberVertices();
 }
 
-uint& ParticleSystem2::getStateFlags() {
-	return mStateFlags;
+void ParticleSystem2::planDeletion() {
+	mStateFlags |= StateFlags::planned_deletion;
+	subTransform(getTransform().cloneChain());
+	subDepthTransform(getDepthTransform().cloneChain());
 }
 
 ParticleSystem2::Specifier* ParticleSystem2::getSpecifier() {
@@ -109,7 +119,7 @@ void ParticleSystem2::update(double in_dt) {
 }
 
 double ParticleSystem2::z() const {
-	return 0.0;
+	return getDepthTransform().getWorldDepth();
 }
 
 bool ParticleSystem2::shouldCull() const {

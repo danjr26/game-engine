@@ -68,7 +68,7 @@ public:
 	void flipBuffers();
 	std::wstring getName();
 	Vector2i getPosition();
-	Vector2i getDimensions() const;
+	Vector2ui getDimensions() const;
 	bool isFullscreen();
 	bool isAlwaysFront();
 	bool hasTitleBar();

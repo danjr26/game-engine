@@ -23,8 +23,8 @@ burning_eye::Renderer::Renderer(BurningEye& in_parent) :
 
 burning_eye::Renderer::~Renderer() {
 	//GE.render().remove(&mSprite);
-	mIris->getStateFlags() |= ParticleSystem2::StateFlags::planned_deletion;
-	mPupil->getStateFlags() |= ParticleSystem2::StateFlags::planned_deletion;
+	mIris->planDeletion();
+	mPupil->planDeletion();
 }
 
 void burning_eye::Renderer::init() {

@@ -5,6 +5,8 @@
 #include "misc.h"
 #include <cmath>
 #include <functional>
+#include <sstream>
+#include <iomanip>
 
 template<class T, uint n>
 class Vector {
@@ -344,7 +346,7 @@ public:
 		T index = 0;
 		for (uint i = 0; i < n; i++) {
 			T segment = mMembers[i];
-			for (uint j = i + 1; j < n; j++) {
+			for (int j = i - 1; j >= 0; j--) {
 				segment *= d[j];
 			}
 			index += segment;
@@ -354,8 +356,8 @@ public:
 
 	template<typename = std::enable_if_t<std::is_integral_v<T>, void>>
 	void setAsCoords(const Vector<T, n>& d, T index) {
-		T total = d.componentProduct();
-		for (uint i = 0; i < n; i++) {
+		T total = d.componentProduct() / d[0];
+		for (int i = n - 1; i >= 0; i--) {
 			mMembers[i] = index / total;
 			index %= total;
 			total /= d[i];

@@ -24,6 +24,9 @@ public:
 	void translateWorldDepth(T in_depth);
 	Matrix<T, 4, 4> getLocalMatrix() const;
 	Matrix<T, 4, 4> getWorldMatrix() const;
+
+	DepthTransform<T, n>* cloneChain() const;
+	void deleteChainParents();
 };
 
 using DepthTransform2f = DepthTransform<float, 2>;

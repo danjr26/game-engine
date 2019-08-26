@@ -5,8 +5,8 @@
 
 class RenderTarget {
 public:
-	void Draw_To_This();
-	virtual Vector2i getDimensions() const = 0;
+	void drawToThis();
+	virtual Vector2ui getDimensions() const = 0;
 protected:
 	virtual void _drawToThis() = 0;
 };

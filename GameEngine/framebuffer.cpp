@@ -265,12 +265,12 @@ Texture* Framebuffer::getDepthTexture() {
 	return mDepthTexture;
 }
 
-Vector2i Framebuffer::getDimensions() const {
-	return (Vector2i)mColorTextures[0]->getDimensions();
+Vector2ui Framebuffer::getDimensions() const {
+	return (Vector2ui)mColorTextures[0]->getDimensions();
 }
 
 void Framebuffer::_drawToThis() {
-	Vector3i dimensions = mColorTextures[0]->getDimensions();
+	Vector3ui dimensions = mColorTextures[0]->getDimensions();
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mID);
 	glViewport(0, 0, dimensions.x(), dimensions.y());
 }

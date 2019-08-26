@@ -15,7 +15,7 @@ Texture::Texture(Type in_type, std::string in_filename, ubyte in_nBitsPerChannel
 
 	cimg_library::CImg<ubyte> image((in_filename).c_str());
 
-	mDimensions = Vector3i(image.width(), image.height(), image.depth());
+	mDimensions = Vector3ui(image.width(), image.height(), image.depth());
 	mNChannels = image.spectrum();
 
 	mData = new ubyte[mDimensions.componentProduct() * mNChannels];
@@ -30,7 +30,7 @@ Texture::Texture(Type in_type, std::string in_filename, ubyte in_nBitsPerChannel
 	finishSetup();
 }
 
-Texture::Texture(Type in_type, Vector3i in_dimensions, ubyte* in_data, ubyte in_nChannels, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA) :
+Texture::Texture(Type in_type, Vector3ui in_dimensions, ubyte* in_data, ubyte in_nChannels, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA) :
 	mType(in_type),
 	mDimensions(in_dimensions),
 	mNSamplesMSAA(in_nSamplesMSAA),
@@ -45,7 +45,7 @@ Texture::Texture(Type in_type, Vector3i in_dimensions, ubyte* in_data, ubyte in_
 	finishSetup();
 }
 
-Texture::Texture(Type in_type, Vector3i in_dimensions, ColorRGBAc in_color, ubyte in_nChannels, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA) :
+Texture::Texture(Type in_type, Vector3ui in_dimensions, ColorRGBAc in_color, ubyte in_nChannels, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA) :
 	mType(in_type),
 	mDimensions(in_dimensions),
 	mNSamplesMSAA(in_nSamplesMSAA),
@@ -64,7 +64,7 @@ Texture::Texture(Type in_type, Vector3i in_dimensions, ColorRGBAc in_color, ubyt
 	finishSetup();
 }
 
-Texture::Texture(Type in_type, Vector3i in_dimensions, ubyte in_nChannels, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA) :
+Texture::Texture(Type in_type, Vector3ui in_dimensions, ubyte in_nChannels, ubyte in_nBitsPerChannel, uint in_flags, ubyte in_nSamplesMSAA) :
 	mType(in_type),
 	mData(nullptr),
 	mDimensions(in_dimensions),
@@ -120,7 +120,7 @@ Texture::Type Texture::getType() {
 	return mType;
 }
 
-Vector3i Texture::getDimensions() {
+Vector3ui Texture::getDimensions() {
 	return mDimensions;
 }
 

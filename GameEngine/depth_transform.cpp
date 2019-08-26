@@ -63,5 +63,24 @@ Matrix<T, 4, 4> DepthTransform<T, n>::getWorldMatrix() const {
 	return Matrix<T, 4, 4>::translation(Vector<T, 3>(0, 0, getWorldDepth()));
 }
 
+template<class T, uint n>
+DepthTransform<T, n>* DepthTransform<T, n>::cloneChain() const {
+	DepthTransform<T, n>* out = new DepthTransform<T, n>(*this);
+	for (DepthTransform<T, n>* it = out; it->mParent != nullptr; it = it->mParent) {
+		it->mParent = new DepthTransform<T, n>(*it->mParent);
+	}
+	return out;
+}
+
+template<class T, uint n>
+void DepthTransform<T, n>::deleteChainParents() {
+	DepthTransform<T, n>* next;
+	for (DepthTransform<T, n>* it = mParent; it != nullptr; it = next) {
+		next = it->mParent;
+		delete it;
+		it = next;
+	}
+}
+
 template class DepthTransform<float, 2>;
 template class DepthTransform<double, 2>;

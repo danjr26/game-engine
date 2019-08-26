@@ -20,7 +20,7 @@ public:
 	Texture* getColorTexture(uint in_index = 0);
 	Texture* getDepthTexture();
 
-	Vector2i getDimensions() const override final;
+	Vector2ui getDimensions() const override final;
 
 protected:
 	void _drawToThis() override final;

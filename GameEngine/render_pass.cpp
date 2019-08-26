@@ -31,7 +31,7 @@ RenderPass& RenderPass::sortOrder(SortOrder in_order) {
 
 void RenderPass::begin(void* in_params) {
 	OnBegin(in_params);
-	mTarget->Draw_To_This();
+	mTarget->drawToThis();
 	mCamera->use();
 
 	if (mClearBits & GL_COLOR_BUFFER_BIT) {

@@ -60,7 +60,7 @@ void Test_Render(Window* window) {
 
 	RenderPass testPass =
 		RenderPass(window, &camera1)
-		.clearColor(ColorRGBAf(0.0f, 0.0f, 0.0f, 1.0f))
+		.clearColor(ColorRGBAf(0.2f, 0.2f, 0.2f, 1.0f))
 		.sortOrder(RenderPass::SortOrder::back_to_front);
 
 	GE.render().mPasses.push_back(&testPass);

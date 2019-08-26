@@ -220,6 +220,7 @@
     </ClInclude>
     <ClInclude Include="font_face_raster_set.h" />
     <ClInclude Include="force_field.h" />
+    <ClInclude Include="fractal_perlin.h" />
     <ClInclude Include="framebuffer.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
@@ -241,10 +242,13 @@
     <ClInclude Include="mesh_sphere_tree.h" />
     <ClInclude Include="minigun.h" />
     <ClInclude Include="minigun_bullet.h" />
+    <ClInclude Include="needler_pupil_specifier.h" />
+    <ClInclude Include="needler_iris_specifier.h" />
     <ClInclude Include="particle_system2.h" />
     <ClInclude Include="particle_system2_factories.h" />
     <ClInclude Include="particle_system2_specifiers.h" />
     <ClInclude Include="perlin.h" />
+    <ClInclude Include="perlin_lightning_bolt.h" />
     <ClInclude Include="player_ship.h" />
     <ClInclude Include="player_ship_camera_mover.h" />
     <ClInclude Include="player_ship_health.h" />
@@ -428,10 +432,13 @@
     <ClCompile Include="mesh_sphere_tree.cpp" />
     <ClCompile Include="minigun.cpp" />
     <ClCompile Include="minigun_bullet.cpp" />
+    <ClCompile Include="needler_iris_specifier.cpp" />
+    <ClCompile Include="needler_pupil_specifier.cpp" />
     <ClCompile Include="particle_system2.cpp" />
     <ClCompile Include="particle_system2_factories.cpp" />
     <ClCompile Include="particle_system2_specifiers.cpp" />
     <ClCompile Include="perlin.cpp" />
+    <ClCompile Include="perlin_lightning_bolt.cpp" />
     <ClCompile Include="player_ship.cpp" />
     <ClCompile Include="player_ship_camera_mover.cpp" />
     <ClCompile Include="player_ship_health.cpp" />

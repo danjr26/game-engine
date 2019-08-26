@@ -20,6 +20,7 @@ private:
 
 public:
 	Transform();
+	Transform(const Transform<T, n>& in_other);
 	template<class T2, std::enable_if_t<!std::is_same_v<T, T2>>>
 	Transform(const Transform<T2, n>& in_other) : 
 		mParent(nullptr),
