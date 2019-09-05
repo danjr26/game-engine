@@ -57,6 +57,11 @@ void burning_eye::BurningEye::update(double in_dt) {
 	mMover.update(in_dt);
 }
 
+void burning_eye::BurningEye::setMultiplier(double in_multiplier) {
+	mMultiplier = in_multiplier;
+	mRigidBody.setMultiplier(in_multiplier);
+}
+
 burning_eye::Renderer& burning_eye::BurningEye::getRenderer() {
 	return mRenderer;
 }

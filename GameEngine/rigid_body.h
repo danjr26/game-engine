@@ -15,6 +15,7 @@ private:
 	URotation<double, n> mAngularVelocity;
 	double mLinearMass;
 	double mAngularMass;
+	double mMultiplier;
 
 public:
 	RigidBody();
@@ -47,7 +48,9 @@ public:
 	Vector<double, n> impulseToChangePointVelocity(const Vector<double, n>& in_point, const Vector<double, n>& in_dv);
 
 	void update(double in_dt);
-	void update(double in_dt, const Vector<double, n>& in_normal);
+
+	double getMultiplier() const;
+	void setMultiplier(double in_multiplier);
 
 	static Vector<double, n> getCollisionNormal(RigidBody<n>& in_body1, RigidBody<n>& in_body2, const Collision<double, n>& in_collision);
 };

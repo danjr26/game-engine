@@ -7,7 +7,7 @@ burning_eye::IrisSpecifier::IrisSpecifier() :
 	mColorTransition.mKeys.assign({
 		{ ColorRGBAf(0.9, 0.7, 0.4, 0.05), 0.10 },
 		{ ColorRGBAf(0.7, 0.5, 0.1, 0.05), 0.25 },
-		{ ColorRGBAf(0.5, 0.2, 0.1, 0.01), 0.25 },
+		{ ColorRGBAf(0.5, 0.2, 0.1, 0.01), 0.15 },
 		{ ColorRGBAf(0.2, 0.2, 0.1, 0.0), 0.0 }
 		});
 }

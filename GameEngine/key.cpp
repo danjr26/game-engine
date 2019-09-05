@@ -1,7 +1,8 @@
 #include "key.h"
 
-Key windowsVKToKey(uint in_vk) {
-	switch (in_vk) {
+Key windowsScanCodeToKey(uint in_scanCode) {
+	uint virtualKey = MapVirtualKeyA(in_scanCode, MAPVK_VSC_TO_VK_EX);
+	switch (virtualKey) {
 	case 'A': return Key::a;
 	case 'B': return Key::b;
 	case 'C': return Key::c;

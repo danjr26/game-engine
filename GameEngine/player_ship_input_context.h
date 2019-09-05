@@ -11,6 +11,7 @@ namespace player_ship {
 	public:
 		struct Actions {
 			enum {
+				dodge,
 				count
 			};
 		};
@@ -20,6 +21,7 @@ namespace player_ship {
 				fire_1,
 				fire_2,
 				fire_3,
+				slow,
 				count
 			};
 		};

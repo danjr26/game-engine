@@ -23,6 +23,6 @@ enum class Key : ubyte {
 	count
 };
 
-Key windowsVKToKey(uint in_vk);
+Key windowsScanCodeToKey(uint in_vk);
 
 #endif

@@ -263,6 +263,7 @@
     <ClInclude Include="refractor_gun.h" />
     <ClInclude Include="relativistic_cannon.h" />
     <ClInclude Include="ribbon2.h" />
+    <ClInclude Include="run_speed_manager.h" />
     <ClInclude Include="shrapnel_gun.h" />
     <ClInclude Include="small_enemy_bullet.h" />
     <ClInclude Include="spark_gun.h" />
@@ -449,6 +450,7 @@
     <ClCompile Include="player_ship_weapons_system.cpp" />
     <ClCompile Include="raycast.cpp" />
     <ClCompile Include="ribbon2.cpp" />
+    <ClCompile Include="run_speed_manager.cpp" />
     <ClCompile Include="test_bullet.cpp" />
     <ClCompile Include="burning_eye.cpp" />
     <ClCompile Include="burning_eye_controller.cpp" />

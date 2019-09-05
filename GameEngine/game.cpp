@@ -77,7 +77,7 @@ void Game::init() {
 	GE.render().add(perlinSprite);
 
 	*/
-	for (uint i = 0; i < 5; i++) {
+	for (uint i = 0; i < 1; i++) {
 		burning_eye::BurningEye* testEnemy = new burning_eye::BurningEye();
 		testEnemy->getTransform().setLocalPosition(Vector2d(4 + i * 2.0, 4));
 		testEnemy->getDepthTransform().setLocalDepth(-0.1);
@@ -157,4 +157,9 @@ DamageManager& Game::getDamageManager() {
 Game::AITargetContainer& Game::getAITargets() {
 	return mAITargets;
 }
+
+RunSpeedManager& Game::getRunSpeedManager() {
+	return mRunSpeedManager;
+}
+
 

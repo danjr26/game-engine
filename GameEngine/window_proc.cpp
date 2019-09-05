@@ -114,14 +114,14 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 	case WM_KEYDOWN:
 		inputEvent.mWindowHandle = in_hwnd;
 		inputEvent.mType = RawInputEvent::Type::key_down;
-		inputEvent.mKeyboard.mKey = windowsVKToKey((uint)in_wParam);
-		inputEvent.mKeyboard.mRepeat = in_lParam & (1 << 30);
+		inputEvent.mKeyboard.mKey = windowsScanCodeToKey((uint)(in_lParam & 0x00ff0000) >> 16);
+		inputEvent.mKeyboard.mRepeat = in_lParam & KF_REPEAT;
 		GE.input().processRawEvent(inputEvent);
 		return 0;
 	case WM_KEYUP:
 		inputEvent.mWindowHandle = in_hwnd;
 		inputEvent.mType = RawInputEvent::Type::key_up;
-		inputEvent.mKeyboard.mKey = windowsVKToKey((uint)in_wParam);
+		inputEvent.mKeyboard.mKey = windowsScanCodeToKey((uint)(in_lParam & 0x00ff0000) >> 16);
 		inputEvent.mKeyboard.mRepeat = false;
 		GE.input().processRawEvent(inputEvent);
 		return 0;
@@ -129,7 +129,7 @@ LRESULT CALLBACK WindowProc(HWND in_hwnd, UINT in_message, WPARAM in_wParam, LPA
 		inputEvent.mWindowHandle = in_hwnd;
 		inputEvent.mType = RawInputEvent::Type::character;
 		inputEvent.mKeyboard.mCharacter = (char)in_wParam;
-		inputEvent.mKeyboard.mRepeat = in_lParam & (1 << 30);
+		inputEvent.mKeyboard.mRepeat = in_lParam & KF_REPEAT;
 		GE.input().processRawEvent(inputEvent);
 		return 0;
 	default:

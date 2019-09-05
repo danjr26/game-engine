@@ -170,13 +170,53 @@ spark gun
   gets more DMG and SPD over time
 ##
 
+player ship
+store
+	max speed
+	maneuverability
+	health
+	healing rate
+	max healing
+
+carries two weapons, only one usable at a time
+weapons degrade with use
+	pristine	100%
+	excellent	90%
+	good		75%
+	poor		60%
+	awful		40%
+
+weapons can be sold for money
+weapons can be repaired w/ consumable 'boost kit', which is less effective when used on same weapon
+use 1 - +2 levels
+use 2 - +1 level
+use 3+ - maintain current level
+
+dodge - speed burst, invincible for very short period; recharges ~2s
+store
+	damage
+	recharge
+
+slowdown - slows world down (including player); lasts for period of time which can be pushed further for mission-long decrease in efficacy
+store
+	increase world slowdown
+	decrease player slowdown
+	increase safe capacity
+	increase unsafe capacity
+##
+
 rusher - rushes at player; stops and moves erratically backwards if player is looking at it within donut; inside donut "activates" and kamikazies
 
-runner - makes runs at player, shooting when moving towards and shielded when moving away
+runner - makes runs at player, shooting when moving towards
 
-tank - frequent burst shots, occasional missle, slowly moves towards player, shielded by droid that moves erratically around it
+tank - frequent burst shots, occasional missile, slowly moves towards player
 
 
 
 shields take heavy damage, but when break, temporarily disable ships in immediate area
 
+enemies drop
+	boost kits
+	money
+	weapons
+these disappear over time

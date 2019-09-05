@@ -11,8 +11,11 @@
 #include "deep_transformable_object.h"
 #include "blend_settings.h"
 
-class ParticleSystem2 : public RenderableObject, public PerFrameUpdateableObject, 
-	public DestructableObject, public DeepTransformableObject2d {
+class ParticleSystem2 : 
+	public RenderableObject, 
+	public PerFrameUpdateableObject, 
+	public DestructableObject, 
+	public DeepTransformableObject2d {
 
 public:
 	using position_t = Vector3f;

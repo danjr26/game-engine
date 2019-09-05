@@ -33,6 +33,8 @@ namespace burning_eye {
 
 		void update(double in_dt) override;
 
+		void setMultiplier(double in_multiplier) override;
+
 		Renderer& getRenderer();
 		Mover& getMover();
 		Health& getHealth();

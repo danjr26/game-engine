@@ -8,6 +8,7 @@ class PerFrameUpdateableObject : public DisableableObject {
 protected:
 	ubyte mNumberToSkip;
 	ubyte mSkipCount;
+	double mMultiplier;
 
 public:
 	PerFrameUpdateableObject();
@@ -17,6 +18,8 @@ public:
 	void nextFrame(double in_dt);
 	void nextFrameLate(double in_dt);
 	void skipFrames(ubyte in_numberToSkip);
+	virtual double getMultiplier() const;
+	virtual void setMultiplier(double in_multiplier);
 };
 
 #endif

@@ -8,7 +8,8 @@ RigidBody<n>::RigidBody() :
 	mLinearVelocity(),
 	mAngularVelocity(),
 	mLinearMass(0.0),
-	mAngularMass(0.0)
+	mAngularMass(0.0),
+	mMultiplier(1.0)
 {}
 
 template<uint n>
@@ -172,16 +173,18 @@ Vector2d RigidBody<2>::impulseToChangePointVelocity(const Vector2d& in_point, co
 
 template<uint n>
 void RigidBody<n>::update(double in_dt) {
-	getTransform().translateWorld(mLinearVelocity * in_dt);
-	getTransform().rotateWorld(mAngularVelocity * in_dt);
+	getTransform().translateWorld(mLinearVelocity * in_dt * mMultiplier);
+	getTransform().rotateWorld(mAngularVelocity * in_dt * mMultiplier);
 }
 
 template<uint n>
-void RigidBody<n>::update(double in_dt, const Vector<double, n>& in_normal) {
-	Vector<double, n> linearNormalComponent = mLinearVelocity.projection(in_normal);
-	mLinearVelocity -= linearNormalComponent;
-	update(in_dt);
-	mLinearVelocity += linearNormalComponent;
+double RigidBody<n>::getMultiplier() const {
+	return mMultiplier;
+}
+
+template<uint n>
+void RigidBody<n>::setMultiplier(double in_multiplier) {
+	mMultiplier = in_multiplier;
 }
 
 template<uint n>

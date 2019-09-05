@@ -11,7 +11,9 @@
 #include "basic_collision_mask.h"
 #include "collision_queue.h"
 
-class IndustrialLaserBeam : public DeepTransformableObject2d, public PerFrameUpdateableObject,
+class IndustrialLaserBeam : 
+	public DeepTransformableObject2d, 
+	public PerFrameUpdateableObject,
 	public DestructableObject {
 
 private:

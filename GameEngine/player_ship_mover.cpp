@@ -27,7 +27,15 @@ void player_ship::Mover::update(double in_dt) {
 
 	//mParent.getTransform().translateWorld(linearVelocity * in_dt);
 
-	mShipInput.clearEvents();
+	InputEvent _event;
+	while (mShipInput.getNumberEvents()) {
+		_event = mShipInput.popEvent();
+		if (_event.mType == InputEvent::Type::action && _event.mMessage == player_ship::InputContext::Actions::dodge) {
+			Vector2d jump = linearVelocity.withMagnitude(5.0);
+			mParent.getTransform().translateLocal(jump);
+		}
+	}
+
 	mPointerInput.clearEvents();
 
 	Vector2d mousePosition(

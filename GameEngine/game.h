@@ -7,6 +7,7 @@
 #include "collision_context.h"
 #include "damage_manager.h"
 #include "ai_target.h"
+#include "run_speed_manager.h"
 
 class Game {
 public:
@@ -27,6 +28,7 @@ private:
 	DamageManager mDamageManager;
 	player_ship::PlayerShip* mPlayerShip;
 	AITargetContainer mAITargets;
+	RunSpeedManager mRunSpeedManager;
 
 public:
 	Game();
@@ -42,6 +44,7 @@ public:
 	CollisionContext2d& getMainCollisionContext();
 	DamageManager& getDamageManager();
 	AITargetContainer& getAITargets();
+	RunSpeedManager& getRunSpeedManager();
 };
 
 #endif

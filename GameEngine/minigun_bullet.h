@@ -10,7 +10,9 @@
 #include "collision_responder.h"
 #include "collision_queue.h"
 
-class MinigunBullet : public DeepTransformableObject2d, public PerFrameUpdateableObject,
+class MinigunBullet : 
+	public DeepTransformableObject2d, 
+	public PerFrameUpdateableObject,
 	public DestructableObject {
 
 private:

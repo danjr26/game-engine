@@ -9,7 +9,10 @@
 #include "stepper.h"
 #include "blend_settings.h"
 
-class EditableText : public RenderableObject, public DeepTransformableObject2d, public PerFrameUpdateableObject {
+class EditableText : 
+	public RenderableObject, 
+	public DeepTransformableObject2d, 
+	public PerFrameUpdateableObject {
 private:
 	const float mCursorWidth = 1.0f;
 

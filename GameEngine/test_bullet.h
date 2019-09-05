@@ -9,7 +9,9 @@
 #include "rigid_body.h"
 #include "collision_responder.h"
 
-class TestBullet : public DeepTransformableObject2d, public PerFrameUpdateableObject, 
+class TestBullet : 
+	public DeepTransformableObject2d, 
+	public PerFrameUpdateableObject, 
 	public DestructableObject {
 
 private:

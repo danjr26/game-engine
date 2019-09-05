@@ -98,6 +98,11 @@ void player_ship::PlayerShip::update(double in_dt) {
 	mWeaponsSystem.update(in_dt);
 }
 
+void player_ship::PlayerShip::setMultiplier(double in_multiplier) {
+	mMultiplier = in_multiplier;
+	mRigidBody.setMultiplier(in_multiplier);
+}
+
 void player_ship::PlayerShip::initMembers() {
 	mRenderer.init();
 }

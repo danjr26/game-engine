@@ -43,6 +43,8 @@ namespace player_ship {
 		CollisionQueue2d& getCollisionQueue();
 
 		virtual void update(double in_dt) override;
+		
+		void setMultiplier(double in_multiplier) override;
 
 	private:
 		void initMembers();
