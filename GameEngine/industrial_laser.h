@@ -12,7 +12,7 @@ private:
 		warm,
 		on
 	} mState;
-	double mWarmUp;
+	double mWarmTime;
 	double mAccum;
 
 public:

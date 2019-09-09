@@ -2,7 +2,7 @@
 
 IndustrialLaser::IndustrialLaser() :
 	mState(State::off),
-	mWarmUp(0.5),
+	mWarmTime(0.5),
 	mAccum(0.0) {
 
 	mBeam.getTransform().setParent(&getTransform());
