@@ -400,6 +400,7 @@
     <ClCompile Include="camera_manager.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="chain_bolt.cpp" />
     <ClCompile Include="circle_renderer.cpp" />
     <ClCompile Include="clock.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
