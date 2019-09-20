@@ -8,7 +8,7 @@
 #include "texture_settings.h"
 #include "vector.h"
 #define cimg_use_png
-#include "CImg-2.2.3\CImg.h"
+#include "CImg.h"
 #include "texture.h"
 
 class Texture2 : public Texture {

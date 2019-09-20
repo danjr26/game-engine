@@ -39,7 +39,8 @@ public:
 		mMembers{(T)in_members...} 
 	{}
 
-	Vector(const T* in_members) {
+	Vector(const T* in_members) :
+		mMembers{} {
 		for (int i = 0; i < n; i++) {
 			mMembers[i] = in_members[i];
 		}

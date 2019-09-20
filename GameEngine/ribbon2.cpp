@@ -47,7 +47,7 @@ void Ribbon2::updateMesh() {
 		ushort mFarIndex2;
 
 		struct Comparator {
-			bool operator()(const NodeEntry& ne1, const NodeEntry& ne2) {
+			bool operator()(const NodeEntry& ne1, const NodeEntry& ne2) const {
 				return ne1.mOffset.ccwTheta() < ne2.mOffset.ccwTheta();
 			}
 		};
@@ -139,7 +139,7 @@ void Ribbon2::updateMesh() {
 
 
 	for (auto it = mGraph.mNodes.begin(); it != mGraph.mNodes.end(); it++) {
-		auto entries = allEdges[&*it];
+		std::set<NodeEntry, NodeEntry::Comparator>& entries = allEdges[&*it];
 		if (entries.size() <= 1) continue;
 		ushort baseIndex = (ushort)mMeshVertexData.getNumberVertices();
 

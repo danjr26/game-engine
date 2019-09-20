@@ -71,8 +71,8 @@ void Test_Render(Window* window) {
 }
 
 int WINAPI WinMain(HINSTANCE in_hInst, HINSTANCE in_hPrevInst, LPSTR arg, int nArgs) {
-	int tmpFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
-	_CrtSetDbgFlag(tmpFlag | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
+	//int tmpFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+	//_CrtSetDbgFlag(tmpFlag | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	new GameEngine();
 

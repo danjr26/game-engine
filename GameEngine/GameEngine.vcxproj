@@ -74,16 +74,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\danie\Documents\Visual Studio 2017\Projects\GameEngine\GameEngine\CImg-2.2.3;C:\Users\danie\Documents\Visual Studio 2017\glew-1.13.0\include;C:\Users\danie\Documents\Visual Studio 2017\freetype-2.7\include;C:\Users\danie\Documents\Visual Studio 2017\freetype-2.7\include\freetype;C:\Users\danie\Documents\GitHub\libpng;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\danie\Documents\Visual Studio 2017\glew-1.13.0\lib\Debug\x64;C:\Users\danie\Documents\Visual Studio 2017\freetype-2.7\objs\vc2010\x64;C:\Users\danie\Documents\GitHub\libpng\projects\vstudio2017\x64\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\danie\source\repos\game-engine\GameEngine\extlib\cimg-2.2.3;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\glew-1.13.0\include;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\freetype-2.10.1\include;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\freetype-2.10.1\include\freetype;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\libpng-1.6;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\rapidxml-1.13;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\danie\source\repos\game-engine\GameEngine\extlib\glew-1.13.0\lib\Debug\x64;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\freetype-2.10.1\objs\x64\Debug;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\libpng-1.6\projects\vstudio\x64\Debug Library;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\zlib\contrib\vstudio\vc14\x64\ZlibStatDebug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\danie\Documents\GitHub\libpng;C:\Users\danie\Documents\Visual Studio 2017\Projects\GameEngine\GameEngine\CImg-2.2.3;C:\Users\danie\Documents\Visual Studio 2017\glew-1.13.0\include;C:\Users\danie\Documents\Visual Studio 2017\freetype-2.7\include;C:\Users\danie\Documents\Visual Studio 2017\freetype-2.7\include\freetype;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\danie\Documents\GitHub\libpng\projects\vstudio2017\x64\Release;C:\Users\danie\Documents\Visual Studio 2017\glew-1.13.0\lib\Release\x64;C:\Users\danie\Documents\Visual Studio 2017\freetype-2.7\objs\vc2010\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\danie\source\repos\game-engine\GameEngine\extlib\cimg-2.2.3;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\glew-1.13.0\include;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\freetype-2.10.1\include;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\freetype-2.10.1\include\freetype;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\libpng-1.6;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\rapidxml-1.13;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\danie\source\repos\game-engine\GameEngine\extlib\glew-1.13.0\lib\Release\x64;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\freetype-2.10.1\objs\x64\Release;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\libpng-1.6\projects\vstudio\x64\Release;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\zlib\contrib\vstudio\vc14\x64\ZlibStatReleaseWithoutAsm;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -107,12 +107,14 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>msvcrtd.lib;msvcmrt.lib;opengl32.lib;glew32d.lib;freetype27d.lib;libpng_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32d.lib;freetype.lib;libpng16.lib;zlibstat.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -137,22 +139,23 @@
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <Optimization>Disabled</Optimization>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <UseFullPaths>false</UseFullPaths>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>msvcrt.lib;msvcmrt.lib;opengl32.lib;glew32.lib;freetype27.lib;libpng.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;freetype.lib;libpng16.lib;zlibstat.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

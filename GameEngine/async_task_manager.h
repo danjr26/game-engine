@@ -8,6 +8,7 @@
 #include <vector>
 #include <mutex>
 #include <list>
+#include <functional>
 
 class AsyncTaskManager {
 public:

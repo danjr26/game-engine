@@ -1,5 +1,5 @@
 #include "shader_program.h"
-#include "rapidxml-1.13/rapidxml.hpp"
+#include "rapidxml.hpp"
 #include <fstream>
 #include <sstream>
 #include "game_engine.h"

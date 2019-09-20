@@ -1,5 +1,5 @@
 #include "texture.h"
-#include "rapidxml-1.13/rapidxml.hpp"
+#include "rapidxml.hpp"
 #include <fstream>
 #include <sstream>
 #include <unordered_map>

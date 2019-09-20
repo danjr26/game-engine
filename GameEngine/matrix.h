@@ -13,7 +13,8 @@ protected:
 	T mData[m][n];
 
 public:
-	Matrix() 
+	Matrix() :
+		mData{}
 	{}
 
 	Matrix(T in_data[m][n]) {
