@@ -4,16 +4,16 @@
 
 template<class T, uint n>
 BinaryCollisionTree<T, n>::Evaluation::Iterator::Iterator(Evaluation* in_parent) :
-	mParent(in_parent) {
-
-	for (uint i = 0; i < n; i++) {
-		mDepths[i] = 0;
-		mEvals[i] = 0;
-	}
-}
+	mParent(in_parent),
+	mDepths{ 0 },
+	mEvals{ 0 } 
+{}
 
 template<class T, uint n>
-BinaryCollisionTree<T, n>::Evaluation::Iterator::Iterator() 
+BinaryCollisionTree<T, n>::Evaluation::Iterator::Iterator() :
+	mParent(nullptr),
+	mDepths{ 0 },
+	mEvals{ 0 }
 {}
 
 template<class T, uint n>
@@ -83,31 +83,25 @@ BinaryCollisionTree<T, n>::Evaluation::Evaluation() :
 	mParentTree(nullptr),
 	mParentMask(nullptr),
 	mTransformedParentMask(nullptr),
-	mDepth(UINT_MAX) {
-
-	for (uint i = 0; i < n; i++) {
-		mData[i] = nullptr;
-		mDataSizes[i] = 0;
-	}
-}
+	mDepth(UINT_MAX),
+	mData{ 0 },
+	mDataSizes{ 0 } 
+{}
 
 template<class T, uint n>
 BinaryCollisionTree<T, n>::Evaluation::Evaluation(const Evaluation& in_other) :
 	mParentTree(nullptr),
 	mParentMask(nullptr),
 	mTransformedParentMask(nullptr),
-	mDepth(UINT_MAX) {
-
-	for (uint i = 0; i < n; i++) {
-		mData[i] = nullptr;
-		mDataSizes[i] = 0;
-	}
+	mDepth(UINT_MAX),
+	mData{ 0 },
+	mDataSizes{ 0 } {
 
 	*this = in_other;
 }
 
 template<class T, uint n>
-BinaryCollisionTree<T, n>::Evaluation::Evaluation(Evaluation&& in_other) :
+BinaryCollisionTree<T, n>::Evaluation::Evaluation(Evaluation&& in_other) noexcept :
 	mParentTree(in_other.mParentTree),
 	mParentMask(in_other.mParentMask),
 	mTransformedParentMask(in_other.mTransformedParentMask),
@@ -303,7 +297,8 @@ BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::Iterator(PairedGroupi
 	mParent(in_parent),
 	mIt(in_parent->mGroupings.begin()),
 	mI(0),
-	mJ(0) {}
+	mJ(0) 
+{}
 
 template<class T, uint n>
 typename BinaryCollisionTree<T, n>::Evaluation* BinaryCollisionTree<T, n>::PairedGroupingScheme::Iterator::getFirst() {
@@ -403,17 +398,18 @@ void BinaryCollisionTree<T, n>::evaluate(CollisionMask<T, n>* in_mask, uint in_d
 	InPlaceCollisionEvaluator evaluator;
 	evaluator.returnPoint(false);
 
-	EvaluationStackElement evaluationStacks[n][maxStackSize];
-	uint stackSizes[3];
+	StackElement* evaluationStacks[n];
+	uint stackSizes[n];
 	for (uint i = 0; i < n; i++) {
 		stackSizes[i] = 1;
+		evaluationStacks[i] = new EvaluationStackElement[maxStackSize];
 		evaluationStacks[i][0] = { i, mBox.getCenter()[i], false, 0 };
 	}
 
 	AxisAlignedHalfSpace<T, n> halfSpace1 = AxisAlignedHalfSpace<T, n>::fromDimensionValue(0, 0.0, false);
 	AxisAlignedHalfSpace<T, n> halfSpace2 = AxisAlignedHalfSpace<T, n>::fromDimensionValue(0, 0.0, false);
-	typename BinaryCollisionTree<T, n>::AxisAlignedHalfSpaceCollisionMask<> mask1(halfSpace1, true);
-	typename BinaryCollisionTree<T, n>::AxisAlignedHalfSpaceCollisionMask<> mask2(halfSpace2, true);
+	typename BinaryCollisionTree<T, n>::AAHalfSpaceCollisionMask<> mask1(halfSpace1, true);
+	typename BinaryCollisionTree<T, n>::AAHalfSpaceCollisionMask<> mask2(halfSpace2, true);
 
 	for (bool keepGoing = true; keepGoing;) {
 		keepGoing = false;
@@ -432,10 +428,10 @@ void BinaryCollisionTree<T, n>::evaluate(CollisionMask<T, n>* in_mask, uint in_d
 			bool didCollide1 = evaluator.evaluate(*out_evaluation.getTransformedParentMask(), mask1).mDid;
 			bool didCollide2 = evaluator.evaluate(*out_evaluation.getTransformedParentMask(), mask2).mDid;
 
-			out_evaluation.mData[i][out_evaluation.mDataSizes[i]++] = didCollide1;
-			out_evaluation.mData[i][out_evaluation.mDataSizes[i]++] = didCollide2;
+			out_evaluation.mData[i][out_evaluation.mDataSizes[i]++] = (ubyte)didCollide1;
+			out_evaluation.mData[i][out_evaluation.mDataSizes[i]++] = (ubyte)didCollide2;
 
-			T nextOffset = mBox.getDimensions()[halfSpace1.getDimension()] / (1 << (back.mDepth + 2));
+			T nextOffset = mBox.getDimensions()[halfSpace1.getDimension()] / (1 << (ullong)(back.mDepth + 2));
 			uint lastDepth = back.mDepth;
 
 			if (lastDepth < in_depth) {

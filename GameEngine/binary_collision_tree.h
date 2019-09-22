@@ -4,9 +4,11 @@
 #include <list>
 #include <algorithm>
 #include <mutex>
+#include <stack>
 #include "collision_mask.h"
 #include "axis_aligned_box.h"
 #include "in_place_collision_evaluator.h"
+#include "lazy_provider.h"
 
 template<class T, uint n>
 class BinaryCollisionTree {
@@ -48,7 +50,7 @@ public:
 	public:
 		Evaluation();
 		Evaluation(const Evaluation& in_other);
-		Evaluation(Evaluation&& in_other);
+		Evaluation(Evaluation&& in_other) noexcept;
 		~Evaluation();
 
 		Evaluation& operator=(const Evaluation& in_other);
@@ -139,7 +141,9 @@ public:
 	};
 
 private:
-	AxisAlignedBox<T, n> mBox;
+	template<typename = std::enable_if_t<n == 2>>
+	using AAHalfSpaceCollisionMask = AAHalfSpace2CollisionMask<T>;
+	using InPlaceCollisionEvaluator = InPlaceCollisionEvaluator<T, n>;
 
 	struct EvaluationStackElement {
 		uint mDimension;
@@ -153,12 +157,14 @@ private:
 		typename Evaluation::Iterator mIt2;
 	};
 
+	// member variables
+
+	AxisAlignedBox<T, n> mBox;
+
+
+
 	std::list<typename GroupingScheme::Grouping> mRecycling;
 	std::list<typename PairedGroupingScheme::Grouping> mPairRecycling;
-
-	template<typename = std::enable_if_t<n == 2>>
-	using AxisAlignedHalfSpaceCollisionMask = AAHalfSpace2CollisionMask<T>;
-	using InPlaceCollisionEvaluator = InPlaceCollisionEvaluator<T, n>;
 
 public:
 	BinaryCollisionTree(const AxisAlignedBox<T, n>& in_box);

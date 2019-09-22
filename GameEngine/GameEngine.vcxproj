@@ -83,7 +83,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>C:\Users\danie\source\repos\game-engine\GameEngine\extlib\cimg-2.2.3;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\glew-1.13.0\include;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\freetype-2.10.1\include;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\freetype-2.10.1\include\freetype;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\libpng-1.6;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\rapidxml-1.13;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\danie\source\repos\game-engine\GameEngine\extlib\glew-1.13.0\lib\Release\x64;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\freetype-2.10.1\objs\x64\Release;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\libpng-1.6\projects\vstudio\x64\Release;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\zlib\contrib\vstudio\vc14\x64\ZlibStatReleaseWithoutAsm;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\danie\source\repos\game-engine\GameEngine\extlib\glew-1.13.0\lib\Release\x64;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\freetype-2.10.1\objs\x64\Release;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\libpng-1.6\projects\vstudio\x64\Release Library\;C:\Users\danie\source\repos\game-engine\GameEngine\extlib\zlib\contrib\vstudio\vc14\x64\ZlibStatReleaseWithoutAsm;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -92,6 +92,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -107,7 +108,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -126,6 +127,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -139,21 +141,22 @@
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <Optimization>Full</Optimization>
+      <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <UseFullPaths>false</UseFullPaths>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
+      <OptimizeReferences>false</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glew32.lib;freetype.lib;libpng16.lib;zlibstat.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
@@ -239,6 +242,7 @@
     <ClInclude Include="industrial_laser_beam.h" />
     <ClInclude Include="laser_cannon.h" />
     <ClInclude Include="laser_cannon_bullet.h" />
+    <ClInclude Include="lazy_provider.h" />
     <ClInclude Include="lightning_overloader.h" />
     <ClInclude Include="linear_transitioner.h" />
     <ClInclude Include="located_vector.h" />

@@ -768,6 +768,9 @@
     <ClInclude Include="needler_pupil_specifier.h">
       <Filter>Header Files\render\renderable\particle system 2\specifier</Filter>
     </ClInclude>
+    <ClInclude Include="lazy_provider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clock.cpp">
