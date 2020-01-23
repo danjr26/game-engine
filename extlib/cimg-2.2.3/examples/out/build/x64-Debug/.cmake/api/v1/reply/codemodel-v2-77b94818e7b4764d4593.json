@@ -1,0 +1,320 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.6"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20,
+						21,
+						22,
+						23,
+						24,
+						25,
+						26,
+						27,
+						28,
+						29
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Examples-CIMG",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20,
+						21,
+						22,
+						23,
+						24,
+						25,
+						26,
+						27,
+						28,
+						29
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "CImg_demo::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CImg_demo-Debug-4dd68006d3c8b505f7ef.json",
+					"name" : "CImg_demo",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "captcha::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-captcha-Debug-6e5f0f868c33f8850cca.json",
+					"name" : "captcha",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "curve_editor2d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-curve_editor2d-Debug-91e79c88870788b870c1.json",
+					"name" : "curve_editor2d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "dtmri_view3d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-dtmri_view3d-Debug-9af9f85494a368d149dc.json",
+					"name" : "dtmri_view3d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "edge_explorer2d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-edge_explorer2d-Debug-02b4dd84de29140a7f31.json",
+					"name" : "edge_explorer2d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "fade_images::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-fade_images-Debug-807c196bd77cfcf80fca.json",
+					"name" : "fade_images",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "gaussian_fit1d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-gaussian_fit1d-Debug-9cfc9b6a21f4f46c3029.json",
+					"name" : "gaussian_fit1d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "generate_loop_macros::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-generate_loop_macros-Debug-bbb7c29b8976f517b9fc.json",
+					"name" : "generate_loop_macros",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "hough_transform2d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-hough_transform2d-Debug-049169efccec4f3934b1.json",
+					"name" : "hough_transform2d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "image2ascii::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-image2ascii-Debug-af868ab7d7a0a16af17d.json",
+					"name" : "image2ascii",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "image_registration2d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-image_registration2d-Debug-11eaf36e1326c72b8253.json",
+					"name" : "image_registration2d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "image_surface3d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-image_surface3d-Debug-fec899ceb80bf2db422d.json",
+					"name" : "image_surface3d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "jawbreaker::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-jawbreaker-Debug-6203d6e1519601fd606c.json",
+					"name" : "jawbreaker",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "mcf_levelsets2d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-mcf_levelsets2d-Debug-81f3c7173a279ceb9757.json",
+					"name" : "mcf_levelsets2d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "mcf_levelsets3d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-mcf_levelsets3d-Debug-1b577c655cb4e4a7a52f.json",
+					"name" : "mcf_levelsets3d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "odykill::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-odykill-Debug-585bcf132d5eb2b5bedd.json",
+					"name" : "odykill",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "pde_TschumperleDeriche2d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pde_TschumperleDeriche2d-Debug-68d9d181a62a6d10b4be.json",
+					"name" : "pde_TschumperleDeriche2d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "pde_heatflow2d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pde_heatflow2d-Debug-ce9946f3481fc55efcd5.json",
+					"name" : "pde_heatflow2d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "plotter1d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-plotter1d-Debug-4a542b0a7ddc20bb76e7.json",
+					"name" : "plotter1d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "radon_transform2d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-radon_transform2d-Debug-67bddc405ddc4e8aa30d.json",
+					"name" : "radon_transform2d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "scene3d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-scene3d-Debug-13a1abe2830c998b5305.json",
+					"name" : "scene3d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "spherical_function3d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-spherical_function3d-Debug-931b697c0c59367e110a.json",
+					"name" : "spherical_function3d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tetris::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tetris-Debug-b39336fd1a0247877931.json",
+					"name" : "tetris",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tron::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tron-Debug-a44cf5476325b23a9505.json",
+					"name" : "tron",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tutorial::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tutorial-Debug-f527e69a4f1249323def.json",
+					"name" : "tutorial",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "use_RGBclass::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-use_RGBclass-Debug-24af88871a5803a99b24.json",
+					"name" : "use_RGBclass",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "use_draw_gradient::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-use_draw_gradient-Debug-395ee693331b5d1fed5a.json",
+					"name" : "use_draw_gradient",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "use_nlmeans::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-use_nlmeans-Debug-23b7c3854bcb708d1f58.json",
+					"name" : "use_nlmeans",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "use_skeleton::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-use_skeleton-Debug-645528fa5dbb0f21f624.json",
+					"name" : "use_skeleton",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wavelet_atrous::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wavelet_atrous-Debug-c9c3b59992b58baede51.json",
+					"name" : "wavelet_atrous",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/danie/source/repos/game-engine/GameEngine/CImg-2.2.3/examples/out/build/x64-Debug",
+		"source" : "C:/Users/danie/source/repos/game-engine/GameEngine/CImg-2.2.3/examples"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 0
+	}
+}

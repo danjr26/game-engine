@@ -1,0 +1,76 @@
+#ifndef COLLISION_EVALUATION_H
+#define COLLISION_EVALUATION_H
+
+#include "collider.h"
+
+#define getCollisionDecl(t1, t2) template<class T, uint n> void getCollision(t1<T, n>& i_collider1, t2<T, n>& i_collider2, Collision<T, n>& o_collision, collision_flags_t i_flags = 0)
+
+getCollisionDecl(Collider, Collider);
+getCollisionDecl(AAHalfSpaceCollider, AAHalfSpaceCollider);
+getCollisionDecl(AAHalfSpaceCollider, AABoxCollider);
+getCollisionDecl(AAHalfSpaceCollider, SphereCollider);
+getCollisionDecl(AAHalfSpaceCollider, HalfSpaceCollider);
+getCollisionDecl(AAHalfSpaceCollider, LineCollider);
+getCollisionDecl(AAHalfSpaceCollider, LineSegmentCollider);
+getCollisionDecl(AAHalfSpaceCollider, MSTCollider);
+getCollisionDecl(AAHalfSpaceCollider, PointCollider);
+getCollisionDecl(AAHalfSpaceCollider, RayCollider);
+getCollisionDecl(AAHalfSpaceCollider, BoxCollider);
+getCollisionDecl(AAHalfSpaceCollider, TriangleCollider);
+getCollisionDecl(AABoxCollider, AABoxCollider);
+getCollisionDecl(AABoxCollider, SphereCollider);
+getCollisionDecl(AABoxCollider, HalfSpaceCollider);
+getCollisionDecl(AABoxCollider, LineCollider);
+getCollisionDecl(AABoxCollider, LineSegmentCollider);
+getCollisionDecl(AABoxCollider, MSTCollider);
+getCollisionDecl(AABoxCollider, PointCollider);
+getCollisionDecl(AABoxCollider, RayCollider);
+getCollisionDecl(AABoxCollider, BoxCollider);
+getCollisionDecl(AABoxCollider, TriangleCollider);
+getCollisionDecl(SphereCollider, SphereCollider);
+getCollisionDecl(SphereCollider, HalfSpaceCollider);
+getCollisionDecl(SphereCollider, LineCollider);
+getCollisionDecl(SphereCollider, LineSegmentCollider);
+getCollisionDecl(SphereCollider, MSTCollider);
+getCollisionDecl(SphereCollider, PointCollider);
+getCollisionDecl(SphereCollider, RayCollider);
+getCollisionDecl(SphereCollider, BoxCollider);
+getCollisionDecl(SphereCollider, TriangleCollider);
+getCollisionDecl(HalfSpaceCollider, HalfSpaceCollider);
+getCollisionDecl(HalfSpaceCollider, LineCollider);
+getCollisionDecl(HalfSpaceCollider, LineSegmentCollider);
+getCollisionDecl(HalfSpaceCollider, MSTCollider);
+getCollisionDecl(HalfSpaceCollider, PointCollider);
+getCollisionDecl(HalfSpaceCollider, RayCollider);
+getCollisionDecl(HalfSpaceCollider, BoxCollider);
+getCollisionDecl(HalfSpaceCollider, TriangleCollider);
+getCollisionDecl(LineCollider, LineCollider);
+getCollisionDecl(LineCollider, LineSegmentCollider);
+getCollisionDecl(LineCollider, MSTCollider);
+getCollisionDecl(LineCollider, PointCollider);
+getCollisionDecl(LineCollider, RayCollider);
+getCollisionDecl(LineCollider, BoxCollider);
+getCollisionDecl(LineCollider, TriangleCollider);
+getCollisionDecl(LineSegmentCollider, LineSegmentCollider);
+getCollisionDecl(LineSegmentCollider, MSTCollider);
+getCollisionDecl(LineSegmentCollider, PointCollider);
+getCollisionDecl(LineSegmentCollider, RayCollider);
+getCollisionDecl(LineSegmentCollider, BoxCollider);
+getCollisionDecl(LineSegmentCollider, TriangleCollider);
+getCollisionDecl(MSTCollider, MSTCollider);
+getCollisionDecl(MSTCollider, PointCollider);
+getCollisionDecl(MSTCollider, RayCollider);
+getCollisionDecl(MSTCollider, BoxCollider);
+getCollisionDecl(MSTCollider, TriangleCollider);
+getCollisionDecl(PointCollider, PointCollider);
+getCollisionDecl(PointCollider, RayCollider);
+getCollisionDecl(PointCollider, BoxCollider);
+getCollisionDecl(PointCollider, TriangleCollider);
+getCollisionDecl(RayCollider, RayCollider);
+getCollisionDecl(RayCollider, BoxCollider);
+getCollisionDecl(RayCollider, TriangleCollider);
+getCollisionDecl(BoxCollider, BoxCollider);
+getCollisionDecl(BoxCollider, TriangleCollider);
+getCollisionDecl(TriangleCollider, TriangleCollider);
+
+#endif	

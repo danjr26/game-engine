@@ -23,6 +23,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>GameEngine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Game</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -172,8 +173,6 @@
     <ClInclude Include="async_task_manager.h" />
     <ClInclude Include="axis_aligned_box.h" />
     <ClInclude Include="axis_aligned_half_space.h" />
-    <ClInclude Include="axis_aligned_line.h" />
-    <ClInclude Include="basic_collision_mask.h" />
     <ClInclude Include="binary_collision_tree.h" />
     <ClInclude Include="bit_manipulation.h" />
     <ClInclude Include="blend_settings.h" />
@@ -195,11 +194,10 @@
     <ClInclude Include="circle_renderer.h" />
     <ClInclude Include="collision_partner.h" />
     <ClInclude Include="collision_queue.h" />
-    <ClInclude Include="collision_basis_wrapper.h" />
+    <ClInclude Include="collider_basis.h" />
     <ClInclude Include="collision_context.h" />
-    <ClInclude Include="collision_evaluator.h" />
     <ClInclude Include="collision_manager.h" />
-    <ClInclude Include="collision_mask.h" />
+    <ClInclude Include="collider.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="concussive_wave.h" />
     <ClInclude Include="cubic_transitioner.h" />
@@ -213,12 +211,10 @@
     <ClInclude Include="depth_transform.h" />
     <ClInclude Include="destructable_object.h" />
     <ClInclude Include="destruction_manager.h" />
-    <ClInclude Include="disableable_object.h" />
     <ClInclude Include="display_units.h" />
     <ClInclude Include="editable_text.h" />
     <ClInclude Include="exceptions.h" />
     <ClInclude Include="feedback_drone_launcher.h" />
-    <ClInclude Include="filtered_object.h" />
     <ClInclude Include="filter_query.h" />
     <ClInclude Include="font_face.h" />
     <ClInclude Include="font_manager.h">
@@ -254,6 +250,7 @@
     <ClInclude Include="particle_system2.h" />
     <ClInclude Include="particle_system2_factories.h" />
     <ClInclude Include="particle_system2_specifiers.h" />
+    <ClInclude Include="pch.h" />
     <ClInclude Include="perlin.h" />
     <ClInclude Include="perlin_lightning_bolt.h" />
     <ClInclude Include="player_ship.h" />
@@ -264,6 +261,7 @@
     <ClInclude Include="player_ship_renderer.h" />
     <ClInclude Include="player_ship_target.h" />
     <ClInclude Include="player_ship_weapons_system.h" />
+    <ClInclude Include="point_collider_basis.h" />
     <ClInclude Include="precision_laser.h" />
     <ClInclude Include="pulse_repeater.h" />
     <ClInclude Include="raycast.h" />
@@ -293,7 +291,7 @@
     <ClInclude Include="overlay_input_context.h" />
     <ClInclude Include="input_event.h" />
     <ClInclude Include="input_listener.h" />
-    <ClInclude Include="in_place_collision_evaluator.h" />
+    <ClInclude Include="collision_evaluation.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="keyboard_action_identifier.h" />
     <ClInclude Include="keyboard_range_identifier.h" />
@@ -392,8 +390,6 @@
     <ClCompile Include="async_task_manager.cpp" />
     <ClCompile Include="axis_aligned_box.cpp" />
     <ClCompile Include="axis_aligned_half_space.cpp" />
-    <ClCompile Include="axis_aligned_line.cpp" />
-    <ClCompile Include="basic_collision_mask.cpp" />
     <ClCompile Include="binary_collision_tree.cpp" />
     <ClCompile Include="blend_settings.cpp" />
     <ClCompile Include="box.cpp" />
@@ -412,11 +408,9 @@
     <ClCompile Include="clock.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="collision_basis_wrapper.cpp" />
     <ClCompile Include="collision_context.cpp" />
-    <ClCompile Include="collision_evaluator.cpp" />
     <ClCompile Include="collision_manager.cpp" />
-    <ClCompile Include="collision_mask.cpp" />
+    <ClCompile Include="collider.cpp" />
     <ClCompile Include="damage_manager.cpp" />
     <ClCompile Include="damage_receiver.cpp" />
     <ClCompile Include="debug_mesh_vertex_data_renderer.cpp" />
@@ -424,10 +418,8 @@
     <ClCompile Include="deep_transformable_object.cpp" />
     <ClCompile Include="depth_transform.cpp" />
     <ClCompile Include="destruction_manager.cpp" />
-    <ClCompile Include="disableable_object.cpp" />
     <ClCompile Include="editable_text.cpp" />
     <ClCompile Include="exceptions.cpp" />
-    <ClCompile Include="filtered_object.cpp" />
     <ClCompile Include="filter_query.cpp" />
     <ClCompile Include="font_face.cpp" />
     <ClCompile Include="font_face_raster_set.cpp" />
@@ -446,6 +438,7 @@
     <ClCompile Include="particle_system2.cpp" />
     <ClCompile Include="particle_system2_factories.cpp" />
     <ClCompile Include="particle_system2_specifiers.cpp" />
+    <ClCompile Include="pch.cpp" />
     <ClCompile Include="perlin.cpp" />
     <ClCompile Include="perlin_lightning_bolt.cpp" />
     <ClCompile Include="player_ship.cpp" />
@@ -456,6 +449,7 @@
     <ClCompile Include="player_ship_renderer.cpp" />
     <ClCompile Include="player_ship_target.cpp" />
     <ClCompile Include="player_ship_weapons_system.cpp" />
+    <ClCompile Include="point_collider_basis.cpp" />
     <ClCompile Include="raycast.cpp" />
     <ClCompile Include="ribbon2.cpp" />
     <ClCompile Include="run_speed_manager.cpp" />
@@ -478,7 +472,7 @@
     <ClCompile Include="input_context.cpp" />
     <ClCompile Include="input_listener.cpp" />
     <ClCompile Include="input_manager.cpp" />
-    <ClCompile Include="in_place_collision_evaluator.cpp" />
+    <ClCompile Include="collision_evaluation.cpp" />
     <ClCompile Include="key.cpp" />
     <ClCompile Include="keyboard_action_identifier.cpp" />
     <ClCompile Include="keyboard_range_identifier.cpp" />

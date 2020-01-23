@@ -55,9 +55,6 @@
     <Filter Include="Source Files\geometry">
       <UniqueIdentifier>{328a4554-a0d8-45c5-b2b4-2a101562c584}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\geometry\trash">
-      <UniqueIdentifier>{ed9d3640-d4dd-4cda-b802-28ca784705b8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\framework\async">
       <UniqueIdentifier>{dc87b505-7272-48a7-b4db-14156372a565}</UniqueIdentifier>
     </Filter>
@@ -285,13 +282,7 @@
     <ClInclude Include="display_units.h">
       <Filter>Header Files\render</Filter>
     </ClInclude>
-    <ClInclude Include="filtered_object.h">
-      <Filter>Header Files\framework</Filter>
-    </ClInclude>
     <ClInclude Include="filter_query.h">
-      <Filter>Header Files\framework</Filter>
-    </ClInclude>
-    <ClInclude Include="disableable_object.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
     <ClInclude Include="asset.h">
@@ -363,12 +354,6 @@
     <ClInclude Include="sphere.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="collision_mask.h">
-      <Filter>Header Files\collision\masks</Filter>
-    </ClInclude>
-    <ClInclude Include="collision_evaluator.h">
-      <Filter>Header Files\collision\evaluators</Filter>
-    </ClInclude>
     <ClInclude Include="range.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
@@ -377,9 +362,6 @@
     </ClInclude>
     <ClInclude Include="binary_collision_tree.h">
       <Filter>Header Files\collision</Filter>
-    </ClInclude>
-    <ClInclude Include="axis_aligned_line.h">
-      <Filter>Header Files\geometry</Filter>
     </ClInclude>
     <ClInclude Include="axis_aligned_half_space.h">
       <Filter>Header Files\geometry</Filter>
@@ -447,9 +429,6 @@
     <ClInclude Include="unclamped_rotation.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="in_place_collision_evaluator.h">
-      <Filter>Header Files\collision\evaluators</Filter>
-    </ClInclude>
     <ClInclude Include="depth_transform.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
@@ -494,12 +473,6 @@
     </ClInclude>
     <ClInclude Include="catmull_rom_transitioner.h">
       <Filter>Header Files\util\transition</Filter>
-    </ClInclude>
-    <ClInclude Include="basic_collision_mask.h">
-      <Filter>Header Files\collision\masks</Filter>
-    </ClInclude>
-    <ClInclude Include="collision_basis_wrapper.h">
-      <Filter>Header Files\collision</Filter>
     </ClInclude>
     <ClInclude Include="font_face.h">
       <Filter>Header Files\render\text</Filter>
@@ -771,6 +744,21 @@
     <ClInclude Include="lazy_provider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="collision_evaluation.h">
+      <Filter>Header Files\collision\evaluators</Filter>
+    </ClInclude>
+    <ClInclude Include="collider.h">
+      <Filter>Header Files\collision\masks</Filter>
+    </ClInclude>
+    <ClInclude Include="collider_basis.h">
+      <Filter>Header Files\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="point_collider_basis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clock.cpp">
@@ -818,13 +806,7 @@
     <ClCompile Include="render_manager.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
-    <ClCompile Include="filtered_object.cpp">
-      <Filter>Source Files\framework</Filter>
-    </ClCompile>
     <ClCompile Include="filter_query.cpp">
-      <Filter>Source Files\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="disableable_object.cpp">
       <Filter>Source Files\framework</Filter>
     </ClCompile>
     <ClCompile Include="asset.cpp">
@@ -877,12 +859,6 @@
     </ClCompile>
     <ClCompile Include="mesh_vertex_gpu_pusher.cpp">
       <Filter>Source Files\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="collision_evaluator.cpp">
-      <Filter>Source Files\collision\evaluators</Filter>
-    </ClCompile>
-    <ClCompile Include="collision_mask.cpp">
-      <Filter>Source Files\collision\masks</Filter>
     </ClCompile>
     <ClCompile Include="editable_text.cpp">
       <Filter>Source Files\objects</Filter>
@@ -938,9 +914,6 @@
     <ClCompile Include="vector.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
-    <ClCompile Include="in_place_collision_evaluator.cpp">
-      <Filter>Source Files\collision\evaluators</Filter>
-    </ClCompile>
     <ClCompile Include="depth_transform.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
@@ -954,9 +927,6 @@
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
     <ClCompile Include="axis_aligned_half_space.cpp">
-      <Filter>Source Files\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="axis_aligned_line.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
     <ClCompile Include="box.cpp">
@@ -993,12 +963,6 @@
       <Filter>Source Files\physics\force field</Filter>
     </ClCompile>
     <ClCompile Include="binary_collision_tree.cpp">
-      <Filter>Source Files\collision</Filter>
-    </ClCompile>
-    <ClCompile Include="basic_collision_mask.cpp">
-      <Filter>Source Files\collision\masks</Filter>
-    </ClCompile>
-    <ClCompile Include="collision_basis_wrapper.cpp">
       <Filter>Source Files\collision</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
@@ -1191,6 +1155,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="chain_bolt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="collision_evaluation.cpp">
+      <Filter>Source Files\collision\evaluators</Filter>
+    </ClCompile>
+    <ClCompile Include="collider.cpp">
+      <Filter>Source Files\collision\masks</Filter>
+    </ClCompile>
+    <ClCompile Include="point_collider_basis.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
