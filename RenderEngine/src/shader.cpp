@@ -14,11 +14,13 @@ Shader::~Shader() {
 
 void Shader::init(ShaderType i_type, const std::string* i_texts, uint i_nTexts) {
 	if (isValid()) fail();
+	mType = i_type;
 	mId = glCreateShader(mType.toGL());
 	std::vector<const char*> texts;
 	for (uint i = 0; i < i_nTexts; i++) {
 		texts.push_back(i_texts->c_str());
 	}
+
 	glShaderSource(mId, i_nTexts, texts.data(), nullptr);
 	glCompileShader(mId);
 

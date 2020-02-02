@@ -6,23 +6,21 @@
 #include "uniform_pusher.h"
 #include "virtual_vertex_pusher.h"
 #include "camera.h"
+#include "shader_data_pusher.h"
 #include <unordered_set>
 #include <unordered_map>
 
 struct RenderRequest {
-	uint64_t mPassFlags;
-	std::unordered_set<Shader*> mShaders;
-	std::unordered_map<texture_slot_t, Texture*> mTextures; 
-	std::unordered_map<uniform_slot_t, UniformPusher*> mUniforms;
+	std::vector<Shader*> mShaders;
 	VirtualVertexPusher* mVertices;
 	VirtualVertexPusher::RenderCommand* mCommand;
+	std::unordered_map<shader_data_slot_t, ShaderData*> mShaderData;
+
+	uint64_t mPassFlags;
 	std::function<double(const Camera*)> mZ;
 
 	RenderRequest() :
 	mPassFlags(0ull),
-	mShaders(),
-	mTextures(),
-	mUniforms(),
 	mVertices(nullptr),
 	mCommand(nullptr),
 	mZ(defaultZ)
@@ -31,6 +29,13 @@ struct RenderRequest {
 	static double defaultZ(const Camera* c) {
 		return 0.0; 
 	}
+};
+
+struct RenderRequestBatch {
+	ShaderProgram* mShader;
+	std::unordered_map<shader_data_slot_t, ShaderDataPusher*> mShaderData;
+	VertexPusher* mVertices;
+	std::vector<VertexPusher::RenderCommand> mCommands;
 };
 
 #endif

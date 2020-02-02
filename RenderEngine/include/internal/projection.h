@@ -3,25 +3,22 @@
 
 #include "../../../Geometry/include/geometry.h"
 
+enum class ProjectionType {
+	undefined,
+	orthographic,
+	perspective
+};
+
 template<class T>
-class Projection {
-public:
-	Vector<T, 3> mMinima;
-	Vector<T, 3> mMaxima;
-	enum Type : bool {
-		orthographic = false,
-		perspective = true
-	} type;
+struct Projection {
+	T mNear, mFar;
+	Vector<T, 2> mNearDimen;
+	ProjectionType mType;
 
 public:
 	Projection();
-	Projection(T i_near, T i_far, T i_horizontalAngle, T i_xToYRatio, Type i_type = Type::perspective);
-	Projection(Vector<T, 3> i_minima, Vector<T, 3> i_maxima, Type i_type = Type::orthographic);
 
-	T getViewAngle();
-	void setViewAngle(T i_value);
-
-	Matrix<T, 4, 4> getMatrix();
+	Matrix<T, 4, 4> getMatrix() const;
 };
 
 using Projectionf = Projection<float>;

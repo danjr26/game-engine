@@ -6,15 +6,15 @@ mId(0)
 {}
 
 ShaderProgram::~ShaderProgram() {
-	
+	destroy();
 }
 
-void ShaderProgram::init(const Shader* i_shaders, uint i_nShaders) {
+void ShaderProgram::init(const Shader* const* i_shaders, uint i_nShaders) {
 	if (isValid()) fail();
 
 	mId = glCreateProgram();
 	for (uint i = 0; i < i_nShaders; i++) {
-		glAttachShader(mId, i_shaders[i].mId);
+		glAttachShader(mId, i_shaders[i]->mId);
 	}
 	glLinkProgram(mId);
 

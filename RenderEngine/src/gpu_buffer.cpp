@@ -7,24 +7,32 @@ mNCopies(0),
 mCopyIndex(0),
 mType(),
 mUsage(),
+mReadWrite(),
 mData(nullptr),
-mEdits()
+mEdits(),
+mDirty(false)
 {}
 
-GpuBuffer::GpuBuffer(size_t i_size, BufferType i_type, BufferUsage i_usage) :
+GpuBuffer::GpuBuffer(size_t i_size, BufferType i_type, BufferUsage i_usage, ReadWrite i_readWrite) :
 mId(0),
 mSize(i_size),
 mNCopies(0),
 mCopyIndex(0),
 mType(i_type),
 mUsage(i_usage),
+mReadWrite(i_readWrite),
 mData(nullptr),
-mEdits() {
+mEdits(),
+mDirty(false) {
 	_init();
 }
 
 GpuBuffer::~GpuBuffer() {
 	destroy();
+}
+
+GLuint GpuBuffer::getInternalId() const {
+	return mId;
 }
 
 size_t GpuBuffer::getSize() const {
@@ -39,6 +47,10 @@ BufferUsage GpuBuffer::getUsage() const {
 	return mUsage;
 }
 
+ReadWrite GpuBuffer::getReadWrite() const {
+	return mReadWrite;
+}
+
 size_t GpuBuffer::getWriteOffset() const {
 	return mCopyIndex * mSize;
 }
@@ -47,11 +59,12 @@ size_t GpuBuffer::getDrawOffset() const {
 	return getPrevCopyIndex() * mSize;
 }
 
-void GpuBuffer::init(size_t i_size, BufferType i_type, BufferUsage i_usage) {
+void GpuBuffer::init(size_t i_size, BufferType i_type, BufferUsage i_usage, ReadWrite i_readWrite) {
 	if (isValid()) fail();
 	mSize = i_size;
 	mType = i_type;
 	mUsage = i_usage;
+	mReadWrite = i_readWrite;
 	_init();
 }
 
@@ -100,6 +113,10 @@ void* GpuBuffer::edit(size_t i_begin, size_t i_length) {
 		editPtr = new ubyte[i_length];
 	}
 	mEdits.insert(std::make_pair(editPtr, editData));
+
+	mDirty = true;
+
+	return editPtr;
 }
 
 void GpuBuffer::commit(void* i_ptr) {
@@ -116,8 +133,19 @@ void GpuBuffer::commit(void* i_ptr) {
 }
 
 void GpuBuffer::finalize() {
-	if (!isValid()) fail();
-	mCopyIndex = getNextCopyIndex();
+	if (!isValid() || !mEdits.empty()) fail();
+	if (mDirty) {
+		mCopyIndex = getNextCopyIndex();
+		mDirty = false;
+	}
+}
+
+void GpuBuffer::activate() {
+	glBindBuffer(mType.toGL(), mId);
+}
+
+void GpuBuffer::deactivate() {
+	glBindBuffer(mType.toGL(), 0);
 }
 
 void GpuBuffer::_init() {
@@ -126,7 +154,7 @@ void GpuBuffer::_init() {
 	mFences.resize(mNCopies, 0);
 	mCopyIndex = 0;
 	glBindBuffer(mType.toGL(), mId);
-	GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+	GLbitfield mapFlags = mReadWrite.toMapGL() | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
 	glBufferStorage(mType.toGL(), mSize * mNCopies, nullptr, mapFlags);
 	mData = glMapBufferRange(mType.toGL(), 0, mSize * mNCopies, mapFlags);
 	glBindBuffer(mType.toGL(), 0);

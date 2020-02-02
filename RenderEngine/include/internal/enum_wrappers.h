@@ -51,6 +51,20 @@ struct BufferUsage {
 	static BufferUsage fromGL(GLenum i_value);
 };
 
+struct ReadWrite {
+	bool mRead;
+	bool mWrite;
+
+	ReadWrite();
+	ReadWrite(bool i_read, bool i_write);
+
+	bool operator==(const ReadWrite& i_other);
+	bool operator!=(const ReadWrite& i_other);
+
+	GLbitfield toMapGL() const;
+	static ReadWrite fromMapGL(GLbitfield i_value);
+};
+
 struct Topology {
 	enum class Value {
 		undefined,

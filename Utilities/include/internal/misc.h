@@ -5,10 +5,12 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
+#include "windows_misc.h"
 #include "definitions.h"
 
-#define fail() exit(fprintf(stderr, "err@%s:%d", __FILE__, __LINE__) ? -1 : -1)
+#define fail() exit(fprintf(stdout, "error @%s:%d\nwin: %s", __FILE__, __LINE__, getWindowsErrorMessage().c_str()) & std::cin.get())
 
 inline void fileToString(const std::string& i_filename, std::string& o_data) {
 	std::ifstream file;

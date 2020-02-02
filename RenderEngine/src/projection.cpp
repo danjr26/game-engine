@@ -1,50 +1,34 @@
-#include "projection.h"
+#include "../include/internal/projection.h"
 
 template<class T>
 Projection<T>::Projection() :
-	mMinima(Vector<T, 3>(-1, -1, 0)),
-	mMaxima(Vector<T, 3>(1, 1, -1)),
-	type(Type::orthographic)
+	mNear(0),
+	mFar(0),
+	mNearDimen(),
+	mType(ProjectionType::undefined)
 {}
 
 template<class T>
-Projection<T>::Projection(T i_near, T i_far, T i_horizontalAngle, T i_xToYRatio, Type i_type) :
-type(i_type) {
-	mMaxima[0] = tan(i_horizontalAngle) * i_near;
-	mMaxima[1] = mMaxima[0] / i_xToYRatio;
-	mMaxima[2] = i_far;
-	mMinima[0] = -mMaxima[0];
-	mMinima[1] = -mMaxima[1];
-	mMinima[2] = i_near;
-}
-
-template<class T>
-Projection<T>::Projection(Vector<T, 3> i_minima, Vector<T, 3> i_maxima, Type i_type) :
-	mMinima(i_minima),
-	mMaxima(i_maxima),
-	type(i_type)
-{}
-
-template<class T>
-T Projection<T>::getViewAngle() {
-	return atan(mMaxima[0] / mMinima[2]);
-}
-
-template<class T>
-void Projection<T>::setViewAngle(T i_value) {
-	mMaxima[0] = tan(i_value) * mMinima[2];
-	mMinima[0] = -mMaxima[0];
-}
-
-template<class T>
-Matrix<T, 4, 4> Projection<T>::getMatrix() {
-	if (type == Type::perspective) {
-		return Matrix<T, 4, 4>::perspective(mMinima, mMaxima);
+Matrix<T, 4, 4> Projection<T>::getMatrix() const {
+	T out[4][4] = {};
+	switch (mType) {
+	case ProjectionType::perspective:
+		out[0][0] = mNear / mNearDimen.x();
+		out[1][1] = mNear / mNearDimen.y();
+		out[2][2] = -(mFar + mNear) / (mFar - mNear);
+		out[3][2] = (T)(-1);
+		out[2][3] = (T)(-2) * mFar * mNear / (mFar - mNear);
+		break;
+	case ProjectionType::orthographic:
+		out[0][0] = (T)(1) / mNearDimen.x();
+		out[1][1] = (T)(1) / mNearDimen.y();
+		out[2][2] = (T)(-2) / (mFar - mNear);
+		out[3][3] = (T)(1);
+		out[2][3] = -(mFar + mNear) / (mFar - mNear);
+	default: fail();
 	}
-	else {
-		return Matrix<T, 4, 4>::orthographic(mMinima, mMaxima);
-	}
+	return out;
 }
 
-template class Projection<float>;
-template class Projection<double>;
+template struct Projection<float>;
+template struct Projection<double>;

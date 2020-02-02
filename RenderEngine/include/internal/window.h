@@ -23,6 +23,7 @@ private:
 
 	HWND mWindow;
 	HGLRC mRenderContext;
+	std::string mClassName;
 
 public:
 	Window();

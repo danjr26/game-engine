@@ -21,30 +21,38 @@ private:
 
 	BufferType mType;
 	BufferUsage mUsage;
+	ReadWrite mReadWrite;
 
 	void* mData;
 
 	std::unordered_map<void*, Edit> mEdits;
 
+	bool mDirty;
+
 public:
 	GpuBuffer();
-	GpuBuffer(size_t i_size, BufferType i_type, BufferUsage i_usage);
+	GpuBuffer(size_t i_size, BufferType i_type, BufferUsage i_usage, ReadWrite i_readWrite);
 	~GpuBuffer();
 
+	GLuint getInternalId() const;
 	size_t getSize() const;
 	BufferType getType() const;
 	BufferUsage getUsage() const;
+	ReadWrite getReadWrite() const;
 
 	size_t getWriteOffset() const;
 	size_t getDrawOffset() const;
 
-	void init(size_t i_size, BufferType i_type, BufferUsage i_usage);
+	void init(size_t i_size, BufferType i_type, BufferUsage i_usage, ReadWrite i_readWrite);
 	void destroy();
 	bool isValid() const;
 
 	void* edit(size_t i_begin, size_t i_length);
 	void commit(void* i_ptr);
 	void finalize();
+
+	void activate();
+	void deactivate();
 
 private:
 	void _init();

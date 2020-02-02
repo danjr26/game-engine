@@ -33,9 +33,12 @@ private:
 private:
 	RenderTarget* mActiveRenderTarget;
 	ShaderProgram* mActiveShader;
+	std::unordered_map<shader_data_slot_t, ShaderDataPusher*> mActiveShaderData;
 	std::unordered_map<texture_slot_t, Texture*> mActiveTextures;
+
 	std::list<CachedShader> mCachedShaders;
-	std::list<VertexPusher> mVertexPushers;
+	std::unordered_set<ShaderDataPusher*> mFreeShaderDataPushers;
+	std::vector<VertexPusher*> mVertexPushers;
 
 public:
 	DisplayManager mDisplayManager;
@@ -48,16 +51,24 @@ public:
 
 	void render();
 
-	void requestVertexPusher(RenderRequest& io_request, const VertexPusherLayout& i_layout, size_t i_nIndices, size_t i_nVertices);
+	void requestVertexPusher(RenderRequest& io_request, const VertexPusherLayout& i_layout, uint i_nIndices, uint i_nVertices);
 	void reportErrors(GLDEBUGPROC i_callback = defaultErrorCallback, const void* i_param = nullptr);
 
 private:
-	void retrieveRequests(const RenderPass& i_pass, std::vector<RenderRequest*>& o_requests) const;
-	void activate(RenderTarget* i_target);
-	ShaderProgram* retrieveShader(const std::vector<Shader*>& i_shaderParts);
-	void activate(ShaderProgram* i_shader);
 	void activate(RenderPass& i_pass);
-	void bind(texture_slot_t i_slot, Texture* i_texture);
+	void activate(RenderRequestBatch& i_batch);
+
+	void activate(RenderTarget* i_target);
+	ShaderProgram* consolidate(const std::vector<Shader*>& i_shaderParts);
+	void release(ShaderProgram* i_shader);
+	void activate(ShaderProgram* i_shader);
+	ShaderDataPusher* consolidate(const std::vector<ShaderData*>& i_shaderData);
+	void release(ShaderDataPusher* i_shaderData);
+	void activate(ShaderDataPusher* i_shaderData, shader_data_slot_t i_slot);
+
+	void createBatches(const RenderPass& i_pass, std::list<RenderRequestBatch>& o_batches);
+	void destroyBatches(std::list<RenderRequestBatch>& i_batches);
+
 	void execute(const ClearCommand& i_command);
 };
 

@@ -836,3 +836,32 @@ uint ClearBits::fromGL(GLuint i_value) {
 	if (i_value & GL_STENCIL_BUFFER_BIT) out |= stencil;
 	return out;
 }
+
+ReadWrite::ReadWrite() :
+mRead(false),
+mWrite(false)
+{}
+
+ReadWrite::ReadWrite(bool i_read, bool i_write) :
+mRead(i_read),
+mWrite(i_write)
+{}
+
+bool ReadWrite::operator==(const ReadWrite & i_other) {
+	return mRead == i_other.mRead && mWrite == i_other.mWrite;
+}
+
+bool ReadWrite::operator!=(const ReadWrite& i_other) {
+	return !(*this == i_other);
+}
+
+GLbitfield ReadWrite::toMapGL() const {
+	GLbitfield out = 0;
+	if (mRead) out |= GL_MAP_READ_BIT;
+	if (mWrite) out |= GL_MAP_WRITE_BIT;
+	return out;
+}
+
+ReadWrite ReadWrite::fromMapGL(GLbitfield i_value) {
+	return ReadWrite(i_value & GL_MAP_READ_BIT, i_value & GL_MAP_WRITE_BIT);
+}

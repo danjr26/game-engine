@@ -10,6 +10,13 @@ struct ClearCommand {
 	Color4f mColor;
 	float mDepth;
 	uint mStencil;
+
+	ClearCommand() :
+	mBits(0),
+	mColor(),
+	mDepth(1.0f),
+	mStencil(0)
+	{}
 };
 
 #endif

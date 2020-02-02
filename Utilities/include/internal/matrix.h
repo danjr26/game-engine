@@ -285,40 +285,6 @@ public:
 		};
 	}
 
-	template<typename = typename std::enable_if<m == 4 && n == 4, void>::type>
-	static Matrix<T, m, n> orthographic(Vector3f i_minima, Vector3f i_maxima) {
-		return {
-			2.0f / (i_maxima[0] - i_minima[0]), 0.0f, 0.0f, -(i_maxima[0] + i_minima[0]) / (i_maxima[0] - i_minima[0]),
-			0.0f, 2.0f / (i_maxima[1] - i_minima[1]), 0.0f, -(i_maxima[1] + i_minima[1]) / (i_maxima[1] - i_minima[1]),
-			0.0f, 0.0f, 2.0f / (i_maxima[2] - i_minima[2]), -(i_maxima[2] + i_minima[2]) / (i_maxima[2] - i_minima[2]),
-			0.0f, 0.0f, 0.0f, 1.0f
-		};
-	}
-
-	template<typename = typename std::enable_if<m == 4 && n == 4, void>::type>
-	static Matrix<T, m, n> perspective(float i_near, float i_far, float i_horizontalAngle, float aspectRatio) {
-		float right = tanf(i_horizontalAngle) * i_near;
-		float left = -right;
-		float top = right / aspectRatio;
-		float bottom = -top;
-		return {
-			2.0f * i_near / (right - left), 0, (right + left) / (right - left), 0.0f,
-			0.0f, 2.0f * i_near / (top - bottom), (top + bottom) / (top - bottom), 0.0f,
-			0.0f, 0.0f, -(i_far + i_near) / (i_far - i_near), -(2 * i_far * i_near) / (i_far - i_near),
-			0.0f, 0.0f, -1.0f, 0.0f
-		};
-	}
-
-	template<typename = typename std::enable_if<m == 4 && n == 4, void>::type>
-	static Matrix<T, m, n> perspective(Vector3f i_minima, Vector3f i_maxima) {
-		return {
-			2.0f * i_minima[2] / (i_maxima[0] - i_minima[0]), 0.0f, (i_maxima[0] + i_minima[0]) / (i_maxima[0] - i_minima[0]), 0.0f,
-			0.0f, 2.0f * i_minima[2] / (i_maxima[1] - i_minima[1]), (i_maxima[1] + i_minima[1]) / (i_maxima[1] - i_minima[1]), 0.0f,
-			0.0f, 0.0f, -(i_maxima[2] + i_minima[2]) / (i_maxima[2] - i_minima[2]), -(2 * i_maxima[2] * i_minima[2]) / (i_maxima[2] - i_minima[2]),
-			0.0f, 0.0f, -1.0f, 0.0f
-		};
-	}
-
 	void REFify() {
 		uint iStart = 0;
 		for (uint j = 0; j < n && iStart < m; j++) {

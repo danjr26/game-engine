@@ -11,7 +11,6 @@ void printAllDisplayInfo();
 void setupConsole();
 
 int WINAPI WinMain(HINSTANCE i_instance, HINSTANCE i_prevInstance, LPSTR i_commandLine, int i_showCommand) {
-
 	setupConsole();
 
 	RenderEngine renderEngine;
@@ -23,8 +22,14 @@ int WINAPI WinMain(HINSTANCE i_instance, HINSTANCE i_prevInstance, LPSTR i_comma
 	pass.mRenderTarget = &renderEngine.mWindow;
 	pass.mClearCommand.mBits = ClearBits::color | ClearBits::depth;
 	pass.mClearCommand.mColor = Color4f(0.0, 0.0, 0.8, 1.0);
-	pass.mClearCommand.mDepth = 0.0;
+	pass.mClearCommand.mDepth = 1.0;
 	auto& passNode = renderEngine.mPasses.addNode(&pass);
+
+	Shader vertexShader;
+	vertexShader.initFromFile(ShaderType::Value::vertex, "data/shader/test_v.glsl");
+
+	Shader fragmentShader;
+	fragmentShader.initFromFile(ShaderType::Value::fragment, "data/shader/test_f.glsl");
 
 	VertexPusherLayout layout;
 	layout.mTopology = Topology::Value::triangles;
@@ -37,6 +42,8 @@ int WINAPI WinMain(HINSTANCE i_instance, HINSTANCE i_prevInstance, LPSTR i_comma
 	layout.mVertex.insert(decltype(layout.mVertex)::value_type(1, sublayout));
 
 	RenderRequest request;
+	request.mShaders.push_back(&vertexShader);
+	request.mShaders.push_back(&fragmentShader);
 	
 	renderEngine.requestVertexPusher(request, layout, 3, 3);
 
@@ -52,11 +59,26 @@ int WINAPI WinMain(HINSTANCE i_instance, HINSTANCE i_prevInstance, LPSTR i_comma
 	verticesEdit[2] = Vector3f(0, 1, 0);
 	request.mVertices->commitVertices(1, verticesEdit);
 
+	VirtualVertexPusher::RenderCommand command;
+	command.mNIndices = 3;
+	request.mCommand = &command;
+
+	ShaderData shaderData;
+	Color4f color(1.0, 0.0, 0.0, 1.0);
+	shaderData.mData = color.pointer();
+	shaderData.mSize = sizeof(color);
+	shaderData.mLayout.mFreq = BufferUsage::Frequency::seldom;
+	shaderData.mLayout.mReadWrite = ReadWrite(false, true);
+
+	request.mShaderData[1] = &shaderData;
+
 	renderEngine.mRequests.push_back(&request);
 	
 	renderEngine.render();
 
 	renderEngine.mWindow.flipBuffers();
+
+	std::cout << glewGetErrorString(glGetError()) << std::endl;
 
 	std::this_thread::sleep_for(std::chrono::seconds(5));
 
@@ -100,8 +122,9 @@ void printAllDisplayInfo() {
 }
 
 void setupConsole() {
-	//AllocConsole();
+	AllocConsole();
+	AttachConsole(-1);
 	FILE* fin, *fout;
-	//freopen_s(&fin, "CONIN$", "r", stdin);
-	freopen_s(&fout, "dbgout.txt", "w", stdout);
+	freopen_s(&fin, "CONIN$", "r", stdin);
+	freopen_s(&fout, "CONOUT$", "w", stdout);
 }

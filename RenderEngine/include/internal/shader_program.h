@@ -13,7 +13,7 @@ public:
 	ShaderProgram();
 	~ShaderProgram();
 
-	void init(const Shader* i_shaders, uint i_nShaders);
+	void init(const Shader* const* i_shaders, uint i_nShaders);
 	void destroy();
 	bool isValid() const;
 

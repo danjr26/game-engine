@@ -57,8 +57,10 @@ struct VertexPusherLayout {
 };
 
 class VertexPusher {
-friend class VirtualVertexPusher;
-private:
+	friend class RenderEngine;
+	friend class VirtualVertexPusher;
+
+public:
 	struct RenderCommand {
 		uint mNIndices;
 		uint mNInstances;
@@ -68,7 +70,7 @@ private:
 
 		RenderCommand() :
 		mNIndices(0),
-		mNInstances(0),
+		mNInstances(1),
 		mIndexBegin(0),
 		mVertexBegin(0),
 		mInstanceBegin(0)
@@ -81,32 +83,32 @@ private:
 	VertexPusherLayout mLayout;
 
 	GpuBuffer mIndices;
-	size_t mMaxIndices;
-	size_t mNIndices;
+	uint mMaxIndices;
 
 	std::unordered_map<vertex_slot_t, GpuBuffer> mVertices;
-	size_t mMaxVertices;
-	size_t mNVertices;
+	uint mMaxVertices;
 
 	GpuBuffer mCommands;
-	size_t mMaxCommands;
-	size_t mNCommands;
+	uint mMaxCommands;
+	uint mNCommands;
 
 public:
-	VertexPusher();
-	VertexPusher(const VertexPusherLayout& i_layout, size_t i_maxIndices, size_t i_maxVertices, size_t i_maxCommands);
 	~VertexPusher();
 
-	void init(const VertexPusherLayout& i_layout, size_t i_maxIndices, size_t i_maxVertices, size_t i_maxCommands);
+private:
+	VertexPusher();
+	VertexPusher(const VertexPusherLayout& i_layout, uint i_maxIndices, uint i_maxVertices, uint i_maxCommands);
+
+	void init(const VertexPusherLayout& i_layout, uint i_maxIndices, uint i_maxVertices, uint i_maxCommands);
+	void _init();
 	void destroy();
 	bool isValid() const;
 
-	void getLayout(VertexPusherLayout& o_layout);
+	RenderCommand* newCommands(uint i_n);
+	void commitCommands(RenderCommand* i_ptr);
 
+	void finalize();
 	void render();
-
-private:
-	void _init();
 };
 
 #endif

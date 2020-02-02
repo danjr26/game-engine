@@ -1,4 +1,5 @@
 #include "../include/internal/window.h"
+#include <GL/wglew.h>
 
 const DWORD Window::defaultStyle = WS_CAPTION | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU;
 const DWORD Window::defaultStyleEx = 0;
@@ -12,7 +13,8 @@ LRESULT CALLBACK dummyWindowProc(HWND i_window, UINT i_message, WPARAM i_wParam,
 
 Window::Window() :
 mWindow(nullptr),
-mRenderContext(nullptr)
+mRenderContext(nullptr),
+mClassName()
 {}
 
 Window::~Window() {
@@ -28,10 +30,12 @@ void Window::flipBuffers() {
 }
 
 void Window::init(const PixelFormat& i_format) {
+	mClassName = std::string("class") + std::to_string((uintptr_t)this);
+
 	// create window class
 	WNDCLASSEXA windowClass = {};
 	windowClass.hInstance = GetModuleHandleA(nullptr);
-	windowClass.lpszClassName = (std::string("class") + std::to_string((uintptr_t)this)).c_str();
+	windowClass.lpszClassName = mClassName.c_str();
 	windowClass.lpfnWndProc = nullptr;
 	windowClass.style = CS_DBLCLKS | CS_OWNDC;
 	windowClass.cbSize = sizeof(windowClass);
@@ -80,12 +84,19 @@ void Window::init(const PixelFormat& i_format) {
 	if (!SetPixelFormat(deviceContext, ChoosePixelFormat(deviceContext, &pfd), &pfd)) fail();
 
 	// create OpenGL render context attached to this window
-	mRenderContext = wglCreateContext(deviceContext);
-	if (!mRenderContext) fail();
-
-	// init OpenGL context
+	HGLRC tmpContext = wglCreateContext(deviceContext);
+	if (!tmpContext) fail();
+	wglMakeCurrent(deviceContext, tmpContext);
+	PFNWGLCREATECONTEXTATTRIBSARBPROC createContext = (PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
+	int attribs[] = {
+		WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB,
+		0
+	};
+	mRenderContext = createContext(deviceContext, 0, attribs);
+	wglMakeCurrent(nullptr, nullptr);
+	wglDeleteContext(tmpContext);
 	wglMakeCurrent(deviceContext, mRenderContext);
-	glewInit();
+	if (glewInit() != GLEW_OK) fail();
 }
 
 void Window::show() {
